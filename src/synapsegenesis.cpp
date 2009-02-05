@@ -147,7 +147,7 @@ void genesis(QTextBrowser *output)
 			{
 				//output "incomplete MF to GR connection for GR# at grPosX, grPosY
 				//cout<<"incomplete MF to GR connection for GR#"<<j<<endl;
-				formatOut.clear();
+				formatOut.str("");
 				formatOut<<"incomplete MF to GR connection for GR#"<<j<<endl;
 				outStr=formatOut.str().c_str();
 				output->textCursor().insertText(outStr);
@@ -234,7 +234,7 @@ void genesis(QTextBrowser *output)
 			{
 				//output "incomplete MF to GO connections for GO# at goPos X, goPosY
 				//cout<<"incomplete MF to GO connections for GO#"<<j<<endl;
-				formatOut.clear();
+				formatOut.str("");
 				formatOut<<"incomplete MF to GO connections for GO#"<<j<<endl;
 				outStr=formatOut.str().c_str();
 				output->textCursor().insertText(outStr);
@@ -317,7 +317,7 @@ void genesis(QTextBrowser *output)
 			{
 				//output "incomplete GR to GO connections for GO#
 				//cout<<"incomplete GR to GO connections for GO#"<<j<<endl;
-				formatOut.clear();
+				formatOut.str("");
 				formatOut<<"incomplete GR to GO connections for GO#"<<j<<endl;
 				outStr=formatOut.str().c_str();
 				output->textCursor().insertText(outStr);
@@ -331,7 +331,7 @@ void genesis(QTextBrowser *output)
 
 	connsMade=true;
 
-	/*
+
 	for(int i=0; i<NUMGR; i++)
 	{
 		numSyn[i]=0;
@@ -396,7 +396,7 @@ void genesis(QTextBrowser *output)
 			{
 				//output "incomplete GO to GR connection for GR#
 				//cout<<"incomplete GO to GR connection for GR#"<<j<<endl;
-				formatOut.clear();
+				formatOut.str("");
 				formatOut<<"incomplete GO to GR connection for GR#"<<j<<endl;
 				outStr=formatOut.str().c_str();
 				output->textCursor().insertText(outStr);
@@ -412,5 +412,5 @@ void genesis(QTextBrowser *output)
 	{
 		delete &numSyn[i];
 	}
-	delete [] numSyn;*/
+	delete [] numSyn;
 }
