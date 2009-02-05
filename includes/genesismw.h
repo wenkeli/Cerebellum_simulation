@@ -3,6 +3,7 @@
 
 #include <QtGui/QMainWindow>
 #include "ui_genesismw.h"
+#include "synapsegenesis.h"
 
 class GenesisMW : public QMainWindow
 {
@@ -11,9 +12,13 @@ class GenesisMW : public QMainWindow
 public:
     GenesisMW(QWidget *parent = 0);
     ~GenesisMW();
+    QTextBrowser *getStatusBox();
 
 private:
     Ui::GenesisMWClass ui;
+
+public slots:
+	void makeConns();
 };
 
 #endif // GENESISMW_H

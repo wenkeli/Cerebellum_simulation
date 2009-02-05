@@ -24,7 +24,7 @@
     </property>
     <layout class="QVBoxLayout" name="verticalLayout" >
      <item>
-      <widget class="QPushButton" name="pushButton" >
+      <widget class="QPushButton" name="connectButton" >
        <property name="text" >
         <string>make connections</string>
        </property>
@@ -59,7 +59,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_6" >
+      <widget class="QPushButton" name="quitButton" >
        <property name="text" >
         <string>quit</string>
        </property>
@@ -67,12 +67,12 @@
      </item>
     </layout>
    </widget>
-   <widget class="QTextBrowser" name="textBrowser" >
+   <widget class="QTextBrowser" name="statusBox" >
     <property name="geometry" >
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>381</width>
+      <width>391</width>
       <height>491</height>
      </rect>
     </property>
@@ -81,5 +81,41 @@
   <widget class="QStatusBar" name="statusbar" />
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>quitButton</sender>
+   <signal>clicked()</signal>
+   <receiver>GenesisMWClass</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>488</x>
+     <y>478</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>486</x>
+     <y>488</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>connectButton</sender>
+   <signal>clicked()</signal>
+   <receiver>GenesisMWClass</receiver>
+   <slot>makeConns()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>489</x>
+     <y>325</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>490</x>
+     <y>233</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>makeConns()</slot>
+ </slots>
 </ui>

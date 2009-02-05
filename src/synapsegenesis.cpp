@@ -7,14 +7,17 @@
 
 #include "../includes/synapsegenesis.h"
 
-void genesis()
+void genesis(QTextBrowser *output)
 {
-	int numGL=GLX*GLY;
+	int *numSyn=new int[NUMGR];
 	int glomeruli[GLX*GLY];
-	int *numSyn=new int[NUMGR]; //number of particular synapses already made.
+	int numGL=GLX*GLY;
 
 	float scaleX;
 	float scaleY;
+
+	stringstream formatOut;
+	QString outStr;
 
 	CRandomMother randGen(time(NULL));
 
@@ -55,7 +58,9 @@ void genesis()
 	}
 
 	//****gui output to indicate mossy fiber assigned to glomeruli.
-	cout<<"mossy fiber assigned to glomeruli."<<endl;
+	output->textCursor().insertText("mossy fiber assigned to glomeruli.\n");
+	output->repaint();
+	//cout<<"mossy fiber assigned to glomeruli."<<endl;
 
 	//initialize the number of (granule cell) synapses already made for each mossy fiber to 0
 	for(int i=0; i<NUMMF; i++)
@@ -134,13 +139,18 @@ void genesis()
 			if(attempts>=60000 && !complete)
 			{
 				//output "incomplete MF to GR connection for GR# at grPosX, grPosY
-				cout<<"incomplete MF to GR connection for GR#"<<j<<endl;
+				//cout<<"incomplete MF to GR connection for GR#"<<j<<endl;
+				formatOut.clear();
+				formatOut<<"incomplete MF to GR connection for GR#"<<j<<endl;
+				outStr=formatOut.str().c_str();
+				output->textCursor().insertText(outStr);
 			}
 		}
 	}
 	//****output "mossy fibers connected to granule cells"
-	cout<<"mossy fibers connected to granule cells"<<endl;
-
+	//cout<<"mossy fibers connected to granule cells"<<endl;
+	output->textCursor().insertText("mossy fibers connected to granule cells\n");
+	output->repaint();
 
 	//initialize the number of (golgi cell) synapses already made to 0 for each mossy fiber
 	for(int i=0; i<NUMMF; i++)
@@ -216,12 +226,18 @@ void genesis()
 			if(attempts>=3000 && !complete)
 			{
 				//output "incomplete MF to GO connections for GO# at goPos X, goPosY
-				cout<<"incomplete MF to GO connections for GO#"<<j<<endl;
+				//cout<<"incomplete MF to GO connections for GO#"<<j<<endl;
+				formatOut.clear();
+				formatOut<<"incomplete MF to GO connections for GO#"<<j<<endl;
+				outStr=formatOut.str().c_str();
+				output->textCursor().insertText(outStr);
 			}
 		}
 	}
 	//****output "mossy fibers connected to golgi cells"
-	cout<<"mossy fibers connected to golgi cells"<<endl;
+	//cout<<"mossy fibers connected to golgi cells"<<endl;
+	output->textCursor().insertText("mossy fibers connected to golgi cells\n");
+	output->repaint();
 
 	for(int i=0; i<NUMGR; i++)
 	{
@@ -293,18 +309,23 @@ void genesis()
 			if(attempts>=50000 && !complete)
 			{
 				//output "incomplete GR to GO connections for GO#
-				cout<<"incomplete GR to GO connections for GO#"<<j<<endl;
+				//cout<<"incomplete GR to GO connections for GO#"<<j<<endl;
+				formatOut.clear();
+				formatOut<<"incomplete GR to GO connections for GO#"<<j<<endl;
+				outStr=formatOut.str().c_str();
+				output->textCursor().insertText(outStr);
 			}
 		}
 	}
 	//****output "granule to golgi synapses connected"
-	cout<<"granule to golgi synapses connected."<<endl;
+	//cout<<"granule to golgi synapses connected."<<endl;
+	output->textCursor().insertText("granule to golgi synapses connected.\n");
+	output->repaint();
 
 	for(int i=0; i<NUMGR; i++)
 	{
 		numSyn[i]=0;
 	}
-
 	//assign golgi cell to granule cell connections
 	for(int i=0; i<DENPERGR; i++)
 	{
@@ -364,12 +385,17 @@ void genesis()
 			if(attempts>=50000 && !complete)
 			{
 				//output "incomplete GO to GR connection for GR#
-				cout<<"incomplete GO to GR connection for GR#"<<j<<endl;
+				//cout<<"incomplete GO to GR connection for GR#"<<j<<endl;
+				formatOut.clear();
+				formatOut<<"incomplete GO to GR connection for GR#"<<j<<endl;
+				outStr=formatOut.str().c_str();
+				output->textCursor().insertText(outStr);
 			}
 		}
 	}
 	//output "golgi to granule cells connected"
-	cout<<"golgi to granule cells connected"<<endl;
+	//cout<<"golgi to granule cells connected"<<endl;
+	output->textCursor().insertText("golgi to granule cells connected\n");
 
 	//free memory
 	for(int i=0; i<NUMGR; i++)

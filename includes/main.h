@@ -71,6 +71,6 @@ int GrV[NUMGR];
 bool simRunning;
 float r[NUMGR];
 
-int main();
+int main(int, char **);
 
 #endif /* MAIN_H_ */

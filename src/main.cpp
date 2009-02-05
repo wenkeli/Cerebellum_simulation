@@ -10,7 +10,11 @@
 int main(int argc, char *argv[])
 {
 	QApplication app(argc, argv);
-	GenesisMW test();
-	//genesis();
-	return 0;
+	GenesisMW *mainW=new GenesisMW();
+
+	app.setQuitOnLastWindowClosed(true);
+	app.setActiveWindow(mainW);
+	mainW->show();
+
+	return app.exec();
 }
