@@ -4,6 +4,8 @@
 #include <QtGui/QMainWindow>
 #include "ui_genesismw.h"
 #include "synapsegenesis.h"
+#include "common.h"
+
 
 class GenesisMW : public QMainWindow
 {
@@ -19,6 +21,7 @@ private:
 
 public slots:
 	void makeConns();
+	void showMFGRMainP();
 };
 
 #endif // GENESISMW_H

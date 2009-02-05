@@ -11,6 +11,7 @@
 //***********
 //connectivity matrices
 //Mossy fiber to granule cells
+//last index: [0]=gr cell number, [1]=gr dendrite number
 extern int conMFtoGR[NUMMF][MFGRSYNPERMF][2];
 
 //mossy fiber to golgi cells
@@ -52,6 +53,11 @@ extern bool actGR[NUMGR];
 
 //golgi cells
 extern bool actGO[NUMGO];
+
+//***************
+//status variables
+extern int dispMFNum;
+extern bool connsMade;
 
 //*********************
 //unknown variables*********************

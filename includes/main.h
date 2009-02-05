@@ -71,6 +71,11 @@ int GrV[NUMGR];
 bool simRunning;
 float r[NUMGR];
 
+//************
+//status variables
+int dispMFNum=0;
+bool connsMade=false;
+
 int main(int, char **);
 
 #endif /* MAIN_H_ */

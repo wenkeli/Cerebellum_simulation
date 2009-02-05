@@ -11,7 +11,6 @@
 #include "common.h"
 #include <QtGui/QTextBrowser>
 #include <QtCore/QString>
-//#include <string>
 #include <sstream>
 
 //populate the connectivity matrices

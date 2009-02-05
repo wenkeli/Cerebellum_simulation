@@ -21,6 +21,13 @@ void genesis(QTextBrowser *output)
 
 	CRandomMother randGen(time(NULL));
 
+	if(connsMade)
+	{
+		output->textCursor().insertText("Connections already made\n");
+		output->repaint();
+		return;
+	}
+
 	/*initialize each member of the array to a value outside the mossy fiber indices which ranges from
 	 * 0 to NUMMF-1. NUMMF itself is outside that range.
 	 */
@@ -322,6 +329,9 @@ void genesis(QTextBrowser *output)
 	output->textCursor().insertText("granule to golgi synapses connected.\n");
 	output->repaint();
 
+	connsMade=true;
+
+	/*
 	for(int i=0; i<NUMGR; i++)
 	{
 		numSyn[i]=0;
@@ -402,5 +412,5 @@ void genesis(QTextBrowser *output)
 	{
 		delete &numSyn[i];
 	}
-	delete [] numSyn;
+	delete [] numSyn;*/
 }
