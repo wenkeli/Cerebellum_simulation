@@ -8,6 +8,7 @@
 #ifndef GLOBALVARS_H_
 #define GLOBALVARS_H_
 #include "parameters.h"
+#include <vector>
 
 //***********
 //connectivity matrices
@@ -64,5 +65,10 @@ extern bool connsMade;
 extern int GrV[NUMGR];
 extern bool simRunning;
 extern float r[NUMGR];
+
+//*****************
+//debug variables
+extern std::vector<int> incompGRs;
+
 
 #endif /* GLOBALVARS_H_ */

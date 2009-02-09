@@ -9,8 +9,10 @@
 #define COMMON_H_
 
 #include <iostream>
+#include <sstream>
 #include <cstdlib>
 #include <ctime>
+#include <vector>
 #include "randomc.h"
 #include "parameters.h"
 #include "globalvars.h"

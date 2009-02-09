@@ -81,10 +81,26 @@ void ConnDispW::paintEvent(QPaintEvent *event)
 	}
 	if(dispT==MFGO)
 	{
+		float scaleX=(float) GOX/GRX;
+		float scaleY=(float) GOY/GRY;
 		windowTitle<<"Mossy fibers (#"<<start<<" to "<<end<<") to golgi cells connections";
 		this->setWindowTitle(windowTitle.str().c_str());
 		windowTitle.str("");
-		//draw
+
+		for(int i=start; i<=end; i++)
+		{
+			for(int j=0; j<MFGOSYNPERMF; j++)
+			{
+				int goNum=conMFtoGO[i][j][0];
+				int goPosX=goNum%GOX;
+				int goPosY=(int) goNum/GOX;
+				int grPosX=(int) ((goPosX+0.5)/scaleX);
+				int grPosY=(int) ((goPosY+0.5)/scaleY);
+				painter.drawPoint(grPosX, grPosY);
+			}
+			painter.setPen(QColor(randomGen.iRandom(100, 255), randomGen.iRandom(100, 255), randomGen.iRandom(100, 255)));
+		}
+
 		return;
 	}
 	if(dispT==GRGO)
@@ -93,6 +109,14 @@ void ConnDispW::paintEvent(QPaintEvent *event)
 		this->setWindowTitle(windowTitle.str().c_str());
 		windowTitle.str("");
 		//draw
+		for(int i=start; i<end; i++)
+		{
+			for(int j=0; j<GRGOSYNPERGR; j++)
+			{
+
+			}
+			painter.setPen(QColor(randomGen.iRandom(100, 255), randomGen.iRandom(100, 255), randomGen.iRandom(100, 255)));
+		}
 		return;
 	}
 	if(dispT==GOGR)
@@ -101,6 +125,37 @@ void ConnDispW::paintEvent(QPaintEvent *event)
 		this->setWindowTitle(windowTitle.str().c_str());
 		windowTitle.str("");
 		//draw
+
+
+		/*
+		//draw debug, shows GRs with incomplete connections
+		for(int i=0; i<incompGRs.size(); i++)
+		{
+			int grNum=incompGRs[i];
+			int x=grNum%GRX;
+			int y=grNum/GRX;
+			if(y>=GRY)
+			{
+				this->close();
+				return;
+			}
+			painter.drawPoint(x, y);
+		}
+
+		float scaleX=(float) GOX/GRX;
+		float scaleY=(float) GOY/GRY;
+
+		painter.setPen(Qt::red);
+		for(int i=0; i<NUMGO; i++)
+		{
+			int goPosX=i%GOX;
+			int goPosY=(int) i/GOX;
+
+			int grPosX=(int) ((goPosX+0.5)/scaleX);
+			int grPosY=(int) ((goPosY+0.5)/scaleY);
+			painter.drawPoint(grPosX, grPosY);
+		}*/
+
 		return;
 	}
 }

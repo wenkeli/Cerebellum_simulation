@@ -79,9 +79,9 @@
 //the vertical span of a granule cell dendrite
 #define GRDENSPANY 64
 
-//the horizontal span of a golgi cell dendrite
+//the horizontal span of a golgi cell dendrite in golmeruli grid coordinates
 #define GODENSPANX 16
-//the vertical span of a golgi cell dendrite
+//the vertical span of a golgi cell dendrite in glomeruli grid coordinates
 #define GODENSPANY 16
 
 //the max horizontal distance a golgi cell can be from a granule cell to be able to make a GO->GR connection

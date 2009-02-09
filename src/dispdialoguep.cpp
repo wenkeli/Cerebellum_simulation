@@ -15,24 +15,35 @@ DispDialogueP::~DispDialogueP()
 
 void DispDialogueP::setDispT(ConnDispT t)
 {
+	stringstream formatStr;
+
 	dispT=t;
 	if(t==MFGO || t==MFGR)
 	{
 		this->setWindowTitle("Please select the mossy fibers to display");
 		ui.startNumSel->setRange(0, NUMMF-1);
 		ui.endNumSel->setRange(0, NUMMF-1);
+		formatStr<<NUMMF;
+		ui.maxValLab->setText(formatStr.str().c_str());
+		return;
 	}
 	if(t==GRGO)
 	{
 		this->setWindowTitle("Please select the granule cells to display");
 		ui.startNumSel->setRange(0, NUMGR-1);
 		ui.endNumSel->setRange(0, NUMGR-1);
+		formatStr<<NUMGR;
+		ui.maxValLab->setText(formatStr.str().c_str());
+		return;
 	}
 	if(t==GOGR)
 	{
 		this->setWindowTitle("Please select the golgi cells to display");
 		ui.startNumSel->setRange(0, NUMGO-1);
 		ui.endNumSel->setRange(0, NUMGO-1);
+		formatStr<<NUMGO;
+		ui.maxValLab->setText(formatStr.str().c_str());
+		return;
 	}
 }
 
@@ -71,6 +82,7 @@ void DispDialogueP::dispConns()
 	}
 	if(dispT==GRGO && end>=NUMGO)
 	{
+
 		ui.statusBox->textCursor().insertText("Error: wrong golgi cell end #\n");
 		ui.statusBox->repaint();
 		return;

@@ -101,8 +101,8 @@ void genesis(QTextBrowser *output)
 
 				tempGLPosX=(int) (grPosX+tempGRDenSpanX*(randGen.fRandom()-0.5));
 				tempGLPosY=(int) (grPosY+tempGRDenSpanY*(randGen.fRandom()-0.5));
-				tempGLPosX=(int) (tempGLPosX/scaleX);
-				tempGLPosY=(int) (tempGLPosY/scaleY);
+				tempGLPosX=(int) (tempGLPosX/scaleX-0.5);
+				tempGLPosY=(int) (tempGLPosY/scaleY-0.5);
 
 				//wrap around if out of bounds
 				if(tempGLPosX>=GLX)
@@ -185,13 +185,14 @@ void genesis(QTextBrowser *output)
 			{
 				//these are used to derive glomerulus that the granule cell should connect to
 				int tempGLPosX, tempGLPosY;
+				float glPosXf, glPosYf;
 
 				int derivedGLIndex, mfIndex;
 
-				tempGLPosX=(int) (goPosX*scaleX);
-				tempGLPosY=(int) (goPosY*scaleY);
-				tempGLPosX=(int) (tempGLPosX+tempGODenSpanX*(randGen.fRandom()-0.5));
-				tempGLPosY=(int) (tempGLPosY+tempGODenSpanY*(randGen.fRandom()-0.5));
+				glPosXf= ((goPosX+0.5)*scaleX);
+				glPosYf= ((goPosY+0.5)*scaleY);
+				tempGLPosX=(int) (glPosXf+tempGODenSpanX*(randGen.fRandom()-0.5));
+				tempGLPosY=(int) (glPosYf+tempGODenSpanY*(randGen.fRandom()-0.5));
 
 				//wrap around if out of bounds
 				if(tempGLPosX>=GLX)
@@ -272,8 +273,8 @@ void genesis(QTextBrowser *output)
 
 				int derivedGRIndex;
 
-				tempGRPosX=(int) (goPosX*scaleX);
-				tempGRPosY=(int) (goPosY*scaleY);
+				tempGRPosX=(int) ((goPosX+0.5)*scaleX);
+				tempGRPosY=(int) ((goPosY+0.5)*scaleY);
 				tempGRPosX=(int) (tempGRPosX+tempGODenSpanX*(randGen.fRandom()-0.5));
 				tempGRPosY=(int) (tempGRPosY+tempGODenSpanY*(randGen.fRandom()-0.5));
 
@@ -336,8 +337,9 @@ void genesis(QTextBrowser *output)
 	{
 		numSyn[i]=0;
 	}
+	//randGen.randomInit(time(NULL)+randGen.iRandom(0, 533232));
 	//assign golgi cell to granule cell connections
-	for(int i=0; i<DENPERGR; i++)
+	for(int i=0; i<DENPERGR/2; i++)
 	{
 		for(int j=0; j<NUMGR; j++)
 		{
@@ -352,12 +354,29 @@ void genesis(QTextBrowser *output)
 			for(attempts=0; attempts<50000; attempts++)
 			{
 				int tempGOPosX, tempGOPosY;
+				float tempGOPosXf, tempGOPosYf;
 				int derivedGOIndex;
 
-				tempGOPosX=(int) (grPosX+tempGRDenSpanX*(randGen.fRandom()-0.5));
-				tempGOPosY=(int) (grPosY+tempGRDenSpanY*(randGen.fRandom()-0.5));
-				tempGOPosX=(int) (tempGOPosX/scaleX);
-				tempGOPosY=(int) (tempGOPosY/scaleY);
+				tempGOPosXf= (float)grPosX+(float)tempGRDenSpanX*(randGen.fRandom()-0.5);
+				tempGOPosYf= (float)grPosY+(float)tempGRDenSpanY*(randGen.fRandom()-0.5);
+				if(tempGOPosXf>=GRX)
+				{
+					tempGOPosXf=tempGOPosXf-GRX;
+				}
+				if(tempGOPosXf<0)
+				{
+					tempGOPosXf=tempGOPosXf+GRX;
+				}
+				if(tempGOPosYf>=GRY)
+				{
+					tempGOPosYf=tempGOPosYf-GRY;
+				}
+				if(tempGOPosYf<0)
+				{
+					tempGOPosYf=tempGOPosYf+GRY;
+				}
+				tempGOPosX=(int) (tempGOPosXf/scaleX-0.5);
+				tempGOPosY=(int) (tempGOPosYf/scaleY-0.5);
 
 				if(tempGOPosX>=GOX)
 				{
@@ -377,7 +396,7 @@ void genesis(QTextBrowser *output)
 				}
 
 				derivedGOIndex=tempGOPosY*GOX+tempGOPosX;
-				if(numSyn[derivedGOIndex]<GOGRSYNPERGO)
+				if(numSyn[derivedGOIndex]<GOGRSYNPERGO/2)
 				{
 					conGOtoGR[derivedGOIndex][numSyn[derivedGOIndex]][0]=j;
 					conGOtoGR[derivedGOIndex][numSyn[derivedGOIndex]][1]=i;
@@ -396,8 +415,9 @@ void genesis(QTextBrowser *output)
 			{
 				//output "incomplete GO to GR connection for GR#
 				//cout<<"incomplete GO to GR connection for GR#"<<j<<endl;
+				incompGRs.push_back(j);
 				formatOut.str("");
-				formatOut<<"incomplete GO to GR connection for GR#"<<j<<endl;
+				formatOut<<"incomplete GO to GR connection for GR#"<<j<<" at dendrite #"<<i<<endl;
 				outStr=formatOut.str().c_str();
 				output->textCursor().insertText(outStr);
 			}
@@ -406,6 +426,13 @@ void genesis(QTextBrowser *output)
 	//output "golgi to granule cells connected"
 	//cout<<"golgi to granule cells connected"<<endl;
 	output->textCursor().insertText("golgi to granule cells connected\n");
+	output->repaint();
+	for(int i=0; i<NUMGO; i++)
+	{
+		formatOut.str("");
+		formatOut<<"GO #"<<i<<" connections: "<<numSyn[i]<<endl;
+		output->textCursor().insertText(formatOut.str().c_str());
+	}
 
 	//free memory
 	for(int i=0; i<NUMGR; i++)

@@ -12,6 +12,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <Qt/qapplication.h>
+#include <vector>
 
 #include "randomc.h"
 #include "parameters.h"
@@ -73,6 +74,10 @@ float r[NUMGR];
 //************
 //status variables
 bool connsMade=false;
+
+//*****************
+//debug variables
+std::vector<int> incompGRs;
 
 int main(int, char **);
 
