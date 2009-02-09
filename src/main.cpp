@@ -11,6 +11,7 @@ int main(int argc, char *argv[])
 {
 	QApplication app(argc, argv);
 	GenesisMW *mainW=new GenesisMW();
+	mainW->setApp(&app);
 
 	app.setQuitOnLastWindowClosed(true);
 	app.setActiveWindow(mainW);

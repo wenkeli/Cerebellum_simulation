@@ -15,7 +15,6 @@
 
 #include "randomc.h"
 #include "parameters.h"
-//#include "globalvars.h"
 //#include "common.h"
 #include "synapsegenesis.h"
 #include "genesismw.h"
@@ -73,7 +72,6 @@ float r[NUMGR];
 
 //************
 //status variables
-int dispMFNum=0;
 bool connsMade=false;
 
 int main(int, char **);

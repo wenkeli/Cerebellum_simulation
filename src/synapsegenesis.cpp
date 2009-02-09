@@ -115,7 +115,7 @@ void genesis(QTextBrowser *output)
 				}
 				if(tempGLPosY>=GLY)
 				{
-					tempGLPosY=tempGLPosY-GLY;
+			 		tempGLPosY=tempGLPosY-GLY;
 				}
 				if(tempGLPosY<0)
 				{

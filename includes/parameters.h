@@ -102,4 +102,7 @@
 //for golgi cells
 #define ELEAKGO -70
 
+//display types, for visualization
+enum ConnDispT{MFGR, MFGO, GRGO, GOGR};
+
 #endif /* PARAMETERS_H_ */

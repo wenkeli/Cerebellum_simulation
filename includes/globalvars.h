@@ -7,6 +7,7 @@
 
 #ifndef GLOBALVARS_H_
 #define GLOBALVARS_H_
+#include "parameters.h"
 
 //***********
 //connectivity matrices
@@ -56,7 +57,6 @@ extern bool actGO[NUMGO];
 
 //***************
 //status variables
-extern int dispMFNum;
 extern bool connsMade;
 
 //*********************

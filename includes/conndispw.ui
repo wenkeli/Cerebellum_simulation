@@ -1,16 +1,16 @@
 <ui version="4.0" >
- <class>MFGRConnsWClass</class>
- <widget class="QWidget" name="MFGRConnsWClass" >
+ <class>ConnDispWClass</class>
+ <widget class="QWidget" name="ConnDispWClass" >
   <property name="geometry" >
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>433</width>
-    <height>167</height>
+    <width>691</width>
+    <height>193</height>
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>MFGRConns</string>
+   <string>ConnDispW</string>
   </property>
   <property name="styleSheet" >
    <string notr="true" >background-color: rgb(0, 0, 0);</string>

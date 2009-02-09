@@ -38,21 +38,21 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_5" >
+      <widget class="QPushButton" name="viewMFGOButton" >
        <property name="text" >
         <string>view MF to GO connections</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_4" >
+      <widget class="QPushButton" name="viewGRGOButton" >
        <property name="text" >
         <string>view GR to GO connections</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_3" >
+      <widget class="QPushButton" name="viewGOGRButton" >
        <property name="text" >
         <string>view GO to GR connections</string>
        </property>
@@ -82,22 +82,6 @@
  </widget>
  <resources/>
  <connections>
-  <connection>
-   <sender>quitButton</sender>
-   <signal>clicked()</signal>
-   <receiver>GenesisMWClass</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>488</x>
-     <y>478</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>486</x>
-     <y>488</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>connectButton</sender>
    <signal>clicked()</signal>
@@ -146,9 +130,60 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>viewMFGOButton</sender>
+   <signal>clicked()</signal>
+   <receiver>GenesisMWClass</receiver>
+   <slot>showMFGOMainP()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>497</x>
+     <y>385</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>522</x>
+     <y>135</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>viewGRGOButton</sender>
+   <signal>clicked()</signal>
+   <receiver>GenesisMWClass</receiver>
+   <slot>showGRGOMainP()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>472</x>
+     <y>414</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>431</x>
+     <y>120</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>viewGOGRButton</sender>
+   <signal>clicked()</signal>
+   <receiver>GenesisMWClass</receiver>
+   <slot>showGOGRMainP()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>506</x>
+     <y>447</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>505</x>
+     <y>63</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>makeConns()</slot>
   <slot>showMFGRMainP()</slot>
+  <slot>showMFGOMainP()</slot>
+  <slot>showGRGOMainP()</slot>
+  <slot>showGOGRMainP()</slot>
  </slots>
 </ui>
