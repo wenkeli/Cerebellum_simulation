@@ -77,7 +77,8 @@ bool connsMade=false;
 
 //*****************
 //debug variables
-std::vector<int> incompGRs;
+std::vector<int> incompGRsGOGR;
+std::vector<int> incompGOsGOGR;
 
 int main(int, char **);
 

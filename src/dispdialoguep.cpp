@@ -23,25 +23,16 @@ void DispDialogueP::setDispT(ConnDispT t)
 		this->setWindowTitle("Please select the mossy fibers to display");
 		ui.startNumSel->setRange(0, NUMMF-1);
 		ui.endNumSel->setRange(0, NUMMF-1);
-		formatStr<<NUMMF;
+		formatStr<<NUMMF-1;
 		ui.maxValLab->setText(formatStr.str().c_str());
 		return;
 	}
-	if(t==GRGO)
-	{
-		this->setWindowTitle("Please select the granule cells to display");
-		ui.startNumSel->setRange(0, NUMGR-1);
-		ui.endNumSel->setRange(0, NUMGR-1);
-		formatStr<<NUMGR;
-		ui.maxValLab->setText(formatStr.str().c_str());
-		return;
-	}
-	if(t==GOGR)
+	if(t==GRGO || t==GOGR)
 	{
 		this->setWindowTitle("Please select the golgi cells to display");
 		ui.startNumSel->setRange(0, NUMGO-1);
 		ui.endNumSel->setRange(0, NUMGO-1);
-		formatStr<<NUMGO;
+		formatStr<<NUMGO-1;
 		ui.maxValLab->setText(formatStr.str().c_str());
 		return;
 	}
@@ -74,15 +65,8 @@ void DispDialogueP::dispConns()
 		ui.statusBox->repaint();
 		return;
 	}
-	if(dispT==GRGO && end>=NUMGR)
+	if((dispT==GRGO || dispT==GOGR) && end>=NUMGO)
 	{
-		ui.statusBox->textCursor().insertText("Error: wrong granule cell end #\n");
-		ui.statusBox->repaint();
-		return;
-	}
-	if(dispT==GRGO && end>=NUMGO)
-	{
-
 		ui.statusBox->textCursor().insertText("Error: wrong golgi cell end #\n");
 		ui.statusBox->repaint();
 		return;

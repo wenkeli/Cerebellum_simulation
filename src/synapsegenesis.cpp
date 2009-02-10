@@ -99,10 +99,10 @@ void genesis(QTextBrowser *output)
 
 				int derivedGLIndex, mfIndex;
 
-				tempGLPosX=(int) (grPosX+tempGRDenSpanX*(randGen.fRandom()-0.5));
-				tempGLPosY=(int) (grPosY+tempGRDenSpanY*(randGen.fRandom()-0.5));
-				tempGLPosX=(int) (tempGLPosX/scaleX-0.5);
-				tempGLPosY=(int) (tempGLPosY/scaleY-0.5);
+				tempGLPosX=(int) lroundf(grPosX+tempGRDenSpanX*(randGen.fRandom()-0.5));
+				tempGLPosY=(int) lroundf(grPosY+tempGRDenSpanY*(randGen.fRandom()-0.5));
+				tempGLPosX=(int) lroundf(tempGLPosX/scaleX-0.5);
+				tempGLPosY=(int) lroundf(tempGLPosY/scaleY-0.5);
 
 				//wrap around if out of bounds
 				if(tempGLPosX>=GLX)
@@ -191,8 +191,8 @@ void genesis(QTextBrowser *output)
 
 				glPosXf= ((goPosX+0.5)*scaleX);
 				glPosYf= ((goPosY+0.5)*scaleY);
-				tempGLPosX=(int) (glPosXf+tempGODenSpanX*(randGen.fRandom()-0.5));
-				tempGLPosY=(int) (glPosYf+tempGODenSpanY*(randGen.fRandom()-0.5));
+				tempGLPosX=(int) lroundf(glPosXf+tempGODenSpanX*(randGen.fRandom()-0.5));
+				tempGLPosY=(int) lroundf(glPosYf+tempGODenSpanY*(randGen.fRandom()-0.5));
 
 				//wrap around if out of bounds
 				if(tempGLPosX>=GLX)
@@ -273,10 +273,10 @@ void genesis(QTextBrowser *output)
 
 				int derivedGRIndex;
 
-				tempGRPosX=(int) ((goPosX+0.5)*scaleX);
-				tempGRPosY=(int) ((goPosY+0.5)*scaleY);
-				tempGRPosX=(int) (tempGRPosX+tempGODenSpanX*(randGen.fRandom()-0.5));
-				tempGRPosY=(int) (tempGRPosY+tempGODenSpanY*(randGen.fRandom()-0.5));
+				tempGRPosX=(int) lroundf((goPosX+0.5)*scaleX);
+				tempGRPosY=(int) lroundf((goPosY+0.5)*scaleY);
+				tempGRPosX=(int) lroundf(tempGRPosX+tempGODenSpanX*(randGen.fRandom()-0.5));
+				tempGRPosY=(int) lroundf(tempGRPosY+tempGODenSpanY*(randGen.fRandom()-0.5));
 
 				//wrap around if out of bounds
 				if(tempGRPosX>=GRX)
@@ -339,7 +339,7 @@ void genesis(QTextBrowser *output)
 	}
 	//randGen.randomInit(time(NULL)+randGen.iRandom(0, 533232));
 	//assign golgi cell to granule cell connections
-	for(int i=0; i<DENPERGR/2; i++)
+	for(int i=0; i<DENPERGR; i++)
 	{
 		for(int j=0; j<NUMGR; j++)
 		{
@@ -359,24 +359,8 @@ void genesis(QTextBrowser *output)
 
 				tempGOPosXf= (float)grPosX+(float)tempGRDenSpanX*(randGen.fRandom()-0.5);
 				tempGOPosYf= (float)grPosY+(float)tempGRDenSpanY*(randGen.fRandom()-0.5);
-				if(tempGOPosXf>=GRX)
-				{
-					tempGOPosXf=tempGOPosXf-GRX;
-				}
-				if(tempGOPosXf<0)
-				{
-					tempGOPosXf=tempGOPosXf+GRX;
-				}
-				if(tempGOPosYf>=GRY)
-				{
-					tempGOPosYf=tempGOPosYf-GRY;
-				}
-				if(tempGOPosYf<0)
-				{
-					tempGOPosYf=tempGOPosYf+GRY;
-				}
-				tempGOPosX=(int) (tempGOPosXf/scaleX-0.5);
-				tempGOPosY=(int) (tempGOPosYf/scaleY-0.5);
+				tempGOPosX=(int) lroundf(tempGOPosXf/scaleX-0.5);
+				tempGOPosY=(int) lroundf(tempGOPosYf/scaleY-0.5);
 
 				if(tempGOPosX>=GOX)
 				{
@@ -396,7 +380,7 @@ void genesis(QTextBrowser *output)
 				}
 
 				derivedGOIndex=tempGOPosY*GOX+tempGOPosX;
-				if(numSyn[derivedGOIndex]<GOGRSYNPERGO/2)
+				if(numSyn[derivedGOIndex]<GOGRSYNPERGO)
 				{
 					conGOtoGR[derivedGOIndex][numSyn[derivedGOIndex]][0]=j;
 					conGOtoGR[derivedGOIndex][numSyn[derivedGOIndex]][1]=i;
@@ -409,15 +393,16 @@ void genesis(QTextBrowser *output)
 				{
 					tempGRDenSpanX=tempGRDenSpanX*2;
 					tempGRDenSpanY=tempGRDenSpanY*2;
+					//cout<<"GR #"<<j<<" at 4999"<<endl;
 				}
 			}
 			if(attempts>=50000 && !complete)
 			{
 				//output "incomplete GO to GR connection for GR#
 				//cout<<"incomplete GO to GR connection for GR#"<<j<<endl;
-				incompGRs.push_back(j);
+				incompGRsGOGR.push_back(j);
 				formatOut.str("");
-				formatOut<<"incomplete GO to GR connection for GR#"<<j<<" at dendrite #"<<i<<endl;
+				formatOut<<"incomplete GO to GR connection for GR#"<<j<<endl;//<<" at dendrite #"<<i<<endl;
 				outStr=formatOut.str().c_str();
 				output->textCursor().insertText(outStr);
 			}
@@ -429,9 +414,13 @@ void genesis(QTextBrowser *output)
 	output->repaint();
 	for(int i=0; i<NUMGO; i++)
 	{
-		formatOut.str("");
-		formatOut<<"GO #"<<i<<" connections: "<<numSyn[i]<<endl;
-		output->textCursor().insertText(formatOut.str().c_str());
+		if(numSyn[i]<GOGRSYNPERGO-1)
+		{
+			incompGOsGOGR.push_back(i);
+			formatOut.str("");
+			formatOut<<"GO #"<<i<<" connections: "<<numSyn[i]<<endl;
+			output->textCursor().insertText(formatOut.str().c_str());
+		}
 	}
 
 	//free memory

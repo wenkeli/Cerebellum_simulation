@@ -68,7 +68,8 @@ extern float r[NUMGR];
 
 //*****************
 //debug variables
-extern std::vector<int> incompGRs;
+extern std::vector<int> incompGRsGOGR;
+extern std::vector<int> incompGOsGOGR;
 
 
 #endif /* GLOBALVARS_H_ */

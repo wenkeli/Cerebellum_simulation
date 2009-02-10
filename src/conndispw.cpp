@@ -105,15 +105,29 @@ void ConnDispW::paintEvent(QPaintEvent *event)
 	}
 	if(dispT==GRGO)
 	{
-		windowTitle<<"Granule cells (#"<<start<<" to "<<end<<") to golgi cells connections";
+		windowTitle<<"Granule cells to golgi cells connections for golgi cells #"<<start<<" to "<<end;
 		this->setWindowTitle(windowTitle.str().c_str());
 		windowTitle.str("");
 		//draw
-		for(int i=start; i<end; i++)
+		for(int i=start; i<=end; i++)
 		{
-			for(int j=0; j<GRGOSYNPERGR; j++)
+			for(int j=0; j<NUMGR; j++)
 			{
-
+				for(int k=0; k<GRGOSYNPERGR; k++)
+				{
+					if(conGRtoGO[j][k][0]==i)
+					{
+						int grPosX=j%GRX;
+						int grPosY=j/GRX;
+						if(grPosY>=GRY)
+						{
+							this->close();
+							return;
+						}
+						painter.drawPoint(grPosX, grPosY);
+						break;
+					}
+				}
 			}
 			painter.setPen(QColor(randomGen.iRandom(100, 255), randomGen.iRandom(100, 255), randomGen.iRandom(100, 255)));
 		}
@@ -125,13 +139,28 @@ void ConnDispW::paintEvent(QPaintEvent *event)
 		this->setWindowTitle(windowTitle.str().c_str());
 		windowTitle.str("");
 		//draw
-
-
-		/*
-		//draw debug, shows GRs with incomplete connections
-		for(int i=0; i<incompGRs.size(); i++)
+		for(int i=start; i<=end; i++)
 		{
-			int grNum=incompGRs[i];
+			for(int j=0; j<GOGRSYNPERGO; j++)
+			{
+				int grPosX=conGOtoGR[i][j][0]%GRX;
+				int grPosY=conGOtoGR[i][j][0]/GRX;
+				if(grPosY>=GRY)
+				{
+					this->close();
+					return;
+				}
+				painter.drawPoint(grPosX, grPosY);
+			}
+			painter.setPen(QColor(randomGen.iRandom(100, 255), randomGen.iRandom(100, 255), randomGen.iRandom(100, 255)));
+		}
+
+
+
+		//draw debug, shows GRs with incomplete connections
+		for(int i=0; i<incompGRsGOGR.size(); i++)
+		{
+			int grNum=incompGRsGOGR[i];
 			int x=grNum%GRX;
 			int y=grNum/GRX;
 			if(y>=GRY)
@@ -154,7 +183,17 @@ void ConnDispW::paintEvent(QPaintEvent *event)
 			int grPosX=(int) ((goPosX+0.5)/scaleX);
 			int grPosY=(int) ((goPosY+0.5)/scaleY);
 			painter.drawPoint(grPosX, grPosY);
-		}*/
+		}
+		painter.setPen(Qt::cyan);
+		for(int i=0; i<incompGOsGOGR.size(); i++)
+		{
+			int goPosX=incompGOsGOGR[i]%GOX;
+			int goPosY=(int) incompGOsGOGR[i]/GOX;
+
+			int grPosX=(int) ((goPosX+0.5)/scaleX);
+			int grPosY=(int) ((goPosY+0.5)/scaleY);
+			painter.drawPoint(grPosX, grPosY);
+		}
 
 		return;
 	}

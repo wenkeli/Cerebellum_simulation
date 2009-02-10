@@ -13,6 +13,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
+#include <math.h>
 #include "randomc.h"
 #include "parameters.h"
 #include "globalvars.h"
