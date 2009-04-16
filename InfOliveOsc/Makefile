@@ -14,4 +14,4 @@ INCLUDEPATH = ./includes
 SRCPATH = ./src
 OUTPUTPATH = ./output
 
-
+COMMONINCS = $(INCLUDEPATH)/common.h
