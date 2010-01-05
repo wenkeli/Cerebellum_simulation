@@ -1,0 +1,125 @@
+<ui version="4.0" >
+ <class>MainWClass</class>
+ <widget class="QMainWindow" name="MainWClass" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>339</width>
+    <height>93</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget" >
+   <widget class="QPushButton" name="dispAllCells" >
+    <property name="geometry" >
+     <rect>
+      <x>250</x>
+      <y>10</y>
+      <width>81</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text" >
+     <string>display all cells</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="dispSingleCell" >
+    <property name="geometry" >
+     <rect>
+      <x>240</x>
+      <y>60</y>
+      <width>91</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text" >
+     <string>display single cell</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="formLayoutWidget" >
+    <property name="geometry" >
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>221</width>
+      <height>74</height>
+     </rect>
+    </property>
+    <layout class="QFormLayout" name="formLayout" >
+     <item row="2" column="0" >
+      <widget class="QLabel" name="label_2" >
+       <property name="text" >
+        <string>Display single cell #</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1" >
+      <widget class="QSpinBox" name="grDispStartNum" />
+     </item>
+     <item row="2" column="1" >
+      <widget class="QSpinBox" name="dispSingleCellNum" />
+     </item>
+     <item row="0" column="0" >
+      <widget class="QLabel" name="label_3" >
+       <property name="text" >
+        <string>Display cell type</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1" >
+      <widget class="QComboBox" name="dispCellType" />
+     </item>
+     <item row="1" column="0" >
+      <widget class="QLabel" name="label" >
+       <property name="text" >
+        <string>Granule start #</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>dispAllCells</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWClass</receiver>
+   <slot>dispAllCells()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>279</x>
+     <y>24</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>301</x>
+     <y>37</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>dispSingleCell</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWClass</receiver>
+   <slot>dispSingleCell()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>258</x>
+     <y>71</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>272</x>
+     <y>48</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>dispAllCells()</slot>
+  <slot>dispSingleCell()</slot>
+ </slots>
+</ui>
