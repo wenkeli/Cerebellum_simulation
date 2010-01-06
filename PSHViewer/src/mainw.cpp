@@ -38,3 +38,34 @@ void MainW::dispSingleCell()
 	PSHDispw *panel=new PSHDispw(NULL, 1, ui.dispCellType->currentIndex(), ui.dispSingleCellNum->value());
 	panel->show();
 }
+
+void MainW::loadPSHFile()
+{
+
+	ifstream infile;
+	QString fileName;
+	fileName=QFileDialog::getOpenFileName(this, "Please select the PSH file to open", "/", "");
+
+	cout<<"PSH file name: "<<fileName.toStdString()<<endl;
+
+	infile.open(fileName.toStdString().c_str(), ios::binary);
+	if(!infile.good() || !infile.is_open())
+	{
+		cerr<<"error opening file "<<fileName.toStdString()<<endl;
+		return;
+	}
+
+	cout<<"loading MF PSH..."<<endl;
+	infile.read((char *)pshMF, NUMBINS*NUMMF*sizeof(unsigned short));
+	infile.read((char *)&pshMFMax, sizeof(unsigned short));
+
+	cout<<"loading GO PSH..."<<endl;
+	infile.read((char *)pshGO, NUMBINS*NUMGO*sizeof(unsigned short));
+	infile.read((char *)&pshGOMax, sizeof(unsigned short));
+
+	cout<<"loading GR PSH..."<<endl;
+	infile.read((char *)pshGR, NUMBINS*NUMGR*sizeof(unsigned short));
+	infile.read((char *)&pshGRMax, sizeof(unsigned short));
+
+	cout<<"loaded!"<<endl;
+}

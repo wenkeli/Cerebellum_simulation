@@ -3,6 +3,8 @@
 
 #include <QtGui/QMainWindow>
 #include <QtGui/QApplication>
+#include <QtGui/QFileDialog>
+#include <QtCore/QString>
 
 #include "common.h"
 #include "pshdispw.h"
@@ -24,6 +26,7 @@ private:
 public slots:
 	void dispSingleCell();
 	void dispAllCells();
+	void loadPSHFile();
 };
 
 #endif // MAINW_H

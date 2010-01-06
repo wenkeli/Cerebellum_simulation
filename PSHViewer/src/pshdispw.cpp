@@ -16,15 +16,15 @@ PSHDispw::PSHDispw(QWidget *parent, int t, int cT, int cN)
 
 	if(type==0)
 	{
-		wW=ALLVIEWPW;
-		wH=ALLVIEWPH;
+		wW=ALLVIEWPW+100;
+		wH=ALLVIEWPH+100;
 		windowTitle<<"all "<<cellTypeText[cellT]<<"s PSH starting at cell #"<<cN<<"(GR only)";
 
 	}
 	else
 	{
-		wW=SINGLEVIEWPW;
-		wH=SINGLEVIEWPH;
+		wW=SINGLEVIEWPW+100;
+		wH=SINGLEVIEWPH+100;
 		windowTitle<<"single "<<cellTypeText[cellT]<<" PSH for cell #"<<cN;
 	}
 

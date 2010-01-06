@@ -94,6 +94,19 @@
      <string>quit</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="loadPSH" >
+    <property name="geometry" >
+     <rect>
+      <x>80</x>
+      <y>90</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text" >
+     <string>load PSH file</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>
@@ -130,9 +143,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>loadPSH</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWClass</receiver>
+   <slot>loadPSHFile()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>119</x>
+     <y>104</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>186</x>
+     <y>95</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>dispAllCells()</slot>
   <slot>dispSingleCell()</slot>
+  <slot>loadPSHFile()</slot>
  </slots>
 </ui>
