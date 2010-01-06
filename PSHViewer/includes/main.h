@@ -8,9 +8,10 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
-#include "common.h"
+#include <QtGui/QApplication>
 
-#include <Qt/qapplication.h>
+#include "common.h"
+#include "mainw.h"
 
 unsigned short pshMF[NUMBINS][NUMMF];
 unsigned short pshMFMax;

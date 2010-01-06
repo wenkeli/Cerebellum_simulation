@@ -14,6 +14,8 @@
 #include <sstream>
 #include <string>
 
+#define NULL 0
+
 #define NUMBINS 200
 #define NUMMF 1024
 #define NUMGO 1024
