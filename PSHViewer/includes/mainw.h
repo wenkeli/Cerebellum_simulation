@@ -14,7 +14,7 @@ class MainW : public QMainWindow
     Q_OBJECT
 
 public:
-    MainW(QWidget *parent = 0, QApplication *application);
+    MainW(QWidget *parent, QApplication *application);
     ~MainW();
 
 private:

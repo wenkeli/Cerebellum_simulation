@@ -1,7 +1,7 @@
 #include "../includes/mainw.h"
 #include "../includes/moc_mainw.h"
 
-MainW::MainW(QWidget *parent, QApplication *application)
+MainW::MainW(QWidget *parent, QApplication *a)
     : QMainWindow(parent)
 {
 	ui.setupUi(this);
@@ -11,8 +11,9 @@ MainW::MainW(QWidget *parent, QApplication *application)
 
 	this->setAttribute(Qt::WA_DeleteOnClose);
 
-	app=application;
+	app=a;
 	connect(this, SIGNAL(destroyed()), app, SLOT(quit()));
+	connect(ui.quitButton, SIGNAL(clicked()), app, SLOT(quit()));
 }
 
 MainW::~MainW()
