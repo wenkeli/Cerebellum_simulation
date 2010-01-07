@@ -56,18 +56,18 @@ void PSHDispw::paintPSH()
 		p.drawLine(0, wH-99, ALLVIEWPW, wH-99);
 		p.drawLine(ALLVIEWPW, 0, ALLVIEWPW, wH-99);
 
+		p.setPen(Qt::green);
 		for(int i=0; i<wW; i+=100)
 		{
-			p.setPen(Qt::blue);
 			p.drawLine(i, wH-98, i, wH-93);
 			strFormat.str("");
 			strFormat<<i;
 			paintStr=strFormat.str().c_str();
-			p.setPen(Qt::green);
 			p.drawText(i, wH-83, paintStr);
 		}
 		p.drawText(wW/2-20, wH-70, "time (ms)");
 
+		p.setPen(Qt::green);
 		for(int i=0; i<ALLVIEWPH; i+=25)
 		{
 			int dispNum=i;
@@ -75,12 +75,10 @@ void PSHDispw::paintPSH()
 			{
 				dispNum=ALLVIEWPH*cellN+i;
 			}
-			p.setPen(Qt::blue);
 			p.drawLine(ALLVIEWPW, i, ALLVIEWPW+5, i);
 			strFormat.str("");
 			strFormat<<dispNum;
 			paintStr=strFormat.str().c_str();
-			p.setPen(Qt::green);
 			p.drawText(ALLVIEWPW+8, i, paintStr);
 		}
 		p.drawText(ALLVIEWPW+40, ALLVIEWPH/2, "cell #");
@@ -132,24 +130,60 @@ void PSHDispw::paintPSH()
 		}
 		else
 		{
+			int i=0;
 			strFormat.str("");
 			strFormat<<"GR bin Max value: "<<pshGRMax;
 			paintStr=strFormat.str().c_str();
 			p.drawText(wW/2-20, wH-40, paintStr);
 
-			for(int i=0; i<ALLVIEWPW; i++)
+
+			//for(int i=0; i<ALLVIEWPW; i++)
+			while(i<ALLVIEWPH)
 			{
 				QColor paintColor;
 				int binN, greyVal;
 
-				binN=(int)(i/((float)ALLVIEWPW/NUMBINS));
-				for(int j=cellN*ALLVIEWPH; j<(cellN+1)*ALLVIEWPH; j++)
+				for(int j=0; j<NUMGR; j++)
 				{
-					greyVal=(int)(((float)pshGR[binN][j]/pshGRMax)*255);
-					paintColor.setRgb(greyVal, greyVal, greyVal, 255);
-					p.setPen(paintColor);
-					p.drawPoint(i, j%ALLVIEWPH);
+					int maxVal;
+					maxVal=0;
+
+					if(i>=ALLVIEWPH)
+					{
+						break;
+					}
+					for(int k=0; k<NUMBINS; k++)
+					{
+						if(pshGR[k][j]>maxVal)
+						{
+							maxVal=pshGR[k][j];
+						}
+					}
+					if(maxVal<15)
+					{
+						continue;
+					}
+
+					for(int k=0; k<ALLVIEWPW; k++)
+					{
+						binN=(int)(k/((float)ALLVIEWPW/NUMBINS));
+						greyVal=(int)(((float)pshGR[binN][j]/pshGRMax)*255);
+						paintColor.setRgb(greyVal, greyVal, greyVal, 255);
+						p.setPen(paintColor);
+						p.drawPoint(k, i);
+					}
+					i++;
 				}
+
+//				binN=(int)(i/((float)ALLVIEWPW/NUMBINS));
+//				for(int j=cellN*ALLVIEWPH; j<(cellN+1)*ALLVIEWPH; j++)
+//				{
+//					greyVal=(int)(((float)pshGR[binN][j]/pshGRMax)*255);
+//					paintColor.setRgb(greyVal, greyVal, greyVal, 255);
+//					p.setPen(paintColor);
+//					p.drawPoint(i, j%ALLVIEWPH);
+//				}
+				i++;
 			}
 		}
 	}
@@ -161,14 +195,13 @@ void PSHDispw::paintPSH()
 		p.drawLine(99, 0, 99, wH-99);
 		p.drawLine(99, wH-99, wW, wH-99);
 
+		p.setPen(Qt::green);
 		for(int i=0; i<SINGLEVIEWPW; i+=100)
 		{
-			p.setPen(Qt::blue);
 			p.drawLine(i+100, wH-98, i+100, wH-93);
 			strFormat.str("");
 			strFormat<<i;
 			paintStr=strFormat.str().c_str();
-			p.setPen(Qt::green);
 			p.drawText(i+100, wH-83, paintStr);
 		}
 		p.drawText(wW/2+30, wH-70, "time (ms)");
@@ -253,16 +286,15 @@ void PSHDispw::paintPSH()
 		{
 			yInc=ceil((float)yMaxVal/10);
 		}
+		p.setPen(Qt::green);
 		for(int i=0; i<yMaxVal; i+=yInc)
 		{
 			int yPos;
 			yPos=SINGLEVIEWPH-(int)(((float)i/yMaxVal)*SINGLEVIEWPH);
-			p.setPen(Qt::blue);
 			p.drawLine(95, yPos, 99, yPos);
 			strFormat.str("");
 			strFormat<<i;
 			paintStr=strFormat.str().c_str();
-			p.setPen(Qt::green);
 			p.drawText(75, yPos, paintStr);
 		}
 	}
