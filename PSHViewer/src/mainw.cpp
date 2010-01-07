@@ -13,7 +13,7 @@ MainW::MainW(QWidget *parent, QApplication *a)
 	ui.dispSingleCellNum->setMaximum(NUMGR-1);
 
 	ui.grDispStartNum->setMinimum(0);
-	ui.grDispStartNum->setMaximum(NUMGR-ALLVIEWPH-1);
+	ui.grDispStartNum->setMaximum(1023);
 
 	this->setAttribute(Qt::WA_DeleteOnClose);
 

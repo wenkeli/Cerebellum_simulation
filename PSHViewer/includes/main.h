@@ -14,13 +14,13 @@
 #include "mainw.h"
 
 unsigned short pshMF[NUMBINS][NUMMF];
-unsigned short pshMFMax;
+unsigned short pshMFMax=1;
 
 unsigned short pshGO[NUMBINS][NUMGO];
-unsigned short pshGOMax;
+unsigned short pshGOMax=1;
 
 unsigned short pshGR[NUMBINS][NUMGR];
-unsigned short pshGRMax;
+unsigned short pshGRMax=1;
 
 int main(int argc, char **argv);
 

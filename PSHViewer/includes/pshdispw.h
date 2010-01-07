@@ -5,6 +5,7 @@
 #include <QtGui/QPaintEvent>
 #include <QtGui/QPixmap>
 #include <QtGui/QPainter>
+#include <QtGui/QColor>
 
 #include "common.h"
 
