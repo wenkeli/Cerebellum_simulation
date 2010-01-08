@@ -138,7 +138,7 @@ void PSHDispw::paintPSH()
 
 
 			//for(int i=0; i<ALLVIEWPW; i++)
-			while(i<ALLVIEWPH)
+//			while(i<ALLVIEWPH)
 			{
 				QColor paintColor;
 				int binN, greyVal;
