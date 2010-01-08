@@ -159,7 +159,7 @@ void PSHDispw::paintPSH()
 							maxVal=pshGR[k][j];
 						}
 					}
-					if(maxVal<15)
+					if(maxVal<(pshGRMax/2))
 					{
 						continue;
 					}
