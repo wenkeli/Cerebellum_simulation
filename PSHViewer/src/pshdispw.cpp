@@ -138,7 +138,6 @@ void PSHDispw::paintPSH()
 
 
 			//for(int i=0; i<ALLVIEWPW; i++)
-//			while(i<ALLVIEWPH)
 			{
 				QColor paintColor;
 				int binN, greyVal;
@@ -159,7 +158,7 @@ void PSHDispw::paintPSH()
 							maxVal=pshGR[k][j];
 						}
 					}
-					if(maxVal<(pshGRMax/2))
+					if(maxVal<(pshGRMax/4))
 					{
 						continue;
 					}
@@ -183,7 +182,6 @@ void PSHDispw::paintPSH()
 //					p.setPen(paintColor);
 //					p.drawPoint(i, j%ALLVIEWPH);
 //				}
-				i++;
 			}
 		}
 	}
