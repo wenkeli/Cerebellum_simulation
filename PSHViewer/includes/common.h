@@ -40,5 +40,6 @@ extern unsigned short pshGOMax;
 extern unsigned short pshGR[NUMBINS][NUMGR];
 extern unsigned short pshGRMax;
 
+extern vector<vector<unsigned short> > pshValGR;
 
 #endif /* COMMON_H_ */

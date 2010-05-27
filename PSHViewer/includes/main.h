@@ -22,6 +22,8 @@ unsigned short pshGOMax=1;
 unsigned short pshGR[NUMBINS][NUMGR];
 unsigned short pshGRMax=1;
 
+vector<vector<unsigned short> > pshValGR;
+
 int main(int argc, char **argv);
 
 #endif /* MAIN_H_ */

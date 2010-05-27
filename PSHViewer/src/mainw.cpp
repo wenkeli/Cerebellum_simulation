@@ -41,10 +41,10 @@ void MainW::dispSingleCell()
 
 void MainW::loadPSHFile()
 {
-
 	ifstream infile;
 	QString fileName;
 	fileName=QFileDialog::getOpenFileName(this, "Please select the PSH file to open", "/", "");
+
 
 	cout<<"PSH file name: "<<fileName.toStdString()<<endl;
 
@@ -67,5 +67,22 @@ void MainW::loadPSHFile()
 	infile.read((char *)pshGR, NUMBINS*NUMGR*sizeof(unsigned short));
 	infile.read((char *)&pshGRMax, sizeof(unsigned short));
 
-	cout<<"loaded!"<<endl;
+
+	for(int i=0; i<NUMGR; i++)
+	{
+		for(int j=0; j<NUMBINS; j++)
+		{
+			if(pshGR[j][i]>pshGRMax/3)
+			{
+				vector<unsigned short> tempRow(NUMBINS);
+				for(int k=0; k<NUMBINS; k++)
+				{
+					tempRow[k]=pshGR[k][i];
+				}
+
+				pshValGR.push_back(tempRow);
+				break;
+			}
+		}
+	}
 }
