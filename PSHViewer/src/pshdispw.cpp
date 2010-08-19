@@ -150,6 +150,12 @@ void PSHDispw::paintPSH()
 					startCellN=(cellN-1)*ALLVIEWPH;
 					endCellN=pshValGR.size();
 				}
+				if(endCellN>=pshValGR.size())
+				{
+					endCellN=pshValGR.size();
+				}
+
+				cout<<startCellN<<" "<<endCellN<<" "<<pshValGR.size()<<endl;
 
 				for(int i=startCellN; i<endCellN; i++)
 				{
@@ -290,7 +296,7 @@ void PSHDispw::paintPSH()
 			for(int i=0; i<NUMBINS; i++)
 			{
 				int yPos, xPos;
-				yPos=SINGLEVIEWPH-(int)(((float)(pshValGR[cellN][i])/yMaxVal)*SINGLEVIEWPH);
+				yPos=SINGLEVIEWPH-(int)(((float)(pshValGR[cellN][i])/500)*SINGLEVIEWPH);//yMaxVal
 				xPos=(int)(i*((float)SINGLEVIEWPW/NUMBINS))+100;
 
 				p.fillRect(xPos, yPos, SINGLEVIEWPW/NUMBINS, SINGLEVIEWPH-yPos, Qt::white);
@@ -314,7 +320,7 @@ void PSHDispw::paintPSH()
 		}
 
 		strFormat.str("");
-		strFormat<<"max # of spikes: "<<yMaxVal;
+		strFormat<<"max # of spikes: "<<pshGRMax;
 		paintStr=strFormat.str().c_str();
 		p.drawText(wW/2-50, wH-40, paintStr);
 
@@ -324,13 +330,13 @@ void PSHDispw::paintPSH()
 		}
 		else
 		{
-			yInc=ceil((float)yMaxVal/10);
+			yInc=ceil((float)pshGRMax/10);//yMaxVal
 		}
 		p.setPen(Qt::green);
-		for(int i=0; i<yMaxVal; i+=yInc)
+		for(int i=0; i<pshGRMax; i+=yInc)//yMaxVal
 		{
 			int yPos;
-			yPos=SINGLEVIEWPH-(int)(((float)i/yMaxVal)*SINGLEVIEWPH);
+			yPos=SINGLEVIEWPH-(int)(((float)i/pshGRMax)*SINGLEVIEWPH);//yMaxVal
 			p.drawLine(95, yPos, 99, yPos);
 			strFormat.str("");
 			strFormat<<i;

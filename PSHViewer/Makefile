@@ -17,8 +17,8 @@ INCPATH = ./includes
 SRCPATH = ./src
 OUTPATH = ./output
 
-QTINCPATH = 'C:/Qt/4.6.2/include/'
-QTLIBPATH = 'C:/Qt/4.6.2/lib/'
+QTINCPATH = 'C:/Qt/4.6.3/include/'
+QTLIBPATH = 'C:/Qt/4.6.3/lib/'
 QTLIBS = -DEFAULTLIB:qtmain -DEFAULTLIB:QTGui4 -DEFAULTLIB:QTCore4
 
 UIS = $(INCPATH)/mainw.ui $(INCPATH)/pshdispw.ui

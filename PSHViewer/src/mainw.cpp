@@ -72,7 +72,7 @@ void MainW::loadPSHFile()
 	{
 		for(int j=0; j<NUMBINS; j++)
 		{
-			if(pshGR[j][i]>pshGRMax/3)
+			if(pshGR[j][i]>pshGRMax/4)
 			{
 				vector<unsigned short> tempRow(NUMBINS);
 				for(int k=0; k<NUMBINS; k++)
