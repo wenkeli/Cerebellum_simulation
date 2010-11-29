@@ -15,7 +15,9 @@
 #include <string>
 #include <math.h>
 
+#ifndef NULL
 #define NULL 0
+#endif
 
 #define NUMBINS 200
 #define NUMMF 1024
