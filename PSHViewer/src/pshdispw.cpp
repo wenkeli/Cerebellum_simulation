@@ -296,7 +296,7 @@ void PSHDispw::paintPSH()
 			for(int i=0; i<NUMBINS; i++)
 			{
 				int yPos, xPos;
-				yPos=SINGLEVIEWPH-(int)(((float)(pshValGR[cellN][i])/yMaxVal)*SINGLEVIEWPH);//200
+				yPos=SINGLEVIEWPH-(int)(((float)(pshValGR[cellN][i])/pshGRMax)*SINGLEVIEWPH);//yMaxVal//200
 				xPos=(int)(i*((float)SINGLEVIEWPW/NUMBINS))+100;
 
 				p.fillRect(xPos, yPos, SINGLEVIEWPW/NUMBINS, SINGLEVIEWPH-yPos, Qt::white);
