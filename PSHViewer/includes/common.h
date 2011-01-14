@@ -33,6 +33,8 @@
 
 using namespace std;
 
+extern unsigned int numTrials;
+
 extern unsigned short pshMF[NUMBINS][NUMMF];
 extern unsigned short pshMFMax;
 

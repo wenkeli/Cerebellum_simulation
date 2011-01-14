@@ -54,6 +54,8 @@ void MainW::loadPSHFile()
 		cerr<<"error opening file "<<fileName.toStdString()<<endl;
 		return;
 	}
+	cout<<"loading non cell type specific variables..."<<endl;
+	infile.read((char *)&numTrials, sizeof(unsigned int));
 
 	cout<<"loading MF PSH..."<<endl;
 	infile.read((char *)pshMF, NUMBINS*NUMMF*sizeof(unsigned short));
@@ -72,7 +74,7 @@ void MainW::loadPSHFile()
 	{
 		for(int j=0; j<NUMBINS; j++)
 		{
-			if(pshGR[j][i]>pshGRMax/5)//10
+			if(pshGR[j][i]>numTrials/3)//pshGRMax/5)//10
 			{
 				vector<unsigned short> tempRow(NUMBINS);
 				for(int k=0; k<NUMBINS; k++)
@@ -85,4 +87,5 @@ void MainW::loadPSHFile()
 			}
 		}
 	}
+	cout<<"done!"<<endl;
 }

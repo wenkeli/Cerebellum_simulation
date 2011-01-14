@@ -13,6 +13,8 @@
 #include "common.h"
 #include "mainw.h"
 
+unsigned int numTrials=1;
+
 unsigned short pshMF[NUMBINS][NUMMF];
 unsigned short pshMFMax=1;
 
