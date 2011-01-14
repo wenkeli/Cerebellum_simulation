@@ -56,6 +56,7 @@ void MainW::loadPSHFile()
 	}
 	cout<<"loading non cell type specific variables..."<<endl;
 	infile.read((char *)&numTrials, sizeof(unsigned int));
+	cout<<"number of trials: "<<numTrials<<endl;
 
 	cout<<"loading MF PSH..."<<endl;
 	infile.read((char *)pshMF, NUMBINS*NUMMF*sizeof(unsigned short));

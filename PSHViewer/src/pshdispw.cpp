@@ -97,12 +97,26 @@ void PSHDispw::paintPSH()
 				int binN, greyVal;
 
 				binN=(int)(i/((float)ALLVIEWPW/NUMBINS));
-				for(int j=0; j<NUMMF; j++)
+
+				if(i>=CSSTARTT && i<CSENDT)
 				{
-					greyVal=(int)(((float)pshMF[binN][j]/pshMFMax)*255);
-					paintColor.setRgb(greyVal, greyVal, greyVal, 255);
-					p.setPen(paintColor);
-					p.drawPoint(i, j);
+					for(int j=0; j<NUMMF; j++)
+					{
+						greyVal=(int)(((float)pshMF[binN][j]/pshMFMax)*255);
+						paintColor.setRgb(greyVal, greyVal, 255, 255);
+						p.setPen(paintColor);
+						p.drawPoint(i, j);
+					}
+				}
+				else
+				{
+					for(int j=0; j<NUMMF; j++)
+					{
+						greyVal=(int)(((float)pshMF[binN][j]/pshMFMax)*255);
+						paintColor.setRgb(greyVal, greyVal, greyVal, 255);
+						p.setPen(paintColor);
+						p.drawPoint(i, j);
+					}
 				}
 			}
 		}
@@ -119,12 +133,26 @@ void PSHDispw::paintPSH()
 				int binN, greyVal;
 
 				binN=(int)(i/((float)ALLVIEWPW/NUMBINS));
-				for(int j=0; j<NUMMF; j++)
+
+				if(i>=CSSTARTT && i<CSENDT)
 				{
-					greyVal=(int)(((float)pshGO[binN][j]/pshGOMax)*255);
-					paintColor.setRgb(greyVal, greyVal, greyVal, 255);
-					p.setPen(paintColor);
-					p.drawPoint(i, j);
+					for(int j=0; j<NUMMF; j++)
+					{
+						greyVal=(int)(((float)pshGO[binN][j]/pshGOMax)*255);
+						paintColor.setRgb(greyVal, greyVal, 255, 255);
+						p.setPen(paintColor);
+						p.drawPoint(i, j);
+					}
+				}
+				else
+				{
+					for(int j=0; j<NUMMF; j++)
+					{
+						greyVal=(int)(((float)pshGO[binN][j]/pshGOMax)*255);
+						paintColor.setRgb(greyVal, greyVal, greyVal, 255);
+						p.setPen(paintColor);
+						p.drawPoint(i, j);
+					}
 				}
 			}
 		}
@@ -162,8 +190,16 @@ void PSHDispw::paintPSH()
 					for(int j=0; j<ALLVIEWPW; j++)
 					{
 						binN=(int)(j/((float)ALLVIEWPW/NUMBINS));
-						greyVal=(int)(((float)pshValGR[i][binN]/pshGRMax)*255);
-						paintColor.setRgb(greyVal, greyVal, greyVal, 255);
+						greyVal=(int)(((float)pshValGR[i][binN]/numTrials)*255);//pshGRMax
+						greyVal=(greyVal>255)*255+(greyVal<=255)*greyVal;
+						if(j>=CSSTARTT && j<CSENDT)
+						{
+							paintColor.setRgb(greyVal, greyVal, 255, 255);
+						}
+						else
+						{
+							paintColor.setRgb(greyVal, greyVal, greyVal, 255);
+						}
 						p.setPen(paintColor);
 						p.drawPoint(j, i%ALLVIEWPH);
 					}
@@ -231,6 +267,9 @@ void PSHDispw::paintPSH()
 		}
 		p.drawText(wW/2+30, wH-70, "time (ms)");
 		p.drawText(5, SINGLEVIEWPH/2, "# of spikes");
+
+		p.setPen(Qt::blue);
+		p.fillRect(CSSTARTT+100, 0, CSDURATIONT, wH-100, Qt::blue);
 
 		p.setPen(Qt::white);
 		if(cellT==0)

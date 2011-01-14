@@ -19,16 +19,28 @@
 #define NULL 0
 #endif
 
-#define NUMBINS 200
+#define NUMBINS 240//200
+
+#define CSSTARTBIN 20
+#define CSSTARTT 100
+
+#define CSENDBIN 220
+#define CSENDT 1100
+
+#define CSDURATIONBIN 200
+#define CSDURATIONT 1000
+
 #define NUMMF 1024
 #define NUMGO 1024
 #define NUMGR 1048576
 
+#define BINWIDTH 5
+
 #define ALLVIEWPH 1024
-#define ALLVIEWPW 1000
+#define ALLVIEWPW 1200 //1000
 
 #define SINGLEVIEWPH 500
-#define SINGLEVIEWPW 1000
+#define SINGLEVIEWPW 1200 //1000
 
 
 using namespace std;
