@@ -71,6 +71,7 @@ void MainW::loadPSHFile()
 	infile.read((char *)&pshGRMax, sizeof(unsigned short));
 
 
+	pshValGR.clear();
 	for(int i=0; i<NUMGR; i++)
 	{
 		for(int j=0; j<NUMBINS; j++)
