@@ -112,11 +112,7 @@ void PSHDispw::paintPSH()
 				{
 					for(int j=0; j<NUMMF; j++)
 					{
-						greyVal=(int)(((float)pshMF[binN][j]/(numTrials*4))*255);//pshMFMax
-						if(greyVal>255)
-						{
-							greyVal=255;
-						}
+						greyVal=(int)(((float)pshMF[binN][j]/(pshMFMax))*255);
 						paintColor.setRgb(greyVal, greyVal, greyVal, 255);
 						p.setPen(paintColor);
 						p.drawPoint(i, j);
@@ -142,7 +138,11 @@ void PSHDispw::paintPSH()
 				{
 					for(int j=0; j<NUMMF; j++)
 					{
-						greyVal=(int)(((float)pshGO[binN][j]/pshGOMax)*255);
+						greyVal=(int)(((float)pshGO[binN][j]/numTrials)*255);//pshGOMax)
+						if(greyVal>255)
+						{
+							greyVal=255;
+						}
 						paintColor.setRgb(greyVal, greyVal, 255, 255);
 						p.setPen(paintColor);
 						p.drawPoint(i, j);
@@ -152,7 +152,11 @@ void PSHDispw::paintPSH()
 				{
 					for(int j=0; j<NUMMF; j++)
 					{
-						greyVal=(int)(((float)pshGO[binN][j]/pshGOMax)*255);
+						greyVal=(int)(((float)pshGO[binN][j]/numTrials)*255);//pshGOMax)
+						if(greyVal>255)
+						{
+							greyVal=255;
+						}
 						paintColor.setRgb(greyVal, greyVal, greyVal, 255);
 						p.setPen(paintColor);
 						p.drawPoint(i, j);
