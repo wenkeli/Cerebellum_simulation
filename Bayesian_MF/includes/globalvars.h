@@ -10,8 +10,8 @@
 
 #include "parameters.h"
 
-int ratesMFInputA[NUMMF];
-int ratesMFInputB[NUMMF];
-
+extern int ratesMFInputA[NUMMF];
+extern int ratesMFInputB[NUMMF];
+extern int spikeCountsMF[NUMMF];
 
 #endif /* GLOBALVARS_H_ */
