@@ -13,5 +13,6 @@
 extern int ratesMFInputA[NUMMF];
 extern int ratesMFInputB[NUMMF];
 extern int spikeCountsMF[NUMMF];
+extern float sVs[NUMTRIALS];
 
 #endif /* GLOBALVARS_H_ */
