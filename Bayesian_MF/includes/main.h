@@ -15,6 +15,8 @@
 #include <math.h>
 #endif
 
+#include "randomc.h"
+#include "sfmt.h"
 #include "parameters.h"
 #include "bayesianeval.h"
 #include "mfactivities.h"

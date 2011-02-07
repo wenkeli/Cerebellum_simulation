@@ -14,11 +14,13 @@
 #include <math.h>
 #endif
 
+#include "randomc.h"
+#include "sfmt.h"
 #include "parameters.h"
 #include "globalvars.h"
 
-void calcMFActsPoisson();
-void calcMFActsRegenPoisson();
+void calcMFActsPoisson(int, CRandomSFMT0 &);
+void calcMFActsRegenPoisson(int, CRandomSFMT0 &);
 
 
 #endif /* MFACTIVITIES_H_ */
