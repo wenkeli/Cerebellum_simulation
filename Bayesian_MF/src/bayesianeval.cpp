@@ -11,6 +11,9 @@ void bayesianCalcSV(int trialN)
 {
 	float sv;
 
+	double lnPRIA, lnPRIB;
+
+
 
 
 
