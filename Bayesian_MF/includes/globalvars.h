@@ -10,9 +10,11 @@
 
 #include "parameters.h"
 
-extern int ratesMFInputA[NUMMF];
-extern int ratesMFInputB[NUMMF];
-extern int spikeCountsMF[NUMMF];
+extern float ratesMFInputA[NUMMF];
+extern float ratesMFInputB[NUMMF];
+extern unsigned int spikeCountsMF[NUMMF];
 extern float sVs[NUMTRIALS];
+
+extern const float threshDecayMF;
 
 #endif /* GLOBALVARS_H_ */

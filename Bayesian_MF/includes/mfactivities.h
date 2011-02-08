@@ -8,6 +8,8 @@
 #ifndef MFACTIVITIES_H_
 #define MFACTIVITIES_H_
 
+#include <cstdlib>
+#include <string.h>
 #ifdef INTELCC
 #include <mathimf.h>
 #else

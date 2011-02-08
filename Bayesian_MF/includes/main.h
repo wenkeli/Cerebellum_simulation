@@ -23,11 +23,13 @@
 #include "readinputs.h"
 #include "writeoutputs.h"
 
-int ratesMFInputA[NUMMF];
-int ratesMFInputB[NUMMF];
-int spikeCountsMF[NUMMF];
+float ratesMFInputA[NUMMF];
+float ratesMFInputB[NUMMF];
+unsigned int spikeCountsMF[NUMMF];
 float sVs[NUMTRIALS];
 
+const float threshDecayTMF=4;
+const float threshDecayMF=1-exp(-TIMESTEPMS/threshDecayTMF);
 
 int main(int, char **);
 

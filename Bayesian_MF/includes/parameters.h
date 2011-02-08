@@ -15,6 +15,8 @@
 #define NUMMF 1024
 #define NUMTRIALS 1000000
 #define TRIALTIMEMS 350
+#define TBINLENSEC 0.001f
+#define TIMESTEPMS 1.0f
 
 
 #endif /* PARAMETERS_H_ */
