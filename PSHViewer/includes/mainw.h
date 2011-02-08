@@ -22,6 +22,8 @@ public:
 private:
     Ui::MainWClass ui;
     QApplication *app;
+    PSHDispw *curSingleWindow;
+    PSHDispw *curAllWindow;
 
 public slots:
 	void dispSingleCell();
