@@ -28,7 +28,7 @@ void calcMFActsPoisson(int inputType, CRandomSFMT0 &randGen)
 		for(int i=0; i<NUMMF; i++)
 		{
 			bool ap;
-			ap=randGen.Random()<(inputSRs[i]*TBINLENSEC);
+			ap=randGen.Random()<(inputSRs[i]*TIMESTEPSEC);
 			spikeCountsMF[i]=spikeCountsMF[i]+ap;
 		}
 	}
@@ -61,7 +61,7 @@ void calcMFActsRegenPoisson(int inputType, CRandomSFMT0 &randGen)
 			bool ap;
 			threshMF[i]=threshMF[i]+(1-threshMF[i])*threshDecayMF;
 
-			ap=randGen.Random()<((inputSRs[i]*TBINLENSEC)*threshMF[i]);
+			ap=randGen.Random()<((inputSRs[i]*TIMESTEPSEC)*threshMF[i]);
 			spikeCountsMF[i]=spikeCountsMF[i]+ap;
 			threshMF[i]=(!ap)*threshMF[i];
 		}

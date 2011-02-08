@@ -18,4 +18,6 @@
 
 void bayesianCalcSV(int);
 
+double lnPoisson(unsigned int, double);
+
 #endif /* BAYESIANEVAL_H_ */
