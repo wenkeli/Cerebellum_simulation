@@ -13,7 +13,6 @@
 #include "globalvars.h"
 #include "parameters.h"
 
-using namespace std;
 
 bool writeOutputs(char *);
 

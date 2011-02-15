@@ -14,7 +14,5 @@
 #include "parameters.h"
 #include "globalvars.h"
 
-using namespace std;
-
 bool readInputs(char *);
 #endif /* READINPUTS_H_ */

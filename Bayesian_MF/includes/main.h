@@ -8,6 +8,7 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
+#include <iostream>
 
 #ifdef INTELCC
 #include <mathimf.h>
@@ -30,6 +31,8 @@ float sVs[NUMTRIALS];
 
 const float threshDecayTMF=4;
 const float threshDecayMF=1-exp(-TIMESTEPMS/threshDecayTMF);
+
+
 
 int main(int, char **);
 
