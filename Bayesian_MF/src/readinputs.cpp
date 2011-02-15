@@ -18,5 +18,12 @@ bool readInputs(char *inputFileName)
 	if(!infile.good() || !infile.is_open())
 	{
 		cerr<<"error opening file "<<inputFileName<<endl;
+
+		return false;
 	}
+
+	infile.read((char *)ratesMFInputA, NUMMF*sizeof(float));
+	infile.read((char *)ratesMFInputB, NUMMF*sizeof(float));
+
+	return true;
 }
