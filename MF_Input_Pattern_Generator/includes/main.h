@@ -15,15 +15,13 @@
 #include <vector>
 
 #include "readin.h"
-//#include "writeout.h"
+#include "writeout.h"
 
-//#include "randomc.h"
-//#include "sfmt.h"
+#include "randomc.h"
+#include "sfmt.h"
 
-using namespace std;
-
-vector<float> pAMFSR;
-vector<float> pBMFSR;
+std::vector<float> pAMFSR;
+std::vector<float> pBMFSR;
 
 int numMF;
 

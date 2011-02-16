@@ -22,7 +22,7 @@ bool readin(char *infileName)
 
 	if(!infile.good() || !infile.is_open())
 	{
-		cout<<"error opening file "<<infileName<<endl;
+		cerr<<"error opening file "<<infileName<<endl;
 		return false;
 	}
 

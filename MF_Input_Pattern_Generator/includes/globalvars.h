@@ -9,10 +9,9 @@
 #define GLOBALVARS_H_
 
 #include <vector>
-using namespace std;
 
-extern vector<float> pAMFSR;
-extern vector<float> pBMFSR;
+extern std::vector<float> pAMFSR;
+extern std::vector<float> pBMFSR;
 
 extern int numMF;
 
