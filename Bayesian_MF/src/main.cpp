@@ -9,11 +9,11 @@
 
 using namespace std;
 
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
 	CRandomSFMT0 randGen(time(NULL));
 
-	if(!readInputs(argv[0]))
+	if(!readInputs(argv[1]))
 	{
 		cout<<"failed to read input file"<<endl;
 		return 0;
@@ -33,7 +33,7 @@ int main(int argc, char **argv)
 		bayesianCalcSV(i);
 	}
 
-	writeOutputs(argv[1]);
+	writeOutputs(argv[2]);
 
 	return 1;
 }
