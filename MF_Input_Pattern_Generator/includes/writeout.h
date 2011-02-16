@@ -11,9 +11,10 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <string>
 
 #include "globalvars.h"
 
-void writeout(char *);
+bool writeout(char *);
 
 #endif /* WRITEOUT_H_ */

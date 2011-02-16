@@ -61,5 +61,6 @@ bool readin(char *infileName)
 		cout<<mfIndex<<" "<<definedSR<<endl;
 	}
 
+	infile.close();
 	return true;
 }

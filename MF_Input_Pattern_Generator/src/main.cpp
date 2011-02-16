@@ -34,5 +34,11 @@ int main(int argc, char *argv[])
 		}
 	}
 
+	if(!writeout(argv[2]))
+	{
+		cerr<<"failed to write results to files, exiting"<<endl;
+		return 0;
+	}
+
 	return 1;
 }
