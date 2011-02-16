@@ -5,7 +5,7 @@
 NAME = PSHViewer
 
 
-CC = icc
+CC = icpc
 DEFINES = 
 CFLAGS = $(DEFINES) -O3
 
