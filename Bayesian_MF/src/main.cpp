@@ -24,11 +24,11 @@ int main(int argc, char *argv[])
 	{
 		if(randGen.Random()<0.5)
 		{
-			calcMFActsPoisson(0, randGen);
+			calcMFActsRegenPoisson(0, randGen);
 		}
 		else
 		{
-			calcMFActsPoisson(1, randGen);
+			calcMFActsRegenPoisson(1, randGen);
 		}
 
 		bayesianCalcSV(i);
