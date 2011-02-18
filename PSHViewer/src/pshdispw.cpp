@@ -138,7 +138,7 @@ void PSHDispw::paintPSH()
 				{
 					for(int j=0; j<NUMMF; j++)
 					{
-						greyVal=(int)(((float)pshGO[binN][j]/numTrials)*255);//pshGOMax)
+						greyVal=(int)(((float)pshGO[binN][j]/pshGOMax)*255);//numTrials
 						if(greyVal>255)
 						{
 							greyVal=255;
@@ -152,7 +152,7 @@ void PSHDispw::paintPSH()
 				{
 					for(int j=0; j<NUMMF; j++)
 					{
-						greyVal=(int)(((float)pshGO[binN][j]/numTrials)*255);//pshGOMax)
+						greyVal=(int)(((float)pshGO[binN][j]/pshGOMax)*255);//numTrials
 						if(greyVal>255)
 						{
 							greyVal=255;
