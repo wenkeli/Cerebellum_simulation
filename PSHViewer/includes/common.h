@@ -57,7 +57,7 @@ extern unsigned short pshGOMax;
 
 extern unsigned short pshGR[NUMBINS][NUMGR];
 extern unsigned short pshGRMax;
-extern unsigned short pshGRTrans[NUMBINS][NUMGR];
+extern unsigned short pshGRTrans[NUMGR][NUMBINS];
 
 extern unsigned int grTotalSpikes[NUMGR];
 extern float grTempSpecificity[NUMGR][NUMBINS];

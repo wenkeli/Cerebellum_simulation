@@ -45,6 +45,8 @@ void MainW::loadPSHFile()
 {
 	ifstream infile;
 	QString fileName;
+	bool dispGR[NUMGR];
+
 	fileName=QFileDialog::getOpenFileName(this, "Please select the PSH file to open", "/", "");
 
 
@@ -74,12 +76,13 @@ void MainW::loadPSHFile()
 
 
 	pshValGR.clear();
+	memset((char *)dispGR, false, NUMGR*sizeof(bool));
 	for(int i=0; i<NUMGR; i++)
 	{
 		for(int j=0; j<NUMBINS; j++)
 		{
 			pshGRTrans[i][j]=pshGR[j][i];
-			if(pshGR[j][i]>numTrials/3)//pshGRMax/5)//10
+			if(pshGR[j][i]>numTrials/3 && !dispGR[i])//pshGRMax/5)//10
 			{
 				vector<unsigned short> tempRow(NUMBINS);
 				for(int k=0; k<NUMBINS; k++)
@@ -88,7 +91,7 @@ void MainW::loadPSHFile()
 				}
 
 				pshValGR.push_back(tempRow);
-				break;
+				dispGR[i]=true;
 			}
 		}
 	}
@@ -106,14 +109,20 @@ void MainW::calcTempMetrics()
 	fileName=QFileDialog::getOpenFileName(this, "Please specify where to save the data", "/", "");
 	outfile.open(fileName.toStdString().c_str(), ios::out);
 
+	cout<<"Calculating total spikes of individual cells"<<endl;
+	calcGRTotalSpikes();
+	cout<<"calculating individual temporal specificity"<<endl;
 	calcGRTempSpecific();
+	cout<<"calculating population metrics"<<endl;
 	calcGRPopTempMetric();
+	cout<<"writing results"<<endl;
 
 	for(int i=0; i<NUMBINS; i++)
 	{
-		outfile<<grPopSpecMean<<" "<<grPopSpecSR<<endl;
+		outfile<<grPopSpecMean[i]<<" "<<grPopSpecSR[i]<<endl;
 	}
 	outfile.close();
+	cout<<"done!"<<endl;
 }
 
 
@@ -146,7 +155,7 @@ void MainW::calcGRTempSpecific()
 		short peakBin;
 		float peakVal;
 
-		PeakBin=-1;
+		peakBin=-1;
 		peakVal=0;
 		for(int j=0; j<NUMBINS; j++)
 		{
@@ -159,8 +168,18 @@ void MainW::calcGRTempSpecific()
 					continue;
 				}
 				tempSum=tempSum+pshGRTrans[i][k];
+//				cout<<"k="<<k<<" tempSum="<<tempSum<<endl;
 			}
-			grTempSpecificity[i][j]=((float)tempSum)/grTotalSpikes[i];
+			if(grTotalSpikes[i]>0)
+			{
+				grTempSpecificity[i][j]=((float)tempSum)/((float)grTotalSpikes[i]);
+			}
+			else
+			{
+//				cout<<grTotalSpikes[i]<<" "<<tempSum<<" "<<endl;
+				grTempSpecificity[i][j]=0;
+			}
+//			cout<<grTempSpecificity[i][j]<<endl;
 			if(grTempSpecificity[i][j]>peakVal)
 			{
 				peakVal=grTempSpecificity[i][j];
@@ -182,7 +201,8 @@ void MainW::calcGRPopTempMetric()
 		int numSpecGR;
 		float specAvg;
 		unsigned int specGRSpSum;
-		unsigned int grSpSum;
+		int grSpSum;
+//		int grSpSumTemp;
 
 		memset((char *)grIsSpecific, 0, NUMGR*sizeof(bool));
 //		grSpecInd.clear();
@@ -206,38 +226,41 @@ void MainW::calcGRPopTempMetric()
 		}
 
 		specAvg=0;
-//		for(int j=0; j<grSpecVecSize; j++)
-//		{
-//			specAvg=specAvg+grTempSpPeakVal[grSpecInd[j]];
-//		}
-//		if(specAvg>0)
-//		{
-//			specAvg=specAvg/grSpecVecSize;
-//		}
-//
-//		grPopSpecMean[i]=specAvg;
-
 		specGRSpSum=0;
 		grSpSum=0;
+//		grSpSumTemp=0;
+//		cout<<grSpSum<<" "<<specGRSpSum<<" "<<specAvg<<endl;
 		for(int j=0; j<NUMGR; j++)
 		{
 			if(grIsSpecific[j])
 			{
 				specGRSpSum=specGRSpSum+grTempSpecificity[j][i]*grTotalSpikes[j];
+//				cout<<endl<<grTempSpecificity[j][i]<<" "<<grTotalSpikes[j]<<" "<<specGRSpSum<<" "<<grSpSum<<" "<<grSpSumTemp<<endl;
 				specAvg=specAvg+grTempSpPeakVal[j];
 			}
+//			if(grTempSpecificity[j][i]*grTotalSpikes[j]<0 || grTempSpecificity[j][i]*grTotalSpikes[j]>100000)
+//			{
+//				cout<<grSpSum<<" ";
+//				cout<<grTempSpecificity[j][i]*grTotalSpikes[j]<<" "<<grTempSpecificity[j][i]<<" "<<grTotalSpikes[j]<<"|";
+//			}
 
+//			grSpSumTemp=grSpSum;
 			grSpSum=grSpSum+grTempSpecificity[j][i]*grTotalSpikes[j];
+//			if(grSpSum<0 && grSpSumTemp>=0)
+//			{
+//				cout<<grSpSumTemp<<" "<<grSpSum<<" "<<grTempSpecificity[j][i]<<" "<<grTotalSpikes[j]<<" "<<grTempSpecificity[j][i]*grTotalSpikes[j]<<endl;
+//			}
 		}
 
 		if(specAvg>0)
 		{
-			grPopSpecMean[i]=specAvg/numSpecGR;
+			grPopSpecMean[i]=specAvg/((float)numSpecGR);
 		}
 
 		if(grSpSum>0)
 		{
-			grPopSpecSR[i]=specGRSpSum/grSpSum;
+//			cout<<specGRSpSum<<" "<<grSpSum<<endl<<endl;
+			grPopSpecSR[i]=((float)specGRSpSum)/((float)grSpSum);
 		}
 		else
 		{
