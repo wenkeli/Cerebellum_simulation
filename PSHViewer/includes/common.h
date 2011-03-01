@@ -42,6 +42,8 @@
 #define SINGLEVIEWPH 500
 #define SINGLEVIEWPW 1200 //1000
 
+#define TEMPMETSLIDINGW 40 //200 ms
+
 
 using namespace std;
 
@@ -55,6 +57,15 @@ extern unsigned short pshGOMax;
 
 extern unsigned short pshGR[NUMBINS][NUMGR];
 extern unsigned short pshGRMax;
+extern unsigned short pshGRTrans[NUMBINS][NUMGR];
+
+extern unsigned int grTotalSpikes[NUMGR];
+extern float grTempSpecificity[NUMGR][NUMBINS];
+extern unsigned short grTempSpPeakBin[NUMGR];
+extern float grTempSpPeakVal[NUMGR];
+
+extern float grPopSpecMean[NUMBINS];
+extern float grPopSpecSR[NUMBINS];
 
 extern vector<vector<unsigned short> > pshValGR;
 

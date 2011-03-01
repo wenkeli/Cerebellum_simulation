@@ -1,6 +1,7 @@
 #ifndef MAINW_H
 #define MAINW_H
 
+#include <vector>
 #include <QtGui/QMainWindow>
 #include <QtGui/QApplication>
 #include <QtGui/QFileDialog>
@@ -25,10 +26,17 @@ private:
     PSHDispw *curSingleWindow;
     PSHDispw *curAllWindow;
 
+    bool grTotalCalced;
+
+    void calcGRTotalSpikes();
+    void calcGRTempSpecific();
+    void calcGRPopTempMetric();
+
 public slots:
 	void dispSingleCell();
 	void dispAllCells();
 	void loadPSHFile();
+	void calcTempMetrics();
 };
 
 #endif // MAINW_H

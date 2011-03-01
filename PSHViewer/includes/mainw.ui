@@ -6,63 +6,27 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>377</width>
-    <height>126</height>
+    <width>384</width>
+    <height>189</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="dispAllCells">
-    <property name="geometry">
-     <rect>
-      <x>240</x>
-      <y>10</y>
-      <width>121</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>display all cells</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="dispSingleCell">
-    <property name="geometry">
-     <rect>
-      <x>240</x>
-      <y>40</y>
-      <width>121</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>display single cell</string>
-    </property>
-   </widget>
    <widget class="QWidget" name="formLayoutWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>10</y>
       <width>213</width>
-      <height>79</height>
+      <height>91</height>
      </rect>
     </property>
     <layout class="QFormLayout" name="formLayout">
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>Display single cell #</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QSpinBox" name="grDispStartNum"/>
-     </item>
-     <item row="2" column="1">
-      <widget class="QSpinBox" name="dispSingleCellNum"/>
-     </item>
+     <property name="fieldGrowthPolicy">
+      <enum>QFormLayout::ExpandingFieldsGrow</enum>
+     </property>
      <item row="0" column="0">
       <widget class="QLabel" name="label_3">
        <property name="text">
@@ -80,33 +44,67 @@
        </property>
       </widget>
      </item>
+     <item row="1" column="1">
+      <widget class="QSpinBox" name="grDispStartNum"/>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Display single cell #</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QSpinBox" name="dispSingleCellNum"/>
+     </item>
     </layout>
    </widget>
-   <widget class="QPushButton" name="quitButton">
+   <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>260</x>
-      <y>90</y>
-      <width>75</width>
-      <height>23</height>
+      <x>240</x>
+      <y>10</y>
+      <width>131</width>
+      <height>163</height>
      </rect>
     </property>
-    <property name="text">
-     <string>quit</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="loadPSH">
-    <property name="geometry">
-     <rect>
-      <x>64</x>
-      <y>90</y>
-      <width>101</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>load PSH file</string>
-    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QPushButton" name="dispAllCells">
+       <property name="text">
+        <string>display all cells</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="dispSingleCell">
+       <property name="text">
+        <string>display single cell</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="calcTempMetrics">
+       <property name="text">
+        <string>Calc temp metrics</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="loadPSH">
+       <property name="text">
+        <string>load PSH file</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="quitButton">
+       <property name="text">
+        <string>quit</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
  </widget>
@@ -151,12 +149,28 @@
    <slot>loadPSHFile()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>119</x>
-     <y>104</y>
+     <x>296</x>
+     <y>127</y>
     </hint>
     <hint type="destinationlabel">
      <x>186</x>
      <y>95</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>calcTempMetrics</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWClass</receiver>
+   <slot>calcTempMetrics()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>335</x>
+     <y>99</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>121</x>
+     <y>144</y>
     </hint>
    </hints>
   </connection>
@@ -165,5 +179,6 @@
   <slot>dispAllCells()</slot>
   <slot>dispSingleCell()</slot>
   <slot>loadPSHFile()</slot>
+  <slot>calcTempMetrics()</slot>
  </slots>
 </ui>

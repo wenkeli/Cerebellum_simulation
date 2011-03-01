@@ -18,6 +18,8 @@ MainW::MainW(QWidget *parent, QApplication *a)
 	this->setAttribute(Qt::WA_DeleteOnClose);
 
 	app=a;
+
+	grTotalCalced=false;
 	connect(this, SIGNAL(destroyed()), app, SLOT(quit()));
 	connect(ui.quitButton, SIGNAL(clicked()), app, SLOT(quit()));
 }
@@ -76,6 +78,7 @@ void MainW::loadPSHFile()
 	{
 		for(int j=0; j<NUMBINS; j++)
 		{
+			pshGRTrans[i][j]=pshGR[j][i];
 			if(pshGR[j][i]>numTrials/3)//pshGRMax/5)//10
 			{
 				vector<unsigned short> tempRow(NUMBINS);
@@ -89,5 +92,157 @@ void MainW::loadPSHFile()
 			}
 		}
 	}
+
+	grTotalCalced=false;
 	cout<<"done!"<<endl;
+	infile.close();
+}
+
+void MainW::calcTempMetrics()
+{
+	ofstream outfile;
+	QString fileName;
+
+	fileName=QFileDialog::getOpenFileName(this, "Please specify where to save the data", "/", "");
+	outfile.open(fileName.toStdString().c_str(), ios::out);
+
+	calcGRTempSpecific();
+	calcGRPopTempMetric();
+
+	for(int i=0; i<NUMBINS; i++)
+	{
+		outfile<<grPopSpecMean<<" "<<grPopSpecSR<<endl;
+	}
+	outfile.close();
+}
+
+
+void MainW::calcGRTotalSpikes()
+{
+	if(grTotalCalced)
+	{
+		return;
+	}
+
+	for(int i=0; i<NUMGR; i++)
+	{
+		grTotalSpikes[i]=0;
+	}
+	for(int i=0; i<NUMBINS; i++)
+	{
+		for(int j=0; j<NUMGR; j++)
+		{
+			grTotalSpikes[j]=grTotalSpikes[j]+pshGR[i][j];
+		}
+	}
+
+	grTotalCalced=true;
+}
+
+void MainW::calcGRTempSpecific()
+{
+	for(int i=0; i<NUMGR; i++)
+	{
+		short peakBin;
+		float peakVal;
+
+		PeakBin=-1;
+		peakVal=0;
+		for(int j=0; j<NUMBINS; j++)
+		{
+			int tempSum;
+			tempSum=0;
+			for(int k=j-TEMPMETSLIDINGW+1; k<=j; k++)
+			{
+				if(k<0)
+				{
+					continue;
+				}
+				tempSum=tempSum+pshGRTrans[i][k];
+			}
+			grTempSpecificity[i][j]=((float)tempSum)/grTotalSpikes[i];
+			if(grTempSpecificity[i][j]>peakVal)
+			{
+				peakVal=grTempSpecificity[i][j];
+				peakBin=j;
+			}
+		}
+
+		grTempSpPeakBin[i]=peakBin;
+		grTempSpPeakVal[i]=peakVal;
+	}
+}
+
+void MainW::calcGRPopTempMetric()
+{
+	for(int i=0; i<NUMBINS; i++)
+	{
+//		vector<int> grSpecInd;
+		bool grIsSpecific[NUMGR];
+		int numSpecGR;
+		float specAvg;
+		unsigned int specGRSpSum;
+		unsigned int grSpSum;
+
+		memset((char *)grIsSpecific, 0, NUMGR*sizeof(bool));
+//		grSpecInd.clear();
+
+		numSpecGR=0;
+		for(int j=i-TEMPMETSLIDINGW+1; j<=i; j++)
+		{
+			if(j<0)
+			{
+				continue;
+			}
+			for(int k=0; k<NUMGR; k++)
+			{
+				if(grTempSpPeakBin[k]==j && grTempSpPeakVal[k]*grTotalSpikes[k]>=numTrials)
+				{
+//					grSpecInd.push_back(grTempSpPeakBin);
+					grIsSpecific[k]=true;
+					numSpecGR++;
+				}
+			}
+		}
+
+		specAvg=0;
+//		for(int j=0; j<grSpecVecSize; j++)
+//		{
+//			specAvg=specAvg+grTempSpPeakVal[grSpecInd[j]];
+//		}
+//		if(specAvg>0)
+//		{
+//			specAvg=specAvg/grSpecVecSize;
+//		}
+//
+//		grPopSpecMean[i]=specAvg;
+
+		specGRSpSum=0;
+		grSpSum=0;
+		for(int j=0; j<NUMGR; j++)
+		{
+			if(grIsSpecific[j])
+			{
+				specGRSpSum=specGRSpSum+grTempSpecificity[j][i]*grTotalSpikes[j];
+				specAvg=specAvg+grTempSpPeakVal[j];
+			}
+
+			grSpSum=grSpSum+grTempSpecificity[j][i]*grTotalSpikes[j];
+		}
+
+		if(specAvg>0)
+		{
+			grPopSpecMean[i]=specAvg/numSpecGR;
+		}
+
+		if(grSpSum>0)
+		{
+			grPopSpecSR[i]=specGRSpSum/grSpSum;
+		}
+		else
+		{
+			grPopSpecSR[i]=0;
+		}
+
+	}
 }
