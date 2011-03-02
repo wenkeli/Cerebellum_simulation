@@ -208,7 +208,7 @@ void MainW::calcGRPopTempMetric()
 //		grSpecInd.clear();
 
 		numSpecGR=0;
-		for(int j=i-TEMPMETSLIDINGW+1; j<=i; j++)
+		for(int j=i; j<=i; j++)//i-TEMPMETSLIDINGW+1
 		{
 			if(j<0)
 			{
