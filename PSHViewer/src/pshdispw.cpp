@@ -181,24 +181,24 @@ void PSHDispw::paintPSH()
 
 				startCellN=cellN*ALLVIEWPH;
 				endCellN=(cellN+1)*ALLVIEWPH;
-				if(startCellN>=pshValGR.size())
+				if(startCellN>=pshActiveGR.size())
 				{
 					startCellN=(cellN-1)*ALLVIEWPH;
-					endCellN=pshValGR.size();
+					endCellN=pshActiveGR.size();
 				}
-				if(endCellN>=pshValGR.size())
+				if(endCellN>=pshActiveGR.size())
 				{
-					endCellN=pshValGR.size();
+					endCellN=pshActiveGR.size();
 				}
 
-				cout<<startCellN<<" "<<endCellN<<" "<<pshValGR.size()<<endl;
+				cout<<startCellN<<" "<<endCellN<<" "<<pshActiveGR.size()<<endl;
 
 				for(int i=startCellN; i<endCellN; i++)
 				{
 					for(int j=0; j<ALLVIEWPW; j++)
 					{
 						binN=(int)(j/((float)ALLVIEWPW/NUMBINS));
-						greyVal=(int)(((float)pshValGR[i][binN]/numTrials)*255);//pshGRMax
+						greyVal=(int)(((float)pshActiveGR[i][binN]/numTrials)*255);//pshGRMax
 						greyVal=(greyVal>255)*255+(greyVal<=255)*greyVal;
 						if(j>=CSSTARTT && j<CSENDT)
 						{
@@ -328,22 +328,22 @@ void PSHDispw::paintPSH()
 		}
 		else
 		{
-			if(cellN>=pshValGR.size())
+			if(cellN>=pshActiveGR.size())
 			{
-				cellN=pshValGR.size()-1;
+				cellN=pshActiveGR.size()-1;
 			}
 
 			for(int i=0; i<NUMBINS; i++)
 			{
-				if(pshValGR[cellN][i]>yMaxVal)
+				if(pshActiveGR[cellN][i]>yMaxVal)
 				{
-					yMaxVal=pshValGR[cellN][i];
+					yMaxVal=pshActiveGR[cellN][i];
 				}
 			}
 			for(int i=0; i<NUMBINS; i++)
 			{
 				int yPos, xPos;
-				yPos=SINGLEVIEWPH-(int)(((float)(pshValGR[cellN][i])/pshGRMax)*SINGLEVIEWPH);//yMaxVal//200
+				yPos=SINGLEVIEWPH-(int)(((float)(pshActiveGR[cellN][i])/pshGRMax)*SINGLEVIEWPH);//yMaxVal//200
 				xPos=(int)(i*((float)SINGLEVIEWPW/NUMBINS))+100;
 
 				p.fillRect(xPos, yPos, SINGLEVIEWPW/NUMBINS, SINGLEVIEWPH-yPos, Qt::white);

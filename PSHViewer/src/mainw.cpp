@@ -75,7 +75,7 @@ void MainW::loadPSHFile()
 	infile.read((char *)&pshGRMax, sizeof(unsigned short));
 
 
-	pshValGR.clear();
+	pshActiveGR.clear();
 	memset((char *)dispGR, false, NUMGR*sizeof(bool));
 	for(int i=0; i<NUMGR; i++)
 	{
@@ -90,7 +90,7 @@ void MainW::loadPSHFile()
 					tempRow[k]=pshGR[k][i];
 				}
 
-				pshValGR.push_back(tempRow);
+				pshActiveGR.push_back(tempRow);
 				dispGR[i]=true;
 			}
 		}
@@ -117,9 +117,12 @@ void MainW::calcTempMetrics()
 	calcGRPopTempMetric();
 	cout<<"writing results"<<endl;
 
+	outfile<<"specGRSpM activeGRSpM totalGRSpM specGRActM activeGRActM totalGRActM spTotGRActR spActGRActR actTotGRActR"<<endl;
 	for(int i=0; i<NUMBINS; i++)
 	{
-		outfile<<grPopSpecMean[i]<<" "<<grPopSpecSR[i]<<endl;
+		outfile<<specGRPopSpMean[i]<<" "<<activeGRPopSpMean[i]<<" "<<totalGRPopSpMean[i]<<
+				" "<<specGRPopActMean[i]<<" "<<activeGRPopActMean[i]<<" "<<totalGRPopActMean[i]<<
+				" "<<spTotGRPopActR[i]<<" "<<spActGRPopActR[i]<<" "<<actTotGRPopActR[i]<<endl;
 	}
 	outfile.close();
 	cout<<"done!"<<endl;
@@ -198,16 +201,23 @@ void MainW::calcGRPopTempMetric()
 	{
 //		vector<int> grSpecInd;
 		bool grIsSpecific[NUMGR];
+		bool grIsActive[NUMGR];
 		int numSpecGR;
-		float specAvg;
-		unsigned int specGRSpSum;
-		int grSpSum;
+		int numActiveGR;
+		float specGRSpSum;
+		float activeGRSpSum;
+		float totalGRSpSum;
+		unsigned int specGRActSum;
+		unsigned int activeGRActSum;
+		unsigned int totalGRActSum;
 //		int grSpSumTemp;
 
 		memset((char *)grIsSpecific, 0, NUMGR*sizeof(bool));
+		memset((char *)grIsActive, 0, NUMGR*sizeof(bool));
 //		grSpecInd.clear();
 
 		numSpecGR=0;
+		numActiveGR=0;
 		for(int j=i; j<=i; j++)//i-TEMPMETSLIDINGW+1
 		{
 			if(j<0)
@@ -216,27 +226,41 @@ void MainW::calcGRPopTempMetric()
 			}
 			for(int k=0; k<NUMGR; k++)
 			{
-				if(grTempSpPeakBin[k]==j && grTempSpPeakVal[k]*grTotalSpikes[k]>=numTrials)
+				if(grTempSpPeakVal[k]*grTotalSpikes[k]>=numTrials)
 				{
-//					grSpecInd.push_back(grTempSpPeakBin);
-					grIsSpecific[k]=true;
-					numSpecGR++;
+					grIsActive[k]=true;
+					numActiveGR++;
+
+					if(grTempSpPeakBin[k]==j)
+					{
+						grIsSpecific[k]=true;
+						numSpecGR++;
+					}
 				}
 			}
 		}
 
-		specAvg=0;
 		specGRSpSum=0;
-		grSpSum=0;
+		activeGRSpSum=0;
+		totalGRSpSum=0;
+		specGRActSum=0;
+		activeGRActSum=0;
+		totalGRActSum=0;
 //		grSpSumTemp=0;
 //		cout<<grSpSum<<" "<<specGRSpSum<<" "<<specAvg<<endl;
 		for(int j=0; j<NUMGR; j++)
 		{
 			if(grIsSpecific[j])
 			{
-				specGRSpSum=specGRSpSum+grTempSpecificity[j][i]*grTotalSpikes[j];
+				specGRActSum=specGRActSum+grTempSpecificity[j][i]*grTotalSpikes[j];
 //				cout<<endl<<grTempSpecificity[j][i]<<" "<<grTotalSpikes[j]<<" "<<specGRSpSum<<" "<<grSpSum<<" "<<grSpSumTemp<<endl;
-				specAvg=specAvg+grTempSpPeakVal[j];
+				specGRSpSum=specGRSpSum+grTempSpPeakVal[j];
+			}
+
+			if(grIsActive[j])
+			{
+				activeGRActSum=activeGRActSum+grTempSpecificity[j][i]*grTotalSpikes[j];
+				activeGRSpSum=activeGRSpSum+grTempSpecificity[j][i];
 			}
 //			if(grTempSpecificity[j][i]*grTotalSpikes[j]<0 || grTempSpecificity[j][i]*grTotalSpikes[j]>100000)
 //			{
@@ -245,27 +269,33 @@ void MainW::calcGRPopTempMetric()
 //			}
 
 //			grSpSumTemp=grSpSum;
-			grSpSum=grSpSum+grTempSpecificity[j][i]*grTotalSpikes[j];
+			totalGRSpSum=totalGRSpSum+grTempSpecificity[j][i];
+			totalGRActSum=totalGRActSum+grTempSpecificity[j][i]*grTotalSpikes[j];
 //			if(grSpSum<0 && grSpSumTemp>=0)
 //			{
 //				cout<<grSpSumTemp<<" "<<grSpSum<<" "<<grTempSpecificity[j][i]<<" "<<grTotalSpikes[j]<<" "<<grTempSpecificity[j][i]*grTotalSpikes[j]<<endl;
 //			}
 		}
 
-		if(specAvg>0)
+		if(specGRSpSum>0)
 		{
-			grPopSpecMean[i]=specAvg/((float)numSpecGR);
+			specGRPopSpMean[i]=specGRSpSum/((float)numSpecGR);
+			specGRPopActMean[i]=specGRActSum/((float)numSpecGR);
 		}
+		if(activeGRSpSum>0)
+		{
+			activeGRPopSpMean[i]=activeGRSpSum/((float)numActiveGR);
+			activeGRPopActMean[i]=activeGRActSum/((float)numActiveGR);
 
-		if(grSpSum>0)
-		{
-//			cout<<specGRSpSum<<" "<<grSpSum<<endl<<endl;
-			grPopSpecSR[i]=((float)specGRSpSum)/((float)grSpSum);
+			spActGRPopActR[i]=((float)specGRActSum)/((float)activeGRActSum);
 		}
-		else
+		if(totalGRSpSum>0)
 		{
-			grPopSpecSR[i]=0;
-		}
+			totalGRPopSpMean[i]=totalGRSpSum/((float)NUMGR);
+			totalGRPopActMean[i]=totalGRActSum/((float)NUMGR);
 
+			spTotGRPopActR[i]=((float)specGRActSum)/((float)totalGRActSum);
+			actTotGRPopActR[i]=((float)activeGRActSum)/((float)totalGRActSum);
+		}
 	}
 }

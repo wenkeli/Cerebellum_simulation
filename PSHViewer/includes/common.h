@@ -64,9 +64,17 @@ extern float grTempSpecificity[NUMGR][NUMBINS];
 extern unsigned short grTempSpPeakBin[NUMGR];
 extern float grTempSpPeakVal[NUMGR];
 
-extern float grPopSpecMean[NUMBINS];
-extern float grPopSpecSR[NUMBINS];
+extern float specGRPopSpMean[NUMBINS];
+extern float activeGRPopSpMean[NUMBINS];
+extern float totalGRPopSpMean[NUMBINS];
 
-extern vector<vector<unsigned short> > pshValGR;
+extern float specGRPopActMean[NUMBINS];
+extern float activeGRPopActMean[NUMBINS];
+extern float totalGRPopActMean[NUMBINS];
+extern float spTotGRPopActR[NUMBINS];
+extern float spActGRPopActR[NUMBINS];
+extern float actTotGRPopActR[NUMBINS];
+
+extern vector<vector<unsigned short> > pshActiveGR;
 
 #endif /* COMMON_H_ */

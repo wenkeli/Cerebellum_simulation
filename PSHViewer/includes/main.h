@@ -30,9 +30,17 @@ float grTempSpecificity[NUMGR][NUMBINS];
 unsigned short grTempSpPeakBin[NUMGR];
 float grTempSpPeakVal[NUMGR];
 
-float grPopSpecMean[NUMBINS];
-float grPopSpecSR[NUMBINS];
-vector<vector<unsigned short> > pshValGR;
+float specGRPopSpMean[NUMBINS];
+float activeGRPopSpMean[NUMBINS];
+float totalGRPopSpMean[NUMBINS];
+
+float specGRPopActMean[NUMBINS];
+float activeGRPopActMean[NUMBINS];
+float totalGRPopActMean[NUMBINS];
+float spTotGRPopActR[NUMBINS];
+float spActGRPopActR[NUMBINS];
+float actTotGRPopActR[NUMBINS];
+vector<vector<unsigned short> > pshActiveGR;
 
 int main(int argc, char **argv);
 
