@@ -34,6 +34,9 @@ float specGRPopSpMean[NUMBINS];
 float activeGRPopSpMean[NUMBINS];
 float totalGRPopSpMean[NUMBINS];
 
+int numGRSpecific[NUMBINS];
+int numGRActive[NUMBINS];
+
 float specGRPopActMean[NUMBINS];
 float activeGRPopActMean[NUMBINS];
 float totalGRPopActMean[NUMBINS];

@@ -226,7 +226,7 @@ void MainW::calcGRPopTempMetric()
 			}
 			for(int k=0; k<NUMGR; k++)
 			{
-				if(grTempSpPeakVal[k]*grTotalSpikes[k]>=numTrials)
+				if(grTempSpPeakVal[k]*grTotalSpikes[k]>=numTrials*2)
 				{
 					grIsActive[k]=true;
 					numActiveGR++;
@@ -276,6 +276,9 @@ void MainW::calcGRPopTempMetric()
 //				cout<<grSpSumTemp<<" "<<grSpSum<<" "<<grTempSpecificity[j][i]<<" "<<grTotalSpikes[j]<<" "<<grTempSpecificity[j][i]*grTotalSpikes[j]<<endl;
 //			}
 		}
+
+		numGRActive[i]=numActiveGR;
+		numGRSpecific[i]=numSpecGR;
 
 		if(specGRSpSum>0)
 		{

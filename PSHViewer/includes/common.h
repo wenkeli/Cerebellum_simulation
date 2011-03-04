@@ -64,6 +64,9 @@ extern float grTempSpecificity[NUMGR][NUMBINS];
 extern unsigned short grTempSpPeakBin[NUMGR];
 extern float grTempSpPeakVal[NUMGR];
 
+extern int numGRSpecific[NUMBINS];
+extern int numGRActive[NUMBINS];
+
 extern float specGRPopSpMean[NUMBINS];
 extern float activeGRPopSpMean[NUMBINS];
 extern float totalGRPopSpMean[NUMBINS];
