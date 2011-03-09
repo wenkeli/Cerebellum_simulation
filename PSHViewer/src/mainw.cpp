@@ -130,6 +130,22 @@ void MainW::calcTempMetrics()
 				" "<<spTotGRPopActR[i]<<" "<<spActGRPopActR[i]<<" "<<actTotGRPopActR[i]<<
 				" "<<grPopActSpecLTD[i]<<" "<<grPopActAmpLTD[i]<<endl;
 	}
+
+	outfile<<endl<<endl;
+	for(int i=0; i<NUMBINS; i++)
+	{
+		outfile<<grBinTotalSpikes[i]<<" ";
+	}
+	outfile<<endl<<endl;
+
+	for(int i=0; i<NUMBINS; i++)
+	{
+		for(int j=0; j<NUMBINS; j++)
+		{
+			outfile<<grPopActDiffLTD[i][j]<<" ";
+		}
+		outfile<<endl;
+	}
 	outfile.close();
 	cout<<"done!"<<endl;
 }
