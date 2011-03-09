@@ -128,7 +128,7 @@ void MainW::calcTempMetrics()
 		outfile<<specGRPopSpMean[i]<<" "<<activeGRPopSpMean[i]<<" "<<totalGRPopSpMean[i]<<
 				" "<<specGRPopActMean[i]<<" "<<activeGRPopActMean[i]<<" "<<totalGRPopActMean[i]<<
 				" "<<spTotGRPopActR[i]<<" "<<spActGRPopActR[i]<<" "<<actTotGRPopActR[i]<<
-				" "<<grPopActSpecLTD<<" "<<grPopActAmpLTD<<endl;
+				" "<<grPopActSpecLTD[i]<<" "<<grPopActAmpLTD[i]<<endl;
 	}
 	outfile.close();
 	cout<<"done!"<<endl;
@@ -371,7 +371,7 @@ void MainW::calcGRLTDPopActDiff(int binN)
 	}
 }
 
-void MainW::calcGRLTDPopActDiffSum(binN)
+void MainW::calcGRLTDPopActDiffSum(int binN)
 {
 	double sum;
 	sum=0;

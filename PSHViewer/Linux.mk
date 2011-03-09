@@ -7,7 +7,7 @@ NAME = PSHViewer
 
 CC = icpc
 DEFINES = 
-CFLAGS = $(DEFINES) -O3
+CFLAGS = $(DEFINES) -O3 -mcmodel medium -shared-intel
 
 RM = rm
 MOC = moc
