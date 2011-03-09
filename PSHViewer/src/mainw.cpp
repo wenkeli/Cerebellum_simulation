@@ -142,9 +142,13 @@ void MainW::calcGRTotalSpikes()
 	}
 	for(int i=0; i<NUMBINS; i++)
 	{
+		grBinTotalSpikes[i]=0;
+
 		for(int j=0; j<NUMGR; j++)
 		{
 			grTotalSpikes[j]=grTotalSpikes[j]+pshGR[i][j];
+
+			grBinTotalSpikes[i]=grBinTotalSpikes[i]+pshGR[i][j];
 		}
 	}
 

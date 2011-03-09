@@ -60,6 +60,7 @@ extern unsigned short pshGRMax;
 extern unsigned short pshGRTrans[NUMGR][NUMBINS];
 
 extern unsigned int grTotalSpikes[NUMGR];
+extern unsigned long grBinTotalSpikes[NUMBINS];
 extern float grTempSpecificity[NUMGR][NUMBINS];
 extern unsigned short grTempSpPeakBin[NUMGR];
 extern float grTempSpPeakVal[NUMGR];
@@ -77,6 +78,13 @@ extern float totalGRPopActMean[NUMBINS];
 extern float spTotGRPopActR[NUMBINS];
 extern float spActGRPopActR[NUMBINS];
 extern float actTotGRPopActR[NUMBINS];
+
+extern float grWeightsLTD[NUMBINS][NUMGR];
+extern double grPopActLTD[NUMBINS][NUMBINS];
+extern double grPopActDiffLTD[NUMBINS][NUMBINS];
+extern double grPopActDiffSumLTD[NUMBINS];
+extern float grPopActSpecLTD[NUMBINS];
+extern float grPopActPeakLTD[NUMBINS];
 
 extern vector<vector<unsigned short> > pshActiveGR;
 
