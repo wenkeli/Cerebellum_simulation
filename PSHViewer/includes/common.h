@@ -44,6 +44,8 @@
 
 #define TEMPMETSLIDINGW 40 //200 ms
 
+#define LTDSTEP 0.2f
+
 
 using namespace std;
 
@@ -84,7 +86,7 @@ extern double grPopActLTD[NUMBINS][NUMBINS];
 extern double grPopActDiffLTD[NUMBINS][NUMBINS];
 extern double grPopActDiffSumLTD[NUMBINS];
 extern float grPopActSpecLTD[NUMBINS];
-extern float grPopActPeakLTD[NUMBINS];
+extern float grPopActAmpLTD[NUMBINS];
 
 extern vector<vector<unsigned short> > pshActiveGR;
 

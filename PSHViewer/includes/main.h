@@ -47,8 +47,10 @@ float actTotGRPopActR[NUMBINS];
 
 float grWeightsLTD[NUMBINS][NUMGR];
 double grPopActLTD[NUMBINS][NUMBINS];
+double grPopActDiffLTD[NUMBINS][NUMBINS];
+double grPopActDiffSumLTD[NUMBINS];
 float grPopActSpecLTD[NUMBINS];
-float grPopActPeakLTD[NUMBINS];
+float grPopActAmpLTD[NUMBINS];
 
 
 vector<vector<unsigned short> > pshActiveGR;

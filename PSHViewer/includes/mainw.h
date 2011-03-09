@@ -32,6 +32,14 @@ private:
     void calcGRTempSpecific();
     void calcGRPopTempMetric();
 
+    void calcGRLTDTempMetric();
+    void calcGRLTDSynWeight(int);
+    void calcGRLTDPopAct(int);
+    void calcGRLTDPopActDiff(int);
+    void calcGRLTDPopActDiffSum(int);
+    void calcGRLTDPopSpec(int);
+    void calcGRLTDPopAmp(int);
+
 public slots:
 	void dispSingleCell();
 	void dispAllCells();
