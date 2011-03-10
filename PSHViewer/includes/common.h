@@ -44,7 +44,7 @@
 
 #define TEMPMETSLIDINGW 40 //200 ms
 
-#define LTDSTEP 0.2f
+#define LTDSTEP 0.01f//0.2f
 
 
 using namespace std;
