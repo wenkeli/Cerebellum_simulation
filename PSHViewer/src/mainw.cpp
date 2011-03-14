@@ -116,7 +116,7 @@ void MainW::calcTempMetrics()
 	cout<<"calculating population metrics"<<endl;
 	calcGRPopTempMetric();
 	cout<<"calculating population LTD metrics"<<endl;
-	calcGRLTDTempMetric();
+	calcGRPlastTempMetric();
 	cout<<"writing results"<<endl;
 
 	outfile<<"specGRSpM activeGRSpM totalGRSpM "<<
@@ -128,7 +128,7 @@ void MainW::calcTempMetrics()
 		outfile<<specGRPopSpMean[i]<<" "<<activeGRPopSpMean[i]<<" "<<totalGRPopSpMean[i]<<
 				" "<<specGRPopActMean[i]<<" "<<activeGRPopActMean[i]<<" "<<totalGRPopActMean[i]<<
 				" "<<spTotGRPopActR[i]<<" "<<spActGRPopActR[i]<<" "<<actTotGRPopActR[i]<<
-				" "<<grPopActSpecLTD[i]<<" "<<grPopActAmpLTD[i]<<endl;
+				" "<<grPopActSpecPlast[i]<<" "<<grPopActAmpPlast[i]<<endl;
 	}
 
 	outfile<<endl<<endl;
@@ -142,7 +142,7 @@ void MainW::calcTempMetrics()
 	{
 		for(int j=0; j<NUMBINS; j++)
 		{
-			outfile<<grPopActDiffLTD[i][j]<<" ";
+			outfile<<grPopActDiffPlast[i][j]<<" ";
 		}
 		outfile<<endl;
 	}
@@ -330,36 +330,125 @@ void MainW::calcGRPopTempMetric()
 }
 
 
-void MainW::calcGRLTDTempMetric()
+void MainW::calcGRPlastTempMetric()
+{
+	initGRPlastTempVars();
+
+	for(int i=119; i<120; i++)
+	{
+		double maxLTDBinDiff;
+
+		double lastLTDBinDiff;
+		double lastLTPBinDiff;
+
+		maxLTDBinDiff=0;
+
+		lastLTDBinDiff=0;
+		lastLTPBinDiff=0;
+
+		calcGRLTDSynWeight(i, 1);
+		calcGRPlastPopAct(i);
+		maxLTDBinDiff=calcGRPlastPopActDiff(i);
+		lastLTDBinDiff=maxLTDBinDiff;
+
+		for(int j=0; j<10; j++)
+		{
+			double curLTDBinDiff;
+			double curLTPBinDiff;
+
+			calcGRLTPSynWeight(i, maxLTDBinDiff);
+
+			calcGRPlastPopAct(i);
+			curLTPBinDiff=calcGRPlastPopActDiff(i);
+
+			calcGRLTDSynWeight(i, (curLTPBinDiff<maxLTDBinDiff)*(1-(curLTPBinDiff/maxLTDBinDiff)));
+
+			calcGRPlastPopAct(i);
+			curLTDBinDiff=calcGRPlastPopActDiff(i);
+
+//			if(fabs((lastLTDBinDiff-curLTDBinDiff)/maxLTDBinDiff)<0.2)
+//			{
+//				break;
+//			}
+			lastLTPBinDiff=curLTPBinDiff;
+			lastLTDBinDiff=curLTDBinDiff;
+		}
+	}
+}
+
+void MainW::initGRPlastTempVars()
 {
 	for(int i=0; i<NUMBINS; i++)
 	{
-		calcGRLTDSynWeight(i);
-		calcGRLTDPopAct(i);
-		calcGRLTDPopActDiff(i);
-		calcGRLTDPopActDiffSum(i);
-		calcGRLTDPopSpec(i);
-		calcGRLTDPopAmp(i);
+		for(int j=0; j<NUMGR; j++)
+		{
+			grWeightsPlast[i][j]=1;
+		}
 	}
 }
 
-void MainW::calcGRLTDSynWeight(int binN)
+void MainW::calcGRLTDSynWeight(int binN, float scale)
 {
+
+	if(scale<=0)
+	{
+		return;
+	}
+
 	for(int i=0; i<NUMGR; i++)
 	{
-		float spikesPerTrial;
-		float synWeight;
+		float synWeight=grWeightsPlast[binN][i];
 
-		spikesPerTrial=grTempSpecificity[i][binN]*grTotalSpikes[i]/((float)numTrials);
+		for(int j=binN-TEMPMETSLIDINGW+1; j<=binN; j++)
+		{
+			float spikesPerTrial;
+			if(j<0)
+			{
+				continue;
+			}
 
-		synWeight=1-(spikesPerTrial*LTDSTEP);
-		synWeight=(synWeight>0)*synWeight;
+			spikesPerTrial=pshGRTrans[i][j]/((float)numTrials);
 
-		grWeightsLTD[binN][i]=synWeight;
+			synWeight=synWeight-(spikesPerTrial*LTDSTEP*scale);
+			synWeight=(synWeight>0)*synWeight;
+		}
+		grWeightsPlast[binN][i]=synWeight;
 	}
 }
 
-void MainW::calcGRLTDPopAct(int binN)
+void MainW::calcGRLTPSynWeight(int binN, double maxBinLTDDiff)
+{
+	double synWeightScale[NUMBINS];
+
+	for(int i=0; i<NUMBINS; i++)
+	{
+		synWeightScale[i]=grPopActDiffPlast[binN][i]/maxBinLTDDiff;
+	}
+
+	for(int i=0; i<NUMGR; i++)
+	{
+		float synWeight;
+		synWeight=grWeightsPlast[binN][i];
+
+		for(int j=0; j<NUMBINS; j++)
+		{
+			float spikesPerTrial;
+			if(j>=binN-TEMPMETSLIDINGW+1 && j<=binN)
+			{
+				continue;
+			}
+
+			spikesPerTrial=pshGRTrans[i][j]/((float)numTrials);
+
+			synWeight=synWeight+(spikesPerTrial*LTPSTEP*synWeightScale[i]);
+			synWeight=(synWeight<GRSYNWEIGHTMAX)*synWeight+(!synWeight<GRSYNWEIGHTMAX)*GRSYNWEIGHTMAX;
+		}
+
+		grWeightsPlast[binN][i]=synWeight;
+	}
+}
+
+void MainW::calcGRPlastPopAct(int binN)
 {
 
 	for(int i=0; i<NUMBINS; i++)
@@ -371,32 +460,33 @@ void MainW::calcGRLTDPopAct(int binN)
 		{
 			double spikes;
 
-			spikes=grWeightsLTD[binN][j]*pshGR[i][j];
+			spikes=grWeightsPlast[binN][j]*pshGR[i][j];
 			binActSum=binActSum+spikes;
 		}
 
-		grPopActLTD[binN][i]=binActSum;
+		grPopActPlast[binN][i]=binActSum;
 	}
 }
 
-void MainW::calcGRLTDPopActDiff(int binN)
+double MainW::calcGRPlastPopActDiff(int binN)
 {
 	for(int i=0; i<NUMBINS; i++)
 	{
-		grPopActDiffLTD[binN][i]=grBinTotalSpikes[i]-grPopActLTD[binN][i];
+		grPopActDiffPlast[binN][i]=grBinTotalSpikes[i]-grPopActPlast[binN][i];
 	}
+	return grPopActDiffPlast[binN][binN];
 }
 
-void MainW::calcGRLTDPopActDiffSum(int binN)
+void MainW::calcGRPlastPopActDiffSum(int binN)
 {
 	double sum;
 	sum=0;
 	for(int i=0; i<NUMBINS; i++)
 	{
-		sum=sum+grPopActDiffLTD[binN][i];
+		sum=sum+grPopActDiffPlast[binN][i];
 	}
 
-	grPopActDiffSumLTD[binN]=sum;
+	grPopActDiffSumPlast[binN]=sum;
 }
 
 void MainW::calcGRLTDPopSpec(int binN)
@@ -410,13 +500,13 @@ void MainW::calcGRLTDPopSpec(int binN)
 			continue;
 		}
 
-		actSum=actSum+grPopActDiffLTD[binN][i];
+		actSum=actSum+grPopActDiffPlast[binN][i];
 	}
 
-	grPopActSpecLTD[binN]=actSum/grPopActDiffSumLTD[binN];
+	grPopActSpecPlast[binN]=actSum/grPopActDiffSumPlast[binN];
 }
 
 void MainW::calcGRLTDPopAmp(int binN)
 {
-	grPopActAmpLTD[binN]=grPopActDiffLTD[binN][binN]/((double)grBinTotalSpikes[binN]);
+	grPopActAmpPlast[binN]=grPopActDiffPlast[binN][binN]/((double)grBinTotalSpikes[binN]);
 }

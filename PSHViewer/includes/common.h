@@ -44,7 +44,10 @@
 
 #define TEMPMETSLIDINGW 40 //200 ms
 
-#define LTDSTEP 0.01f//0.2f
+#define GRSYNWEIGHTINI 1.0f
+#define GRSYNWEIGHTMAX 2.0f
+#define LTDSTEP 0.001f//0.2f
+#define LTPSTEP 0.001f
 
 
 using namespace std;
@@ -81,12 +84,12 @@ extern float spTotGRPopActR[NUMBINS];
 extern float spActGRPopActR[NUMBINS];
 extern float actTotGRPopActR[NUMBINS];
 
-extern float grWeightsLTD[NUMBINS][NUMGR];
-extern double grPopActLTD[NUMBINS][NUMBINS];
-extern double grPopActDiffLTD[NUMBINS][NUMBINS];
-extern double grPopActDiffSumLTD[NUMBINS];
-extern float grPopActSpecLTD[NUMBINS];
-extern float grPopActAmpLTD[NUMBINS];
+extern float grWeightsPlast[NUMBINS][NUMGR];
+extern double grPopActPlast[NUMBINS][NUMBINS];
+extern double grPopActDiffPlast[NUMBINS][NUMBINS];
+extern double grPopActDiffSumPlast[NUMBINS];
+extern float grPopActSpecPlast[NUMBINS];
+extern float grPopActAmpPlast[NUMBINS];
 
 extern vector<vector<unsigned short> > pshActiveGR;
 

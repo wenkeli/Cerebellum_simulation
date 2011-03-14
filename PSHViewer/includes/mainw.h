@@ -32,11 +32,13 @@ private:
     void calcGRTempSpecific();
     void calcGRPopTempMetric();
 
-    void calcGRLTDTempMetric();
-    void calcGRLTDSynWeight(int);
-    void calcGRLTDPopAct(int);
-    void calcGRLTDPopActDiff(int);
-    void calcGRLTDPopActDiffSum(int);
+    void calcGRPlastTempMetric();
+    void initGRPlastTempVars();
+    void calcGRLTDSynWeight(int, float);
+    void calcGRLTPSynWeight(int, double);
+    void calcGRPlastPopAct(int);
+    double calcGRPlastPopActDiff(int);
+    void calcGRPlastPopActDiffSum(int);
     void calcGRLTDPopSpec(int);
     void calcGRLTDPopAmp(int);
 
