@@ -335,7 +335,7 @@ void MainW::calcGRPlastTempMetric(ofstream &outfile)
 {
 	initGRPlastTempVars();
 
-	for(int i=199; i<200; i++)
+	for(int i=119; i<120; i++)
 	{
 		double maxLTDBinDiff;
 
@@ -363,7 +363,7 @@ void MainW::calcGRPlastTempMetric(ofstream &outfile)
 		outfile<<endl;
 		cout<<"first LTD initialized, max val: "<<maxLTDBinDiff<<endl;
 
-		for(int j=0; j<10; j++)
+		for(int j=0; j<300; j++)
 		{
 			double curLTDBinDiff;
 			double curLTPBinDiff;
@@ -397,6 +397,14 @@ void MainW::calcGRPlastTempMetric(ofstream &outfile)
 			lastLTDBinDiff=curLTDBinDiff;
 		}
 		cout<<"time for bin: "<<time(NULL)-startT<<endl;
+
+		for(int j=0; j<NUMGR; j++)
+		{
+			if(grWeightsPlast[i][j]<0 || grWeightsPlast[i][j]>GRSYNWEIGHTMAX)
+			{
+				cout<<j<<" "<<grWeightsPlast[i][j]<<endl;
+			}
+		}
 	}
 }
 
