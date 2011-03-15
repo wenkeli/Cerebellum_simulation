@@ -32,7 +32,7 @@ private:
     void calcGRTempSpecific();
     void calcGRPopTempMetric();
 
-    void calcGRPlastTempMetric();
+    void calcGRPlastTempMetric(ofstream &);
     void initGRPlastTempVars();
     void calcGRLTDSynWeight(int, float);
     void calcGRLTPSynWeight(int, double);

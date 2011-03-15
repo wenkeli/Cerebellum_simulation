@@ -116,36 +116,36 @@ void MainW::calcTempMetrics()
 	cout<<"calculating population metrics"<<endl;
 	calcGRPopTempMetric();
 	cout<<"calculating population LTD metrics"<<endl;
-	calcGRPlastTempMetric();
+	calcGRPlastTempMetric(outfile);
 	cout<<"writing results"<<endl;
 
-	outfile<<"specGRSpM activeGRSpM totalGRSpM "<<
-			"specGRActM activeGRActM totalGRActM "<<
-			"spTotGRActR spActGRActR actTotGRActR "<<
-			"SpecLTD AmpLTD"<<endl;
-	for(int i=0; i<NUMBINS; i++)
-	{
-		outfile<<specGRPopSpMean[i]<<" "<<activeGRPopSpMean[i]<<" "<<totalGRPopSpMean[i]<<
-				" "<<specGRPopActMean[i]<<" "<<activeGRPopActMean[i]<<" "<<totalGRPopActMean[i]<<
-				" "<<spTotGRPopActR[i]<<" "<<spActGRPopActR[i]<<" "<<actTotGRPopActR[i]<<
-				" "<<grPopActSpecPlast[i]<<" "<<grPopActAmpPlast[i]<<endl;
-	}
-
-	outfile<<endl<<endl;
-	for(int i=0; i<NUMBINS; i++)
-	{
-		outfile<<grBinTotalSpikes[i]<<" ";
-	}
-	outfile<<endl<<endl;
-
-	for(int i=0; i<NUMBINS; i++)
-	{
-		for(int j=0; j<NUMBINS; j++)
-		{
-			outfile<<grPopActDiffPlast[i][j]<<" ";
-		}
-		outfile<<endl;
-	}
+//	outfile<<"specGRSpM activeGRSpM totalGRSpM "<<
+//			"specGRActM activeGRActM totalGRActM "<<
+//			"spTotGRActR spActGRActR actTotGRActR "<<
+//			"SpecLTD AmpLTD"<<endl;
+//	for(int i=0; i<NUMBINS; i++)
+//	{
+//		outfile<<specGRPopSpMean[i]<<" "<<activeGRPopSpMean[i]<<" "<<totalGRPopSpMean[i]<<
+//				" "<<specGRPopActMean[i]<<" "<<activeGRPopActMean[i]<<" "<<totalGRPopActMean[i]<<
+//				" "<<spTotGRPopActR[i]<<" "<<spActGRPopActR[i]<<" "<<actTotGRPopActR[i]<<
+//				" "<<grPopActSpecPlast[i]<<" "<<grPopActAmpPlast[i]<<endl;
+//	}
+//
+//	outfile<<endl<<endl;
+//	for(int i=0; i<NUMBINS; i++)
+//	{
+//		outfile<<grBinTotalSpikes[i]<<" ";
+//	}
+//	outfile<<endl<<endl;
+//
+//	for(int i=0; i<NUMBINS; i++)
+//	{
+//		for(int j=0; j<NUMBINS; j++)
+//		{
+//			outfile<<grPopActDiffPlast[i][j]<<" ";
+//		}
+//		outfile<<endl;
+//	}
 	outfile.close();
 	cout<<"done!"<<endl;
 }
@@ -330,7 +330,7 @@ void MainW::calcGRPopTempMetric()
 }
 
 
-void MainW::calcGRPlastTempMetric()
+void MainW::calcGRPlastTempMetric(ofstream &outfile)
 {
 	initGRPlastTempVars();
 
@@ -351,6 +351,13 @@ void MainW::calcGRPlastTempMetric()
 		maxLTDBinDiff=calcGRPlastPopActDiff(i);
 		lastLTDBinDiff=maxLTDBinDiff;
 
+		outfile<<i<<endl;
+		for(int j=0; j<NUMBINS; j++)
+		{
+			outfile<<grPopActDiffPlast[i][j]<<" ";
+		}
+		outfile<<endl;
+
 		for(int j=0; j<10; j++)
 		{
 			double curLTDBinDiff;
@@ -358,13 +365,23 @@ void MainW::calcGRPlastTempMetric()
 
 			calcGRLTPSynWeight(i, maxLTDBinDiff);
 
+			outfile<<endl<<j<<endl;
 			calcGRPlastPopAct(i);
 			curLTPBinDiff=calcGRPlastPopActDiff(i);
+			for(int k=0; k<NUMBINS; k++)
+			{
+				outfile<<grPopActDiffPlast[i][k]<<" ";
+			}
 
 			calcGRLTDSynWeight(i, (curLTPBinDiff<maxLTDBinDiff)*(1-(curLTPBinDiff/maxLTDBinDiff)));
 
 			calcGRPlastPopAct(i);
 			curLTDBinDiff=calcGRPlastPopActDiff(i);
+			for(int k=0; k<NUMBINS; k++)
+			{
+				outfile<<grPopActDiffPlast[i][k]<<" ";
+			}
+			outfile<<endl;
 
 //			if(fabs((lastLTDBinDiff-curLTDBinDiff)/maxLTDBinDiff)<0.2)
 //			{
