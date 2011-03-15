@@ -109,10 +109,10 @@ void MainW::calcTempMetrics()
 	fileName=QFileDialog::getOpenFileName(this, "Please specify where to save the data", "/", "");
 	outfile.open(fileName.toStdString().c_str(), ios::out);
 
-	cout<<"Calculating total spikes of individual cells"<<endl;
+	cout<<"Calculating total spikes"<<endl;
 	calcGRTotalSpikes();
-	cout<<"calculating individual temporal specificity"<<endl;
-	calcGRTempSpecific();
+//	cout<<"calculating individual temporal specificity"<<endl;
+//	calcGRTempSpecific();
 //	cout<<"calculating population metrics"<<endl;
 //	calcGRPopTempMetric();
 	cout<<"calculating population plasticity metrics"<<endl;
@@ -162,6 +162,7 @@ void MainW::calcGRTotalSpikes()
 	{
 		grTotalSpikes[i]=0;
 	}
+
 	for(int i=0; i<NUMBINS; i++)
 	{
 		grBinTotalSpikes[i]=0;
@@ -341,6 +342,9 @@ void MainW::calcGRPlastTempMetric(ofstream &outfile)
 		double lastLTDBinDiff;
 		double lastLTPBinDiff;
 
+		int startT;
+		startT=time(NULL);
+
 		maxLTDBinDiff=0;
 
 		lastLTDBinDiff=0;
@@ -392,6 +396,7 @@ void MainW::calcGRPlastTempMetric(ofstream &outfile)
 			lastLTPBinDiff=curLTPBinDiff;
 			lastLTDBinDiff=curLTDBinDiff;
 		}
+		cout<<"time for bin: "<<time(NULL)-startT<<endl;
 	}
 }
 
@@ -414,6 +419,7 @@ void MainW::calcGRLTDSynWeight(int binN, float scale)
 		return;
 	}
 
+#pragma omp parallel for schedule(static)
 	for(int i=0; i<NUMGR; i++)
 	{
 		float synWeight;
@@ -449,6 +455,7 @@ void MainW::calcGRLTPSynWeight(int binN, double maxBinLTDDiff)
 	}
 //	cout<<endl;
 
+#pragma omp parallel for schedule(static)
 	for(int i=0; i<NUMGR; i++)
 	{
 		float synWeight;
@@ -476,6 +483,7 @@ void MainW::calcGRLTPSynWeight(int binN, double maxBinLTDDiff)
 void MainW::calcGRPlastPopAct(int binN)
 {
 
+#pragma omp parallel for schedule(static)
 	for(int i=0; i<NUMBINS; i++)
 	{
 		double binActSum;
@@ -495,6 +503,7 @@ void MainW::calcGRPlastPopAct(int binN)
 
 double MainW::calcGRPlastPopActDiff(int binN)
 {
+#pragma omp parallel for schedule(static)
 	for(int i=0; i<NUMBINS; i++)
 	{
 		grPopActDiffPlast[binN][i]=grBinTotalSpikes[i]-grPopActPlast[binN][i];

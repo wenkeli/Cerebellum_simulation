@@ -1,13 +1,14 @@
 #makes IO single cell simulation for subthreshold oscillation parameters exploration
 
 #-DDEBUG -DINTELCC
+#
 
 NAME = PSHViewer
 
 
 CC = icpc
 DEFINES = 
-CFLAGS = $(DEFINES) -O3 -mcmodel medium -shared-intel
+CFLAGS = $(DEFINES) -O3 -openmp -mcmodel medium -shared-intel
 
 RM = rm
 MOC = moc

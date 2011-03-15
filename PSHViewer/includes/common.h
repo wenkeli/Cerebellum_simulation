@@ -14,6 +14,7 @@
 #include <sstream>
 #include <string>
 #include <math.h>
+#include <ctime>
 
 #ifndef NULL
 #define NULL 0
