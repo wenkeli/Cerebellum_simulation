@@ -113,9 +113,9 @@ void MainW::calcTempMetrics()
 	calcGRTotalSpikes();
 	cout<<"calculating individual temporal specificity"<<endl;
 	calcGRTempSpecific();
-	cout<<"calculating population metrics"<<endl;
-	calcGRPopTempMetric();
-	cout<<"calculating population LTD metrics"<<endl;
+//	cout<<"calculating population metrics"<<endl;
+//	calcGRPopTempMetric();
+	cout<<"calculating population plasticity metrics"<<endl;
 	calcGRPlastTempMetric(outfile);
 	cout<<"writing results"<<endl;
 
@@ -334,7 +334,7 @@ void MainW::calcGRPlastTempMetric(ofstream &outfile)
 {
 	initGRPlastTempVars();
 
-	for(int i=119; i<120; i++)
+	for(int i=199; i<200; i++)
 	{
 		double maxLTDBinDiff;
 
@@ -357,6 +357,7 @@ void MainW::calcGRPlastTempMetric(ofstream &outfile)
 			outfile<<grPopActDiffPlast[i][j]<<" ";
 		}
 		outfile<<endl;
+		cout<<"first LTD initialized, max val: "<<maxLTDBinDiff<<endl;
 
 		for(int j=0; j<10; j++)
 		{
@@ -365,13 +366,14 @@ void MainW::calcGRPlastTempMetric(ofstream &outfile)
 
 			calcGRLTPSynWeight(i, maxLTDBinDiff);
 
-			outfile<<endl<<j<<endl;
+			cout<<j<<endl;
 			calcGRPlastPopAct(i);
 			curLTPBinDiff=calcGRPlastPopActDiff(i);
 			for(int k=0; k<NUMBINS; k++)
 			{
 				outfile<<grPopActDiffPlast[i][k]<<" ";
 			}
+			outfile<<endl;
 
 			calcGRLTDSynWeight(i, (curLTPBinDiff<maxLTDBinDiff)*(1-(curLTPBinDiff/maxLTDBinDiff)));
 
@@ -414,7 +416,8 @@ void MainW::calcGRLTDSynWeight(int binN, float scale)
 
 	for(int i=0; i<NUMGR; i++)
 	{
-		float synWeight=grWeightsPlast[binN][i];
+		float synWeight;
+		synWeight=grWeightsPlast[binN][i];
 
 		for(int j=binN-TEMPMETSLIDINGW+1; j<=binN; j++)
 		{
@@ -440,13 +443,18 @@ void MainW::calcGRLTPSynWeight(int binN, double maxBinLTDDiff)
 	for(int i=0; i<NUMBINS; i++)
 	{
 		synWeightScale[i]=grPopActDiffPlast[binN][i]/maxBinLTDDiff;
+		synWeightScale[i]=(synWeightScale[i]>0)*synWeightScale[i];
+
+//		cout<<synWeightScale[i]<<" ";
 	}
+//	cout<<endl;
 
 	for(int i=0; i<NUMGR; i++)
 	{
 		float synWeight;
 		synWeight=grWeightsPlast[binN][i];
 
+//		cout<<i<<" "<<synWeight<<endl;
 		for(int j=0; j<NUMBINS; j++)
 		{
 			float spikesPerTrial;
@@ -457,8 +465,8 @@ void MainW::calcGRLTPSynWeight(int binN, double maxBinLTDDiff)
 
 			spikesPerTrial=pshGRTrans[i][j]/((float)numTrials);
 
-			synWeight=synWeight+(spikesPerTrial*LTPSTEP*synWeightScale[i]);
-			synWeight=(synWeight<GRSYNWEIGHTMAX)*synWeight+(!synWeight<GRSYNWEIGHTMAX)*GRSYNWEIGHTMAX;
+			synWeight=synWeight+(spikesPerTrial*LTPSTEP*synWeightScale[j]);
+			synWeight=(synWeight<GRSYNWEIGHTMAX)*synWeight+(!(synWeight<GRSYNWEIGHTMAX))*GRSYNWEIGHTMAX;
 		}
 
 		grWeightsPlast[binN][i]=synWeight;
