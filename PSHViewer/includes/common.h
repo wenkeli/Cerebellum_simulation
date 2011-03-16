@@ -48,7 +48,7 @@
 #define GRSYNWEIGHTINI 1.0f
 #define GRSYNWEIGHTMAX 2.0f
 #define LTDSTEP 0.0001f//0.2f
-#define LTPSTEP 0.00002f
+#define LTPSTEP 0.00001f
 
 
 using namespace std;
