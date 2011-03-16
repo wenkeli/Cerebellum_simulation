@@ -132,11 +132,11 @@ void MainW::calcTempMetrics()
 //	}
 //
 //	outfile<<endl<<endl;
-//	for(int i=0; i<NUMBINS; i++)
-//	{
-//		outfile<<grBinTotalSpikes[i]<<" ";
-//	}
-//	outfile<<endl<<endl;
+	for(int i=0; i<NUMBINS; i++)
+	{
+		outfile<<grBinTotalSpikes[i]<<" ";
+	}
+	outfile<<endl<<endl;
 //
 //	for(int i=0; i<NUMBINS; i++)
 //	{
@@ -350,12 +350,25 @@ void MainW::calcGRPlastTempMetric(ofstream &outfile)
 		lastLTDBinDiff=0;
 		lastLTPBinDiff=0;
 
-		calcGRLTDSynWeight(i, 1);
+		outfile<<i<<endl;
+		cout<<"initializing LTD"<<endl;
+		for(int j=0; j<300; j++)
+		{
+			cout<<j<<" ";
+			calcGRLTDSynWeight(i, 1);
+			calcGRPlastPopAct(i);
+			calcGRPlastPopActDiff(i);
+			for(int k=0; k<NUMBINS; k++)
+			{
+				outfile<<grPopActDiffPlast[i][k]<<" ";
+			}
+			outfile<<endl;
+		}
+		cout<<endl;
 		calcGRPlastPopAct(i);
 		maxLTDBinDiff=calcGRPlastPopActDiff(i);
 		lastLTDBinDiff=maxLTDBinDiff;
 
-		outfile<<i<<endl;
 		for(int j=0; j<NUMBINS; j++)
 		{
 			outfile<<grPopActDiffPlast[i][j]<<" ";
