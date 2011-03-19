@@ -335,7 +335,7 @@ void MainW::calcGRPlastTempMetric(ofstream &outfile)
 {
 	initGRPlastTempVars();
 
-	for(int i=119; i<120; i++)
+	for(int i=219; i<220; i++)
 	{
 		double maxLTDBinDiff;
 
@@ -352,18 +352,19 @@ void MainW::calcGRPlastTempMetric(ofstream &outfile)
 
 		outfile<<i<<endl;
 		cout<<"initializing LTD"<<endl;
-		for(int j=0; j<300; j++)
-		{
-			cout<<j<<" ";
-			calcGRLTDSynWeight(i, 1);
-			calcGRPlastPopAct(i);
-			calcGRPlastPopActDiff(i);
-			for(int k=0; k<NUMBINS; k++)
-			{
-				outfile<<grPopActDiffPlast[i][k]<<" ";
-			}
-			outfile<<endl;
-		}
+//		for(int j=0; j<300; j++)
+//		{
+//			cout<<j<<" ";
+//			calcGRLTDSynWeight(i, 1);
+//			calcGRPlastPopAct(i);
+//			calcGRPlastPopActDiff(i);
+//			for(int k=0; k<NUMBINS; k++)
+//			{
+//				outfile<<grPopActDiffPlast[i][k]<<" ";
+//			}
+//			outfile<<endl;
+//		}
+		calcGRLTDSynWeight(i, 1);
 		cout<<endl;
 		calcGRPlastPopAct(i);
 		maxLTDBinDiff=calcGRPlastPopActDiff(i);
@@ -381,7 +382,7 @@ void MainW::calcGRPlastTempMetric(ofstream &outfile)
 			double curLTDBinDiff;
 			double curLTPBinDiff;
 
-			calcGRLTPSynWeight(i, maxLTDBinDiff);
+			calcGRLTPSynWeight(i, lastLTDBinDiff);//maxLTDBinDiff);
 
 			cout<<j<<endl;
 			calcGRPlastPopAct(i);
@@ -392,7 +393,7 @@ void MainW::calcGRPlastTempMetric(ofstream &outfile)
 			}
 			outfile<<endl;
 
-			calcGRLTDSynWeight(i, (curLTPBinDiff<maxLTDBinDiff)*(1-(curLTPBinDiff/maxLTDBinDiff)));
+			calcGRLTDSynWeight(i, 1);//(curLTPBinDiff<maxLTDBinDiff)*(1-(curLTPBinDiff/maxLTDBinDiff)));
 
 			calcGRPlastPopAct(i);
 			curLTDBinDiff=calcGRPlastPopActDiff(i);
