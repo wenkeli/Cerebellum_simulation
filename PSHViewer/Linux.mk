@@ -41,13 +41,15 @@ OBJ = $(GUIOBJ) $(COREOBJ)
 all: core gui
 	-$(CC) $(CFLAGS) $(OBJ) -o $(OUTPATH)/$(NAME) -L$(QTLIBPATH) $(QTLIBS)
 
-core: mocs uis $(INCS) $(CORESRC)
+core: $(INCS) $(CORESRC)
 	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(SRCPATH)/main.cpp -o$(OUTPATH)/main.obj
 	
-gui: mocs uis $(INC) $(GUISRC)
+gui: $(INC) $(GUISRC)
 	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(SRCPATH)/mainw.cpp -o$(OUTPATH)/mainw.obj
 	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(SRCPATH)/pshdispw.cpp -o$(OUTPATH)/pshdispw.obj
 
+guiinc: mocs uis
+	
 mocs:
 	-$(MOC) $(INCPATH)/mainw.h -o $(INCPATH)/moc_mainw.h
 	-$(MOC) $(INCPATH)/pshdispw.h -o $(INCPATH)/moc_pshdispw.h
@@ -60,7 +62,7 @@ clean: fclean
 	-$(RM) $(OUTPATH)/$(NAME)
 
 fclean:
-	-$(RM) $(OBJ) $(UICOUT) $(MOCOUT)
+	-$(RM) $(OBJ)
 
 run: $(OUTPATH)/$(NAME)
 	-$(OUTPATH)/$(NAME)
