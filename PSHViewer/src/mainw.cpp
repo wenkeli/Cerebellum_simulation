@@ -335,7 +335,7 @@ void MainW::calcGRPlastTempMetric(ofstream &outfile)
 {
 	initGRPlastTempVars();
 
-	for(int i=219; i<220; i++)
+	for(int i=119; i<120; i++)
 	{
 		double maxLTDBinDiff;
 
