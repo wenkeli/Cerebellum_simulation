@@ -382,7 +382,7 @@ void MainW::calcGRPlastTempMetric(ofstream &outfile)
 			double curLTDBinDiff;
 			double curLTPBinDiff;
 
-			calcGRLTPSynWeight(i, lastLTDBinDiff);//maxLTDBinDiff);
+			calcGRLTPSynWeight(i, maxLTDBinDiff);
 
 			cout<<j<<endl;
 			calcGRPlastPopAct(i);
@@ -393,7 +393,7 @@ void MainW::calcGRPlastTempMetric(ofstream &outfile)
 			}
 			outfile<<endl;
 
-			calcGRLTDSynWeight(i, 1);//(curLTPBinDiff<maxLTDBinDiff)*(1-(curLTPBinDiff/maxLTDBinDiff)));
+			calcGRLTDSynWeight(i, (curLTPBinDiff<maxLTDBinDiff)*(1-(curLTPBinDiff/maxLTDBinDiff)));
 
 			calcGRPlastPopAct(i);
 			curLTDBinDiff=calcGRPlastPopActDiff(i);
