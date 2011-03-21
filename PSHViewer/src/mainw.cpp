@@ -367,7 +367,7 @@ void MainW::calcGRPlastTempMetric(ofstream &outfile)
 		calcGRLTDSynWeight(i, 1);
 		cout<<endl;
 		calcGRPlastPopAct(i);
-		maxLTDBinDiff=calcGRPlastPopActDiff(i)*5;
+		maxLTDBinDiff=calcGRPlastPopActDiff(i);
 		lastLTDBinDiff=maxLTDBinDiff;
 
 		for(int j=0; j<NUMBINS; j++)
