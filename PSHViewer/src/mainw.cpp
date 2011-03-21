@@ -377,7 +377,7 @@ void MainW::calcGRPlastTempMetric(ofstream &outfile)
 		outfile<<endl;
 		cout<<"first LTD initialized, max val: "<<maxLTDBinDiff<<endl;
 
-		for(int j=0; j<100; j++)
+		for(int j=0; j<500; j++)
 		{
 			double curLTDBinDiff;
 			double curLTPBinDiff;
