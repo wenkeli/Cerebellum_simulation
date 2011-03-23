@@ -137,7 +137,7 @@ void MainW::calcTempMetrics()
 		outfile<<grBinTotalSpikes[i]<<" ";
 	}
 	outfile<<endl<<endl;
-//
+
 	for(int i=0; i<NUMBINS; i+=10)
 	{
 		for(int j=0; j<NUMBINS; j++)
@@ -335,7 +335,7 @@ void MainW::calcGRPlastTempMetric(ofstream &outfile)
 {
 	initGRPlastTempVars();
 
-	for(int i=0; i<NUMBINS; i+=10)
+	for(int i=0; i<NUMBINS; i+=10)//for(int i=119; i<120; i++)//
 	{
 		double maxLTDBinDiff;
 
@@ -472,9 +472,9 @@ void MainW::calcGRLTPSynWeight(int binN, double maxBinLTDDiff)
 
 	for(int i=0; i<NUMBINS; i++)
 	{
-//		synWeightScale[i]=grPopActDiffPlast[binN][i]/maxBinLTDDiff;
-//		synWeightScale[i]=(synWeightScale[i]>0)*synWeightScale[i];
-		synWeightScale[i]=1;
+		synWeightScale[i]=grPopActDiffPlast[binN][i]/maxBinLTDDiff;
+		synWeightScale[i]=(synWeightScale[i]>0)*synWeightScale[i];
+//		synWeightScale[i]=1;
 //		cout<<synWeightScale[i]<<" ";
 	}
 //	cout<<endl;
