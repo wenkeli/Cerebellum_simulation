@@ -82,6 +82,7 @@ void MainW::loadPSHFile()
 		for(int j=0; j<NUMBINS; j++)
 		{
 			pshGRTrans[i][j]=pshGR[j][i];
+			ratesGRTrans[i][j]=((float)pshGR[j][i])/((float)numTrials);
 			if(pshGR[j][i]>numTrials/3 && !dispGR[i])//pshGRMax/5)//10
 			{
 				vector<unsigned short> tempRow(NUMBINS);
@@ -173,6 +174,12 @@ void MainW::calcGRTotalSpikes()
 
 			grBinTotalSpikes[i]=grBinTotalSpikes[i]+pshGR[i][j];
 		}
+		grBinTotalSpikes[i]=grBinTotalSpikes[i]/((float)numTrials);
+	}
+
+	for(int i=0; i<NUMGR; i++)
+	{
+		grTotalSpikes[i]=grTotalSpikes[i]/((float)numTrials);
 	}
 
 	grTotalCalced=true;
@@ -451,15 +458,15 @@ void MainW::calcGRLTDSynWeight(int binN, float scale)
 
 		for(int j=binN-TEMPMETSLIDINGW+1; j<=binN; j++)
 		{
-			float spikesPerTrial;
+//			float spikesPerTrial;
 			if(j<0)
 			{
 				continue;
 			}
 
-			spikesPerTrial=pshGRTrans[i][j]/((float)numTrials);
+//			spikesPerTrial=pshGRTrans[i][j]/((float)numTrials);
 
-			synWeight=synWeight-(spikesPerTrial*LTDSTEP*scale);
+			synWeight=synWeight-(ratesGRTrans[i][j]*LTDSTEP*scale);//spikesPerTrial
 			synWeight=(synWeight>0)*synWeight;
 		}
 		grWeightsPlast[binN][i]=synWeight;
@@ -488,15 +495,15 @@ void MainW::calcGRLTPSynWeight(int binN, double maxBinLTDDiff)
 //		cout<<i<<" "<<synWeight<<endl;
 		for(int j=0; j<NUMBINS; j++)
 		{
-			float spikesPerTrial;
+//			float spikesPerTrial;
 			if(j>=binN-TEMPMETSLIDINGW+1 && j<=binN)
 			{
 				continue;
 			}
 
-			spikesPerTrial=pshGRTrans[i][j]/((float)numTrials);
+//			spikesPerTrial=pshGRTrans[i][j]/((float)numTrials);
 
-			synWeight=synWeight+(spikesPerTrial*LTPSTEP*synWeightScale[j]);
+			synWeight=synWeight+(ratesGRTrans[i][j]*LTPSTEP*synWeightScale[j]);//spikesPerTrial
 			synWeight=(synWeight<GRSYNWEIGHTMAX)*synWeight+(!(synWeight<GRSYNWEIGHTMAX))*GRSYNWEIGHTMAX;
 		}
 
@@ -521,7 +528,7 @@ void MainW::calcGRPlastPopAct(int binN)
 			binActSum=binActSum+spikes;
 		}
 
-		grPopActPlast[binN][i]=binActSum;
+		grPopActPlast[binN][i]=binActSum/numTrials;
 	}
 }
 
