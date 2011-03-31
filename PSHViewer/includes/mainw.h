@@ -46,7 +46,10 @@ public slots:
 	void dispSingleCell();
 	void dispAllCells();
 	void loadPSHFile();
+	void loadSimFile();
 	void calcTempMetrics();
+
+	void exportSim();
 };
 
 #endif // MAINW_H

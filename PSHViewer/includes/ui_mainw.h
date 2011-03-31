@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainw.ui'
 **
-** Created: Fri Mar 18 20:22:40 2011
+** Created: Wed Mar 30 15:22:13 2011
 **      by: Qt User Interface Compiler version 4.6.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -44,13 +44,17 @@ public:
     QPushButton *dispSingleCell;
     QPushButton *calcTempMetrics;
     QPushButton *loadPSH;
+    QPushButton *loadSim;
     QPushButton *quitButton;
+    QWidget *verticalLayoutWidget_2;
+    QVBoxLayout *verticalLayout_2;
+    QPushButton *exportSim;
 
     void setupUi(QMainWindow *MainWClass)
     {
         if (MainWClass->objectName().isEmpty())
             MainWClass->setObjectName(QString::fromUtf8("MainWClass"));
-        MainWClass->resize(384, 189);
+        MainWClass->resize(384, 222);
         centralwidget = new QWidget(MainWClass);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         formLayoutWidget = new QWidget(centralwidget);
@@ -92,7 +96,7 @@ public:
 
         verticalLayoutWidget = new QWidget(centralwidget);
         verticalLayoutWidget->setObjectName(QString::fromUtf8("verticalLayoutWidget"));
-        verticalLayoutWidget->setGeometry(QRect(240, 10, 131, 163));
+        verticalLayoutWidget->setGeometry(QRect(240, 10, 131, 197));
         verticalLayout = new QVBoxLayout(verticalLayoutWidget);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         verticalLayout->setContentsMargins(0, 0, 0, 0);
@@ -116,10 +120,26 @@ public:
 
         verticalLayout->addWidget(loadPSH);
 
+        loadSim = new QPushButton(verticalLayoutWidget);
+        loadSim->setObjectName(QString::fromUtf8("loadSim"));
+
+        verticalLayout->addWidget(loadSim);
+
         quitButton = new QPushButton(verticalLayoutWidget);
         quitButton->setObjectName(QString::fromUtf8("quitButton"));
 
         verticalLayout->addWidget(quitButton);
+
+        verticalLayoutWidget_2 = new QWidget(centralwidget);
+        verticalLayoutWidget_2->setObjectName(QString::fromUtf8("verticalLayoutWidget_2"));
+        verticalLayoutWidget_2->setGeometry(QRect(40, 110, 151, 101));
+        verticalLayout_2 = new QVBoxLayout(verticalLayoutWidget_2);
+        verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
+        verticalLayout_2->setContentsMargins(0, 0, 0, 0);
+        exportSim = new QPushButton(verticalLayoutWidget_2);
+        exportSim->setObjectName(QString::fromUtf8("exportSim"));
+
+        verticalLayout_2->addWidget(exportSim);
 
         MainWClass->setCentralWidget(centralwidget);
 
@@ -128,6 +148,8 @@ public:
         QObject::connect(dispSingleCell, SIGNAL(clicked()), MainWClass, SLOT(dispSingleCell()));
         QObject::connect(loadPSH, SIGNAL(clicked()), MainWClass, SLOT(loadPSHFile()));
         QObject::connect(calcTempMetrics, SIGNAL(clicked()), MainWClass, SLOT(calcTempMetrics()));
+        QObject::connect(loadSim, SIGNAL(clicked()), MainWClass, SLOT(loadSimFile()));
+        QObject::connect(exportSim, SIGNAL(clicked()), MainWClass, SLOT(exportSim()));
 
         QMetaObject::connectSlotsByName(MainWClass);
     } // setupUi
@@ -142,7 +164,9 @@ public:
         dispSingleCell->setText(QApplication::translate("MainWClass", "display single cell", 0, QApplication::UnicodeUTF8));
         calcTempMetrics->setText(QApplication::translate("MainWClass", "Calc temp metrics", 0, QApplication::UnicodeUTF8));
         loadPSH->setText(QApplication::translate("MainWClass", "load PSH file", 0, QApplication::UnicodeUTF8));
+        loadSim->setText(QApplication::translate("MainWClass", "load sim state file", 0, QApplication::UnicodeUTF8));
         quitButton->setText(QApplication::translate("MainWClass", "quit", 0, QApplication::UnicodeUTF8));
+        exportSim->setText(QApplication::translate("MainWClass", "export sim state", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

@@ -54,6 +54,29 @@ float grPopActSpecPlast[NUMBINS];
 float grPopActAmpPlast[NUMBINS];
 
 
+//simulation state variables
+short conNumMFtoGR[NUMMF+1];
+char conNumMFtoGO[NUMMF+1];
+short conNumGOtoGR[NUMGO+1];
+char conNumGRtoGO[NUMGR+1];
+
+int conMFtoGR[NUMMF+1][NUMGRPERMF];
+short conMFtoGO[NUMMF+1][MFGOSYNPERMF];
+int conGOtoGR[NUMGO+1][NUMGROUTPERGO];
+short conGRtoGO[NUMGR+1][GRGOSYNPERGR];
+char conBCtoPC[NUMBC][BCPCSYNPERBC];
+char conIOCouple[NUMIO][IOCOUPSYNPERIO];
+char conPCtoNC[NUMPC][PCNCSYNPERPC];
+
+char typeMFs[NUMMF+1];
+float bgFreqContsMF[NUMCONTEXTS][NUMMF+1];
+float incFreqMF[NUMMF+1];
+short csStartMF[NUMMF+1];
+short csEndMF[NUMMF+1];
+
+float pfSynWeightPC[NUMGR];
+
+
 vector<vector<unsigned short> > pshActiveGR;
 
 int main(int argc, char **argv);

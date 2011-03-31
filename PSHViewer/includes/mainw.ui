@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>384</width>
-    <height>189</height>
+    <height>222</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -65,7 +65,7 @@
       <x>240</x>
       <y>10</y>
       <width>131</width>
-      <height>163</height>
+      <height>197</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -98,9 +98,35 @@
       </widget>
      </item>
      <item>
+      <widget class="QPushButton" name="loadSim">
+       <property name="text">
+        <string>load sim state file</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="quitButton">
        <property name="text">
         <string>quit</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>110</y>
+      <width>151</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QPushButton" name="exportSim">
+       <property name="text">
+        <string>export sim state</string>
        </property>
       </widget>
      </item>
@@ -174,11 +200,45 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>loadSim</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWClass</receiver>
+   <slot>loadSimFile()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>344</x>
+     <y>163</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>165</x>
+     <y>181</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>exportSim</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWClass</receiver>
+   <slot>exportSim()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>159</x>
+     <y>158</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>217</x>
+     <y>134</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>dispAllCells()</slot>
   <slot>dispSingleCell()</slot>
   <slot>loadPSHFile()</slot>
   <slot>calcTempMetrics()</slot>
+  <slot>loadSimFile()</slot>
+  <slot>exportSim()</slot>
  </slots>
 </ui>

@@ -102,6 +102,96 @@ void MainW::loadPSHFile()
 	infile.close();
 }
 
+void MainW::loadSimFile()
+{
+	ifstream infile;
+	QString fileName;
+
+	fileName=QFileDialog::getOpenFileName(this, "Please select the simulation state file to open", "/", "");
+
+
+	cout<<"Sim file name: "<<fileName.toStdString()<<endl;
+
+	infile.open(fileName.toStdString().c_str(), ios::binary);
+	if(!infile.good() || !infile.is_open())
+	{
+		cerr<<"error opening file "<<fileName.toStdString()<<endl;
+		return;
+	}
+
+	cout<<"reading state data"<<endl;
+	infile.read((char *)conNumMFtoGR, (NUMMF+1)*sizeof(short));
+	infile.read((char *)conNumMFtoGO, (NUMMF+1)*sizeof(char));
+	infile.read((char *)conNumGOtoGR, (NUMGO+1)*sizeof(short));
+	infile.read((char *)conNumGRtoGO, (NUMGR+1)*sizeof(char));
+
+	infile.read((char *)conMFtoGR, (NUMMF+1)*NUMGRPERMF*sizeof(int));
+	infile.read((char *)conMFtoGO, (NUMMF+1)*MFGOSYNPERMF*sizeof(short));
+	infile.read((char *)conGOtoGR, (NUMGO+1)*NUMGROUTPERGO*sizeof(int));
+	infile.read((char *)conGRtoGO, (NUMGR+1)*GRGOSYNPERGR*sizeof(short));
+	infile.read((char *)conBCtoPC, NUMBC*BCPCSYNPERBC*sizeof(char));
+	infile.read((char *)conIOCouple, NUMIO*IOCOUPSYNPERIO*sizeof(char));
+	infile.read((char *)conPCtoNC, NUMPC*PCNCSYNPERPC*sizeof(char));
+
+	infile.read((char *)typeMFs, (NUMMF+1)*sizeof(char));
+	infile.read((char *)bgFreqContsMF, NUMCONTEXTS*(NUMMF+1)*sizeof(float));
+	infile.read((char *)incFreqMF, (NUMMF+1)*sizeof(float));
+	infile.read((char *)csStartMF, (NUMMF+1)*sizeof(short));
+	infile.read((char *)csEndMF, (NUMMF+1)*sizeof(short));
+
+	infile.read((char *)pfSynWeightPC, NUMGR*sizeof(float));
+	cout<<"done"<<endl;
+
+	infile.close();
+}
+
+void MainW::exportSim()
+{
+	ofstream outf;
+
+	QString fileName;
+
+	fileName=QFileDialog::getOpenFileName(this, "Please select where you want to save the sim", "/", "");
+
+
+	cout<<"Sim file name: "<<fileName.toStdString()<<endl;
+
+	outf.open(fileName.toStdString().c_str(), ios::binary);
+	if(!outf.good() || !outf.is_open())
+	{
+		cerr<<"error opening file "<<fileName.toStdString()<<endl;
+		return;
+	}
+
+	cout<<"writing state data"<<endl;
+	outf.seekp(0, ios_base::beg);
+	outf.write((char *)conNumMFtoGR, (NUMMF+1)*sizeof(short));
+	outf.write((char *)conNumMFtoGO, (NUMMF+1)*sizeof(char));
+	outf.write((char *)conNumGOtoGR, (NUMGO+1)*sizeof(short));
+	outf.write((char *)conNumGRtoGO, (NUMGR+1)*sizeof(char));
+
+	outf.write((char *)conMFtoGR, (NUMMF+1)*NUMGRPERMF*sizeof(int));
+	outf.write((char *)conMFtoGO, (NUMMF+1)*MFGOSYNPERMF*sizeof(short));
+	outf.write((char *)conGOtoGR, (NUMGO+1)*NUMGROUTPERGO*sizeof(int));
+	outf.write((char *)conGRtoGO, (NUMGR+1)*GRGOSYNPERGR*sizeof(short));
+	outf.write((char *)conBCtoPC, NUMBC*BCPCSYNPERBC*sizeof(char));
+	outf.write((char *)conIOCouple, NUMIO*IOCOUPSYNPERIO*sizeof(char));
+	outf.write((char *)conPCtoNC, NUMPC*PCNCSYNPERPC*sizeof(char));
+
+	outf.write((char *)typeMFs, (NUMMF+1)*sizeof(char));
+	outf.write((char *)bgFreqContsMF, NUMCONTEXTS*(NUMMF+1)*sizeof(float));
+	outf.write((char *)incFreqMF, (NUMMF+1)*sizeof(float));
+	outf.write((char *)csStartMF, (NUMMF+1)*sizeof(short));
+	outf.write((char *)csEndMF, (NUMMF+1)*sizeof(short));
+
+	outf.write((char *)pfSynWeightPC, NUMGR*sizeof(float));
+
+	outf.flush();
+	cout<<"done"<<endl;
+
+	outf.close();
+}
+
 void MainW::calcTempMetrics()
 {
 	ofstream outfile;
@@ -148,6 +238,11 @@ void MainW::calcTempMetrics()
 		outfile<<endl;
 	}
 	outfile.close();
+
+	for(int i=0; i<NUMGR; i++)
+	{
+		pfSynWeightPC[i]=grWeightsPlast[220][i]/2;
+	}
 	cout<<"done!"<<endl;
 }
 

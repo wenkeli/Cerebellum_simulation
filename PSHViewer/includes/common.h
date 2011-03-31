@@ -31,10 +31,6 @@
 #define CSDURATIONBIN 200
 #define CSDURATIONT 1000
 
-#define NUMMF 1024
-#define NUMGO 1024
-#define NUMGR 1048576
-
 #define BINWIDTH 5
 
 #define ALLVIEWPH 1024
@@ -49,6 +45,29 @@
 #define GRSYNWEIGHTMAX 2.0f
 #define LTDSTEP 0.05f//0.2f
 #define LTPSTEP 0.05f//0.5f
+
+//simulation state parameters
+//connectivity parameters
+#define NUMGRPERMF 5120
+#define MFGOSYNPERMF 64
+#define NUMGROUTPERGO 3840
+#define GRGOSYNPERGR 2
+#define BCPCSYNPERBC 4
+#define IOCOUPSYNPERIO 1
+#define PCNCSYNPERPC 3
+
+#define NUMMF 1024
+#define NUMGO 1024
+#define NUMGR 1048576
+#define NUMBC 128
+#define NUMIO 4
+#define NUMPC 32
+//end connectivity parameters
+//mossy fiber parameters
+#define NUMCONTEXTS 2
+//end mossy fiber parameters
+//end simulation state parameters
+
 
 
 using namespace std;
@@ -92,6 +111,28 @@ extern double grPopActDiffPlast[NUMBINS][NUMBINS];
 extern double grPopActDiffSumPlast[NUMBINS];
 extern float grPopActSpecPlast[NUMBINS];
 extern float grPopActAmpPlast[NUMBINS];
+
+//simulation state variables
+extern short conNumMFtoGR[NUMMF+1];
+extern char conNumMFtoGO[NUMMF+1];
+extern short conNumGOtoGR[NUMGO+1];
+extern char conNumGRtoGO[NUMGR+1];
+
+extern int conMFtoGR[NUMMF+1][NUMGRPERMF];
+extern short conMFtoGO[NUMMF+1][MFGOSYNPERMF];
+extern int conGOtoGR[NUMGO+1][NUMGROUTPERGO];
+extern short conGRtoGO[NUMGR+1][GRGOSYNPERGR];
+extern char conBCtoPC[NUMBC][BCPCSYNPERBC];
+extern char conIOCouple[NUMIO][IOCOUPSYNPERIO];
+extern char conPCtoNC[NUMPC][PCNCSYNPERPC];
+
+extern char typeMFs[NUMMF+1];
+extern float bgFreqContsMF[NUMCONTEXTS][NUMMF+1];
+extern float incFreqMF[NUMMF+1];
+extern short csStartMF[NUMMF+1];
+extern short csEndMF[NUMMF+1];
+
+extern float pfSynWeightPC[NUMGR];
 
 extern vector<vector<unsigned short> > pshActiveGR;
 
