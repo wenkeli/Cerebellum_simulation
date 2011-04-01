@@ -26,6 +26,15 @@ unsigned short pshGRMax=1;
 unsigned short pshGRTrans[NUMGR][NUMBINS];
 float ratesGRTrans[NUMGR][NUMBINS];
 
+unsigned int pshPC[NUMBINS][NUMPC];
+unsigned int pshPCMax=1;
+
+unsigned int pshBC[NUMBINS][NUMBC];
+unsigned int pshBCMax=1;
+
+unsigned int pshSC[NUMBINS][NUMSC];
+unsigned int pshSCMax=1;
+
 double grTotalSpikes[NUMGR];
 double grBinTotalSpikes[NUMBINS];
 float grTempSpecificity[NUMGR][NUMBINS];
