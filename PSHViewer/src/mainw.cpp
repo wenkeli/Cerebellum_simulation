@@ -241,7 +241,7 @@ void MainW::calcTempMetrics()
 
 	for(int i=0; i<NUMGR; i++)
 	{
-		pfSynWeightPC[i]=grWeightsPlast[220][i]/2;
+		pfSynWeightPC[i]=grWeightsPlast[60][i]/2;
 	}
 	cout<<"done!"<<endl;
 }
