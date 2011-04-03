@@ -25,6 +25,8 @@ private:
     int type, wH, wW, cellT, cellN;
 
     void paintPSH();
+    template <class pshType> void paintSingle(pshType *, pshType);
+    template <class pshType> void paintPopulation(pshType *, pshType, int, int);
 
 protected:
 	void paintEvent(QPaintEvent *event);

@@ -8,6 +8,9 @@ MainW::MainW(QWidget *parent, QApplication *a)
 	ui.dispCellType->addItem("Mossy fibers");
 	ui.dispCellType->addItem("Golgi Cells");
 	ui.dispCellType->addItem("Granule cells");
+	ui.dispCellType->addItem("Purkinje cells");
+	ui.dispCellType->addItem("Basket cells");
+	ui.dispCellType->addItem("Stellate cells");
 
 	ui.dispSingleCellNum->setMinimum(0);
 	ui.dispSingleCellNum->setMaximum(NUMGR-1);
@@ -73,6 +76,18 @@ void MainW::loadPSHFile()
 	cout<<"loading GR PSH..."<<endl;
 	infile.read((char *)pshGR, NUMBINS*NUMGR*sizeof(unsigned short));
 	infile.read((char *)&pshGRMax, sizeof(unsigned short));
+
+	cout<<"loading PC PSH..."<<endl;
+	infile.read((char *)pshPC, NUMBINS*NUMPC*sizeof(unsigned int));
+	infile.read((char *)&pshPCMax, sizeof(unsigned int));
+
+	cout<<"loading BC PSH..."<<endl;
+	infile.read((char *)pshBC, NUMBINS*NUMBC*sizeof(unsigned int));
+	infile.read((char *)&pshBCMax, sizeof(unsigned int));
+
+	cout<<"loading SC PSH..."<<endl;
+	infile.read((char *)pshSC, NUMBINS*NUMSC*sizeof(unsigned int));
+	infile.read((char *)&pshSCMax, sizeof(unsigned int));
 
 
 	pshActiveGR.clear();

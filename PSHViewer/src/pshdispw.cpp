@@ -164,7 +164,7 @@ void PSHDispw::paintPSH()
 				}
 			}
 		}
-		else
+		else if(cellT==2)
 		{
 			int i=0;
 			strFormat.str("");
@@ -255,6 +255,139 @@ void PSHDispw::paintPSH()
 //				}
 			}
 		}
+		else if(cellT==3)
+		{
+			strFormat.str("");
+			strFormat<<"PC bin Max value: "<<pshPCMax;
+			paintStr=strFormat.str().c_str();
+			p.drawText(wW/2-20, wH-40, paintStr);
+
+			for(int i=0; i<ALLVIEWPW; i++)
+			{
+				QColor paintColor;
+				int binN, greyVal;
+
+				binN=(int)(i/((float)ALLVIEWPW/NUMBINS));
+
+				if(i>=CSSTARTT && i<CSENDT)
+				{
+					for(int j=0; j<NUMPC; j++)
+					{
+						greyVal=(int)(((float)pshPC[binN][j]/pshPCMax)*255);//numTrials
+						if(greyVal>255)
+						{
+							greyVal=255;
+						}
+						paintColor.setRgb(greyVal, greyVal, 255, 255);
+						p.setPen(paintColor);
+						p.drawPoint(i, j);
+					}
+				}
+				else
+				{
+					for(int j=0; j<NUMPC; j++)
+					{
+						greyVal=(int)(((float)pshPC[binN][j]/pshPCMax)*255);//numTrials
+						if(greyVal>255)
+						{
+							greyVal=255;
+						}
+						paintColor.setRgb(greyVal, greyVal, greyVal, 255);
+						p.setPen(paintColor);
+						p.drawPoint(i, j);
+					}
+				}
+			}
+		}
+		else if(cellT==4)
+		{
+			strFormat.str("");
+			strFormat<<"BC bin Max value: "<<pshBCMax;
+			paintStr=strFormat.str().c_str();
+			p.drawText(wW/2-20, wH-40, paintStr);
+
+			for(int i=0; i<ALLVIEWPW; i++)
+			{
+				QColor paintColor;
+				int binN, greyVal;
+
+				binN=(int)(i/((float)ALLVIEWPW/NUMBINS));
+
+				if(i>=CSSTARTT && i<CSENDT)
+				{
+					for(int j=0; j<NUMBC; j++)
+					{
+						greyVal=(int)(((float)pshBC[binN][j]/pshBCMax)*255);//numTrials
+						if(greyVal>255)
+						{
+							greyVal=255;
+						}
+						paintColor.setRgb(greyVal, greyVal, 255, 255);
+						p.setPen(paintColor);
+						p.drawPoint(i, j);
+					}
+				}
+				else
+				{
+					for(int j=0; j<NUMBC; j++)
+					{
+						greyVal=(int)(((float)pshBC[binN][j]/pshBCMax)*255);//numTrials
+						if(greyVal>255)
+						{
+							greyVal=255;
+						}
+						paintColor.setRgb(greyVal, greyVal, greyVal, 255);
+						p.setPen(paintColor);
+						p.drawPoint(i, j);
+					}
+				}
+			}
+		}
+		else if(cellT==5)
+		{
+			strFormat.str("");
+			strFormat<<"SC bin Max value: "<<pshSCMax;
+			paintStr=strFormat.str().c_str();
+			p.drawText(wW/2-20, wH-40, paintStr);
+
+			for(int i=0; i<ALLVIEWPW; i++)
+			{
+				QColor paintColor;
+				int binN, greyVal;
+
+				binN=(int)(i/((float)ALLVIEWPW/NUMBINS));
+
+				if(i>=CSSTARTT && i<CSENDT)
+				{
+					for(int j=0; j<NUMSC; j++)
+					{
+						greyVal=(int)(((float)pshSC[binN][j]/pshSCMax)*255);//numTrials
+						if(greyVal>255)
+						{
+							greyVal=255;
+						}
+						paintColor.setRgb(greyVal, greyVal, 255, 255);
+						p.setPen(paintColor);
+						p.drawPoint(i, j);
+					}
+				}
+				else
+				{
+					for(int j=0; j<NUMSC; j++)
+					{
+						greyVal=(int)(((float)pshSC[binN][j]/pshSCMax)*255);//numTrials
+						if(greyVal>255)
+						{
+							greyVal=255;
+						}
+						paintColor.setRgb(greyVal, greyVal, greyVal, 255);
+						p.setPen(paintColor);
+						p.drawPoint(i, j);
+					}
+				}
+			}
+		}
+
 	}
 	else
 	{
@@ -326,7 +459,7 @@ void PSHDispw::paintPSH()
 				p.fillRect(xPos, yPos, SINGLEVIEWPW/NUMBINS, SINGLEVIEWPH-yPos, Qt::white);
 			}
 		}
-		else
+		else if(cellT==2)
 		{
 			if(cellN>=pshActiveGR.size())
 			{
@@ -365,6 +498,74 @@ void PSHDispw::paintPSH()
 //				p.fillRect(xPos, yPos, SINGLEVIEWPW/NUMBINS, SINGLEVIEWPH-yPos, Qt::white);
 //			}
 		}
+		else if(cellT==3)
+		{
+			if(cellN>=NUMPC)
+			{
+				cellN=NUMPC-1;
+			}
+			for(int i=0; i<NUMBINS; i++)
+			{
+				if(pshPC[i][cellN]>yMaxVal)
+				{
+					yMaxVal=pshPC[i][cellN];
+				}
+			}
+			for(int i=0; i<NUMBINS; i++)
+			{
+				int yPos, xPos;
+				yPos=SINGLEVIEWPH-(int)(((float)(pshPC[i][cellN])/pshPCMax)*SINGLEVIEWPH);//yMaxVal
+				xPos=(int)(i*((float)SINGLEVIEWPW/NUMBINS))+100;
+
+				p.fillRect(xPos, yPos, SINGLEVIEWPW/NUMBINS, SINGLEVIEWPH-yPos, Qt::white);
+			}
+		}
+
+		else if(cellT==4)
+		{
+			if(cellN>=NUMBC)
+			{
+				cellN=NUMBC-1;
+			}
+			for(int i=0; i<NUMBINS; i++)
+			{
+				if(pshBC[i][cellN]>yMaxVal)
+				{
+					yMaxVal=pshBC[i][cellN];
+				}
+			}
+			for(int i=0; i<NUMBINS; i++)
+			{
+				int yPos, xPos;
+				yPos=SINGLEVIEWPH-(int)(((float)(pshBC[i][cellN])/pshBCMax)*SINGLEVIEWPH);//yMaxVal
+				xPos=(int)(i*((float)SINGLEVIEWPW/NUMBINS))+100;
+
+				p.fillRect(xPos, yPos, SINGLEVIEWPW/NUMBINS, SINGLEVIEWPH-yPos, Qt::white);
+			}
+		}
+		else
+		{
+			if(cellN>=NUMSC)
+			{
+				cellN=NUMSC-1;
+			}
+			for(int i=0; i<NUMBINS; i++)
+			{
+				if(pshSC[i][cellN]>yMaxVal)
+				{
+					yMaxVal=pshSC[i][cellN];
+				}
+			}
+			for(int i=0; i<NUMBINS; i++)
+			{
+				int yPos, xPos;
+				yPos=SINGLEVIEWPH-(int)(((float)(pshSC[i][cellN])/pshSCMax)*SINGLEVIEWPH);//yMaxVal
+				xPos=(int)(i*((float)SINGLEVIEWPW/NUMBINS))+100;
+
+				p.fillRect(xPos, yPos, SINGLEVIEWPW/NUMBINS, SINGLEVIEWPH-yPos, Qt::white);
+			}
+		}
+
 
 		strFormat.str("");
 		strFormat<<"max # of spikes: "<<pshGRMax;
@@ -392,6 +593,16 @@ void PSHDispw::paintPSH()
 		}
 	}
 	p.end();
+}
+
+template <class pshType> void PSHDispw::paintSingle(pshType *, pshType)
+{
+
+}
+
+template <class pshType> void PSHDispw::paintPopulation(pshType *, pshType, int, int)
+{
+
 }
 
 void PSHDispw::paintEvent(QPaintEvent *event)
