@@ -80,14 +80,56 @@ void MainW::loadPSHFile()
 	cout<<"loading PC PSH..."<<endl;
 	infile.read((char *)pshPC, NUMBINS*NUMPC*sizeof(unsigned int));
 	infile.read((char *)&pshPCMax, sizeof(unsigned int));
+	cout<<pshPCMax<<" "<<pshPC[0][0]<<" "<<pshPC[NUMBINS-1][NUMPC-1]<<endl;
+	if(pshPCMax<=0)
+	{
+		for(int i=0; i<NUMBINS; i++)
+		{
+			for(int j=0; j<NUMPC; j++)
+			{
+				if(pshPC[i][j]>pshPCMax)
+				{
+					pshPCMax=pshPC[i][j];
+				}
+			}
+		}
+	}
 
 	cout<<"loading BC PSH..."<<endl;
 	infile.read((char *)pshBC, NUMBINS*NUMBC*sizeof(unsigned int));
 	infile.read((char *)&pshBCMax, sizeof(unsigned int));
+	cout<<pshBCMax<<" "<<pshBC[0][0]<<" "<<pshBC[NUMBINS-1][NUMBC-1]<<endl;
+	if(pshBCMax<=0)
+	{
+		for(int i=0; i<NUMBINS; i++)
+		{
+			for(int j=0; j<NUMBC; j++)
+			{
+				if(pshBC[i][j]>pshBCMax)
+				{
+					pshBCMax=pshBC[i][j];
+				}
+			}
+		}
+	}
 
 	cout<<"loading SC PSH..."<<endl;
 	infile.read((char *)pshSC, NUMBINS*NUMSC*sizeof(unsigned int));
 	infile.read((char *)&pshSCMax, sizeof(unsigned int));
+	cout<<pshSCMax<<" "<<pshSC[0][0]<<" "<<pshSC[NUMBINS-1][NUMSC-1]<<endl;
+	if(pshSCMax<=0)
+	{
+		for(int i=0; i<NUMBINS; i++)
+		{
+			for(int j=0; j<NUMSC; j++)
+			{
+				if(pshSC[i][j]>pshSCMax)
+				{
+					pshSCMax=pshSC[i][j];
+				}
+			}
+		}
+	}
 
 
 	pshActiveGR.clear();
@@ -256,7 +298,7 @@ void MainW::calcTempMetrics()
 
 	for(int i=0; i<NUMGR; i++)
 	{
-		pfSynWeightPC[i]=grWeightsPlast[60][i]/2;
+		pfSynWeightPC[i]=grWeightsPlast[100][i]/2;
 	}
 	cout<<"done!"<<endl;
 }
