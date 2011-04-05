@@ -286,7 +286,8 @@ void MainW::calcTempMetrics()
 	}
 	outfile<<endl<<endl;
 
-	for(int i=0; i<NUMBINS; i+=10)
+//	for(int i=0; i<NUMBINS; i+=10)
+	for(int i=100; i<=100; i++)
 	{
 		for(int j=0; j<NUMBINS; j++)
 		{
@@ -298,7 +299,7 @@ void MainW::calcTempMetrics()
 
 	for(int i=0; i<NUMGR; i++)
 	{
-		pfSynWeightPC[i]=grWeightsPlast[200][i]/2;
+		pfSynWeightPC[i]=grWeightsPlast[100][i]/2;
 	}
 	cout<<"done!"<<endl;
 }
@@ -494,7 +495,8 @@ void MainW::calcGRPlastTempMetric(ofstream &outfile)
 {
 	initGRPlastTempVars();
 
-	for(int i=0; i<NUMBINS; i+=10)//for(int i=119; i<120; i++)//
+//	for(int i=0; i<NUMBINS; i+=10)
+	for(int i=100; i<=100; i++)
 	{
 		double maxLTDBinDiff;
 
