@@ -28,6 +28,8 @@ private:
 
     bool grTotalCalced;
 
+    int calcTempMetricBinN;
+
     void calcGRTotalSpikes();
     void calcGRTempSpecific();
     void calcGRPopTempMetric();
@@ -48,6 +50,8 @@ public slots:
 	void loadPSHFile();
 	void loadSimFile();
 	void calcTempMetrics();
+
+	void changeTempMetricBinN(int);
 
 	void exportSim();
 };

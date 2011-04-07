@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainw.ui'
 **
-** Created: Wed Mar 30 15:22:13 2011
+** Created: Thu Apr 7 12:30:59 2011
 **      by: Qt User Interface Compiler version 4.6.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -38,6 +38,8 @@ public:
     QSpinBox *grDispStartNum;
     QLabel *label_2;
     QSpinBox *dispSingleCellNum;
+    QSpinBox *tempMetricBinN;
+    QLabel *label_4;
     QWidget *verticalLayoutWidget;
     QVBoxLayout *verticalLayout;
     QPushButton *dispAllCells;
@@ -59,7 +61,7 @@ public:
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         formLayoutWidget = new QWidget(centralwidget);
         formLayoutWidget->setObjectName(QString::fromUtf8("formLayoutWidget"));
-        formLayoutWidget->setGeometry(QRect(10, 10, 213, 91));
+        formLayoutWidget->setGeometry(QRect(10, 10, 226, 128));
         formLayout = new QFormLayout(formLayoutWidget);
         formLayout->setObjectName(QString::fromUtf8("formLayout"));
         formLayout->setFieldGrowthPolicy(QFormLayout::ExpandingFieldsGrow);
@@ -93,6 +95,16 @@ public:
         dispSingleCellNum->setObjectName(QString::fromUtf8("dispSingleCellNum"));
 
         formLayout->setWidget(2, QFormLayout::FieldRole, dispSingleCellNum);
+
+        tempMetricBinN = new QSpinBox(formLayoutWidget);
+        tempMetricBinN->setObjectName(QString::fromUtf8("tempMetricBinN"));
+
+        formLayout->setWidget(3, QFormLayout::FieldRole, tempMetricBinN);
+
+        label_4 = new QLabel(formLayoutWidget);
+        label_4->setObjectName(QString::fromUtf8("label_4"));
+
+        formLayout->setWidget(3, QFormLayout::LabelRole, label_4);
 
         verticalLayoutWidget = new QWidget(centralwidget);
         verticalLayoutWidget->setObjectName(QString::fromUtf8("verticalLayoutWidget"));
@@ -132,7 +144,7 @@ public:
 
         verticalLayoutWidget_2 = new QWidget(centralwidget);
         verticalLayoutWidget_2->setObjectName(QString::fromUtf8("verticalLayoutWidget_2"));
-        verticalLayoutWidget_2->setGeometry(QRect(40, 110, 151, 101));
+        verticalLayoutWidget_2->setGeometry(QRect(40, 150, 151, 61));
         verticalLayout_2 = new QVBoxLayout(verticalLayoutWidget_2);
         verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
         verticalLayout_2->setContentsMargins(0, 0, 0, 0);
@@ -150,6 +162,7 @@ public:
         QObject::connect(calcTempMetrics, SIGNAL(clicked()), MainWClass, SLOT(calcTempMetrics()));
         QObject::connect(loadSim, SIGNAL(clicked()), MainWClass, SLOT(loadSimFile()));
         QObject::connect(exportSim, SIGNAL(clicked()), MainWClass, SLOT(exportSim()));
+        QObject::connect(tempMetricBinN, SIGNAL(valueChanged(int)), MainWClass, SLOT(changeTempMetricBinN(int)));
 
         QMetaObject::connectSlotsByName(MainWClass);
     } // setupUi
@@ -160,6 +173,7 @@ public:
         label_3->setText(QApplication::translate("MainWClass", "Display cell type", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWClass", "Granule start page", 0, QApplication::UnicodeUTF8));
         label_2->setText(QApplication::translate("MainWClass", "Display single cell #", 0, QApplication::UnicodeUTF8));
+        label_4->setText(QApplication::translate("MainWClass", "Temp Metric bin #", 0, QApplication::UnicodeUTF8));
         dispAllCells->setText(QApplication::translate("MainWClass", "display all cells", 0, QApplication::UnicodeUTF8));
         dispSingleCell->setText(QApplication::translate("MainWClass", "display single cell", 0, QApplication::UnicodeUTF8));
         calcTempMetrics->setText(QApplication::translate("MainWClass", "Calc temp metrics", 0, QApplication::UnicodeUTF8));

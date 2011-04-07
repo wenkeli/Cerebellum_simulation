@@ -19,8 +19,8 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>213</width>
-      <height>91</height>
+      <width>226</width>
+      <height>128</height>
      </rect>
     </property>
     <layout class="QFormLayout" name="formLayout">
@@ -56,6 +56,16 @@
      </item>
      <item row="2" column="1">
       <widget class="QSpinBox" name="dispSingleCellNum"/>
+     </item>
+     <item row="3" column="1">
+      <widget class="QSpinBox" name="tempMetricBinN"/>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Temp Metric bin #</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -117,9 +127,9 @@
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>110</y>
+      <y>150</y>
       <width>151</width>
-      <height>101</height>
+      <height>61</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -223,12 +233,28 @@
    <slot>exportSim()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>159</x>
-     <y>158</y>
+     <x>160</x>
+     <y>192</y>
     </hint>
     <hint type="destinationlabel">
      <x>217</x>
      <y>134</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>tempMetricBinN</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWClass</receiver>
+   <slot>changeTempMetricBinN(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>171</x>
+     <y>107</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>226</x>
+     <y>84</y>
     </hint>
    </hints>
   </connection>
@@ -240,5 +266,6 @@
   <slot>calcTempMetrics()</slot>
   <slot>loadSimFile()</slot>
   <slot>exportSim()</slot>
+  <slot>changeTempMetricBinN(int)</slot>
  </slots>
 </ui>

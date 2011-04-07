@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainw.h'
 **
-** Created: Wed Mar 30 15:22:13 2011
+** Created: Thu Apr 7 12:30:59 2011
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.6.3)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainW[] = {
        4,       // revision
        0,       // classname
        0,    0, // classinfo
-       6,   14, // methods
+       7,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -37,6 +37,7 @@ static const uint qt_meta_data_MainW[] = {
       53,    6,    6,    6, 0x0a,
       67,    6,    6,    6, 0x0a,
       85,    6,    6,    6, 0x0a,
+     111,    6,    6,    6, 0x0a,
 
        0        // eod
 };
@@ -44,7 +45,8 @@ static const uint qt_meta_data_MainW[] = {
 static const char qt_meta_stringdata_MainW[] = {
     "MainW\0\0dispSingleCell()\0dispAllCells()\0"
     "loadPSHFile()\0loadSimFile()\0"
-    "calcTempMetrics()\0exportSim()\0"
+    "calcTempMetrics()\0changeTempMetricBinN(int)\0"
+    "exportSim()\0"
 };
 
 const QMetaObject MainW::staticMetaObject = {
@@ -81,10 +83,11 @@ int MainW::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 2: loadPSHFile(); break;
         case 3: loadSimFile(); break;
         case 4: calcTempMetrics(); break;
-        case 5: exportSim(); break;
+        case 5: changeTempMetricBinN((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 6: exportSim(); break;
         default: ;
         }
-        _id -= 6;
+        _id -= 7;
     }
     return _id;
 }

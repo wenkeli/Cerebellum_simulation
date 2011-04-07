@@ -18,11 +18,15 @@ MainW::MainW(QWidget *parent, QApplication *a)
 	ui.grDispStartNum->setMinimum(0);
 	ui.grDispStartNum->setMaximum(1023);
 
+	ui.tempMetricBinN->setMinimum(0);
+	ui.tempMetricBinN->setMaximum(0);
+
 	this->setAttribute(Qt::WA_DeleteOnClose);
 
 	app=a;
 
 	grTotalCalced=false;
+	calcBinN=0;
 	connect(this, SIGNAL(destroyed()), app, SLOT(quit()));
 	connect(ui.quitButton, SIGNAL(clicked()), app, SLOT(quit()));
 }
@@ -287,7 +291,7 @@ void MainW::calcTempMetrics()
 	outfile<<endl<<endl;
 
 //	for(int i=0; i<NUMBINS; i+=10)
-	for(int i=200; i<=200; i++)
+	for(int i=calcTempMetricBinN; i<=calcTempMetricBinN; i++)
 	{
 		for(int j=0; j<NUMBINS; j++)
 		{
@@ -299,9 +303,25 @@ void MainW::calcTempMetrics()
 
 	for(int i=0; i<NUMGR; i++)
 	{
-		pfSynWeightPC[i]=grWeightsPlast[100][i]/2;
+		pfSynWeightPC[i]=grWeightsPlast[calcTempMetricBinN][i]/2;
 	}
 	cout<<"done!"<<endl;
+}
+
+void MainW::changeTempMetricBinN(int bN)
+{
+	if(bN>=NUMBINS)
+	{
+		calcTempMetricBinN=NUMBINS-1;
+	}
+	else if(bN<0)
+	{
+		calcTempMetricBinN=0;
+	}
+	else
+	{
+		calcTempMetricBinN=bN;
+	}
 }
 
 
@@ -496,7 +516,7 @@ void MainW::calcGRPlastTempMetric(ofstream &outfile)
 	initGRPlastTempVars();
 
 //	for(int i=0; i<NUMBINS; i+=10)
-	for(int i=200; i<=200; i++)
+	for(int i=calcTempMetricBinN; i<=calcTempMetricBinN; i++)
 	{
 		double maxLTDBinDiff;
 
@@ -539,7 +559,7 @@ void MainW::calcGRPlastTempMetric(ofstream &outfile)
 //		outfile<<endl;
 //		cout<<"first LTD initialized, max val: "<<maxLTDBinDiff<<endl;
 
-		for(int j=0; j<100; j++)//j>=0; j++)//<500; j++)
+		for(int j=0; j<200; j++)//j>=0; j++)//<500; j++)
 		{
 			double curLTDBinDiff;
 			double curLTPBinDiff;
