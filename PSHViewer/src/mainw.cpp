@@ -26,7 +26,7 @@ MainW::MainW(QWidget *parent, QApplication *a)
 	app=a;
 
 	grTotalCalced=false;
-	calcBinN=0;
+	calcTempMetricBinN=0;
 	connect(this, SIGNAL(destroyed()), app, SLOT(quit()));
 	connect(ui.quitButton, SIGNAL(clicked()), app, SLOT(quit()));
 }
