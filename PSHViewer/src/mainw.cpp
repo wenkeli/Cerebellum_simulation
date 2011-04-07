@@ -287,7 +287,7 @@ void MainW::calcTempMetrics()
 	outfile<<endl<<endl;
 
 //	for(int i=0; i<NUMBINS; i+=10)
-	for(int i=100; i<=100; i++)
+	for(int i=200; i<=200; i++)
 	{
 		for(int j=0; j<NUMBINS; j++)
 		{
@@ -496,7 +496,7 @@ void MainW::calcGRPlastTempMetric(ofstream &outfile)
 	initGRPlastTempVars();
 
 //	for(int i=0; i<NUMBINS; i+=10)
-	for(int i=100; i<=100; i++)
+	for(int i=200; i<=200; i++)
 	{
 		double maxLTDBinDiff;
 
@@ -539,7 +539,7 @@ void MainW::calcGRPlastTempMetric(ofstream &outfile)
 //		outfile<<endl;
 //		cout<<"first LTD initialized, max val: "<<maxLTDBinDiff<<endl;
 
-		for(int j=0; j<25; j++)//j>=0; j++)//<500; j++)
+		for(int j=0; j<100; j++)//j>=0; j++)//<500; j++)
 		{
 			double curLTDBinDiff;
 			double curLTPBinDiff;
@@ -610,7 +610,7 @@ void MainW::calcGRLTDSynWeight(int binN, float scale)
 		float synWeight;
 		synWeight=grWeightsPlast[binN][i];
 
-		for(int j=binN-TEMPMETSLIDINGW+1; j<=binN; j++)
+		for(int j=binN-TEMPMETSLIDINGW+1; j<=binN-(TEMPMETSLIDINGW/2); j++)
 		{
 //			float spikesPerTrial;
 			if(j<0)
@@ -650,7 +650,7 @@ void MainW::calcGRLTPSynWeight(int binN, double maxBinLTDDiff)
 		for(int j=0; j<NUMBINS; j++)
 		{
 //			float spikesPerTrial;
-			if(j>=binN-TEMPMETSLIDINGW+1 && j<=binN)
+			if(j>=binN-TEMPMETSLIDINGW+1 && j<=binN-(TEMPMETSLIDINGW/2))
 			{
 				continue;
 			}
