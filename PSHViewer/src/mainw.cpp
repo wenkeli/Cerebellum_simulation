@@ -19,7 +19,7 @@ MainW::MainW(QWidget *parent, QApplication *a)
 	ui.grDispStartNum->setMaximum(1023);
 
 	ui.tempMetricBinN->setMinimum(0);
-	ui.tempMetricBinN->setMaximum(0);
+	ui.tempMetricBinN->setMaximum(NUMBINS);
 
 	this->setAttribute(Qt::WA_DeleteOnClose);
 
