@@ -36,7 +36,10 @@ unsigned int pshSC[NUMBINS][NUMSC];
 unsigned int pshSCMax=1;
 
 double grTotalSpikes[NUMGR];
+
 double grBinTotalSpikes[NUMBINS];
+double grBinTotalSpikesPC[NUMPC][NUMBINS];
+
 float grTempSpecificity[NUMGR][NUMBINS];
 unsigned short grTempSpPeakBin[NUMGR];
 float grTempSpPeakVal[NUMGR];
@@ -56,8 +59,14 @@ float spActGRPopActR[NUMBINS];
 float actTotGRPopActR[NUMBINS];
 
 float grWeightsPlast[NUMBINS][NUMGR];
+float grWeightsPlastPC[NUMBINS][NUMGR];
+
 double grPopActPlast[NUMBINS][NUMBINS];
+double grPopActPlastPC[NUMBINS][NUMPC][NUMBINS];
+
 double grPopActDiffPlast[NUMBINS][NUMBINS];
+double grPopActDiffPlastPC[NUMBINS][NUMPC][NUMBINS];
+
 double grPopActDiffSumPlast[NUMBINS];
 float grPopActSpecPlast[NUMBINS];
 float grPopActAmpPlast[NUMBINS];
@@ -84,6 +93,7 @@ short csStartMF[NUMMF+1];
 short csEndMF[NUMMF+1];
 
 float pfSynWeightPC[NUMGR];
+//float pfSynWeightByPC[NUMGR];
 
 
 vector<vector<unsigned short> > pshActiveGR;

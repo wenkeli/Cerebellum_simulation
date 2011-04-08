@@ -260,15 +260,25 @@ void MainW::calcTempMetrics()
 
 	fileName=QFileDialog::getOpenFileName(this, "Please specify where to save the data", "/", "");
 	outfile.open(fileName.toStdString().c_str(), ios::out);
+	if(!outfile.good() || !outfile.is_open())
+	{
+		cerr<<"error opening file "<<fileName.toStdString()<<endl;
+		return;
+	}
 
 	cout<<"Calculating total spikes"<<endl;
 	calcGRTotalSpikes();
+	calcGRTotalSpikesPC();
 //	cout<<"calculating individual temporal specificity"<<endl;
 //	calcGRTempSpecific();
 //	cout<<"calculating population metrics"<<endl;
 //	calcGRPopTempMetric();
-	cout<<"calculating population plasticity metrics"<<endl;
+	cout<<"calculating population plasticity metrics, all GR"<<endl;
 	calcGRPlastTempMetric(outfile);
+
+	cout<<"calculating population plastiticy metrics, per PC"<<endl;
+	calcGRPlastTempMetricPC(outfile);
+
 	cout<<"writing results"<<endl;
 
 //	outfile<<"specGRSpM activeGRSpM totalGRSpM "<<
@@ -288,9 +298,7 @@ void MainW::calcTempMetrics()
 	{
 		outfile<<grBinTotalSpikes[i]<<" ";
 	}
-	outfile<<endl<<endl;
-
-//	for(int i=0; i<NUMBINS; i+=10)
+	outfile<<endl;
 	for(int i=calcTempMetricBinN; i<=calcTempMetricBinN; i++)
 	{
 		for(int j=0; j<NUMBINS; j++)
@@ -299,11 +307,34 @@ void MainW::calcTempMetrics()
 		}
 		outfile<<endl;
 	}
+	outfile<<endl<<endl;
+
+
+	for(int i=0; i<=NUMPC; i++)
+	{
+		for(int j=0; j<NUMBINS; j++)
+		{
+			outfile<<grBinTotalSpikesPC[i][j]<<" ";
+		}
+		outfile<<endl;
+
+		for(int j=calcTempMetricBinN; j<calcTempMetricBinN; j++)
+		{
+			for(int k=0; k<NUMBINS; k++)
+			{
+				outfile<<grPopActDiffPlastPC[j][i][k]<<" ";
+			}
+			outfile<<endl;
+		}
+		outfile<<endl;
+	}
+
 	outfile.close();
 
 	for(int i=0; i<NUMGR; i++)
 	{
-		pfSynWeightPC[i]=grWeightsPlast[calcTempMetricBinN][i]/2;
+		pfSynWeightPC[i]=grWeightsPlastPC[calcTempMetricBinN][i]/2;
+		//grWeightsPlast
 	}
 	cout<<"done!"<<endl;
 }
@@ -356,6 +387,22 @@ void MainW::calcGRTotalSpikes()
 	}
 
 	grTotalCalced=true;
+}
+
+void MainW::calcGRTotalSpikesPC()
+{
+	for(int i=0; i<NUMPC; i++)
+	{
+		for(int j=0; j<NUMBINS; j++)
+		{
+			grBinTotalSpikesPC[i][j]=0;
+			for(int k=i*(NUMGR/NUMPC); k<(i+1)*(NUMGR/NUMPC); k++)
+			{
+				grBinTotalSpikesPC[i][j]=grBinTotalSpikesPC[i][j]+pshGR[j][k];
+			}
+			grBinTotalSpikesPC[i][j]=grBinTotalSpikesPC[i][j]/((float)numTrials);
+		}
+	}
 }
 
 void MainW::calcGRTempSpecific()
@@ -605,6 +652,53 @@ void MainW::calcGRPlastTempMetric(ofstream &outfile)
 	}
 }
 
+void MainW::calcGRPlastTempMetricPC(ofstream &outfile)
+{
+	for(int i=calcTempMetricBinN; i<=calcTempMetricBinN; i++)
+	{
+		cout<<i<<endl;
+
+#pragma omp parallel for schedule(static)
+		for(int j=0; j<NUMPC; j++)
+		{
+			double maxLTDBinDiff;
+
+			double lastLTDBinDiff;
+			double lastLTPBinDiff;
+
+			maxLTDBinDiff=0;
+
+			lastLTDBinDiff=0;
+			lastLTPBinDiff=0;
+
+			calcGRLTDSynWeightPC(i, 1, j);
+
+			calcGRPlastPopActPC(i, j);
+			maxLTDBinDiff=calcGRPlastPopActDiffPC(i, j);
+			lastLTDBinDiff=maxLTDBinDiff;
+
+			for(int k=0; k<200; k++)
+			{
+				double curLTDBinDiff;
+				double curLTPBinDiff;
+
+				calcGRLTPSynWeightPC(i, maxLTDBinDiff, j);
+
+				calcGRPlastPopActPC(i, j);
+				curLTPBinDiff=calcGRPlastPopActDiffPC(i, j);
+
+				calcGRLTDSynWeightPC(i, (curLTPBinDiff<maxLTDBinDiff)*(1-(curLTPBinDiff/maxLTDBinDiff)), j);
+
+				calcGRPlastPopActPC(i, j);
+				curLTDBinDiff=calcGRPlastPopActDiffPC(i, j);
+
+				lastLTPBinDiff=curLTPBinDiff;
+				lastLTDBinDiff=curLTDBinDiff;
+			}
+		}
+	}
+}
+
 void MainW::initGRPlastTempVars()
 {
 	for(int i=0; i<NUMBINS; i++)
@@ -612,12 +706,17 @@ void MainW::initGRPlastTempVars()
 		for(int j=0; j<NUMGR; j++)
 		{
 			grWeightsPlast[i][j]=1;
+			grWeightsPlastPC[i][j]=1;
 		}
 	}
 }
 
 void MainW::calcGRLTDSynWeight(int binN, float scale)
 {
+	if(binN<0 || binN>=NUMBINS)
+	{
+		return;
+	}
 
 	if(scale<=0)
 	{
@@ -647,9 +746,52 @@ void MainW::calcGRLTDSynWeight(int binN, float scale)
 	}
 }
 
+void MainW::calcGRLTDSynWeightPC(int binN, float scale, int pcN)
+{
+	if(binN<0 || binN>=NUMBINS)
+	{
+		return;
+	}
+	if(scale<=0)
+	{
+		return;
+	}
+	if(pcN<0 || pcN>=NUMPC)
+	{
+		return;
+	}
+
+	for(int i=pcN*(NUMGR/NUMPC); i<(pcN+1)*(NUMGR/NUMPC); i++)
+	{
+		float synWeight;
+		synWeight=grWeightsPlastPC[binN][i];
+
+		for(int j=binN-TEMPMETSLIDINGW+1; j<=binN-(TEMPMETSLIDINGW/2); j++)
+		{
+//			float spikesPerTrial;
+			if(j<0)
+			{
+				continue;
+			}
+
+//			spikesPerTrial=pshGRTrans[i][j]/((float)numTrials);
+
+			synWeight=synWeight-(ratesGRTrans[i][j]*LTDSTEP*scale);//spikesPerTrial
+			synWeight=(synWeight>0)*synWeight;
+		}
+		grWeightsPlastPC[binN][i]=synWeight;
+
+	}
+}
+
 void MainW::calcGRLTPSynWeight(int binN, double maxBinLTDDiff)
 {
 	double synWeightScale[NUMBINS];
+
+	if(binN<0 || binN>=NUMBINS)
+	{
+		return;
+	}
 
 	for(int i=0; i<NUMBINS; i++)
 	{
@@ -685,8 +827,55 @@ void MainW::calcGRLTPSynWeight(int binN, double maxBinLTDDiff)
 	}
 }
 
+void MainW::calcGRLTPSynWeightPC(int binN, double maxBinLTDDiff, int pcN)
+{
+	double synWeightScale[NUMBINS];
+
+	if(binN<0 || binN>=NUMBINS)
+	{
+		return;
+	}
+	if(pcN<0 || pcN>=NUMPC)
+	{
+		return;
+	}
+
+	for(int i=0; i<NUMBINS; i++)
+	{
+		synWeightScale[i]=grPopActDiffPlastPC[binN][pcN][i]/maxBinLTDDiff;
+		synWeightScale[i]=(synWeightScale[i]>0)*synWeightScale[i];
+	}
+
+	for(int i=pcN*(NUMGR/NUMPC); i<(pcN+1)*(NUMGR/NUMPC); i++)
+	{
+		float synWeight;
+		synWeight=grWeightsPlastPC[binN][i];
+
+//		cout<<i<<" "<<synWeight<<endl;
+		for(int j=0; j<NUMBINS; j++)
+		{
+//			float spikesPerTrial;
+			if(j>=binN-TEMPMETSLIDINGW+1 && j<=binN-(TEMPMETSLIDINGW/2))
+			{
+				continue;
+			}
+
+//			spikesPerTrial=pshGRTrans[i][j]/((float)numTrials);
+
+			synWeight=synWeight+(ratesGRTrans[i][j]*LTPSTEP*synWeightScale[j]);//spikesPerTrial
+			synWeight=(synWeight<GRSYNWEIGHTMAX)*synWeight+(!(synWeight<GRSYNWEIGHTMAX))*GRSYNWEIGHTMAX;
+		}
+
+		grWeightsPlastPC[binN][i]=synWeight;
+	}
+}
+
 void MainW::calcGRPlastPopAct(int binN)
 {
+	if(binN<0 || binN>=NUMBINS)
+	{
+		return;
+	}
 
 #pragma omp parallel for schedule(static)
 	for(int i=0; i<NUMBINS; i++)
@@ -706,14 +895,63 @@ void MainW::calcGRPlastPopAct(int binN)
 	}
 }
 
+void MainW::calcGRPlastPopActPC(int binN, int pcN)
+{
+	if(binN<0 || binN>=NUMBINS)
+	{
+		return;
+	}
+	if(pcN<0 || pcN>=NUMPC)
+	{
+		return;
+	}
+
+	for(int i=0; i<NUMBINS; i++)
+	{
+		double binActSum;
+
+		binActSum=0;
+		for(int j=pcN*(NUMGR/NUMPC); i<(pcN+1)*(NUMGR/NUMPC); i++)
+		{
+			double spikes;
+
+			spikes=grWeightsPlastPC[binN][j]*pshGR[i][j];
+			binActSum=binActSum+spikes;
+		}
+
+		grPopActPlastPC[binN][pcN][i]=binActSum/numTrials;
+	}
+}
+
 double MainW::calcGRPlastPopActDiff(int binN)
 {
+	if(binN<0 || binN>=NUMBINS)
+	{
+		return 0;
+	}
 #pragma omp parallel for schedule(static)
 	for(int i=0; i<NUMBINS; i++)
 	{
 		grPopActDiffPlast[binN][i]=grBinTotalSpikes[i]-grPopActPlast[binN][i];
 	}
 	return grPopActDiffPlast[binN][binN];
+}
+
+double MainW::calcGRPlastPopActDiffPC(int binN, int pcN)
+{
+	if(binN<0 || binN>=NUMBINS)
+	{
+		return 0;
+	}
+	if(pcN<0 || pcN>=NUMPC)
+	{
+		return 0;
+	}
+	for(int i=0; i<NUMBINS; i++)
+	{
+		grPopActDiffPlastPC[binN][pcN][i]=grBinTotalSpikesPC[pcN][i]-grPopActPlastPC[binN][pcN][i];
+	}
+	return grPopActDiffPlastPC[binN][pcN][binN];
 }
 
 void MainW::calcGRPlastPopActDiffSum(int binN)

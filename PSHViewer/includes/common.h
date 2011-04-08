@@ -97,7 +97,10 @@ extern unsigned int pshSCMax;
 
 //temporal metric variables
 extern double grTotalSpikes[NUMGR];
+
 extern double grBinTotalSpikes[NUMBINS];
+extern double grBinTotalSpikesPC[NUMPC][NUMBINS];
+
 extern float grTempSpecificity[NUMGR][NUMBINS];
 extern unsigned short grTempSpPeakBin[NUMGR];
 extern float grTempSpPeakVal[NUMGR];
@@ -117,8 +120,14 @@ extern float spActGRPopActR[NUMBINS];
 extern float actTotGRPopActR[NUMBINS];
 
 extern float grWeightsPlast[NUMBINS][NUMGR];
+extern float grWeightsPlastPC[NUMBINS][NUMGR];
+
 extern double grPopActPlast[NUMBINS][NUMBINS];
+extern double grPopActPlastPC[NUMBINS][NUMPC][NUMBINS];
+
 extern double grPopActDiffPlast[NUMBINS][NUMBINS];
+extern double grPopActDiffPlastPC[NUMBINS][NUMPC][NUMBINS];
+
 extern double grPopActDiffSumPlast[NUMBINS];
 extern float grPopActSpecPlast[NUMBINS];
 extern float grPopActAmpPlast[NUMBINS];
@@ -144,6 +153,7 @@ extern short csStartMF[NUMMF+1];
 extern short csEndMF[NUMMF+1];
 
 extern float pfSynWeightPC[NUMGR];
+//extern float pfSynWeightByPC[NUMGR];
 
 extern vector<vector<unsigned short> > pshActiveGR;
 
