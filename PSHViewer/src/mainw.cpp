@@ -274,7 +274,7 @@ void MainW::calcTempMetrics()
 //	cout<<"calculating population metrics"<<endl;
 //	calcGRPopTempMetric();
 	cout<<"calculating population plasticity metrics, all GR"<<endl;
-	calcGRPlastTempMetric(outfile);
+//	calcGRPlastTempMetric(outfile);
 
 	cout<<"calculating population plastiticy metrics, per PC"<<endl;
 	calcGRPlastTempMetricPC(outfile);
@@ -310,7 +310,7 @@ void MainW::calcTempMetrics()
 	outfile<<endl<<endl;
 
 
-	for(int i=0; i<=NUMPC; i++)
+	for(int i=0; i<NUMPC; i++)
 	{
 		for(int j=0; j<NUMBINS; j++)
 		{
@@ -318,7 +318,7 @@ void MainW::calcTempMetrics()
 		}
 		outfile<<endl;
 
-		for(int j=calcTempMetricBinN; j<calcTempMetricBinN; j++)
+		for(int j=calcTempMetricBinN; j<=calcTempMetricBinN; j++)
 		{
 			for(int k=0; k<NUMBINS; k++)
 			{
@@ -672,9 +672,12 @@ void MainW::calcGRPlastTempMetricPC(ofstream &outfile)
 			lastLTPBinDiff=0;
 
 			calcGRLTDSynWeightPC(i, 1, j);
+//			cout<<"here1"<<endl;
 
 			calcGRPlastPopActPC(i, j);
+//			cout<<"here2"<<endl;
 			maxLTDBinDiff=calcGRPlastPopActDiffPC(i, j);
+//			cout<<"here3"<<endl;
 			lastLTDBinDiff=maxLTDBinDiff;
 
 			for(int k=0; k<200; k++)
@@ -683,14 +686,20 @@ void MainW::calcGRPlastTempMetricPC(ofstream &outfile)
 				double curLTPBinDiff;
 
 				calcGRLTPSynWeightPC(i, maxLTDBinDiff, j);
+//				cout<<k<<" here4"<<endl;
 
 				calcGRPlastPopActPC(i, j);
+//				cout<<k<<" here5"<<endl;
 				curLTPBinDiff=calcGRPlastPopActDiffPC(i, j);
+//				cout<<k<<" here6"<<endl;
 
 				calcGRLTDSynWeightPC(i, (curLTPBinDiff<maxLTDBinDiff)*(1-(curLTPBinDiff/maxLTDBinDiff)), j);
+//				cout<<k<<" here7"<<endl;
 
 				calcGRPlastPopActPC(i, j);
+//				cout<<k<<" here8"<<endl;
 				curLTDBinDiff=calcGRPlastPopActDiffPC(i, j);
+//				cout<<k<<" here9"<<endl;
 
 				lastLTPBinDiff=curLTPBinDiff;
 				lastLTDBinDiff=curLTDBinDiff;
@@ -906,20 +915,29 @@ void MainW::calcGRPlastPopActPC(int binN, int pcN)
 		return;
 	}
 
+//	cout<<binN<<" "<<pcN<<endl;
+
 	for(int i=0; i<NUMBINS; i++)
 	{
 		double binActSum;
 
 		binActSum=0;
-		for(int j=pcN*(NUMGR/NUMPC); i<(pcN+1)*(NUMGR/NUMPC); i++)
+		for(int j=pcN*(NUMGR/NUMPC); j<(pcN+1)*(NUMGR/NUMPC); j++)
 		{
 			double spikes;
 
+//			cout<<j<<" ";
+//			cout.flush();
 			spikes=grWeightsPlastPC[binN][j]*pshGR[i][j];
+//			cout<<spikes<<" ";
+//			cout.flush();
 			binActSum=binActSum+spikes;
-		}
+//			cout<<binActSum<<" "<<endl;
 
+		}
+//		cout<<"herew"<<endl;
 		grPopActPlastPC[binN][pcN][i]=binActSum/numTrials;
+//		cout<<"herewdone"<<endl;
 	}
 }
 
