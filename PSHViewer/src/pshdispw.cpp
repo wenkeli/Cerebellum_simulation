@@ -5,7 +5,7 @@ PSHDispw::PSHDispw(QWidget *parent, int t, int cT, int cN)
     : QWidget(parent)
 {
 	stringstream windowTitle;
-	string cellTypeText[3]={"Mossy fiber", "Golgi Cell", "Granule Cell"};
+	string cellTypeText[6]={"Mossy fiber", "Golgi Cell", "Granule Cell", "Purkinje cell", "Basket cell", "Stellate cell"};
 
 	ui.setupUi(this);
 	type=t;
