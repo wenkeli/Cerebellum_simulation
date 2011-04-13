@@ -68,6 +68,7 @@ public slots:
 	void changeTempMetricBinN(int);
 
 	void exportSim();
+	void exportSinglePSH();
 };
 
 #endif // MAINW_H

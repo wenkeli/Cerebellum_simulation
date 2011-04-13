@@ -253,6 +253,37 @@ void MainW::exportSim()
 	outf.close();
 }
 
+void MainW::exportSinglePSH()
+{
+	ofstream outf;
+
+	QString fileName;
+
+	unsigned int cellN;
+	unsigned int cellT;
+
+	fileName=QFileDialog::getOpenFileName(this, "Please select where you want to save the single cell PSH", "/", "");
+
+
+	cout<<"Single PSH file name: "<<fileName.toStdString()<<endl;
+
+	outf.open(fileName.toStdString().c_str(), ios::out);
+	if(!outf.good() || !outf.is_open())
+	{
+		cerr<<"error opening file "<<fileName.toStdString()<<endl;
+		return;
+	}
+
+	cout<<"writing single PSH... ";
+	cout.flush();
+
+	cellN=ui.dispSingleCellNum->value();
+	cellT=ui.dispCellType->currentIndex();
+
+	outf.close();
+	cout<<"done!"<<endl;
+}
+
 void MainW::calcTempMetrics()
 {
 	ofstream outfile;

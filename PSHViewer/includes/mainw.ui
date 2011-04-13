@@ -140,6 +140,13 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="exportSinglePSH">
+       <property name="text">
+        <string>export single cell PSH</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
   </widget>
@@ -233,8 +240,8 @@
    <slot>exportSim()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>160</x>
-     <y>192</y>
+     <x>161</x>
+     <y>175</y>
     </hint>
     <hint type="destinationlabel">
      <x>217</x>
@@ -258,6 +265,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>exportSinglePSH</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWClass</receiver>
+   <slot>exportSinglePSH()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>54</x>
+     <y>204</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>21</x>
+     <y>194</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>dispAllCells()</slot>
@@ -267,5 +290,6 @@
   <slot>loadSimFile()</slot>
   <slot>exportSim()</slot>
   <slot>changeTempMetricBinN(int)</slot>
+  <slot>exportSinglePSH()</slot>
  </slots>
 </ui>

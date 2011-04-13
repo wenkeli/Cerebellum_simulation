@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainw.ui'
 **
-** Created: Thu Apr 7 12:30:59 2011
+** Created: Wed Apr 13 18:13:12 2011
 **      by: Qt User Interface Compiler version 4.6.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -51,6 +51,7 @@ public:
     QWidget *verticalLayoutWidget_2;
     QVBoxLayout *verticalLayout_2;
     QPushButton *exportSim;
+    QPushButton *exportSinglePSH;
 
     void setupUi(QMainWindow *MainWClass)
     {
@@ -153,6 +154,11 @@ public:
 
         verticalLayout_2->addWidget(exportSim);
 
+        exportSinglePSH = new QPushButton(verticalLayoutWidget_2);
+        exportSinglePSH->setObjectName(QString::fromUtf8("exportSinglePSH"));
+
+        verticalLayout_2->addWidget(exportSinglePSH);
+
         MainWClass->setCentralWidget(centralwidget);
 
         retranslateUi(MainWClass);
@@ -163,6 +169,7 @@ public:
         QObject::connect(loadSim, SIGNAL(clicked()), MainWClass, SLOT(loadSimFile()));
         QObject::connect(exportSim, SIGNAL(clicked()), MainWClass, SLOT(exportSim()));
         QObject::connect(tempMetricBinN, SIGNAL(valueChanged(int)), MainWClass, SLOT(changeTempMetricBinN(int)));
+        QObject::connect(exportSinglePSH, SIGNAL(clicked()), MainWClass, SLOT(exportSinglePSH()));
 
         QMetaObject::connectSlotsByName(MainWClass);
     } // setupUi
@@ -181,6 +188,7 @@ public:
         loadSim->setText(QApplication::translate("MainWClass", "load sim state file", 0, QApplication::UnicodeUTF8));
         quitButton->setText(QApplication::translate("MainWClass", "quit", 0, QApplication::UnicodeUTF8));
         exportSim->setText(QApplication::translate("MainWClass", "export sim state", 0, QApplication::UnicodeUTF8));
+        exportSinglePSH->setText(QApplication::translate("MainWClass", "export single cell PSH", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };
