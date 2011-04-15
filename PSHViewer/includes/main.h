@@ -35,6 +35,9 @@ unsigned int pshBCMax=1;
 unsigned int pshSC[NUMBINS][NUMSC];
 unsigned int pshSCMax=1;
 
+unsigned int pshNC[NUMBINS][NUMNC];
+unsigned int pshNCMax=1;
+
 double grTotalSpikes[NUMGR];
 
 double grBinTotalSpikes[NUMBINS];

@@ -11,6 +11,7 @@ MainW::MainW(QWidget *parent, QApplication *a)
 	ui.dispCellType->addItem("Purkinje cells");
 	ui.dispCellType->addItem("Basket cells");
 	ui.dispCellType->addItem("Stellate cells");
+	ui.dispCellType->addItem("Nucleus cells");
 
 	ui.dispSingleCellNum->setMinimum(0);
 	ui.dispSingleCellNum->setMaximum(NUMGR-1);
@@ -130,6 +131,24 @@ void MainW::loadPSHFile()
 				if(pshSC[i][j]>pshSCMax)
 				{
 					pshSCMax=pshSC[i][j];
+				}
+			}
+		}
+	}
+
+	cout<<"loading NC PSH..."<<endl;
+	infile.read((char *)pshNC, NUMBINS*NUMNC*sizeof(unsigned int));
+	infile.read((char *)&pshNCMax, sizeof(unsigned int));
+	cout<<pshNCMax<<" "<<pshNC[0][0]<<" "<<pshNC[NUMBINS-1][NUMNC-1]<<endl;
+	if(pshNCMax<=0)
+	{
+		for(int i=0; i<NUMBINS; i++)
+		{
+			for(int j=0; j<NUMNC; j++)
+			{
+				if(pshNC[i][j]>pshNCMax)
+				{
+					pshNCMax=pshNC[i][j];
 				}
 			}
 		}

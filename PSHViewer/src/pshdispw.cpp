@@ -5,7 +5,7 @@ PSHDispw::PSHDispw(QWidget *parent, int t, int cT, int cN)
     : QWidget(parent)
 {
 	stringstream windowTitle;
-	string cellTypeText[6]={"Mossy fiber", "Golgi Cell", "Granule Cell", "Purkinje cell", "Basket cell", "Stellate cell"};
+	string cellTypeText[7]={"Mossy fiber", "Golgi Cell", "Granule Cell", "Purkinje cell", "Basket cell", "Stellate cell", "Nucleus cell"};
 
 	ui.setupUi(this);
 	type=t;
@@ -387,6 +387,51 @@ void PSHDispw::paintPSH()
 				}
 			}
 		}
+		else if(cellT==6)
+		{
+			strFormat.str("");
+			strFormat<<"NC bin Max value: "<<pshNCMax;
+			paintStr=strFormat.str().c_str();
+			p.drawText(wW/2-20, wH-40, paintStr);
+
+			for(int i=0; i<ALLVIEWPW; i++)
+			{
+				QColor paintColor;
+				int binN, greyVal;
+
+				binN=(int)(i/((float)ALLVIEWPW/NUMBINS));
+
+				if(i>=CSSTARTT && i<CSENDT)
+				{
+					for(int j=0; j<NUMNC; j++)
+					{
+						greyVal=(int)(((float)pshNC[binN][j]/pshNCMax)*255);//numTrials
+						if(greyVal>255)
+						{
+							greyVal=255;
+						}
+						paintColor.setRgb(greyVal, greyVal, 255, 255);
+						p.setPen(paintColor);
+						p.drawPoint(i, j);
+					}
+				}
+				else
+				{
+					for(int j=0; j<NUMNC; j++)
+					{
+						greyVal=(int)(((float)pshNC[binN][j]/pshNCMax)*255);//numTrials
+						if(greyVal>255)
+						{
+							greyVal=255;
+						}
+						paintColor.setRgb(greyVal, greyVal, greyVal, 255);
+						p.setPen(paintColor);
+						p.drawPoint(i, j);
+					}
+				}
+			}
+		}
+
 
 	}
 	else
@@ -543,7 +588,7 @@ void PSHDispw::paintPSH()
 				p.fillRect(xPos, yPos, SINGLEVIEWPW/NUMBINS, SINGLEVIEWPH-yPos, Qt::white);
 			}
 		}
-		else
+		else if(cellT==5)
 		{
 			if(cellN>=NUMSC)
 			{
@@ -560,6 +605,28 @@ void PSHDispw::paintPSH()
 			{
 				int yPos, xPos;
 				yPos=SINGLEVIEWPH-(int)(((float)(pshSC[i][cellN])/pshSCMax)*SINGLEVIEWPH);//yMaxVal
+				xPos=(int)(i*((float)SINGLEVIEWPW/NUMBINS))+100;
+
+				p.fillRect(xPos, yPos, SINGLEVIEWPW/NUMBINS, SINGLEVIEWPH-yPos, Qt::white);
+			}
+		}
+		else if(cellT==6)
+		{
+			if(cellN>=NUMNC)
+			{
+				cellN=NUMNC-1;
+			}
+			for(int i=0; i<NUMBINS; i++)
+			{
+				if(pshNC[i][cellN]>yMaxVal)
+				{
+					yMaxVal=pshNC[i][cellN];
+				}
+			}
+			for(int i=0; i<NUMBINS; i++)
+			{
+				int yPos, xPos;
+				yPos=SINGLEVIEWPH-(int)(((float)(pshNC[i][cellN])/pshNCMax)*SINGLEVIEWPH);//yMaxVal
 				xPos=(int)(i*((float)SINGLEVIEWPW/NUMBINS))+100;
 
 				p.fillRect(xPos, yPos, SINGLEVIEWPW/NUMBINS, SINGLEVIEWPH-yPos, Qt::white);

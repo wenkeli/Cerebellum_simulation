@@ -63,6 +63,7 @@
 #define NUMIO 4
 #define NUMPC 32
 #define NUMSC 512
+#define NUMNC 8
 //end connectivity parameters
 //mossy fiber parameters
 #define NUMCONTEXTS 2
@@ -94,6 +95,9 @@ extern unsigned int pshBCMax;
 
 extern unsigned int pshSC[NUMBINS][NUMSC];
 extern unsigned int pshSCMax;
+
+extern unsigned int pshNC[NUMBINS][NUMNC];
+extern unsigned int pshNCMax;
 
 //temporal metric variables
 extern double grTotalSpikes[NUMGR];
