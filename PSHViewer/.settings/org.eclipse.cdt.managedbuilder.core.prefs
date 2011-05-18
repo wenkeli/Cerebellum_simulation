@@ -1,4 +1,4 @@
-#Wed Dec 15 11:46:02 CST 2010
+#Tue May 17 14:38:49 CDT 2011
 eclipse.preferences.version=1
 environment/buildEnvironmentInclude/cdt.managedbuild.config.gnu.mingw.exe.debug.1342269476/CPATH/delimiter=\:
 environment/buildEnvironmentInclude/cdt.managedbuild.config.gnu.mingw.exe.debug.1342269476/CPATH/operation=remove
@@ -10,6 +10,6 @@ environment/buildEnvironmentInclude/cdt.managedbuild.config.gnu.mingw.exe.debug.
 environment/buildEnvironmentInclude/cdt.managedbuild.config.gnu.mingw.exe.debug.1342269476/appendContributed=true
 environment/buildEnvironmentLibrary/cdt.managedbuild.config.gnu.mingw.exe.debug.1342269476/LIBRARY_PATH/delimiter=\:
 environment/buildEnvironmentLibrary/cdt.managedbuild.config.gnu.mingw.exe.debug.1342269476/LIBRARY_PATH/operation=replace
-environment/buildEnvironmentLibrary/cdt.managedbuild.config.gnu.mingw.exe.debug.1342269476/LIBRARY_PATH/value=/opt/intel/Compiler/11.1/072/lib/intel64
+environment/buildEnvironmentLibrary/cdt.managedbuild.config.gnu.mingw.exe.debug.1342269476/LIBRARY_PATH/value=/opt/intel/Compiler/11.1/072/lib/intel64\:/opt/intel/Compiler/11.1/072/idb/lib/intel64
 environment/buildEnvironmentLibrary/cdt.managedbuild.config.gnu.mingw.exe.debug.1342269476/append=true
 environment/buildEnvironmentLibrary/cdt.managedbuild.config.gnu.mingw.exe.debug.1342269476/appendContributed=true
