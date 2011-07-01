@@ -20,6 +20,14 @@
 #define NULL 0
 #endif
 
+#ifdef EYELID
+#define NUMMZONES 1
+#endif
+
+#ifdef CARTPOLE
+#define NUMMZONES 2
+#endif
+
 #define NUMBINS 240//200
 
 #define CSSTARTBIN 20
@@ -72,32 +80,10 @@
 
 
 
+
 using namespace std;
 
-extern unsigned int numTrials;
 
-extern unsigned short pshMF[NUMBINS][NUMMF];
-extern unsigned short pshMFMax;
-
-extern unsigned short pshGO[NUMBINS][NUMGO];
-extern unsigned short pshGOMax;
-
-extern unsigned short pshGR[NUMBINS][NUMGR];
-extern unsigned short pshGRMax;
-extern unsigned short pshGRTrans[NUMGR][NUMBINS];
-extern float ratesGRTrans[NUMGR][NUMBINS];
-
-extern unsigned int pshPC[NUMBINS][NUMPC];
-extern unsigned int pshPCMax;
-
-extern unsigned int pshBC[NUMBINS][NUMBC];
-extern unsigned int pshBCMax;
-
-extern unsigned int pshSC[NUMBINS][NUMSC];
-extern unsigned int pshSCMax;
-
-extern unsigned int pshNC[NUMBINS][NUMNC];
-extern unsigned int pshNCMax;
 
 //temporal metric variables
 extern double grTotalSpikes[NUMGR];

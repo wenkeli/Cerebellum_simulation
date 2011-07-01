@@ -7,7 +7,9 @@ NAME = PSHViewer
 
 
 CC = icpc
-DEFINES = 
+DEFINES = -DEYELID
+#-DCARTPOLE
+
 CFLAGS = $(DEFINES) -O3 -openmp -mcmodel medium -shared-intel
 
 RM = rm

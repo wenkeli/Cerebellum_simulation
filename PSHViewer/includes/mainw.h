@@ -58,9 +58,6 @@ private:
     void calcGRLTDPopSpec(int);
     void calcGRLTDPopAmp(int);
 
-    template<typename Type>void loadPSH(ifstream &infile, unsigned int nCells, unsigned int nBins,
-    		Type** &pshData, unsigned int &binTimeSize, unsigned int &nTrials, unsigned int &maxBinVal);
-
 public slots:
 	void dispSingleCell();
 	void dispAllCells();
