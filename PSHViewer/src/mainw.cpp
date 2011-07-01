@@ -66,93 +66,93 @@ void MainW::loadPSHFile()
 		cerr<<"error opening file "<<fileName.toStdString()<<endl;
 		return;
 	}
-	cout<<"loading non cell type specific variables..."<<endl;
-	infile.read((char *)&numTrials, sizeof(unsigned int));
-	cout<<"number of trials: "<<numTrials<<endl;
-
-	cout<<"loading MF PSH..."<<endl;
-	infile.read((char *)pshMF, NUMBINS*NUMMF*sizeof(unsigned short));
-	infile.read((char *)&pshMFMax, sizeof(unsigned short));
-
-	cout<<"loading GO PSH..."<<endl;
-	infile.read((char *)pshGO, NUMBINS*NUMGO*sizeof(unsigned short));
-	infile.read((char *)&pshGOMax, sizeof(unsigned short));
-
-	cout<<"loading GR PSH..."<<endl;
-	infile.read((char *)pshGR, NUMBINS*NUMGR*sizeof(unsigned short));
-	infile.read((char *)&pshGRMax, sizeof(unsigned short));
-
-	cout<<"loading PC PSH..."<<endl;
-	infile.read((char *)pshPC, NUMBINS*NUMPC*sizeof(unsigned int));
-	infile.read((char *)&pshPCMax, sizeof(unsigned int));
-	cout<<pshPCMax<<" "<<pshPC[0][0]<<" "<<pshPC[NUMBINS-1][NUMPC-1]<<endl;
-	if(pshPCMax<=0)
-	{
-		for(int i=0; i<NUMBINS; i++)
-		{
-			for(int j=0; j<NUMPC; j++)
-			{
-				if(pshPC[i][j]>pshPCMax)
-				{
-					pshPCMax=pshPC[i][j];
-				}
-			}
-		}
-	}
-
-	cout<<"loading BC PSH..."<<endl;
-	infile.read((char *)pshBC, NUMBINS*NUMBC*sizeof(unsigned int));
-	infile.read((char *)&pshBCMax, sizeof(unsigned int));
-	cout<<pshBCMax<<" "<<pshBC[0][0]<<" "<<pshBC[NUMBINS-1][NUMBC-1]<<endl;
-	if(pshBCMax<=0)
-	{
-		for(int i=0; i<NUMBINS; i++)
-		{
-			for(int j=0; j<NUMBC; j++)
-			{
-				if(pshBC[i][j]>pshBCMax)
-				{
-					pshBCMax=pshBC[i][j];
-				}
-			}
-		}
-	}
-
-	cout<<"loading SC PSH..."<<endl;
-	infile.read((char *)pshSC, NUMBINS*NUMSC*sizeof(unsigned int));
-	infile.read((char *)&pshSCMax, sizeof(unsigned int));
-	cout<<pshSCMax<<" "<<pshSC[0][0]<<" "<<pshSC[NUMBINS-1][NUMSC-1]<<endl;
-	if(pshSCMax<=0)
-	{
-		for(int i=0; i<NUMBINS; i++)
-		{
-			for(int j=0; j<NUMSC; j++)
-			{
-				if(pshSC[i][j]>pshSCMax)
-				{
-					pshSCMax=pshSC[i][j];
-				}
-			}
-		}
-	}
-
-	cout<<"loading NC PSH..."<<endl;
-	infile.read((char *)pshNC, NUMBINS*NUMNC*sizeof(unsigned int));
-	infile.read((char *)&pshNCMax, sizeof(unsigned int));
-	cout<<pshNCMax<<" "<<pshNC[0][0]<<" "<<pshNC[NUMBINS-1][NUMNC-1]<<endl;
-	if(pshNCMax<=0)
-	{
-		for(int i=0; i<NUMBINS; i++)
-		{
-			for(int j=0; j<NUMNC; j++)
-			{
-				if(pshNC[i][j]>pshNCMax)
-				{
-					pshNCMax=pshNC[i][j];
-				}
-			}
-		}
-	}
+//	cout<<"loading non cell type specific variables..."<<endl;
+//	infile.read((char *)&numTrials, sizeof(unsigned int));
+//	cout<<"number of trials: "<<numTrials<<endl;
+//
+//	cout<<"loading MF PSH..."<<endl;
+//	infile.read((char *)pshMF, NUMBINS*NUMMF*sizeof(unsigned short));
+//	infile.read((char *)&pshMFMax, sizeof(unsigned short));
+//
+//	cout<<"loading GO PSH..."<<endl;
+//	infile.read((char *)pshGO, NUMBINS*NUMGO*sizeof(unsigned short));
+//	infile.read((char *)&pshGOMax, sizeof(unsigned short));
+//
+//	cout<<"loading GR PSH..."<<endl;
+//	infile.read((char *)pshGR, NUMBINS*NUMGR*sizeof(unsigned short));
+//	infile.read((char *)&pshGRMax, sizeof(unsigned short));
+//
+//	cout<<"loading PC PSH..."<<endl;
+//	infile.read((char *)pshPC, NUMBINS*NUMPC*sizeof(unsigned int));
+//	infile.read((char *)&pshPCMax, sizeof(unsigned int));
+//	cout<<pshPCMax<<" "<<pshPC[0][0]<<" "<<pshPC[NUMBINS-1][NUMPC-1]<<endl;
+//	if(pshPCMax<=0)
+//	{
+//		for(int i=0; i<NUMBINS; i++)
+//		{
+//			for(int j=0; j<NUMPC; j++)
+//			{
+//				if(pshPC[i][j]>pshPCMax)
+//				{
+//					pshPCMax=pshPC[i][j];
+//				}
+//			}
+//		}
+//	}
+//
+//	cout<<"loading BC PSH..."<<endl;
+//	infile.read((char *)pshBC, NUMBINS*NUMBC*sizeof(unsigned int));
+//	infile.read((char *)&pshBCMax, sizeof(unsigned int));
+//	cout<<pshBCMax<<" "<<pshBC[0][0]<<" "<<pshBC[NUMBINS-1][NUMBC-1]<<endl;
+//	if(pshBCMax<=0)
+//	{
+//		for(int i=0; i<NUMBINS; i++)
+//		{
+//			for(int j=0; j<NUMBC; j++)
+//			{
+//				if(pshBC[i][j]>pshBCMax)
+//				{
+//					pshBCMax=pshBC[i][j];
+//				}
+//			}
+//		}
+//	}
+//
+//	cout<<"loading SC PSH..."<<endl;
+//	infile.read((char *)pshSC, NUMBINS*NUMSC*sizeof(unsigned int));
+//	infile.read((char *)&pshSCMax, sizeof(unsigned int));
+//	cout<<pshSCMax<<" "<<pshSC[0][0]<<" "<<pshSC[NUMBINS-1][NUMSC-1]<<endl;
+//	if(pshSCMax<=0)
+//	{
+//		for(int i=0; i<NUMBINS; i++)
+//		{
+//			for(int j=0; j<NUMSC; j++)
+//			{
+//				if(pshSC[i][j]>pshSCMax)
+//				{
+//					pshSCMax=pshSC[i][j];
+//				}
+//			}
+//		}
+//	}
+//
+//	cout<<"loading NC PSH..."<<endl;
+//	infile.read((char *)pshNC, NUMBINS*NUMNC*sizeof(unsigned int));
+//	infile.read((char *)&pshNCMax, sizeof(unsigned int));
+//	cout<<pshNCMax<<" "<<pshNC[0][0]<<" "<<pshNC[NUMBINS-1][NUMNC-1]<<endl;
+//	if(pshNCMax<=0)
+//	{
+//		for(int i=0; i<NUMBINS; i++)
+//		{
+//			for(int j=0; j<NUMNC; j++)
+//			{
+//				if(pshNC[i][j]>pshNCMax)
+//				{
+//					pshNCMax=pshNC[i][j];
+//				}
+//			}
+//		}
+//	}
 
 
 	pshActiveGR.clear();
@@ -180,6 +180,12 @@ void MainW::loadPSHFile()
 	grTotalCalced=false;
 	cout<<"done!"<<endl;
 	infile.close();
+}
+
+template<typename Type> MainW::loadPSH(ifstream &infile, unsigned int nCells, unsigned int nBins,
+		Type** &pshData, unsigned int &binTimeSize, unsigned int &nTrials, unsigned int &maxBinVal)
+{
+
 }
 
 void MainW::loadSimFile()
