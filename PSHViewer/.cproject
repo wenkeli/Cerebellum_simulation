@@ -33,7 +33,7 @@
 									<listOptionValue builtIn="false" value="&quot;C:\Qt\4.5.3\include&quot;"/>
 									<listOptionValue builtIn="false" value="/usr/include/qt4/"/>
 								</option>
-								<option id="gnu.cpp.compiler.option.preprocessor.def.140328359" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
+								<option id="gnu.cpp.compiler.option.preprocessor.def.140328359" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="CARTPOLE"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.581046531" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
@@ -44,7 +44,7 @@
 								<option id="gnu.c.compiler.option.include.paths.2121622838" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="/usr/include/qt4/"/>
 								</option>
-								<option id="gnu.c.compiler.option.preprocessor.def.symbols.720813741" superClass="gnu.c.compiler.option.preprocessor.def.symbols" valueType="definedSymbols">
+								<option id="gnu.c.compiler.option.preprocessor.def.symbols.720813741" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="EYELID"/>
 									<listOptionValue builtIn="false" value="CARTPOLE"/>
 								</option>
@@ -518,7 +518,7 @@
 								<option id="gnu.cpp.compiler.option.include.paths.248470971" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="/usr/include/qt4/"/>
 								</option>
-								<option id="gnu.cpp.compiler.option.preprocessor.def.1007405393" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
+								<option id="gnu.cpp.compiler.option.preprocessor.def.1007405393" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="CARTPOLE"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.2066711631" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
@@ -529,7 +529,7 @@
 								<option id="gnu.c.compiler.option.include.paths.1500063343" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="/usr/include/qt4/"/>
 								</option>
-								<option id="gnu.c.compiler.option.preprocessor.def.symbols.94993298" superClass="gnu.c.compiler.option.preprocessor.def.symbols" valueType="definedSymbols">
+								<option id="gnu.c.compiler.option.preprocessor.def.symbols.94993298" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="EYELID"/>
 									<listOptionValue builtIn="false" value="CARTPOLE"/>
 								</option>
