@@ -7,10 +7,8 @@
 
 #include "../../includes/analysismodules/psh.h"
 
-PSHAnalysis::PSHAnalysis(ifstream &infile, const unsigned int *buf)
+PSHAnalysis::PSHAnalysis(ifstream &infile)
 {
-	apBuf=buf;
-
 	infile.read((char *)&numCells, sizeof(unsigned int));
 	infile.read((char *)&numBins, sizeof(unsigned int));
 	infile.read((char *)&binTimeSize, sizeof(unsigned int));

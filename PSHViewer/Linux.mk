@@ -3,7 +3,7 @@
 #-DDEBUG -DINTELCC
 #
 
-NAME = PSHViewer
+NAME = SimDataAnalysis
 
 
 CC = icpc
@@ -16,13 +16,17 @@ RM = rm
 MOC = moc
 UIC = uic
 
-INCPATH = ./includes
-SRCPATH = ./src
-OUTPATH = ./output
-
 QTINCPATH = '/usr/include/qt4/'
 QTLIBPATH = '/usr/lib/qt4/'
 QTLIBS = -lQtGui -lQtCore
+
+INCPATH = ./includes
+ANMIP = $(INCPATH)/analysismodules
+
+SRCPATH = ./src
+ANMSP = $(SRCPATH)/analysismodules
+
+OUTPATH = ./output
 
 UIS = $(INCPATH)/mainw.ui $(INCPATH)/pshdispw.ui
 MOCINC = $(INCPATH)/mainw.h $(INCPATH)/pshdispw.h
@@ -30,17 +34,26 @@ UICOUT = $(INCPATH)/ui_mainw.h $(INCPATH)/ui_pshdispw.h
 MOCOUT = $(INCPATH)/moc_mainw.h $(INCPATH)/moc_pshdispw.h
 COMINCS = $(INCPATH)/common.h
 COREINCS = $(INCPATH)/main.h
-INCS = $(MOCINC) $(UICOUT) $(MOCOUT) $(COMINCS) $(GUIINCS) $(COREINCS)
+
+ANMINCS = $(ANMIP)/psh.h
+
+INCS = $(MOCINC) $(UICOUT) $(MOCOUT) $(COMINCS) $(GUIINCS) $(COREINCS) $(ANMINCS)
 
 GUISRC = $(SRCPATH)/mainw.cpp $(SRCPATH)/pshdispw.cpp
 CORESRC = $(SRCPATH)/main.cpp
-SRC = $(GUISRC) $(CORESRC)
+
+ANMSRC = $(ANMSP)/psh.cpp
+
+SRC = $(GUISRC) $(CORESRC) $(ANMSRC)
 
 GUIOBJ = $(OUTPATH)/mainw.obj $(OUTPATH)/pshdispw.obj
 COREOBJ = $(OUTPATH)/main.obj
-OBJ = $(GUIOBJ) $(COREOBJ)
 
-all: core gui
+ANMOBJ = $(OUTPATH)/psh.obj
+
+OBJ = $(GUIOBJ) $(COREOBJ) $(ANMOBJ)
+
+all: core gui anm
 	-$(CC) $(CFLAGS) $(OBJ) -o $(OUTPATH)/$(NAME) -L$(QTLIBPATH) $(QTLIBS)
 
 core: $(INCS) $(CORESRC)
@@ -49,6 +62,9 @@ core: $(INCS) $(CORESRC)
 gui: $(INC) $(GUISRC)
 	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(SRCPATH)/mainw.cpp -o$(OUTPATH)/mainw.obj
 	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(SRCPATH)/pshdispw.cpp -o$(OUTPATH)/pshdispw.obj
+	
+anm: $(INC) $(ANMSRC)
+	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(ANMSP)/psh.cpp -o$(OUTPATH)/psh.obj
 
 guiinc: mocs uis
 	
