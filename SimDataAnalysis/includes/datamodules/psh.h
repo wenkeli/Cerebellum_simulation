@@ -17,6 +17,7 @@
 #include <ctime>
 #include <QtGui/QPixmap>
 #include <QtGui/QPainter>
+#include <QtCore/QString>
 
 using namespace std;
 
@@ -41,7 +42,10 @@ public:
 protected:
 
 	unsigned int numCells;
-	unsigned int numBins;
+	unsigned int preStimNumBins;
+	unsigned int stimNumBins;
+	unsigned int postStimNumBins;
+	unsigned int totalNumBins;
 	unsigned int binTimeSize;
 	unsigned int apBufTimeSize;
 	unsigned int numBinsInBuf;
