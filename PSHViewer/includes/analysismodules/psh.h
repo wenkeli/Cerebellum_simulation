@@ -15,6 +15,9 @@
 #include <string>
 #include <math.h>
 #include <ctime>
+#include <QtGui/QPixmap>
+#include <QtGui/QPainter>
+
 using namespace std;
 
 class PSHAnalysis
@@ -25,6 +28,8 @@ public:
 
 	virtual void exportPSH(ofstream &outfile);
 
+	void paintPSHPop(QPixmap *paintBuf);
+	void paintPSHInd(QPixmap *paintBuf);
 protected:
 
 	unsigned int numCells;

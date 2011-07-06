@@ -60,3 +60,15 @@ void PSHAnalysis::exportPSH(ofstream &outfile)
 	outfile.write((char *)&numTrials, sizeof(unsigned int));
 	outfile.write((char *)pshData[0], numCells*numBins*sizeof(unsigned int));
 }
+
+void PSHAnalysis::paintPSHPop(QPixmap *paintBuf)
+{
+
+}
+
+void PSHAnalysis::paintPSHInd(QPixmap *paintBuf)
+{
+
+}
+
+
