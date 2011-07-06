@@ -28,8 +28,16 @@ public:
 
 	virtual void exportPSH(ofstream &outfile);
 
-	void paintPSHPop(QPixmap *paintBuf);
-	void paintPSHInd(QPixmap *paintBuf);
+	unsigned int getCellNum();
+	unsigned int getNumTrials();
+	unsigned int getNumBins();
+	unsigned int getBinTimeSize();
+	unsigned int getPSHBinMaxVal();
+
+	const unsigned int **getPSHData();
+
+	QPixmap *paintPSHPop(unsigned int startCellN, unsigned int endCellN);
+	QPixmap *paintPSHInd(unsigned int cellN);
 protected:
 
 	unsigned int numCells;

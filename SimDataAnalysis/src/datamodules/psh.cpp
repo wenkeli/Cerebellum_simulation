@@ -41,7 +41,6 @@ PSHAnalysis::PSHAnalysis(ifstream &infile)
 	}
 }
 
-
 PSHAnalysis::~PSHAnalysis()
 {
 	delete[] pshData[0];
@@ -59,14 +58,58 @@ void PSHAnalysis::exportPSH(ofstream &outfile)
 	outfile.write((char *)pshData[0], numCells*numBins*sizeof(unsigned int));
 }
 
-void PSHAnalysis::paintPSHPop(QPixmap *paintBuf)
+unsigned int PSHAnalysis::getCellNum()
 {
-
+	return numCells;
 }
 
-void PSHAnalysis::paintPSHInd(QPixmap *paintBuf)
+unsigned int PSHAnalysis::getNumTrials()
 {
+	return numTrials;
+}
 
+unsigned int PSHAnalysis::getNumBins()
+{
+	return numBins;
+}
+
+unsigned int PSHAnalysis::getBinTimeSize()
+{
+	return binTimeSize;
+}
+
+unsigned int PSHAnalysis::getPSHBinMaxVal()
+{
+	return pshBinMaxVal;
+}
+
+const unsigned int **PSHAnalysis::getPSHData()
+{
+	return (const unsigned int **)pshData;
+}
+
+QPixmap *PSHAnalysis::paintPSHPop(unsigned int startCellN, unsigned int endCellN)
+{
+	QPixmap *paintBuf;
+
+	unsigned int nPaintCells=endCellN-startCellN;
+	if(nPaintCells>1024)
+	{
+		nPaintCells=1024;
+	}
+
+	paintBuf=new QPixmap(nPaintCells+150, numBins*binTimeSize+150);
+
+
+
+	return paintBuf;
+}
+
+QPixmap *PSHAnalysis::paintPSHInd()
+{
+	QPixmap *paintBuf;
+
+	return paintBuf;
 }
 
 
