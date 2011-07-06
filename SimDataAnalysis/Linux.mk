@@ -21,10 +21,10 @@ QTLIBPATH = '/usr/lib/qt4/'
 QTLIBS = -lQtGui -lQtCore
 
 INCPATH = ./includes
-ANMIP = $(INCPATH)/analysismodules
+DAMIP = $(INCPATH)/datamodules
 
 SRCPATH = ./src
-ANMSP = $(SRCPATH)/analysismodules
+DAMSP = $(SRCPATH)/datamodules
 
 OUTPATH = ./output
 
@@ -35,25 +35,25 @@ MOCOUT = $(INCPATH)/moc_mainw.h $(INCPATH)/moc_pshdispw.h
 COMINCS = $(INCPATH)/common.h
 COREINCS = $(INCPATH)/main.h
 
-ANMINCS = $(ANMIP)/psh.h
+DAMINCS = $(DAMIP)/psh.h
 
-INCS = $(MOCINC) $(UICOUT) $(MOCOUT) $(COMINCS) $(GUIINCS) $(COREINCS) $(ANMINCS)
+INCS = $(MOCINC) $(UICOUT) $(MOCOUT) $(COMINCS) $(GUIINCS) $(COREINCS) $(DAMINCS)
 
 GUISRC = $(SRCPATH)/mainw.cpp $(SRCPATH)/pshdispw.cpp
 CORESRC = $(SRCPATH)/main.cpp
 
-ANMSRC = $(ANMSP)/psh.cpp
+DAMSRC = $(DAMSP)/psh.cpp
 
-SRC = $(GUISRC) $(CORESRC) $(ANMSRC)
+SRC = $(GUISRC) $(CORESRC) $(DAMSRC)
 
 GUIOBJ = $(OUTPATH)/mainw.obj $(OUTPATH)/pshdispw.obj
 COREOBJ = $(OUTPATH)/main.obj
 
-ANMOBJ = $(OUTPATH)/psh.obj
+DAMOBJ = $(OUTPATH)/psh.obj
 
-OBJ = $(GUIOBJ) $(COREOBJ) $(ANMOBJ)
+OBJ = $(GUIOBJ) $(COREOBJ) $(DAMOBJ)
 
-all: core gui anm
+all: core gui dam
 	-$(CC) $(CFLAGS) $(OBJ) -o $(OUTPATH)/$(NAME) -L$(QTLIBPATH) $(QTLIBS)
 
 core: $(INCS) $(CORESRC)
@@ -63,8 +63,8 @@ gui: $(INC) $(GUISRC)
 	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(SRCPATH)/mainw.cpp -o$(OUTPATH)/mainw.obj
 	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(SRCPATH)/pshdispw.cpp -o$(OUTPATH)/pshdispw.obj
 	
-anm: $(INC) $(ANMSRC)
-	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(ANMSP)/psh.cpp -o$(OUTPATH)/psh.obj
+dam: $(INC) $(DAMSRC)
+	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(DAMSP)/psh.cpp -o$(OUTPATH)/psh.obj
 
 guiinc: mocs uis
 	
