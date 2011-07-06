@@ -5,7 +5,7 @@
  *      Author: consciousness
  */
 
-#include "../../includes/analysismodules/psh.h"
+#include "../../includes/datamodules/psh.h"
 
 PSHAnalysis::PSHAnalysis(ifstream &infile)
 {
