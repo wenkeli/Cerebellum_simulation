@@ -58,7 +58,7 @@ ANMOBJ = $(OUTPATH)/grpshpopanalysis.obj
 
 OBJ = $(GUIOBJ) $(COREOBJ) $(DAMOBJ) $(ANMOBJ)
 
-all: core gui dam
+all: core gui dam anm
 	-$(CC) $(CFLAGS) $(OBJ) -o $(OUTPATH)/$(NAME) -L$(QTLIBPATH) $(QTLIBS)
 
 core: $(INCS) $(CORESRC)

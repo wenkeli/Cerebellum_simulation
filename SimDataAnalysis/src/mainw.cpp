@@ -14,13 +14,13 @@ MainW::MainW(QWidget *parent, QApplication *a)
 	ui.dispCellType->addItem("Nucleus cells");
 
 	ui.dispSingleCellNum->setMinimum(0);
-	ui.dispSingleCellNum->setMaximum(NUMGR-1);
+//	ui.dispSingleCellNum->setMaximum(NUMGR-1);
 
 	ui.grDispStartNum->setMinimum(0);
 	ui.grDispStartNum->setMaximum(1023);
 
 	ui.tempMetricBinN->setMinimum(0);
-	ui.tempMetricBinN->setMaximum(NUMBINS);
+//	ui.tempMetricBinN->setMaximum(NUMBINS);
 
 	this->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -49,7 +49,6 @@ void MainW::loadPSHFile()
 {
 	ifstream infile;
 	QString fileName;
-	bool dispGR[NUMGR];
 
 	fileName=QFileDialog::getOpenFileName(this, "Please select the PSH file to open", "/", "");
 
@@ -113,49 +112,49 @@ void MainW::loadSimFile()
 
 void MainW::exportSim()
 {
-	ofstream outf;
-
-	QString fileName;
-
-	fileName=QFileDialog::getOpenFileName(this, "Please select where you want to save the sim", "/", "");
-
-
-	cout<<"Sim file name: "<<fileName.toStdString()<<endl;
-
-	outf.open(fileName.toStdString().c_str(), ios::binary);
-	if(!outf.good() || !outf.is_open())
-	{
-		cerr<<"error opening file "<<fileName.toStdString()<<endl;
-		return;
-	}
-
-	cout<<"writing state data"<<endl;
-	outf.seekp(0, ios_base::beg);
-	outf.write((char *)conNumMFtoGR, (NUMMF+1)*sizeof(short));
-	outf.write((char *)conNumMFtoGO, (NUMMF+1)*sizeof(char));
-	outf.write((char *)conNumGOtoGR, (NUMGO+1)*sizeof(short));
-	outf.write((char *)conNumGRtoGO, (NUMGR+1)*sizeof(char));
-
-	outf.write((char *)conMFtoGR, (NUMMF+1)*NUMGRPERMF*sizeof(int));
-	outf.write((char *)conMFtoGO, (NUMMF+1)*MFGOSYNPERMF*sizeof(short));
-	outf.write((char *)conGOtoGR, (NUMGO+1)*NUMGROUTPERGO*sizeof(int));
-	outf.write((char *)conGRtoGO, (NUMGR+1)*GRGOSYNPERGR*sizeof(short));
-	outf.write((char *)conBCtoPC, NUMBC*BCPCSYNPERBC*sizeof(char));
-	outf.write((char *)conIOCouple, NUMIO*IOCOUPSYNPERIO*sizeof(char));
-	outf.write((char *)conPCtoNC, NUMPC*PCNCSYNPERPC*sizeof(char));
-
-	outf.write((char *)typeMFs, (NUMMF+1)*sizeof(char));
-	outf.write((char *)bgFreqContsMF, NUMCONTEXTS*(NUMMF+1)*sizeof(float));
-	outf.write((char *)incFreqMF, (NUMMF+1)*sizeof(float));
-	outf.write((char *)csStartMF, (NUMMF+1)*sizeof(short));
-	outf.write((char *)csEndMF, (NUMMF+1)*sizeof(short));
-
-	outf.write((char *)pfSynWeightPC, NUMGR*sizeof(float));
-
-	outf.flush();
-	cout<<"done"<<endl;
-
-	outf.close();
+//	ofstream outf;
+//
+//	QString fileName;
+//
+//	fileName=QFileDialog::getOpenFileName(this, "Please select where you want to save the sim", "/", "");
+//
+//
+//	cout<<"Sim file name: "<<fileName.toStdString()<<endl;
+//
+//	outf.open(fileName.toStdString().c_str(), ios::binary);
+//	if(!outf.good() || !outf.is_open())
+//	{
+//		cerr<<"error opening file "<<fileName.toStdString()<<endl;
+//		return;
+//	}
+//
+//	cout<<"writing state data"<<endl;
+//	outf.seekp(0, ios_base::beg);
+//	outf.write((char *)conNumMFtoGR, (NUMMF+1)*sizeof(short));
+//	outf.write((char *)conNumMFtoGO, (NUMMF+1)*sizeof(char));
+//	outf.write((char *)conNumGOtoGR, (NUMGO+1)*sizeof(short));
+//	outf.write((char *)conNumGRtoGO, (NUMGR+1)*sizeof(char));
+//
+//	outf.write((char *)conMFtoGR, (NUMMF+1)*NUMGRPERMF*sizeof(int));
+//	outf.write((char *)conMFtoGO, (NUMMF+1)*MFGOSYNPERMF*sizeof(short));
+//	outf.write((char *)conGOtoGR, (NUMGO+1)*NUMGROUTPERGO*sizeof(int));
+//	outf.write((char *)conGRtoGO, (NUMGR+1)*GRGOSYNPERGR*sizeof(short));
+//	outf.write((char *)conBCtoPC, NUMBC*BCPCSYNPERBC*sizeof(char));
+//	outf.write((char *)conIOCouple, NUMIO*IOCOUPSYNPERIO*sizeof(char));
+//	outf.write((char *)conPCtoNC, NUMPC*PCNCSYNPERPC*sizeof(char));
+//
+//	outf.write((char *)typeMFs, (NUMMF+1)*sizeof(char));
+//	outf.write((char *)bgFreqContsMF, NUMCONTEXTS*(NUMMF+1)*sizeof(float));
+//	outf.write((char *)incFreqMF, (NUMMF+1)*sizeof(float));
+//	outf.write((char *)csStartMF, (NUMMF+1)*sizeof(short));
+//	outf.write((char *)csEndMF, (NUMMF+1)*sizeof(short));
+//
+//	outf.write((char *)pfSynWeightPC, NUMGR*sizeof(float));
+//
+//	outf.flush();
+//	cout<<"done"<<endl;
+//
+//	outf.close();
 }
 
 void MainW::exportSinglePSH()

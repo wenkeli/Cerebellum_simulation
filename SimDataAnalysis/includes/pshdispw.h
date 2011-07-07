@@ -6,6 +6,7 @@
 #include <QtGui/QPixmap>
 #include <QtGui/QPainter>
 #include <QtGui/QColor>
+#include <QtCore/QString>
 
 #include "common.h"
 
@@ -16,8 +17,7 @@ class PSHDispw : public QWidget
     Q_OBJECT
 
 public:
-    PSHDispw(QWidget *parent);
-//    PSHDispw(QWidget *parent, int t, int cT, int cN);
+    PSHDispw(QWidget *parent, QPixmap *buf, QString wt);
     ~PSHDispw();
 
     void switchBuf(QPixmap *newBuf);
@@ -25,11 +25,7 @@ public:
 private:
     Ui::PSHDispwClass ui;
     QPixmap *backBuf;
-//    int type, wH, wW, cellT, cellN;
 
-//    void paintPSH();
-//    template <class pshType> void paintSingle(pshType *, pshType);
-//    template <class pshType> void paintPopulation(pshType *, pshType, int, int);
 
 protected:
 	void paintEvent(QPaintEvent *event);
