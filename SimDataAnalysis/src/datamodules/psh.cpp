@@ -103,7 +103,7 @@ QPixmap *PSHAnalysis::paintPSHPop(unsigned int startCellN, unsigned int endCellN
 	QPainter p;
 
 	unsigned int nPaintCells;
-	unsigned int paintTimewidth;
+	unsigned int paintTimeWidth;
 	unsigned int cellTickStep;
 	unsigned int timeTickStep;
 
@@ -111,6 +111,10 @@ QPixmap *PSHAnalysis::paintPSHPop(unsigned int startCellN, unsigned int endCellN
 	if(nPaintCells>1024)
 	{
 		nPaintCells=1024;
+	}
+	if(startCellN>=numCells)
+	{
+		startCellN=numCells-1;
 	}
 	cellTickStep=nPaintCells/2;
 	if(cellTickStep>25)
@@ -125,13 +129,13 @@ QPixmap *PSHAnalysis::paintPSHPop(unsigned int startCellN, unsigned int endCellN
 		timeTickStep=100;
 	}
 
-	paintBuf=new QPixmap(nPaintCells+100, totalNumBins*binTimeSize+100);
+	paintBuf=new QPixmap(nPaintCells+100, paintTimeWidth+100);
 	p.begin(paintBuf);
 
 	//setting up axes
 	p.setPen(Qt::red);
 	p.drawLine(0, paintBuf->height()-99, (int)paintTimeWidth, paintBuf->height()-99);
-	p.drawLine((int)paintTimeWidth, 0, (int)paintTimewidth, paintBuf->height()-99);
+	p.drawLine((int)paintTimeWidth, 0, (int)paintTimeWidth, paintBuf->height()-99);
 
 	p.SetPen(Qt::white);
 	strFormat.str("");
@@ -140,7 +144,7 @@ QPixmap *PSHAnalysis::paintPSHPop(unsigned int startCellN, unsigned int endCellN
 	p.drawText(paintBuf->width()/2-20, paintBuf->height()-40, paintStr);
 
 	p.setPen(Qt::green);
-	for(int i=0; i<paintTimewidth; i+=timeTickStep)
+	for(int i=0; i<paintTimeWidth; i+=timeTickStep)
 	{
 		p.drawLine(i, paintBuf->height()-98, i, paintBuf->height()-93);
 		strFormat.str("");
@@ -157,13 +161,13 @@ QPixmap *PSHAnalysis::paintPSHPop(unsigned int startCellN, unsigned int endCellN
 
 		dispNum=i+startCellN;
 
-		p.drawLine((int)paintTimewidth, i, (int)paintTimeWidth+5, i);
+		p.drawLine((int)paintTimeWidth, i, (int)paintTimeWidth+5, i);
 		strFormat.str("");
 		strFormat<<dispNum;
 		paintStr=strFormat.str().c_str();
 		p.drawText((int)paintTimeWidth+8, i+10, paintStr);
 	}
-	p.drawText(paintTimeWidth+40, nPaintCells=2, "cell #");
+	p.drawText(paintTimeWidth+40, nPaintCells+2, "cell #");
 	//end axes
 
 	p.fillRect((int)preStimNumBins*binTimeSize, 0,
@@ -198,10 +202,97 @@ QPixmap *PSHAnalysis::paintPSHPop(unsigned int startCellN, unsigned int endCellN
 QPixmap *PSHAnalysis::paintPSHInd(unsigned int cellN)
 {
 	QPixmap *paintBuf;
+	stringstream strFormat;
+	QString paintStr;
+	QPainter p;
+
+	unsigned int paintSpC;
+	unsigned int paintTimeWidth;
+	unsigned int spCTickStep;
+	unsigned int spCPaintStep;
+	unsigned int spCNumTicks;
+	unsigned int spCDispNum;
+	unsigned int timeTickStep;
+
 	if(cellN>=numCells)
 	{
 		cellN=numCells-1;
 	}
+
+
+	paintSpC=500;
+	spCNumTicks=21;
+	spCPaintStep=paintSpC/spCNumTicks;
+	spCTickStep=pshBinMaxVal/spCNumTicks;
+
+	if(spCTickStep<1)
+	{
+		spCTickStep=1;
+	}
+
+	paintTimeWidth=totalNumBins*binTimeSize;
+	timeTickStep=paintTimeWidth/2;
+	if(timeTickStep>100)
+	{
+		timeTickStep=100;
+	}
+
+	paintBuf=new QPixmap(paintSpC+100, paintTimeWidth+100);
+	p.begin(paintBuf);
+
+	//setting up axes
+	p.setPen(Qt::red);
+	p.drawLine(0, paintBuf->height()-99, (int)paintTimeWidth, paintBuf->height()-99);
+	p.drawLine((int)paintTimeWidth, 0, (int)paintTimeWidth, paintBuf->height()-99);
+
+	p.SetPen(Qt::white);
+	strFormat.str("");
+	strFormat<<"psh bin max val:"<<pshBinMaxVal;
+	paintStr=strFormat.str().c_str();
+	p.drawText(paintBuf->width()/2-20, paintBuf->height()-40, paintStr);
+
+	p.setPen(Qt::green);
+	for(int i=0; i<paintTimeWidth; i+=timeTickStep)
+	{
+		p.drawLine(i, paintBuf->height()-98, i, paintBuf->height()-93);
+		strFormat.str("");
+		strFormat<<i;
+		paintStr=strFormat.str().c_str();
+		p.drawText(i, paintBuf->height()-83, paintStr);
+	}
+
+	p.drawText(paintBuf->width()/2-20, paintBuf->height()-70, "time (ms)");
+
+	spCDispNum=0;
+	for(int i=paintSpC; i>=0; i-=spCPaintStep)
+	{
+
+		p.drawLine((int)paintTimeWidth, i, (int)paintTimeWidth+5, i);
+		strFormat.str("");
+		strFormat<<spCDispNum;
+		paintStr=strFormat.str().c_str();
+		p.drawText((int)paintTimeWidth+8, i+10, paintStr);
+		spCDispNum+=spCTickStep;
+	}
+	p.drawText(paintTimeWidth+40, paintSpC+2, "spike count");
+	//end axes
+
+	p.fillRect((int)preStimNumBins*binTimeSize, 0,
+			(int)stimNumBins*binTimeSize, (int)paintSpC, Qt::blue);
+	for(int i=0; i<totalNumBins; i++)
+	{
+		int binX;
+		int binHeight;
+		int binY;
+		binX=i*binTimeSize;
+
+		binHeight=paintSpC*((float)pshData[i][cellN])/pshBinMaxVal;
+		binY=paintSpC-binHeight;
+
+		p.fillRect(binX, binY, (int)binTimeSize, binHeight, Qt::white);
+	}
+
+	p.end();
 
 	return paintBuf;
 }
