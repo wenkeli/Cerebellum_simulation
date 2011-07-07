@@ -12,94 +12,18 @@
 
 #include "common.h"
 #include "mainw.h"
+#include "datamodules/psh.h"
 
-unsigned int numTrials=1;
+PSHData *mfPSH;
+PSHData *goPSH;
+PSHData *grPSH;
+PSHData *scPSH;
 
-unsigned short pshMF[NUMBINS][NUMMF];
-unsigned short pshMFMax=1;
+PSHData *BCPSH[NUMMZONES];
+PSHData *PCPSH[NUMMZONES];
+PSHData *IOPSH[NUMMZONES];
+PSHData *NCPSH[NUMMZONES];
 
-unsigned short pshGO[NUMBINS][NUMGO];
-unsigned short pshGOMax=1;
-
-unsigned short pshGR[NUMBINS][NUMGR];
-unsigned short pshGRMax=1;
-unsigned short pshGRTrans[NUMGR][NUMBINS];
-float ratesGRTrans[NUMGR][NUMBINS];
-
-unsigned int pshPC[NUMBINS][NUMPC];
-unsigned int pshPCMax=1;
-
-unsigned int pshBC[NUMBINS][NUMBC];
-unsigned int pshBCMax=1;
-
-unsigned int pshSC[NUMBINS][NUMSC];
-unsigned int pshSCMax=1;
-
-unsigned int pshNC[NUMBINS][NUMNC];
-unsigned int pshNCMax=1;
-
-double grTotalSpikes[NUMGR];
-
-double grBinTotalSpikes[NUMBINS];
-double grBinTotalSpikesPC[NUMPC][NUMBINS];
-
-float grTempSpecificity[NUMGR][NUMBINS];
-unsigned short grTempSpPeakBin[NUMGR];
-float grTempSpPeakVal[NUMGR];
-
-float specGRPopSpMean[NUMBINS];
-float activeGRPopSpMean[NUMBINS];
-float totalGRPopSpMean[NUMBINS];
-
-int numGRSpecific[NUMBINS];
-int numGRActive[NUMBINS];
-
-float specGRPopActMean[NUMBINS];
-float activeGRPopActMean[NUMBINS];
-float totalGRPopActMean[NUMBINS];
-float spTotGRPopActR[NUMBINS];
-float spActGRPopActR[NUMBINS];
-float actTotGRPopActR[NUMBINS];
-
-float grWeightsPlast[NUMBINS][NUMGR];
-float grWeightsPlastPC[NUMBINS][NUMGR];
-
-double grPopActPlast[NUMBINS][NUMBINS];
-double grPopActPlastPC[NUMBINS][NUMPC][NUMBINS];
-
-double grPopActDiffPlast[NUMBINS][NUMBINS];
-double grPopActDiffPlastPC[NUMBINS][NUMPC][NUMBINS];
-
-double grPopActDiffSumPlast[NUMBINS];
-float grPopActSpecPlast[NUMBINS];
-float grPopActAmpPlast[NUMBINS];
-
-
-//simulation state variables
-short conNumMFtoGR[NUMMF+1];
-char conNumMFtoGO[NUMMF+1];
-short conNumGOtoGR[NUMGO+1];
-char conNumGRtoGO[NUMGR+1];
-
-int conMFtoGR[NUMMF+1][NUMGRPERMF];
-short conMFtoGO[NUMMF+1][MFGOSYNPERMF];
-int conGOtoGR[NUMGO+1][NUMGROUTPERGO];
-short conGRtoGO[NUMGR+1][GRGOSYNPERGR];
-char conBCtoPC[NUMBC][BCPCSYNPERBC];
-char conIOCouple[NUMIO][IOCOUPSYNPERIO];
-char conPCtoNC[NUMPC][PCNCSYNPERPC];
-
-char typeMFs[NUMMF+1];
-float bgFreqContsMF[NUMCONTEXTS][NUMMF+1];
-float incFreqMF[NUMMF+1];
-short csStartMF[NUMMF+1];
-short csEndMF[NUMMF+1];
-
-float pfSynWeightPC[NUMGR];
-//float pfSynWeightByPC[NUMGR];
-
-
-vector<vector<unsigned short> > pshActiveGR;
 
 int main(int argc, char **argv);
 

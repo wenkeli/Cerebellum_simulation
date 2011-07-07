@@ -16,17 +16,20 @@ class PSHDispw : public QWidget
     Q_OBJECT
 
 public:
-    PSHDispw(QWidget *parent, int t, int cT, int cN);
+    PSHDispw(QWidget *parent);
+//    PSHDispw(QWidget *parent, int t, int cT, int cN);
     ~PSHDispw();
+
+    void switchBuf(QPixmap *newBuf);
 
 private:
     Ui::PSHDispwClass ui;
     QPixmap *backBuf;
-    int type, wH, wW, cellT, cellN;
+//    int type, wH, wW, cellT, cellN;
 
-    void paintPSH();
-    template <class pshType> void paintSingle(pshType *, pshType);
-    template <class pshType> void paintPopulation(pshType *, pshType, int, int);
+//    void paintPSH();
+//    template <class pshType> void paintSingle(pshType *, pshType);
+//    template <class pshType> void paintPopulation(pshType *, pshType, int, int);
 
 protected:
 	void paintEvent(QPaintEvent *event);

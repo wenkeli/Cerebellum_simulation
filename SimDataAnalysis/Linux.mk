@@ -34,7 +34,7 @@ UIS = $(INCPATH)/mainw.ui $(INCPATH)/pshdispw.ui
 MOCINC = $(INCPATH)/mainw.h $(INCPATH)/pshdispw.h
 UICOUT = $(INCPATH)/ui_mainw.h $(INCPATH)/ui_pshdispw.h
 MOCOUT = $(INCPATH)/moc_mainw.h $(INCPATH)/moc_pshdispw.h
-COMINCS = $(INCPATH)/common.h
+COMINCS = $(INCPATH)/common.h $(INCPATH)/globalvars.h
 COREINCS = $(INCPATH)/main.h
 
 DAMINCS = $(DAMIP)/psh.h $(DAMIP)/pshgpu.h
