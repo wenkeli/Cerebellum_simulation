@@ -121,6 +121,7 @@ QPixmap *PSHData::paintPSHPop(unsigned int startCellN, unsigned int endCellN)
 	unsigned int paintTimeWidth;
 	unsigned int cellTickStep;
 	unsigned int timeTickStep;
+	int timeTickStartNum;
 
 	nPaintCells=endCellN-startCellN;
 	if(nPaintCells>1024)
@@ -138,10 +139,11 @@ QPixmap *PSHData::paintPSHPop(unsigned int startCellN, unsigned int endCellN)
 	}
 
 	paintTimeWidth=totalNumBins*binTimeSize;
-	timeTickStep=paintTimeWidth/2;
-	if(timeTickStep>100)
+	timeTickStartNum=-(preStimNumBins*binTimeSize);
+	timeTickStep=paintTimeWidth/10;
+	if(timeTickStep>50)
 	{
-		timeTickStep=100;
+		timeTickStep=50;
 	}
 
 	paintBuf=new QPixmap(nPaintCells+100, paintTimeWidth+100);
@@ -163,7 +165,7 @@ QPixmap *PSHData::paintPSHPop(unsigned int startCellN, unsigned int endCellN)
 	{
 		p.drawLine(i, paintBuf->height()-98, i, paintBuf->height()-93);
 		strFormat.str("");
-		strFormat<<i;
+		strFormat<<i+timeTickStartNum;
 		paintStr=strFormat.str().c_str();
 		p.drawText(i, paintBuf->height()-83, paintStr);
 	}
@@ -228,6 +230,7 @@ QPixmap *PSHData::paintPSHInd(unsigned int cellN)
 	unsigned int spCNumTicks;
 	unsigned int spCDispNum;
 	unsigned int timeTickStep;
+	int timeTickStartNum;
 
 	if(cellN>=numCells)
 	{
@@ -246,10 +249,11 @@ QPixmap *PSHData::paintPSHInd(unsigned int cellN)
 	}
 
 	paintTimeWidth=totalNumBins*binTimeSize;
-	timeTickStep=paintTimeWidth/2;
-	if(timeTickStep>100)
+	timeTickStep=paintTimeWidth/10;
+	timeTickStartNum=-(preStimNumBins*binTimeSize);
+	if(timeTickStep>50)
 	{
-		timeTickStep=100;
+		timeTickStep=50;
 	}
 
 	paintBuf=new QPixmap(paintSpC+100, paintTimeWidth+100);
@@ -271,7 +275,7 @@ QPixmap *PSHData::paintPSHInd(unsigned int cellN)
 	{
 		p.drawLine(i, paintBuf->height()-98, i, paintBuf->height()-93);
 		strFormat.str("");
-		strFormat<<i;
+		strFormat<<i+timeTickStartNum;
 		paintStr=strFormat.str().c_str();
 		p.drawText(i, paintBuf->height()-83, paintStr);
 	}
