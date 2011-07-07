@@ -22,9 +22,11 @@ QTLIBS = -lQtGui -lQtCore
 
 INCPATH = ./includes
 DAMIP = $(INCPATH)/datamodules
+ANMIP = $(INCPATH)/analysismodules
 
 SRCPATH = ./src
 DAMSP = $(SRCPATH)/datamodules
+ANMSP = $(SRCPATH)/analysismodules
 
 OUTPATH = ./output
 
@@ -36,22 +38,25 @@ COMINCS = $(INCPATH)/common.h
 COREINCS = $(INCPATH)/main.h
 
 DAMINCS = $(DAMIP)/psh.h $(DAMIP)/pshgpu.h
+ANMINCS =
 
-INCS = $(MOCINC) $(UICOUT) $(MOCOUT) $(COMINCS) $(GUIINCS) $(COREINCS) $(DAMINCS)
+INCS = $(MOCINC) $(UICOUT) $(MOCOUT) $(COMINCS) $(GUIINCS) $(COREINCS) $(DAMINCS) $(ANMINCS)
 
 GUISRC = $(SRCPATH)/mainw.cpp $(SRCPATH)/pshdispw.cpp
 CORESRC = $(SRCPATH)/main.cpp
 
 DAMSRC = $(DAMSP)/psh.cpp $(DAMSP)/pshgpu.cpp
+ANMSRC =
 
-SRC = $(GUISRC) $(CORESRC) $(DAMSRC)
+SRC = $(GUISRC) $(CORESRC) $(DAMSRC) $(ANMSRC)
 
 GUIOBJ = $(OUTPATH)/mainw.obj $(OUTPATH)/pshdispw.obj
 COREOBJ = $(OUTPATH)/main.obj
 
 DAMOBJ = $(OUTPATH)/psh.obj $(OUTPATH)/pshgpu.obj
+ANMOBJ =
 
-OBJ = $(GUIOBJ) $(COREOBJ) $(DAMOBJ)
+OBJ = $(GUIOBJ) $(COREOBJ) $(DAMOBJ) $(ANMOBJ)
 
 all: core gui dam
 	-$(CC) $(CFLAGS) $(OBJ) -o $(OUTPATH)/$(NAME) -L$(QTLIBPATH) $(QTLIBS)
@@ -66,7 +71,9 @@ gui: $(INC) $(GUISRC)
 dam: $(INC) $(DAMSRC)
 	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(DAMSP)/psh.cpp -o$(OUTPATH)/psh.obj
 	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(DAMSP)/pshgpu.cpp -o$(OUTPATH)/pshgpu.obj
-
+	
+anm: $(INC) $(ANMSRC)
+	
 guiinc: mocs uis
 	
 mocs:
