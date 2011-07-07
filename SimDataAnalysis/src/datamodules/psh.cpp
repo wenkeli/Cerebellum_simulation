@@ -74,7 +74,22 @@ unsigned int PSHData::getNumTrials()
 	return numTrials;
 }
 
-unsigned int PSHData::getNumBins()
+unsigned int PSHData::getPreStimNumBins()
+{
+	return preStimNumBins;
+}
+
+unsigned int PSHData::getStimNumBins()
+{
+	return stimNumBins;
+}
+
+unsigned int PSHData::getPostStimNumBins()
+{
+	return postStimNumBins;
+}
+
+unsigned int PSHData::getTotalNumBins()
 {
 	return totalNumBins;
 }

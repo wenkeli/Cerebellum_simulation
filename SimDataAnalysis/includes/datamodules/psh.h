@@ -31,7 +31,10 @@ public:
 
 	unsigned int getCellNum();
 	unsigned int getNumTrials();
-	unsigned int getNumBins();
+	unsigned int getPreStimNumBins();
+	unsigned int getStimNumBins();
+	unsigned int getPostStimNumBins();
+	unsigned int getTotalNumBins();
 	unsigned int getBinTimeSize();
 	unsigned int getPSHBinMaxVal();
 
