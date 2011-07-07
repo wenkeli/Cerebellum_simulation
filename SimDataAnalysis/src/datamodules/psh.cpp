@@ -7,7 +7,7 @@
 
 #include "../../includes/datamodules/psh.h"
 
-PSHAnalysis::PSHAnalysis(ifstream &infile)
+PSHData::PSHData(ifstream &infile)
 {
 	infile.read((char *)&numCells, sizeof(unsigned int));
 	infile.read((char *)&preStimNumBins, sizeof(unsigned int));
@@ -19,14 +19,14 @@ PSHAnalysis::PSHAnalysis(ifstream &infile)
 	infile.read((char *)&numBinsInBuf, sizeof(unsigned int));
 	infile.read((char *)&numTrials, sizeof(unsigned int));
 
-	pshData=new unsigned int *[totalNumBins];
-	pshData[0]=new unsigned int[totalNumBins*numCells];
+	data=new unsigned int *[totalNumBins];
+	data[0]=new unsigned int[totalNumBins*numCells];
 	for(int i=1; i<totalNumBins; i++)
 	{
-		pshData[i]=&(pshData[0][numCells*i]);
+		data[i]=&(data[0][numCells*i]);
 	}
 
-	infile.read((char *)pshData[0], totalNumBins*numCells*sizeof(unsigned int));
+	infile.read((char *)data[0], totalNumBins*numCells*sizeof(unsigned int));
 
 	currBinN=0;
 
@@ -36,21 +36,21 @@ PSHAnalysis::PSHAnalysis(ifstream &infile)
 	{
 		for(int j=0; j<numCells; j++)
 		{
-			if(pshData[i][j]>pshBinMaxVal)
+			if(data[i][j]>pshBinMaxVal)
 			{
-				pshBinMaxVal=pshData[i][j];
+				pshBinMaxVal=data[i][j];
 			}
 		}
 	}
 }
 
-PSHAnalysis::~PSHAnalysis()
+PSHData::~PSHData()
 {
-	delete[] pshData[0];
-	delete[] pshData;
+	delete[] data[0];
+	delete[] data;
 }
 
-void PSHAnalysis::exportPSH(ofstream &outfile)
+void PSHData::exportPSH(ofstream &outfile)
 {
 	outfile.write((char *)&numCells, sizeof(unsigned int));
 	outfile.write((char *)&preStimNumBins, sizeof(unsigned int));
@@ -61,40 +61,40 @@ void PSHAnalysis::exportPSH(ofstream &outfile)
 	outfile.write((char *)&apBufTimeSize, sizeof(unsigned int));
 	outfile.write((char *)&numBinsInBuf, sizeof(unsigned int));
 	outfile.write((char *)&numTrials, sizeof(unsigned int));
-	outfile.write((char *)pshData[0], numCells*totalNumBins*sizeof(unsigned int));
+	outfile.write((char *)data[0], numCells*totalNumBins*sizeof(unsigned int));
 }
 
-unsigned int PSHAnalysis::getCellNum()
+unsigned int PSHData::getCellNum()
 {
 	return numCells;
 }
 
-unsigned int PSHAnalysis::getNumTrials()
+unsigned int PSHData::getNumTrials()
 {
 	return numTrials;
 }
 
-unsigned int PSHAnalysis::getNumBins()
+unsigned int PSHData::getNumBins()
 {
 	return totalNumBins;
 }
 
-unsigned int PSHAnalysis::getBinTimeSize()
+unsigned int PSHData::getBinTimeSize()
 {
 	return binTimeSize;
 }
 
-unsigned int PSHAnalysis::getPSHBinMaxVal()
+unsigned int PSHData::getPSHBinMaxVal()
 {
 	return pshBinMaxVal;
 }
 
-const unsigned int **PSHAnalysis::getPSHData()
+const unsigned int **PSHData::getData()
 {
-	return (const unsigned int **)pshData;
+	return (const unsigned int **)data;
 }
 
-QPixmap *PSHAnalysis::paintPSHPop(unsigned int startCellN, unsigned int endCellN)
+QPixmap *PSHData::paintPSHPop(unsigned int startCellN, unsigned int endCellN)
 {
 	stringstream strFormat;
 	QString paintStr;
@@ -187,7 +187,7 @@ QPixmap *PSHAnalysis::paintPSHPop(unsigned int startCellN, unsigned int endCellN
 				break;
 			}
 
-			greyVal=(int)(((float)pshData[i][j]/pshBinMaxVal)*255);
+			greyVal=(int)(((float)data[i][j]/pshBinMaxVal)*255);
 			paintColor.setRgb(greyVal, greyVal, greyVal, 255);
 			p.setPen(paintColor);
 			p.drawLine(binTStart, j, binTEnd, j);
@@ -199,7 +199,7 @@ QPixmap *PSHAnalysis::paintPSHPop(unsigned int startCellN, unsigned int endCellN
 	return paintBuf;
 }
 
-QPixmap *PSHAnalysis::paintPSHInd(unsigned int cellN)
+QPixmap *PSHData::paintPSHInd(unsigned int cellN)
 {
 	QPixmap *paintBuf;
 	stringstream strFormat;
@@ -286,7 +286,7 @@ QPixmap *PSHAnalysis::paintPSHInd(unsigned int cellN)
 		int binY;
 		binX=i*binTimeSize;
 
-		binHeight=paintSpC*((float)pshData[i][cellN])/pshBinMaxVal;
+		binHeight=paintSpC*((float)data[i][cellN])/pshBinMaxVal;
 		binY=paintSpC-binHeight;
 
 		p.fillRect(binX, binY, (int)binTimeSize, binHeight, Qt::white);

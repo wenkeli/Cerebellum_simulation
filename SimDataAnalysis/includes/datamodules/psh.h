@@ -21,11 +21,11 @@
 
 using namespace std;
 
-class PSHAnalysis
+class PSHData
 {
 public:
-	PSHAnalysis(ifstream &infile);
-	virtual ~PSHAnalysis();
+	PSHData(ifstream &infile);
+	virtual ~PSHData();
 
 	virtual void exportPSH(ofstream &outfile);
 
@@ -35,7 +35,7 @@ public:
 	unsigned int getBinTimeSize();
 	unsigned int getPSHBinMaxVal();
 
-	const unsigned int **getPSHData();
+	const unsigned int **getData();
 
 	QPixmap *paintPSHPop(unsigned int startCellN, unsigned int endCellN);
 	QPixmap *paintPSHInd(unsigned int cellN);
@@ -53,10 +53,10 @@ protected:
 	unsigned int currBinN;
 
 	unsigned int pshBinMaxVal;
-	unsigned int **pshData;
+	unsigned int **data;
 
 private:
-	PSHAnalysis();
+	PSHData();
 };
 
 #endif /* PSH_H_ */

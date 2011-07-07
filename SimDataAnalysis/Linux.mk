@@ -35,21 +35,21 @@ MOCOUT = $(INCPATH)/moc_mainw.h $(INCPATH)/moc_pshdispw.h
 COMINCS = $(INCPATH)/common.h
 COREINCS = $(INCPATH)/main.h
 
-DAMINCS = $(DAMIP)/psh.h
+DAMINCS = $(DAMIP)/psh.h $(DAMIP)/pshgpu.h
 
 INCS = $(MOCINC) $(UICOUT) $(MOCOUT) $(COMINCS) $(GUIINCS) $(COREINCS) $(DAMINCS)
 
 GUISRC = $(SRCPATH)/mainw.cpp $(SRCPATH)/pshdispw.cpp
 CORESRC = $(SRCPATH)/main.cpp
 
-DAMSRC = $(DAMSP)/psh.cpp
+DAMSRC = $(DAMSP)/psh.cpp $(DAMSP)/pshgpu.cpp
 
 SRC = $(GUISRC) $(CORESRC) $(DAMSRC)
 
 GUIOBJ = $(OUTPATH)/mainw.obj $(OUTPATH)/pshdispw.obj
 COREOBJ = $(OUTPATH)/main.obj
 
-DAMOBJ = $(OUTPATH)/psh.obj
+DAMOBJ = $(OUTPATH)/psh.obj $(OUTPATH)/pshgpu.obj
 
 OBJ = $(GUIOBJ) $(COREOBJ) $(DAMOBJ)
 
@@ -65,6 +65,7 @@ gui: $(INC) $(GUISRC)
 	
 dam: $(INC) $(DAMSRC)
 	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(DAMSP)/psh.cpp -o$(OUTPATH)/psh.obj
+	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(DAMSP)/pshgpu.cpp -o$(OUTPATH)/pshgpu.obj
 
 guiinc: mocs uis
 	
