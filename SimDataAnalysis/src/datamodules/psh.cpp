@@ -137,7 +137,7 @@ QPixmap *PSHAnalysis::paintPSHPop(unsigned int startCellN, unsigned int endCellN
 	p.drawLine(0, paintBuf->height()-99, (int)paintTimeWidth, paintBuf->height()-99);
 	p.drawLine((int)paintTimeWidth, 0, (int)paintTimeWidth, paintBuf->height()-99);
 
-	p.SetPen(Qt::white);
+	p.setPen(Qt::white);
 	strFormat.str("");
 	strFormat<<"psh bin max val:"<<pshBinMaxVal;
 	paintStr=strFormat.str().c_str();
@@ -245,7 +245,7 @@ QPixmap *PSHAnalysis::paintPSHInd(unsigned int cellN)
 	p.drawLine(0, paintBuf->height()-99, (int)paintTimeWidth, paintBuf->height()-99);
 	p.drawLine((int)paintTimeWidth, 0, (int)paintTimeWidth, paintBuf->height()-99);
 
-	p.SetPen(Qt::white);
+	p.setPen(Qt::white);
 	strFormat.str("");
 	strFormat<<"psh bin max val:"<<pshBinMaxVal;
 	paintStr=strFormat.str().c_str();
@@ -296,5 +296,4 @@ QPixmap *PSHAnalysis::paintPSHInd(unsigned int cellN)
 
 	return paintBuf;
 }
-
 
