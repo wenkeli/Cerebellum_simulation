@@ -15,9 +15,9 @@ extern PSHData *goPSH;
 extern PSHData *grPSH;
 extern PSHData *scPSH;
 
-extern PSHData *BCPSH[NUMMZONES];
-extern PSHData *PCPSH[NUMMZONES];
-extern PSHData *IOPSH[NUMMZONES];
-extern PSHData *NCPSH[NUMMZONES];
+extern PSHData *bcPSH[NUMMZONES];
+extern PSHData *pcPSH[NUMMZONES];
+extern PSHData *ioPSH[NUMMZONES];
+extern PSHData *ncPSH[NUMMZONES];
 
 #endif /* GLOBALVARS_H_ */

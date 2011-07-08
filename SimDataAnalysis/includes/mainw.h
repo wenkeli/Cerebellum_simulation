@@ -31,6 +31,8 @@ private:
 
     int calcTempMetricBinN;
 
+    QString cellTypes[8];
+
 //    void calcGRTotalSpikes();
 //    void calcGRTotalSpikesPC();
 //
@@ -60,9 +62,15 @@ private:
 //    void calcGRLTDPopAmp(int);
 
 public slots:
-	void dispSingleCell();
-	void dispAllCells();
+	void dispSingleCellNP();
+	void dispMultiCellNP();
+	void updateSingleCellDisp(int);
+	void updateMultiCellDisp(int);
+	void updateMultiCellBound(int);
+	void updateCellType(int);
 	void loadPSHFile();
+
+
 	void loadSimFile();
 	void calcTempMetrics();
 

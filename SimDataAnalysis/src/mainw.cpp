@@ -4,23 +4,20 @@
 MainW::MainW(QWidget *parent, QApplication *a)
     : QMainWindow(parent)
 {
+	cellTypes[0]="MF";
+	cellTypes[1]="GO";
+	cellTypes[2]="GR";
+	cellTypes[3]="SC";
+	cellTypes[4]="BC";
+	cellTypes[5]="PC";
+	cellTypes[6]="IO";
+	cellTypes[7]="NC";
 	ui.setupUi(this);
-	ui.dispCellType->addItem("Mossy fibers");
-	ui.dispCellType->addItem("Golgi Cells");
-	ui.dispCellType->addItem("Granule cells");
-	ui.dispCellType->addItem("Purkinje cells");
-	ui.dispCellType->addItem("Basket cells");
-	ui.dispCellType->addItem("Stellate cells");
-	ui.dispCellType->addItem("Nucleus cells");
 
-	ui.dispSingleCellNum->setMinimum(0);
-//	ui.dispSingleCellNum->setMaximum(NUMGR-1);
-
-	ui.grDispStartNum->setMinimum(0);
-	ui.grDispStartNum->setMaximum(1023);
-
-	ui.tempMetricBinN->setMinimum(0);
-//	ui.tempMetricBinN->setMaximum(NUMBINS);
+	for(int i=0; i<8; i++)
+	{
+		ui.dispCellTypeBox->addItem(cellTypes[i]);
+	}
 
 	this->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -34,16 +31,30 @@ MainW::MainW(QWidget *parent, QApplication *a)
 
 MainW::~MainW()
 {
+	delete mfPSH;
+	delete goPSH;
+	delete grPSH;
+	delete scPSH;
 
+	for(int i=0; i<NUMMZONES; i++)
+	{
+		delete bcPSH[i];
+		delete pcPSH[i];
+		delete ioPSH[i];
+		delete ncPSH[i];
+	}
 }
 
-void MainW::dispAllCells()
+void MainW::dispMultiCellNP()
 {
+
 }
 
-void MainW::dispSingleCell()
+void MainW::dispSingleCellNP()
 {
+
 }
+
 
 void MainW::loadPSHFile()
 {
@@ -60,6 +71,30 @@ void MainW::loadPSHFile()
 	{
 		cerr<<"error opening file "<<fileName.toStdString()<<endl;
 		return;
+	}
+
+	delete mfPSH;
+	delete goPSH;
+	delete grPSH;
+	delete scPSH;
+
+	for(int i=0; i<NUMMZONES; i++)
+	{
+		delete bcPSH[i];
+		delete pcPSH[i];
+		delete ioPSH[i];
+		delete ncPSH[i];
+	}
+	mfPSH=new PSHData(infile);
+	goPSH=new PSHData(infile);
+	grPSH=new PSHDataGPU(infile);
+	scPSH=new PSHData(infile);
+	for(int i=0; i<NUMMZONES; i++)
+	{
+		bcPSH[i]=new PSHData(infile);
+		pcPSH[i]=new PSHData(infile);
+		ioPSH[i]=new PSHData(infile);
+		ncPSH[i]=new PSHData(infile);
 	}
 
 	grTotalCalced=false;
@@ -85,26 +120,7 @@ void MainW::loadSimFile()
 //	}
 //
 //	cout<<"reading state data"<<endl;
-//	infile.read((char *)conNumMFtoGR, (NUMMF+1)*sizeof(short));
-//	infile.read((char *)conNumMFtoGO, (NUMMF+1)*sizeof(char));
-//	infile.read((char *)conNumGOtoGR, (NUMGO+1)*sizeof(short));
-//	infile.read((char *)conNumGRtoGO, (NUMGR+1)*sizeof(char));
-//
-//	infile.read((char *)conMFtoGR, (NUMMF+1)*NUMGRPERMF*sizeof(int));
-//	infile.read((char *)conMFtoGO, (NUMMF+1)*MFGOSYNPERMF*sizeof(short));
-//	infile.read((char *)conGOtoGR, (NUMGO+1)*NUMGROUTPERGO*sizeof(int));
-//	infile.read((char *)conGRtoGO, (NUMGR+1)*GRGOSYNPERGR*sizeof(short));
-//	infile.read((char *)conBCtoPC, NUMBC*BCPCSYNPERBC*sizeof(char));
-//	infile.read((char *)conIOCouple, NUMIO*IOCOUPSYNPERIO*sizeof(char));
-//	infile.read((char *)conPCtoNC, NUMPC*PCNCSYNPERPC*sizeof(char));
-//
-//	infile.read((char *)typeMFs, (NUMMF+1)*sizeof(char));
-//	infile.read((char *)bgFreqContsMF, NUMCONTEXTS*(NUMMF+1)*sizeof(float));
-//	infile.read((char *)incFreqMF, (NUMMF+1)*sizeof(float));
-//	infile.read((char *)csStartMF, (NUMMF+1)*sizeof(short));
-//	infile.read((char *)csEndMF, (NUMMF+1)*sizeof(short));
-//
-//	infile.read((char *)pfSynWeightPC, NUMGR*sizeof(float));
+
 //	cout<<"done"<<endl;
 //
 //	infile.close();

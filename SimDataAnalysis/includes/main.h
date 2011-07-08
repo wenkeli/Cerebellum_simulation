@@ -19,10 +19,10 @@ PSHData *goPSH;
 PSHData *grPSH;
 PSHData *scPSH;
 
-PSHData *BCPSH[NUMMZONES];
-PSHData *PCPSH[NUMMZONES];
-PSHData *IOPSH[NUMMZONES];
-PSHData *NCPSH[NUMMZONES];
+PSHData *bcPSH[NUMMZONES];
+PSHData *pcPSH[NUMMZONES];
+PSHData *ioPSH[NUMMZONES];
+PSHData *ncPSH[NUMMZONES];
 
 
 int main(int argc, char **argv);

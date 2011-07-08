@@ -1,8 +1,8 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainw.h'
 **
-** Created: Wed Apr 13 18:13:12 2011
-**      by: The Qt Meta Object Compiler version 62 (Qt 4.6.3)
+** Created: Fri Jul 8 13:38:28 2011
+**      by: The Qt Meta Object Compiler version 62 (Qt 4.7.2)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -11,7 +11,7 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'mainw.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 62
-#error "This file was generated using the moc from 4.6.3. It"
+#error "This file was generated using the moc from 4.7.2. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -20,10 +20,10 @@ QT_BEGIN_MOC_NAMESPACE
 static const uint qt_meta_data_MainW[] = {
 
  // content:
-       4,       // revision
+       5,       // revision
        0,       // classname
        0,    0, // classinfo
-       8,   14, // methods
+      12,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -32,19 +32,26 @@ static const uint qt_meta_data_MainW[] = {
 
  // slots: signature, parameters, type, tag, flags
        7,    6,    6,    6, 0x0a,
-      24,    6,    6,    6, 0x0a,
-      39,    6,    6,    6, 0x0a,
-      53,    6,    6,    6, 0x0a,
-      67,    6,    6,    6, 0x0a,
-      85,    6,    6,    6, 0x0a,
-     111,    6,    6,    6, 0x0a,
-     123,    6,    6,    6, 0x0a,
+      26,    6,    6,    6, 0x0a,
+      44,    6,    6,    6, 0x0a,
+      70,    6,    6,    6, 0x0a,
+      95,    6,    6,    6, 0x0a,
+     121,    6,    6,    6, 0x0a,
+     141,    6,    6,    6, 0x0a,
+     155,    6,    6,    6, 0x0a,
+     169,    6,    6,    6, 0x0a,
+     187,    6,    6,    6, 0x0a,
+     213,    6,    6,    6, 0x0a,
+     225,    6,    6,    6, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_MainW[] = {
-    "MainW\0\0dispSingleCell()\0dispAllCells()\0"
+    "MainW\0\0dispSingleCellNP()\0dispMultiCellNP()\0"
+    "updateSingleCellDisp(int)\0"
+    "updateMultiCellDisp(int)\0"
+    "updateMultiCellBound(int)\0updateCellType(int)\0"
     "loadPSHFile()\0loadSimFile()\0"
     "calcTempMetrics()\0changeTempMetricBinN(int)\0"
     "exportSim()\0exportSinglePSH()\0"
@@ -79,17 +86,21 @@ int MainW::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
-        case 0: dispSingleCell(); break;
-        case 1: dispAllCells(); break;
-        case 2: loadPSHFile(); break;
-        case 3: loadSimFile(); break;
-        case 4: calcTempMetrics(); break;
-        case 5: changeTempMetricBinN((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 6: exportSim(); break;
-        case 7: exportSinglePSH(); break;
+        case 0: dispSingleCellNP(); break;
+        case 1: dispMultiCellNP(); break;
+        case 2: updateSingleCellDisp((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 3: updateMultiCellDisp((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 4: updateMultiCellBound((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 5: updateCellType((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 6: loadPSHFile(); break;
+        case 7: loadSimFile(); break;
+        case 8: calcTempMetrics(); break;
+        case 9: changeTempMetricBinN((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 10: exportSim(); break;
+        case 11: exportSinglePSH(); break;
         default: ;
         }
-        _id -= 8;
+        _id -= 12;
     }
     return _id;
 }
