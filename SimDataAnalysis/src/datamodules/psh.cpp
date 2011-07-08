@@ -146,7 +146,8 @@ QPixmap *PSHData::paintPSHPop(unsigned int startCellN, unsigned int endCellN)
 		timeTickStep=50;
 	}
 
-	paintBuf=new QPixmap(nPaintCells+100, paintTimeWidth+100);
+	paintBuf=new QPixmap(paintTimeWidth+100, nPaintCells+100);
+	paintBuf->fill(Qt::black);
 	p.begin(paintBuf);
 
 	//setting up axes
@@ -187,8 +188,6 @@ QPixmap *PSHData::paintPSHPop(unsigned int startCellN, unsigned int endCellN)
 	p.drawText(paintTimeWidth+40, nPaintCells+2, "cell #");
 	//end axes
 
-	p.fillRect((int)preStimNumBins*binTimeSize, 0,
-			(int)stimNumBins*binTimeSize, (int)nPaintCells, Qt::blue);
 	for(int i=0; i<totalNumBins; i++)
 	{
 		QColor paintColor;
@@ -206,8 +205,12 @@ QPixmap *PSHData::paintPSHPop(unsigned int startCellN, unsigned int endCellN)
 
 			greyVal=(int)(((float)data[i][j]/pshBinMaxVal)*255);
 			paintColor.setRgb(greyVal, greyVal, greyVal, 255);
+			if(i>=preStimNumBins && i<preStimNumBins+stimNumBins)
+			{
+				paintColor.setRgb(greyVal, greyVal, 255, 255);
+			}
 			p.setPen(paintColor);
-			p.drawLine(binTStart, j, binTEnd, j);
+			p.drawLine(binTStart, j-startCellN, binTEnd, j-startCellN);
 		}
 	}
 
@@ -256,7 +259,8 @@ QPixmap *PSHData::paintPSHInd(unsigned int cellN)
 		timeTickStep=50;
 	}
 
-	paintBuf=new QPixmap(paintSpC+100, paintTimeWidth+100);
+	paintBuf=new QPixmap(paintTimeWidth+100, paintSpC+100);
+	paintBuf->fill(Qt::black);
 	p.begin(paintBuf);
 
 	//setting up axes

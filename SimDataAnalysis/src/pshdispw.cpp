@@ -11,6 +11,7 @@ PSHDispw::PSHDispw(QWidget *parent, QPixmap *buf, QString wt)
 	this->setWindowTitle(wt);
 
 	this->setFixedSize(buf->width(), buf->height());
+	this->setAutoFillBackground(true);
 
 	backBuf=buf;
 
