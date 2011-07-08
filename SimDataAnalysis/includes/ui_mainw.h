@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainw.ui'
 **
-** Created: Fri Jul 8 15:05:06 2011
+** Created: Fri Jul 8 15:07:24 2011
 **      by: Qt User Interface Compiler version 4.7.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -51,12 +51,12 @@ public:
     {
         if (MainWClass->objectName().isEmpty())
             MainWClass->setObjectName(QString::fromUtf8("MainWClass"));
-        MainWClass->resize(437, 224);
+        MainWClass->resize(459, 224);
         centralwidget = new QWidget(MainWClass);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         verticalLayoutWidget = new QWidget(centralwidget);
         verticalLayoutWidget->setObjectName(QString::fromUtf8("verticalLayoutWidget"));
-        verticalLayoutWidget->setGeometry(QRect(250, 10, 173, 197));
+        verticalLayoutWidget->setGeometry(QRect(260, 10, 173, 197));
         verticalLayout = new QVBoxLayout(verticalLayoutWidget);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         verticalLayout->setContentsMargins(0, 0, 0, 0);
@@ -82,7 +82,7 @@ public:
 
         gridLayoutWidget = new QWidget(centralwidget);
         gridLayoutWidget->setObjectName(QString::fromUtf8("gridLayoutWidget"));
-        gridLayoutWidget->setGeometry(QRect(0, 10, 231, 121));
+        gridLayoutWidget->setGeometry(QRect(20, 10, 231, 121));
         gridLayout = new QGridLayout(gridLayoutWidget);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         gridLayout->setContentsMargins(0, 0, 0, 0);

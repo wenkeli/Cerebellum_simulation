@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>437</width>
+    <width>459</width>
     <height>224</height>
    </rect>
   </property>
@@ -17,7 +17,7 @@
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>260</x>
       <y>10</y>
       <width>173</width>
       <height>197</height>
@@ -57,7 +57,7 @@
    <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>0</x>
+      <x>20</x>
       <y>10</y>
       <width>231</width>
       <height>121</height>
