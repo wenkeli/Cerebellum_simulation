@@ -9,6 +9,7 @@
 
 #include "common.h"
 #include "globalvars.h"
+#include "datamodules/psh.h"
 #include "pshdispw.h"
 
 #include "ui_mainw.h"
@@ -25,13 +26,16 @@ private:
     Ui::MainWClass ui;
     QApplication *app;
     PSHDispw *curSingleWindow;
-    PSHDispw *curAllWindow;
+    PSHDispw *curMultiWindow;
 
     bool grTotalCalced;
 
     int calcTempMetricBinN;
 
     QString cellTypes[8];
+
+    PSHData **pshs[8];
+    PSHData **curPSH;
 
 //    void calcGRTotalSpikes();
 //    void calcGRTotalSpikesPC();

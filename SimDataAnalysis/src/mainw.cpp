@@ -12,6 +12,19 @@ MainW::MainW(QWidget *parent, QApplication *a)
 	cellTypes[5]="PC";
 	cellTypes[6]="IO";
 	cellTypes[7]="NC";
+
+	pshs[0]=&mfPSH;
+	pshs[1]=&goPSH;
+	pshs[2]=&grPSH;
+	pshs[3]=&scPSH;
+	pshs[4]=&bcPSH[0];
+	pshs[5]=&pcPSH[0];
+	pshs[6]=&ioPSH[0];
+	pshs[7]=&ncPSH[0];
+
+	curSingleWindow=NULL;
+	curMultiWindow=NULL;
+
 	ui.setupUi(this);
 
 	for(int i=0; i<8; i++)
@@ -27,6 +40,13 @@ MainW::MainW(QWidget *parent, QApplication *a)
 	calcTempMetricBinN=0;
 	connect(this, SIGNAL(destroyed()), app, SLOT(quit()));
 	connect(ui.quitButton, SIGNAL(clicked()), app, SLOT(quit()));
+
+	ui.dispCellTypeBox->setDisabled(true);
+	ui.multiCellPageBox->setDisabled(true);
+	ui.multiCellStrideBox->setDisabled(true);
+	ui.singleCellNumBox->setDisabled(true);
+	ui.singleCellNPButton->setDisabled(true);
+	ui.multicellNPButton->setDisabled(true);
 }
 
 MainW::~MainW()
@@ -47,14 +67,72 @@ MainW::~MainW()
 
 void MainW::dispMultiCellNP()
 {
+	int startN, endN;
 
+	startN=ui.multiCellPageBox->value()*ui.multiCellStrideBox->value();
+	endN=startN+ui.multiCellStrideBox->value();
+
+	curMultiWindow=new PSHDispw(NULL,
+			(*curPSH)->paintPSHPop(startN, endN),
+			cellTypes[ui.dispCellTypeBox->currentIndex()]);
 }
 
 void MainW::dispSingleCellNP()
 {
-
+	curSingleWindow=new PSHDispw(NULL,
+			(*curPSH)->paintPSHInd(ui.singleCellNumBox->value()),
+			cellTypes[ui.dispCellTypeBox->currentIndex]);
 }
 
+void MainW::updateSingleCellDisp(int cellN)
+{
+	if(curSingleWindow==NULL)
+	{
+		return;
+	}
+
+	curSingleWindow->switchBuf((*curPSH)->paintPSHInd(cellN));
+}
+
+void MainW::updateMultiCellDisp(int page)
+{
+	int startN, endN;
+	if(curMultiWindow==NULL)
+	{
+		return;
+	}
+
+	startN=page*ui.multiCellStrideBox->value();
+	endN=startN+ui.multiCellStrideBox->value();
+
+	curMultiWindow->switchBuf((*curPSH)->paintPSHPop(startN, endN));
+}
+
+void MainW::updateMultiCellBound(int stride)
+{
+	int numCells;
+	numCells=(*curPSH)->getCellNum();
+
+	ui.multiCellPageBox->setMaximum(numCells/stride);
+}
+
+void MainW::updateCellType(int type)
+{
+	int strideMax;
+	curPSH=pshs[type];
+	strideMax=(*curPSH)->getCellNum();
+	if(strideMax>1024)
+	{
+		strideMax=1024;
+	}
+	ui.multiCellPageBox->setMinimum(0);
+	ui.multiCellStrideBox->setMinimum(4);
+	ui.multiCellStrideBox->setMaximum(strideMax);
+	updateMultiCellBound(ui.multiCellStrideBox->value());
+
+	ui.singleCellNumBox->setMinimum(0);
+	ui.singleCellNumBox->setMaximum((int)((*curPSH)->getCellNum())-1);
+}
 
 void MainW::loadPSHFile()
 {
@@ -100,6 +178,16 @@ void MainW::loadPSHFile()
 	grTotalCalced=false;
 	cout<<"done!"<<endl;
 	infile.close();
+
+	ui.dispCellTypeBox->setEnabled(true);
+	updateCellType(ui.dispCellTypeBox->currentIndex());
+
+	ui.multiCellPageBox->setEnabled(true);
+	ui.multiCellStrideBox->setEnabled(true);
+
+	ui.singleCellNumBox->setEnabled(true);
+	ui.singleCellNPButton->setEnabled(true);
+	ui.multicellNPButton->setEnabled(true);
 }
 
 void MainW::loadSimFile()
