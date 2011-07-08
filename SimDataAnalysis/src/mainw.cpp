@@ -4,6 +4,8 @@
 MainW::MainW(QWidget *parent, QApplication *a)
     : QMainWindow(parent)
 {
+	ui.setupUi(this);
+
 	cellTypes[0]="MF";
 	cellTypes[1]="GO";
 	cellTypes[2]="GR";
@@ -12,6 +14,7 @@ MainW::MainW(QWidget *parent, QApplication *a)
 	cellTypes[5]="PC";
 	cellTypes[6]="IO";
 	cellTypes[7]="NC";
+	cout<<"here1"<<endl;
 
 	pshs[0]=&mfPSH;
 	pshs[1]=&goPSH;
@@ -21,32 +24,42 @@ MainW::MainW(QWidget *parent, QApplication *a)
 	pshs[5]=&pcPSH[0];
 	pshs[6]=&ioPSH[0];
 	pshs[7]=&ncPSH[0];
+	cout<<"here2"<<endl;
 
 	curSingleWindow=NULL;
 	curMultiWindow=NULL;
 
-	ui.setupUi(this);
+	cout<<"here3"<<endl;
 
-	for(int i=0; i<8; i++)
-	{
-		ui.dispCellTypeBox->addItem(cellTypes[i]);
-	}
+//	for(int i=0; i<8; i++)
+//	{
+//		ui.dispCellTypeBox->addItem(cellTypes[i]);
+//	}
+	cout<<"here4";
 
 	this->setAttribute(Qt::WA_DeleteOnClose);
 
 	app=a;
+	cout<<"here5"<<endl;
 
 	grTotalCalced=false;
 	calcTempMetricBinN=0;
 	connect(this, SIGNAL(destroyed()), app, SLOT(quit()));
 	connect(ui.quitButton, SIGNAL(clicked()), app, SLOT(quit()));
 
+	cout<<"here6"<<endl;
+
 	ui.dispCellTypeBox->setDisabled(true);
+	ui.dispCellTypeBox->clear();
+	ui.dispCellTypeBox->addItem("test");
+
+	cout<<ui.dispCellTypeBox->currentIndex()<<endl;
 	ui.multiCellPageBox->setDisabled(true);
 	ui.multiCellStrideBox->setDisabled(true);
 	ui.singleCellNumBox->setDisabled(true);
 	ui.singleCellNPButton->setDisabled(true);
 	ui.multicellNPButton->setDisabled(true);
+	cout<<"here7"<<endl;
 }
 
 MainW::~MainW()
@@ -81,7 +94,7 @@ void MainW::dispSingleCellNP()
 {
 	curSingleWindow=new PSHDispw(NULL,
 			(*curPSH)->paintPSHInd(ui.singleCellNumBox->value()),
-			cellTypes[ui.dispCellTypeBox->currentIndex]);
+			cellTypes[ui.dispCellTypeBox->currentIndex()]);
 }
 
 void MainW::updateSingleCellDisp(int cellN)

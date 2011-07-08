@@ -10,6 +10,7 @@
 #include "common.h"
 #include "globalvars.h"
 #include "datamodules/psh.h"
+#include "datamodules/pshgpu.h"
 #include "pshdispw.h"
 
 #include "ui_mainw.h"
