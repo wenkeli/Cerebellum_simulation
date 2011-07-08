@@ -205,14 +205,17 @@ QPixmap *PSHData::paintPSHPop(unsigned int startCellN, unsigned int endCellN)
 
 			greyVal=(int)(((float)data[i][j]/pshBinMaxVal)*255);
 			paintColor.setRgb(greyVal, greyVal, greyVal, 255);
-			if(i>=preStimNumBins && i<preStimNumBins+stimNumBins)
-			{
-				paintColor.setRgb(greyVal, greyVal, 255, 255);
-			}
+
 			p.setPen(paintColor);
 			p.drawLine(binTStart, j-startCellN, binTEnd, j-startCellN);
 		}
 	}
+
+	p.setPen(Qt::blue);
+	p.drawLine(preStimNumBins*binTimeSize, 0,
+			preStimNumBins*binTimeSize, nPaintCells);
+	p.drawLine((preStimNumBins+stimNumBins)*binTimeSize, 0,
+			(preStimNumBins+stimNumBins)*binTimeSize, nPaintCells);
 
 	p.end();
 

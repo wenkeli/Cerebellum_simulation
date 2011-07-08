@@ -86,6 +86,11 @@ void MainW::dispMultiCellNP()
 	startN=ui.multiCellPageBox->value()*ui.multiCellStrideBox->value();
 	endN=startN+ui.multiCellStrideBox->value();
 
+	if(curMultiWindow!=NULL)
+	{
+		curMultiWindow->setAttribute(Qt::WA_DeleteOnClose);
+	}
+
 	curMultiWindow=new PSHDispw(NULL,
 			(*curPSH)->paintPSHPop(startN, endN),
 			cellTypes[ui.dispCellTypeBox->currentIndex()]);
@@ -93,6 +98,10 @@ void MainW::dispMultiCellNP()
 
 void MainW::dispSingleCellNP()
 {
+	if(curSingleWindow!=NULL)
+	{
+		curSingleWindow->setAttribute(Qt::WA_DeleteOnClose);
+	}
 	curSingleWindow=new PSHDispw(NULL,
 			(*curPSH)->paintPSHInd(ui.singleCellNumBox->value()),
 			cellTypes[ui.dispCellTypeBox->currentIndex()]);

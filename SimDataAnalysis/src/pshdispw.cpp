@@ -6,8 +6,6 @@ PSHDispw::PSHDispw(QWidget *parent, QPixmap *buf, QString wt)
 {
 	ui.setupUi(this);
 
-	this->setAttribute(Qt::WA_DeleteOnClose);
-
 	this->setWindowTitle(wt);
 
 	this->setFixedSize(buf->width(), buf->height());
