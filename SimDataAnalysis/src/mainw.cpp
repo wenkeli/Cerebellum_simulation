@@ -454,7 +454,7 @@ void MainW::changeTempMetricBinN(int bN)
 //
 //	grTotalCalced=true;
 //}
-//
+
 //void MainW::calcGRTotalSpikesPC()
 //{
 //	for(int i=0; i<NUMPC; i++)
@@ -470,7 +470,7 @@ void MainW::changeTempMetricBinN(int bN)
 //		}
 //	}
 //}
-//
+
 //void MainW::calcGRTempSpecific()
 //{
 //	for(int i=0; i<NUMGR; i++)
@@ -514,7 +514,7 @@ void MainW::changeTempMetricBinN(int bN)
 //		grTempSpPeakVal[i]=peakVal;
 //	}
 //}
-//
+
 //void MainW::calcGRPopTempMetric()
 //{
 //	for(int i=0; i<NUMBINS; i++)
@@ -622,8 +622,7 @@ void MainW::changeTempMetricBinN(int bN)
 //		}
 //	}
 //}
-//
-//
+
 //void MainW::calcGRPlastTempMetric(ofstream &outfile)
 //{
 //	initGRPlastTempVars();
@@ -717,7 +716,7 @@ void MainW::changeTempMetricBinN(int bN)
 ////		}
 //	}
 //}
-//
+
 //void MainW::calcGRPlastTempMetricPC(ofstream &outfile)
 //{
 //	for(int i=calcTempMetricBinN; i<=calcTempMetricBinN; i++)
@@ -773,7 +772,7 @@ void MainW::changeTempMetricBinN(int bN)
 //		}
 //	}
 //}
-//
+
 //void MainW::initGRPlastTempVars()
 //{
 //	for(int i=0; i<NUMBINS; i++)
@@ -785,7 +784,7 @@ void MainW::changeTempMetricBinN(int bN)
 //		}
 //	}
 //}
-//
+
 //void MainW::calcGRLTDSynWeight(int binN, float scale)
 //{
 //	if(binN<0 || binN>=NUMBINS)
@@ -820,7 +819,7 @@ void MainW::changeTempMetricBinN(int bN)
 //		grWeightsPlast[binN][i]=synWeight;
 //	}
 //}
-//
+
 //void MainW::calcGRLTDSynWeightPC(int binN, float scale, int pcN)
 //{
 //	if(binN<0 || binN>=NUMBINS)
@@ -858,7 +857,7 @@ void MainW::changeTempMetricBinN(int bN)
 //
 //	}
 //}
-//
+
 //void MainW::calcGRLTPSynWeight(int binN, double maxBinLTDDiff)
 //{
 //	double synWeightScale[NUMBINS];
@@ -901,7 +900,7 @@ void MainW::changeTempMetricBinN(int bN)
 //		grWeightsPlast[binN][i]=synWeight;
 //	}
 //}
-//
+
 //void MainW::calcGRLTPSynWeightPC(int binN, double maxBinLTDDiff, int pcN)
 //{
 //	double synWeightScale[NUMBINS];
@@ -944,7 +943,7 @@ void MainW::changeTempMetricBinN(int bN)
 //		grWeightsPlastPC[binN][i]=synWeight;
 //	}
 //}
-//
+
 //void MainW::calcGRPlastPopAct(int binN)
 //{
 //	if(binN<0 || binN>=NUMBINS)
@@ -969,7 +968,7 @@ void MainW::changeTempMetricBinN(int bN)
 //		grPopActPlast[binN][i]=binActSum/numTrials;
 //	}
 //}
-//
+
 //void MainW::calcGRPlastPopActPC(int binN, int pcN)
 //{
 //	if(binN<0 || binN>=NUMBINS)
@@ -1006,7 +1005,7 @@ void MainW::changeTempMetricBinN(int bN)
 ////		cout<<"herewdone"<<endl;
 //	}
 //}
-//
+
 //double MainW::calcGRPlastPopActDiff(int binN)
 //{
 //	if(binN<0 || binN>=NUMBINS)
@@ -1037,7 +1036,7 @@ void MainW::changeTempMetricBinN(int bN)
 //	}
 //	return grPopActDiffPlastPC[binN][pcN][binN];
 //}
-//
+
 //void MainW::calcGRPlastPopActDiffSum(int binN)
 //{
 //	double sum;

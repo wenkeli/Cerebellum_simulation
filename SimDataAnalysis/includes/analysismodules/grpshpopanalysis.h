@@ -21,6 +21,7 @@ class GRPSHPopAnalysis
 {
 public:
 	GRPSHPopAnalysis(PSHData *grPSH);
+	~GRPSHPopAnalysis();
 protected:
 	const unsigned int **grPSH;
 	unsigned int numTrials;
@@ -32,11 +33,21 @@ protected:
 	unsigned int pshMaxVal;
 	unsigned int numGR;
 
-	unsigned int *totalActivity;
-	unsigned int *pfPCSynW;
+	float *refPFPCPopAct;
+	float *curPFPCPopAct;
+	float *refPFPCSynW;
+	float *curPFPCSynW;
 
 private:
 	GRPSHPopAnalysis();
+
+	void calcPFPCPopActivity(float *actvivity, float *pfPCSynW);
+
+	void calcPFPCPlast(unsigned int usTime);
+
+	void runPFPCPlastIteration(unsigned int usTime);
+	void doPFPCPlast(float plastStep, unsigned int *pshRow);
+
 };
 
 #endif /* GRPOPANALYSIS_H_ */
