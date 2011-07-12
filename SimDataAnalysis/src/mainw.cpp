@@ -230,7 +230,7 @@ void MainW::loadPSHFile()
 
 void MainW::calcPFPCPlasticity()
 {
-
+	grPopTimingAnalysis->calcPFPCPlast(ui.pfPCPlastUSTimeSpinBox->value());
 }
 
 void MainW::loadSimFile()
