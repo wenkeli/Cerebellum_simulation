@@ -93,6 +93,9 @@ void GRPSHPopAnalysis::calcPFPCPlast(unsigned int usTime)
 		runPFPCPlastIteration(usTime);
 		cout<<"PFPC plast iteration "<<i<<endl;
 	}
+	calcPFPCPopActivity(curPFPCPopAct, curPFPCSynW);
+//	cout<<curPFPCPopAct[100]<<endl;
+	cout<<"done"<<endl;
 }
 
 void GRPSHPopAnalysis::runPFPCPlastIteration(unsigned int usTime)
@@ -103,23 +106,29 @@ void GRPSHPopAnalysis::runPFPCPlastIteration(unsigned int usTime)
 	int usLTDEBinN;
 
 	usBinN=usTime/binTimeSize+preStimNumBins;
-	usLTDSBinN=(usTime-200)/binTimeSize+preStimNumBins;
-	usLTDEBinN=(usTime-100)/binTimeSize+preStimNumBins;
+	usLTDSBinN=(((int)usTime)-200)/((int)binTimeSize)+(int)preStimNumBins;
+	usLTDEBinN=(((int)usTime)-100)/((int)binTimeSize)+(int)preStimNumBins;
+//	cout<<usTime<<" "<<usLTDSBinN<<" "<<usLTDEBinN<<endl;
+
+	for(int i=usLTDSBinN; i<usLTDEBinN; i++)
+	{
+		doPFPCPlast(-0.05f*((float)binTimeSize), grPSHNormalized[i], curPFPCSynW);
+	}
 
 	calcPFPCPopActivity(curPFPCPopAct, curPFPCSynW);
-
 	for(int i=0; i<totalNumBins; i++)
 	{
 		if(i>=usLTDSBinN && i<usLTDEBinN)
 		{
-			doPFPCPlast(-0.0001*binTimeSize, grPSHNormalized[i], curPFPCSynW);
+//			doPFPCPlast(-0.05f*((float)binTimeSize), grPSHNormalized[i], curPFPCSynW);
+			continue;
 		}
 		else
 		{
 			float ltpStep;
 
 			ltpStep=(refPFPCPopAct[i]-curPFPCPopAct[i])/refPFPCPopAct[i];
-			ltpStep=0.0001*binTimeSize*(ltpStep>0)*ltpStep;
+			ltpStep=0.05*(float)binTimeSize*(ltpStep>0)*ltpStep;
 			doPFPCPlast(ltpStep, grPSHNormalized[i], curPFPCSynW);
 		}
 	}
@@ -127,6 +136,9 @@ void GRPSHPopAnalysis::runPFPCPlastIteration(unsigned int usTime)
 
 void GRPSHPopAnalysis::doPFPCPlast(float plastStep, const float *pshRow, float *pfPCSynW)
 {
+//	cout<<plastStep<<" ";
+//	cout.flush();
+#pragma omp parallel for schedule(static)
 	for(int i=0; i<numGR; i++)
 	{
 		pfPCSynW[i]+=plastStep*pshRow[i];
@@ -139,6 +151,6 @@ void GRPSHPopAnalysis::exportPFPCPlastAct(ofstream &outfile)
 {
 	for(int i=0; i<totalNumBins; i++)
 	{
-		outfile<<i*binTimeSize<<", "<<refPFPCPopAct[i]<<", "<<curPFPCPopAct[i]<<endl;
+		outfile<<(i-((int)preStimNumBins))*((int)binTimeSize)<<", "<<refPFPCPopAct[i]<<", "<<curPFPCPopAct[i]<<endl;
 	}
 }
