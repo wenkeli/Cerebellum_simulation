@@ -134,8 +134,8 @@
    <slot>loadPSHFile()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>251</x>
-     <y>48</y>
+     <x>390</x>
+     <y>40</y>
     </hint>
     <hint type="destinationlabel">
      <x>15</x>
@@ -150,8 +150,8 @@
    <slot>dispSingleCellNP()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>270</x>
-     <y>81</y>
+     <x>407</x>
+     <y>79</y>
     </hint>
     <hint type="destinationlabel">
      <x>15</x>
@@ -166,8 +166,8 @@
    <slot>dispMultiCellNP()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>288</x>
-     <y>125</y>
+     <x>426</x>
+     <y>118</y>
     </hint>
     <hint type="destinationlabel">
      <x>15</x>
@@ -182,8 +182,8 @@
    <slot>updateMultiCellDisp(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>184</x>
-     <y>59</y>
+     <x>167</x>
+     <y>63</y>
     </hint>
     <hint type="destinationlabel">
      <x>15</x>
@@ -198,8 +198,8 @@
    <slot>updateMultiCellBound(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>164</x>
-     <y>93</y>
+     <x>244</x>
+     <y>105</y>
     </hint>
     <hint type="destinationlabel">
      <x>15</x>
@@ -214,8 +214,8 @@
    <slot>updateSingleCellDisp(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>144</x>
-     <y>123</y>
+     <x>224</x>
+     <y>139</y>
     </hint>
     <hint type="destinationlabel">
      <x>15</x>
@@ -239,13 +239,27 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>calcPFPCPlastButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWClass</receiver>
+   <slot>calcPFPCPlasticity()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>441</x>
+     <y>149</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>13</x>
+     <y>-3</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>loadPSHFile()</slot>
-  <slot>calcTempMetrics()</slot>
   <slot>loadSimFile()</slot>
   <slot>exportSim()</slot>
-  <slot>changeTempMetricBinN(int)</slot>
   <slot>exportSinglePSH()</slot>
   <slot>dispSingleCellNP()</slot>
   <slot>dispMultiCellNP()</slot>
@@ -253,5 +267,6 @@
   <slot>updateMultiCellDisp(int)</slot>
   <slot>updateMultiCellBound(int)</slot>
   <slot>updateSingleCellDisp(int)</slot>
+  <slot>calcPFPCPlasticity()</slot>
  </slots>
 </ui>

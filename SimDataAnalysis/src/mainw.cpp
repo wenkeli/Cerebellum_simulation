@@ -59,6 +59,9 @@ MainW::MainW(QWidget *parent, QApplication *a)
 	ui.singleCellNumBox->setDisabled(true);
 	ui.singleCellNPButton->setDisabled(true);
 	ui.multicellNPButton->setDisabled(true);
+
+	ui.pfPCPlastUSTimeSpinBox->setDisabled(true);
+	ui.calcPFPCPlastButton->setDefault(true);
 //	cout<<"here7"<<endl;
 }
 
@@ -217,6 +220,17 @@ void MainW::loadPSHFile()
 	ui.singleCellNumBox->setEnabled(true);
 	ui.singleCellNPButton->setEnabled(true);
 	ui.multicellNPButton->setEnabled(true);
+
+	ui.pfPCPlastUSTimeSpinBox->setEnabled(true);
+	ui.pfPCPlastUSTimeSpinBox->setMinimum(0);
+	ui.pfPCPlastUSTimeSpinBox->setMaximum(grPSH->getStimNumBins()*grPSH->getBinTimeSize());
+
+	ui.calcPFPCPlastButton->setEnabled(true);
+}
+
+void MainW::calcPFPCPlasticity()
+{
+
 }
 
 void MainW::loadSimFile()
@@ -321,8 +335,8 @@ void MainW::exportSinglePSH()
 //	cout<<"done!"<<endl;
 }
 
-void MainW::calcTempMetrics()
-{
+//void MainW::calcTempMetrics()
+//{
 //	ofstream outfile;
 //	QString fileName;
 //
@@ -405,23 +419,23 @@ void MainW::calcTempMetrics()
 //		//grWeightsPlast
 //	}
 //	cout<<"done!"<<endl;
-}
+//}
 
-void MainW::changeTempMetricBinN(int bN)
-{
-	if(bN>=grPSH->getTotalNumBins())
-	{
-		calcTempMetricBinN=grPSH->getTotalNumBins()-1;
-	}
-	else if(bN<0)
-	{
-		calcTempMetricBinN=0;
-	}
-	else
-	{
-		calcTempMetricBinN=bN;
-	}
-}
+//void MainW::changeTempMetricBinN(int bN)
+//{
+//	if(bN>=grPSH->getTotalNumBins())
+//	{
+//		calcTempMetricBinN=grPSH->getTotalNumBins()-1;
+//	}
+//	else if(bN<0)
+//	{
+//		calcTempMetricBinN=0;
+//	}
+//	else
+//	{
+//		calcTempMetricBinN=bN;
+//	}
+//}
 
 
 //void MainW::calcGRTotalSpikes()

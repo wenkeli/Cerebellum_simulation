@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainw.ui'
 **
-** Created: Fri Jul 8 15:07:24 2011
+** Created: Tue Jul 12 13:02:45 2011
 **      by: Qt User Interface Compiler version 4.7.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -35,6 +35,7 @@ public:
     QPushButton *loadPSHButton;
     QPushButton *singleCellNPButton;
     QPushButton *multicellNPButton;
+    QPushButton *calcPFPCPlastButton;
     QPushButton *quitButton;
     QWidget *gridLayoutWidget;
     QGridLayout *gridLayout;
@@ -46,6 +47,8 @@ public:
     QSpinBox *singleCellNumBox;
     QLabel *label_3;
     QComboBox *dispCellTypeBox;
+    QLabel *label_5;
+    QSpinBox *pfPCPlastUSTimeSpinBox;
 
     void setupUi(QMainWindow *MainWClass)
     {
@@ -56,7 +59,7 @@ public:
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         verticalLayoutWidget = new QWidget(centralwidget);
         verticalLayoutWidget->setObjectName(QString::fromUtf8("verticalLayoutWidget"));
-        verticalLayoutWidget->setGeometry(QRect(260, 10, 173, 197));
+        verticalLayoutWidget->setGeometry(QRect(270, 10, 173, 197));
         verticalLayout = new QVBoxLayout(verticalLayoutWidget);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         verticalLayout->setContentsMargins(0, 0, 0, 0);
@@ -75,6 +78,11 @@ public:
 
         verticalLayout->addWidget(multicellNPButton);
 
+        calcPFPCPlastButton = new QPushButton(verticalLayoutWidget);
+        calcPFPCPlastButton->setObjectName(QString::fromUtf8("calcPFPCPlastButton"));
+
+        verticalLayout->addWidget(calcPFPCPlastButton);
+
         quitButton = new QPushButton(verticalLayoutWidget);
         quitButton->setObjectName(QString::fromUtf8("quitButton"));
 
@@ -82,7 +90,7 @@ public:
 
         gridLayoutWidget = new QWidget(centralwidget);
         gridLayoutWidget->setObjectName(QString::fromUtf8("gridLayoutWidget"));
-        gridLayoutWidget->setGeometry(QRect(20, 10, 231, 121));
+        gridLayoutWidget->setGeometry(QRect(13, 10, 251, 171));
         gridLayout = new QGridLayout(gridLayoutWidget);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         gridLayout->setContentsMargins(0, 0, 0, 0);
@@ -126,6 +134,16 @@ public:
 
         gridLayout->addWidget(dispCellTypeBox, 0, 1, 1, 1);
 
+        label_5 = new QLabel(gridLayoutWidget);
+        label_5->setObjectName(QString::fromUtf8("label_5"));
+
+        gridLayout->addWidget(label_5, 4, 0, 1, 1);
+
+        pfPCPlastUSTimeSpinBox = new QSpinBox(gridLayoutWidget);
+        pfPCPlastUSTimeSpinBox->setObjectName(QString::fromUtf8("pfPCPlastUSTimeSpinBox"));
+
+        gridLayout->addWidget(pfPCPlastUSTimeSpinBox, 4, 1, 1, 1);
+
         MainWClass->setCentralWidget(centralwidget);
 
         retranslateUi(MainWClass);
@@ -136,6 +154,7 @@ public:
         QObject::connect(multiCellStrideBox, SIGNAL(valueChanged(int)), MainWClass, SLOT(updateMultiCellBound(int)));
         QObject::connect(singleCellNumBox, SIGNAL(valueChanged(int)), MainWClass, SLOT(updateSingleCellDisp(int)));
         QObject::connect(dispCellTypeBox, SIGNAL(currentIndexChanged(int)), MainWClass, SLOT(updateCellType(int)));
+        QObject::connect(calcPFPCPlastButton, SIGNAL(clicked()), MainWClass, SLOT(calcPFPCPlasticity()));
 
         QMetaObject::connectSlotsByName(MainWClass);
     } // setupUi
@@ -146,11 +165,13 @@ public:
         loadPSHButton->setText(QApplication::translate("MainWClass", "Load PSH data", 0, QApplication::UnicodeUTF8));
         singleCellNPButton->setText(QApplication::translate("MainWClass", "new single cell PSH panel", 0, QApplication::UnicodeUTF8));
         multicellNPButton->setText(QApplication::translate("MainWClass", "new multi cell PSH panel", 0, QApplication::UnicodeUTF8));
+        calcPFPCPlastButton->setText(QApplication::translate("MainWClass", "calc PF PC plasticity", 0, QApplication::UnicodeUTF8));
         quitButton->setText(QApplication::translate("MainWClass", "quit", 0, QApplication::UnicodeUTF8));
         label_2->setText(QApplication::translate("MainWClass", "multi disp page #", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWClass", "multi disp page stride", 0, QApplication::UnicodeUTF8));
         label_4->setText(QApplication::translate("MainWClass", "single disp cell #", 0, QApplication::UnicodeUTF8));
         label_3->setText(QApplication::translate("MainWClass", "Display cell type", 0, QApplication::UnicodeUTF8));
+        label_5->setText(QApplication::translate("MainWClass", "PFPC plasticity US time", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

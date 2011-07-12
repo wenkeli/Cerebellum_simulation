@@ -73,12 +73,9 @@ public slots:
 	void updateMultiCellBound(int);
 	void updateCellType(int);
 	void loadPSHFile();
-
+	void calcPFPCPlasticity();
 
 	void loadSimFile();
-	void calcTempMetrics();
-
-	void changeTempMetricBinN(int);
 
 	void exportSim();
 	void exportSinglePSH();

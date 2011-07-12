@@ -91,6 +91,7 @@ void GRPSHPopAnalysis::calcPFPCPlast(unsigned int usTime)
 	for(int i=0; i<100; i++)
 	{
 		runPFPCPlastIteration(usTime);
+		cout<<"PFPC plast iteration "<<i<<endl;
 	}
 }
 
