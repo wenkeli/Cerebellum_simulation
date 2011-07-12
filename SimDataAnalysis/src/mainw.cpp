@@ -238,7 +238,23 @@ void MainW::calcPFPCPlasticity()
 
 void MainW::exportPFPCPlastAct()
 {
+	ofstream outfile;
+	QString fileName;
 
+	fileName=QFileDialog::getSaveFileName(this, "Please select where to save PFPC activity file", "/", "");
+
+	cout<<"PSH file name: "<<fileName.toStdString()<<endl;
+
+	outfile.open(fileName.toStdString().c_str());
+	if(!outfile.good() || !outfile.is_open())
+	{
+		cerr<<"error opening file "<<fileName.toStdString()<<endl;
+		return;
+	}
+
+	grPopTimingAnalysis->exportPFPCPlastAct(outfile);
+
+	outfile.close();
 }
 
 void MainW::loadSimFile()

@@ -134,3 +134,11 @@ void GRPSHPopAnalysis::doPFPCPlast(float plastStep, const float *pshRow, float *
 		pfPCSynW[i]=(pfPCSynW[i]>=1)+(pfPCSynW[i]<1)*pfPCSynW[i];
 	}
 }
+
+void GRPSHPopAnalysis::exportPFPCPlastAct(ofstream &outfile)
+{
+	for(int i=0; i<totalNumBins; i++)
+	{
+		outfile<<refPFPCPopAct[i]<<", "<<curPFPCPopAct[i]<<endl;
+	}
+}

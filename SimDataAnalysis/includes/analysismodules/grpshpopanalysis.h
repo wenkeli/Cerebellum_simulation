@@ -24,6 +24,9 @@ public:
 	~GRPSHPopAnalysis();
 
 	void calcPFPCPlast(unsigned int usTime);
+
+	void exportPFPCPlastAct(ofstream &outfile);
+
 protected:
 	const unsigned int **grPSH;
 	float **grPSHNormalized;
