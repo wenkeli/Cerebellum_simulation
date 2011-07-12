@@ -13,6 +13,7 @@
 #include "common.h"
 #include "mainw.h"
 #include "datamodules/psh.h"
+#include "analysismodules/grpshpopanalysis.h"
 
 PSHData *mfPSH;
 PSHData *goPSH;
@@ -23,6 +24,8 @@ PSHData *bcPSH[NUMMZONES];
 PSHData *pcPSH[NUMMZONES];
 PSHData *ioPSH[NUMMZONES];
 PSHData *ncPSH[NUMMZONES];
+
+GRPSHPopAnalysis *grPopTimingAnalysis;
 
 
 int main(int argc, char **argv);

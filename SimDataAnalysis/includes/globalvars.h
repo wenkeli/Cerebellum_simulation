@@ -8,6 +8,7 @@
 #ifndef GLOBALVARS_H_
 #define GLOBALVARS_H_
 #include "datamodules/psh.h"
+#include "analysismodules/grpshpopanalysis.h"
 #include "common.h"
 
 extern PSHData *mfPSH;
@@ -19,5 +20,7 @@ extern PSHData *bcPSH[NUMMZONES];
 extern PSHData *pcPSH[NUMMZONES];
 extern PSHData *ioPSH[NUMMZONES];
 extern PSHData *ncPSH[NUMMZONES];
+
+extern GRPSHPopAnalysis *grPopTimingAnalysis;
 
 #endif /* GLOBALVARS_H_ */

@@ -11,6 +11,7 @@
 #include "globalvars.h"
 #include "datamodules/psh.h"
 #include "datamodules/pshgpu.h"
+#include "analysismodules/grpshpopanalysis.h"
 #include "pshdispw.h"
 
 #include "ui_mainw.h"
@@ -28,8 +29,6 @@ private:
     QApplication *app;
     PSHDispw *curSingleWindow;
     PSHDispw *curMultiWindow;
-
-    bool grTotalCalced;
 
     int calcTempMetricBinN;
 

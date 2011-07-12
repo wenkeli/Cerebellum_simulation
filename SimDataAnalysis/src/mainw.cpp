@@ -44,7 +44,6 @@ MainW::MainW(QWidget *parent, QApplication *a)
 	app=a;
 //	cout<<"here5"<<endl;
 
-	grTotalCalced=false;
 	calcTempMetricBinN=0;
 	connect(this, SIGNAL(destroyed()), app, SLOT(quit()));
 	connect(ui.quitButton, SIGNAL(clicked()), app, SLOT(quit()));
@@ -77,6 +76,7 @@ MainW::~MainW()
 		delete ioPSH[i];
 		delete ncPSH[i];
 	}
+	delete grPopTimingAnalysis;
 }
 
 void MainW::dispMultiCellNP()
@@ -190,6 +190,8 @@ void MainW::loadPSHFile()
 		delete ioPSH[i];
 		delete ncPSH[i];
 	}
+	delete grPopTimingAnalysis;
+
 	mfPSH=new PSHData(infile);
 	goPSH=new PSHData(infile);
 	grPSH=new PSHDataGPU(infile);
@@ -202,7 +204,7 @@ void MainW::loadPSHFile()
 		ncPSH[i]=new PSHData(infile);
 	}
 
-	grTotalCalced=false;
+	grPopTimingAnalysis=new GRPSHPopAnalysis(grPSH);
 	cout<<"done!"<<endl;
 	infile.close();
 

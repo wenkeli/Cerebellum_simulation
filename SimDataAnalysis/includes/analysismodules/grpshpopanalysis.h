@@ -22,6 +22,8 @@ class GRPSHPopAnalysis
 public:
 	GRPSHPopAnalysis(PSHData *grPSH);
 	~GRPSHPopAnalysis();
+
+	void calcPFPCPlast(unsigned int usTime);
 protected:
 	const unsigned int **grPSH;
 	float **grPSHNormalized;
@@ -43,8 +45,6 @@ private:
 	GRPSHPopAnalysis();
 
 	void calcPFPCPopActivity(float *actvivity, float *pfPCSynW);
-
-	void calcPFPCPlast(unsigned int usTime);
 
 	void runPFPCPlastIteration(unsigned int usTime);
 	void doPFPCPlast(float plastStep, const float *pshRow, float *pfPCSynW);
