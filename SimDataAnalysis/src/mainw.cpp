@@ -61,7 +61,7 @@ MainW::MainW(QWidget *parent, QApplication *a)
 	ui.multicellNPButton->setDisabled(true);
 
 	ui.pfPCPlastUSTimeSpinBox->setDisabled(true);
-	ui.calcPFPCPlastButton->setDefault(true);
+	ui.calcPFPCPlastButton->setDisabled(true);
 //	cout<<"here7"<<endl;
 }
 
