@@ -74,6 +74,7 @@ public slots:
 	void updateCellType(int);
 	void loadPSHFile();
 	void calcPFPCPlasticity();
+	void exportPFPCPlastAct();
 
 	void loadSimFile();
 

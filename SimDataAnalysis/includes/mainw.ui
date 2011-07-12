@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>459</width>
-    <height>224</height>
+    <height>230</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,8 +19,8 @@
      <rect>
       <x>270</x>
       <y>10</y>
-      <width>173</width>
-      <height>197</height>
+      <width>175</width>
+      <height>201</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -49,6 +49,13 @@
       <widget class="QPushButton" name="calcPFPCPlastButton">
        <property name="text">
         <string>calc PF PC plasticity</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="exportPFPCPlastActButton">
+       <property name="text">
+        <string>export PFPC plast Activity</string>
        </property>
       </widget>
      </item>
@@ -134,8 +141,8 @@
    <slot>loadPSHFile()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>390</x>
-     <y>40</y>
+     <x>387</x>
+     <y>33</y>
     </hint>
     <hint type="destinationlabel">
      <x>15</x>
@@ -150,8 +157,8 @@
    <slot>dispSingleCellNP()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>407</x>
-     <y>79</y>
+     <x>443</x>
+     <y>65</y>
     </hint>
     <hint type="destinationlabel">
      <x>15</x>
@@ -166,8 +173,8 @@
    <slot>dispMultiCellNP()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>426</x>
-     <y>118</y>
+     <x>427</x>
+     <y>103</y>
     </hint>
     <hint type="destinationlabel">
      <x>15</x>
@@ -246,12 +253,28 @@
    <slot>calcPFPCPlasticity()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>441</x>
-     <y>149</y>
+     <x>410</x>
+     <y>136</y>
     </hint>
     <hint type="destinationlabel">
      <x>13</x>
-     <y>-3</y>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>exportPFPCPlastActButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWClass</receiver>
+   <slot>exportPFPCPlastAct()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>394</x>
+     <y>161</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>3</x>
+     <y>2</y>
     </hint>
    </hints>
   </connection>
@@ -268,5 +291,6 @@
   <slot>updateMultiCellBound(int)</slot>
   <slot>updateSingleCellDisp(int)</slot>
   <slot>calcPFPCPlasticity()</slot>
+  <slot>exportPFPCPlastAct()</slot>
  </slots>
 </ui>

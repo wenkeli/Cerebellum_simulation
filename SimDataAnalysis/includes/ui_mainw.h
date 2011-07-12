@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainw.ui'
 **
-** Created: Tue Jul 12 13:02:45 2011
+** Created: Tue Jul 12 13:25:47 2011
 **      by: Qt User Interface Compiler version 4.7.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -36,6 +36,7 @@ public:
     QPushButton *singleCellNPButton;
     QPushButton *multicellNPButton;
     QPushButton *calcPFPCPlastButton;
+    QPushButton *exportPFPCPlastActButton;
     QPushButton *quitButton;
     QWidget *gridLayoutWidget;
     QGridLayout *gridLayout;
@@ -54,12 +55,12 @@ public:
     {
         if (MainWClass->objectName().isEmpty())
             MainWClass->setObjectName(QString::fromUtf8("MainWClass"));
-        MainWClass->resize(459, 224);
+        MainWClass->resize(459, 230);
         centralwidget = new QWidget(MainWClass);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         verticalLayoutWidget = new QWidget(centralwidget);
         verticalLayoutWidget->setObjectName(QString::fromUtf8("verticalLayoutWidget"));
-        verticalLayoutWidget->setGeometry(QRect(270, 10, 173, 197));
+        verticalLayoutWidget->setGeometry(QRect(270, 10, 175, 201));
         verticalLayout = new QVBoxLayout(verticalLayoutWidget);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         verticalLayout->setContentsMargins(0, 0, 0, 0);
@@ -82,6 +83,11 @@ public:
         calcPFPCPlastButton->setObjectName(QString::fromUtf8("calcPFPCPlastButton"));
 
         verticalLayout->addWidget(calcPFPCPlastButton);
+
+        exportPFPCPlastActButton = new QPushButton(verticalLayoutWidget);
+        exportPFPCPlastActButton->setObjectName(QString::fromUtf8("exportPFPCPlastActButton"));
+
+        verticalLayout->addWidget(exportPFPCPlastActButton);
 
         quitButton = new QPushButton(verticalLayoutWidget);
         quitButton->setObjectName(QString::fromUtf8("quitButton"));
@@ -155,6 +161,7 @@ public:
         QObject::connect(singleCellNumBox, SIGNAL(valueChanged(int)), MainWClass, SLOT(updateSingleCellDisp(int)));
         QObject::connect(dispCellTypeBox, SIGNAL(currentIndexChanged(int)), MainWClass, SLOT(updateCellType(int)));
         QObject::connect(calcPFPCPlastButton, SIGNAL(clicked()), MainWClass, SLOT(calcPFPCPlasticity()));
+        QObject::connect(exportPFPCPlastActButton, SIGNAL(clicked()), MainWClass, SLOT(exportPFPCPlastAct()));
 
         QMetaObject::connectSlotsByName(MainWClass);
     } // setupUi
@@ -166,6 +173,7 @@ public:
         singleCellNPButton->setText(QApplication::translate("MainWClass", "new single cell PSH panel", 0, QApplication::UnicodeUTF8));
         multicellNPButton->setText(QApplication::translate("MainWClass", "new multi cell PSH panel", 0, QApplication::UnicodeUTF8));
         calcPFPCPlastButton->setText(QApplication::translate("MainWClass", "calc PF PC plasticity", 0, QApplication::UnicodeUTF8));
+        exportPFPCPlastActButton->setText(QApplication::translate("MainWClass", "export PFPC plast Activity", 0, QApplication::UnicodeUTF8));
         quitButton->setText(QApplication::translate("MainWClass", "quit", 0, QApplication::UnicodeUTF8));
         label_2->setText(QApplication::translate("MainWClass", "multi disp page #", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWClass", "multi disp page stride", 0, QApplication::UnicodeUTF8));

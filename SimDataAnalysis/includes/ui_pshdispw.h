@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'pshdispw.ui'
 **
-** Created: Tue Jul 12 13:02:45 2011
+** Created: Tue Jul 12 13:25:47 2011
 **      by: Qt User Interface Compiler version 4.7.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!

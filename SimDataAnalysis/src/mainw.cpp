@@ -62,6 +62,8 @@ MainW::MainW(QWidget *parent, QApplication *a)
 
 	ui.pfPCPlastUSTimeSpinBox->setDisabled(true);
 	ui.calcPFPCPlastButton->setDisabled(true);
+
+	ui.exportPFPCPlastActButton->setDisabled(true);
 //	cout<<"here7"<<endl;
 }
 
@@ -231,6 +233,12 @@ void MainW::loadPSHFile()
 void MainW::calcPFPCPlasticity()
 {
 	grPopTimingAnalysis->calcPFPCPlast(ui.pfPCPlastUSTimeSpinBox->value());
+	ui.exportPFPCPlastActButton->setEnabled(true);
+}
+
+void MainW::exportPFPCPlastAct()
+{
+
 }
 
 void MainW::loadSimFile()

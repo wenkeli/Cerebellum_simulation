@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainw.h'
 **
-** Created: Tue Jul 12 13:02:45 2011
+** Created: Tue Jul 12 13:25:47 2011
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.2)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainW[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-      11,   14, // methods
+      12,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -40,8 +40,9 @@ static const uint qt_meta_data_MainW[] = {
      141,    6,    6,    6, 0x0a,
      155,    6,    6,    6, 0x0a,
      176,    6,    6,    6, 0x0a,
-     190,    6,    6,    6, 0x0a,
-     202,    6,    6,    6, 0x0a,
+     197,    6,    6,    6, 0x0a,
+     211,    6,    6,    6, 0x0a,
+     223,    6,    6,    6, 0x0a,
 
        0        // eod
 };
@@ -52,7 +53,8 @@ static const char qt_meta_stringdata_MainW[] = {
     "updateMultiCellDisp(int)\0"
     "updateMultiCellBound(int)\0updateCellType(int)\0"
     "loadPSHFile()\0calcPFPCPlasticity()\0"
-    "loadSimFile()\0exportSim()\0exportSinglePSH()\0"
+    "exportPFPCPlastAct()\0loadSimFile()\0"
+    "exportSim()\0exportSinglePSH()\0"
 };
 
 const QMetaObject MainW::staticMetaObject = {
@@ -92,12 +94,13 @@ int MainW::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 5: updateCellType((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 6: loadPSHFile(); break;
         case 7: calcPFPCPlasticity(); break;
-        case 8: loadSimFile(); break;
-        case 9: exportSim(); break;
-        case 10: exportSinglePSH(); break;
+        case 8: exportPFPCPlastAct(); break;
+        case 9: loadSimFile(); break;
+        case 10: exportSim(); break;
+        case 11: exportSinglePSH(); break;
         default: ;
         }
-        _id -= 11;
+        _id -= 12;
     }
     return _id;
 }
