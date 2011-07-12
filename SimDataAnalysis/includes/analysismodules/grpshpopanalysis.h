@@ -24,6 +24,7 @@ public:
 	~GRPSHPopAnalysis();
 protected:
 	const unsigned int **grPSH;
+	float **grPSHNormalized;
 	unsigned int numTrials;
 	unsigned int preStimNumBins;
 	unsigned int stimNumBins;
@@ -46,7 +47,7 @@ private:
 	void calcPFPCPlast(unsigned int usTime);
 
 	void runPFPCPlastIteration(unsigned int usTime);
-	void doPFPCPlast(float plastStep, unsigned int *pshRow);
+	void doPFPCPlast(float plastStep, const float *pshRow, float *pfPCSynW);
 
 };
 
