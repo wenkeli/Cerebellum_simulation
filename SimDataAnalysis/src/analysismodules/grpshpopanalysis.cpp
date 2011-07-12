@@ -139,6 +139,6 @@ void GRPSHPopAnalysis::exportPFPCPlastAct(ofstream &outfile)
 {
 	for(int i=0; i<totalNumBins; i++)
 	{
-		outfile<<refPFPCPopAct[i]<<", "<<curPFPCPopAct[i]<<endl;
+		outfile<<i*binTimeSize<<", "<<refPFPCPopAct[i]<<", "<<curPFPCPopAct[i]<<endl;
 	}
 }

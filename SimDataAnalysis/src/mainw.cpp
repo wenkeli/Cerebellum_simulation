@@ -254,6 +254,7 @@ void MainW::exportPFPCPlastAct()
 
 	grPopTimingAnalysis->exportPFPCPlastAct(outfile);
 
+	cout<<"done"<<endl;
 	outfile.close();
 }
 
