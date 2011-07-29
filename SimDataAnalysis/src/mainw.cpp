@@ -25,6 +25,16 @@ MainW::MainW(QWidget *parent, QApplication *a)
 	pshs[5]=&pcPSH[0];
 	pshs[6]=&ioPSH[0];
 	pshs[7]=&ncPSH[0];
+
+	srAnalysis[0]=&mfSR;
+	srAnalysis[1]=&goSR;
+	srAnalysis[2]=&grSR;
+	srAnalysis[3]=&scSR;
+	srAnalysis[4]=&bcSR[0];
+	srAnalysis[5]=&pcSR[0];
+	srAnalysis[6]=&ioSR[0];
+	srAnalysis[7]=&ncSR[0];
+
 //	cout<<"here2"<<endl;
 
 	curSingleWindow=NULL;
@@ -62,8 +72,10 @@ MainW::MainW(QWidget *parent, QApplication *a)
 
 	ui.pfPCPlastUSTimeSpinBox->setDisabled(true);
 	ui.calcPFPCPlastButton->setDisabled(true);
-
 	ui.exportPFPCPlastActButton->setDisabled(true);
+
+	ui.calcSpikeRatesButton->setDisabled(true);
+	ui.exportSpikeRatesButton->setDisabled(true);
 //	cout<<"here7"<<endl;
 }
 
@@ -148,6 +160,7 @@ void MainW::updateCellType(int type)
 {
 	int strideMax;
 	curPSH=pshs[type];
+	curSRAnalysis=srAnalysis[type];
 	if((*curPSH)==NULL)
 	{
 		return;
@@ -197,6 +210,18 @@ void MainW::loadPSHFile()
 	}
 	delete grPopTimingAnalysis;
 
+	delete mfSR;
+	delete goSR;
+	delete grSR;
+	delete scSR;
+	for(int i=0; i<NUMMZONES; i++)
+	{
+		delete bcSR[i];
+		delete pcSR[i];
+		delete ioSR[i];
+		delete ncSR[i];
+	}
+
 	mfPSH=new PSHData(infile);
 	goPSH=new PSHData(infile);
 	grPSH=new PSHDataGPU(infile);
@@ -210,6 +235,19 @@ void MainW::loadPSHFile()
 	}
 
 	grPopTimingAnalysis=new GRPSHPopAnalysis(grPSH);
+
+	mfSR=new SpikeRateAnalysis(mfPSH);
+	goSR=new SpikeRateAnalysis(goPSH);
+	grSR=new SpikeRateAnalysis(grPSH);
+	scSR=new SpikeRateAnalysis(scPSH);
+	for(int i=0; i<NUMMZONES; i++)
+	{
+		bcSR[i]=new SpikeRateAnalysis(bcPSH[i]);
+		pcSR[i]=new SpikeRateAnalysis(pcPSH[i]);
+		ioSR[i]=new SpikeRateAnalysis(ioPSH[i]);
+		ncSR[i]=new SpikeRateAnalysis(ncPSH[i]);
+	}
+
 	cout<<"done!"<<endl;
 	infile.close();
 
@@ -226,14 +264,16 @@ void MainW::loadPSHFile()
 	ui.pfPCPlastUSTimeSpinBox->setEnabled(true);
 	ui.pfPCPlastUSTimeSpinBox->setMinimum(0);
 	ui.pfPCPlastUSTimeSpinBox->setMaximum(grPSH->getStimNumBins()*grPSH->getBinTimeSize());
-
 	ui.calcPFPCPlastButton->setEnabled(true);
+	ui.exportPFPCPlastActButton->setEnabled(true);
+
+	ui.calcSpikeRatesButton->setEnabled(true);
+	ui.exportSpikeRatesButton->setEnabled(true);
 }
 
 void MainW::calcPFPCPlasticity()
 {
 	grPopTimingAnalysis->calcPFPCPlast(ui.pfPCPlastUSTimeSpinBox->value());
-	ui.exportPFPCPlastActButton->setEnabled(true);
 }
 
 void MainW::exportPFPCPlastAct()
@@ -253,6 +293,33 @@ void MainW::exportPFPCPlastAct()
 	}
 
 	grPopTimingAnalysis->exportPFPCPlastAct(outfile);
+
+	cout<<"done"<<endl;
+	outfile.close();
+}
+
+void MainW::calcSpikeRates()
+{
+	(*curSRAnalysis)->calcSpikeRates();
+}
+
+void MainW::exportSpikeRates()
+{
+	ofstream outfile;
+	QString fileName;
+
+	fileName=QFileDialog::getSaveFileName(this, "Please select where to save spike rate file", "/", "");
+
+	cout<<"SR file name: "<<fileName.toStdString()<<endl;
+
+	outfile.open(fileName.toStdString().c_str());
+	if(!outfile.good() || !outfile.is_open())
+	{
+		cerr<<"error opening file "<<fileName.toStdString()<<endl;
+		return;
+	}
+
+	(*curSRAnalysis)->exportSpikeRates(outfile);
 
 	cout<<"done"<<endl;
 	outfile.close();

@@ -12,6 +12,7 @@
 #include "datamodules/psh.h"
 #include "datamodules/pshgpu.h"
 #include "analysismodules/grpshpopanalysis.h"
+#include "analysismodules/spikerateanalysis.h"
 #include "pshdispw.h"
 
 #include "ui_mainw.h"
@@ -36,6 +37,9 @@ private:
 
     PSHData **pshs[8];
     PSHData **curPSH;
+
+    SpikeRateAnalysis **srAnalysis[8];
+    SpikeRateAnalysis **curSRAnalysis;
 
 //    void calcGRTotalSpikes();
 //    void calcGRTotalSpikesPC();
@@ -75,6 +79,8 @@ public slots:
 	void loadPSHFile();
 	void calcPFPCPlasticity();
 	void exportPFPCPlastAct();
+	void calcSpikeRates();
+	void exportSpikeRates();
 
 	void loadSimFile();
 

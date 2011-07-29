@@ -38,7 +38,7 @@ COMINCS = $(INCPATH)/common.h $(INCPATH)/globalvars.h
 COREINCS = $(INCPATH)/main.h
 
 DAMINCS = $(DAMIP)/psh.h $(DAMIP)/pshgpu.h
-ANMINCS = $(ANMIP)/grpshpopanalysis.h
+ANMINCS = $(ANMIP)/grpshpopanalysis.h $(ANMIP)/spikerateanalysis.h
 
 INCS = $(MOCINC) $(UICOUT) $(MOCOUT) $(COMINCS) $(GUIINCS) $(COREINCS) $(DAMINCS) $(ANMINCS)
 
@@ -46,7 +46,7 @@ GUISRC = $(SRCPATH)/mainw.cpp $(SRCPATH)/pshdispw.cpp
 CORESRC = $(SRCPATH)/main.cpp
 
 DAMSRC = $(DAMSP)/psh.cpp $(DAMSP)/pshgpu.cpp
-ANMSRC = $(ANMSP)/grpshpopanalysis.cpp
+ANMSRC = $(ANMSP)/grpshpopanalysis.cpp $(ANMSP)/spikerateanalysis.cpp
 
 SRC = $(GUISRC) $(CORESRC) $(DAMSRC) $(ANMSRC)
 
@@ -54,7 +54,7 @@ GUIOBJ = $(OUTPATH)/mainw.obj $(OUTPATH)/pshdispw.obj
 COREOBJ = $(OUTPATH)/main.obj
 
 DAMOBJ = $(OUTPATH)/psh.obj $(OUTPATH)/pshgpu.obj
-ANMOBJ = $(OUTPATH)/grpshpopanalysis.obj
+ANMOBJ = $(OUTPATH)/grpshpopanalysis.obj $(OUTPATH)/spikerateanalysis.obj
 
 OBJ = $(GUIOBJ) $(COREOBJ) $(DAMOBJ) $(ANMOBJ)
 
@@ -74,6 +74,7 @@ dam: $(INC) $(DAMSRC)
 	
 anm: $(INC) $(ANMSRC)
 	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(ANMSP)/grpshpopanalysis.cpp -o$(OUTPATH)/grpshpopanalysis.obj
+	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(ANMSP)/spikerateanalysis.cpp -o$(OUTPATH)/spikerateanalysis.obj
 	
 guiinc: mocs uis
 	

@@ -27,6 +27,15 @@ PSHData *ncPSH[NUMMZONES];
 
 GRPSHPopAnalysis *grPopTimingAnalysis;
 
+SpikeRateAnalysis *mfSR;
+SpikeRateAnalysis *goSR;
+SpikeRateAnalysis *grSR;
+SpikeRateAnalysis *scSR;
+
+SpikeRateAnalysis *bcSR[NUMMZONES];
+SpikeRateAnalysis *pcSR[NUMMZONES];
+SpikeRateAnalysis *ioSR[NUMMZONES];
+SpikeRateAnalysis *ncSR[NUMMZONES];
 
 int main(int argc, char **argv);
 

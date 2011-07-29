@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>459</width>
-    <height>230</height>
+    <height>298</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
       <x>270</x>
       <y>10</y>
       <width>175</width>
-      <height>201</height>
+      <height>271</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -56,6 +56,20 @@
       <widget class="QPushButton" name="exportPFPCPlastActButton">
        <property name="text">
         <string>export PFPC plast Activity</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="calcSpikeRatesButton">
+       <property name="text">
+        <string>calc spike rates</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="exportSpikeRatesButton">
+       <property name="text">
+        <string>export spike rates</string>
        </property>
       </widget>
      </item>
@@ -278,6 +292,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>calcSpikeRatesButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWClass</receiver>
+   <slot>calcSpikeRates()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>372</x>
+     <y>199</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1</x>
+     <y>17</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>exportSpikeRatesButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWClass</receiver>
+   <slot>exportSpikeRates()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>349</x>
+     <y>229</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>0</x>
+     <y>12</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>loadPSHFile()</slot>
@@ -292,5 +338,7 @@
   <slot>updateSingleCellDisp(int)</slot>
   <slot>calcPFPCPlasticity()</slot>
   <slot>exportPFPCPlastAct()</slot>
+  <slot>calcSpikeRates()</slot>
+  <slot>exportSpikeRates()</slot>
  </slots>
 </ui>

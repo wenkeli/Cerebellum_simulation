@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainw.ui'
 **
-** Created: Tue Jul 12 13:25:47 2011
+** Created: Fri Jul 29 14:02:11 2011
 **      by: Qt User Interface Compiler version 4.7.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -37,6 +37,8 @@ public:
     QPushButton *multicellNPButton;
     QPushButton *calcPFPCPlastButton;
     QPushButton *exportPFPCPlastActButton;
+    QPushButton *calcSpikeRatesButton;
+    QPushButton *exportSpikeRatesButton;
     QPushButton *quitButton;
     QWidget *gridLayoutWidget;
     QGridLayout *gridLayout;
@@ -55,12 +57,12 @@ public:
     {
         if (MainWClass->objectName().isEmpty())
             MainWClass->setObjectName(QString::fromUtf8("MainWClass"));
-        MainWClass->resize(459, 230);
+        MainWClass->resize(459, 298);
         centralwidget = new QWidget(MainWClass);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         verticalLayoutWidget = new QWidget(centralwidget);
         verticalLayoutWidget->setObjectName(QString::fromUtf8("verticalLayoutWidget"));
-        verticalLayoutWidget->setGeometry(QRect(270, 10, 175, 201));
+        verticalLayoutWidget->setGeometry(QRect(270, 10, 175, 271));
         verticalLayout = new QVBoxLayout(verticalLayoutWidget);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         verticalLayout->setContentsMargins(0, 0, 0, 0);
@@ -88,6 +90,16 @@ public:
         exportPFPCPlastActButton->setObjectName(QString::fromUtf8("exportPFPCPlastActButton"));
 
         verticalLayout->addWidget(exportPFPCPlastActButton);
+
+        calcSpikeRatesButton = new QPushButton(verticalLayoutWidget);
+        calcSpikeRatesButton->setObjectName(QString::fromUtf8("calcSpikeRatesButton"));
+
+        verticalLayout->addWidget(calcSpikeRatesButton);
+
+        exportSpikeRatesButton = new QPushButton(verticalLayoutWidget);
+        exportSpikeRatesButton->setObjectName(QString::fromUtf8("exportSpikeRatesButton"));
+
+        verticalLayout->addWidget(exportSpikeRatesButton);
 
         quitButton = new QPushButton(verticalLayoutWidget);
         quitButton->setObjectName(QString::fromUtf8("quitButton"));
@@ -162,6 +174,8 @@ public:
         QObject::connect(dispCellTypeBox, SIGNAL(currentIndexChanged(int)), MainWClass, SLOT(updateCellType(int)));
         QObject::connect(calcPFPCPlastButton, SIGNAL(clicked()), MainWClass, SLOT(calcPFPCPlasticity()));
         QObject::connect(exportPFPCPlastActButton, SIGNAL(clicked()), MainWClass, SLOT(exportPFPCPlastAct()));
+        QObject::connect(calcSpikeRatesButton, SIGNAL(clicked()), MainWClass, SLOT(calcSpikeRates()));
+        QObject::connect(exportSpikeRatesButton, SIGNAL(clicked()), MainWClass, SLOT(exportSpikeRates()));
 
         QMetaObject::connectSlotsByName(MainWClass);
     } // setupUi
@@ -174,6 +188,8 @@ public:
         multicellNPButton->setText(QApplication::translate("MainWClass", "new multi cell PSH panel", 0, QApplication::UnicodeUTF8));
         calcPFPCPlastButton->setText(QApplication::translate("MainWClass", "calc PF PC plasticity", 0, QApplication::UnicodeUTF8));
         exportPFPCPlastActButton->setText(QApplication::translate("MainWClass", "export PFPC plast Activity", 0, QApplication::UnicodeUTF8));
+        calcSpikeRatesButton->setText(QApplication::translate("MainWClass", "calc spike rates", 0, QApplication::UnicodeUTF8));
+        exportSpikeRatesButton->setText(QApplication::translate("MainWClass", "export spike rates", 0, QApplication::UnicodeUTF8));
         quitButton->setText(QApplication::translate("MainWClass", "quit", 0, QApplication::UnicodeUTF8));
         label_2->setText(QApplication::translate("MainWClass", "multi disp page #", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWClass", "multi disp page stride", 0, QApplication::UnicodeUTF8));
