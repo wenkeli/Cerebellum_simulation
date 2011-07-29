@@ -44,14 +44,14 @@ protected:
 	float *refPFPCSynW;
 	float *curPFPCSynW;
 
-private:
-	GRPSHPopAnalysis();
-
 	void calcPFPCPopActivity(float *actvivity, float *pfPCSynW);
 
 	void runPFPCPlastIteration(unsigned int usTime);
 	void doPFPCPlast(float plastStep, const float *pshRow, float *pfPCSynW);
 
+
+private:
+	GRPSHPopAnalysis();
 };
 
 #endif /* GRPOPANALYSIS_H_ */
