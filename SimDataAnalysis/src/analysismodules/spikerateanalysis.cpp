@@ -13,6 +13,7 @@ SpikeRateAnalysis::SpikeRateAnalysis(PSHData *pshData)
 	numTrials=pshData->getNumTrials();
 	preStimNumBins=pshData->getPreStimNumBins();
 	stimNumBins=pshData->getStimNumBins();
+	postStimNumBins=pshData->getPostStimNumBins();
 	binTimeSize=pshData->getBinTimeSize();
 	numCells=pshData->getCellNum();
 
