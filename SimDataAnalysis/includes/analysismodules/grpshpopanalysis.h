@@ -40,7 +40,10 @@ protected:
 	unsigned int numGR;
 
 	float *refPFPCPopAct;
-	float *curPFPCPopAct;
+	float *curItePFPCPopActLTD;
+	float *curItePFPCPopActLTP;
+	float *curItePFPCPopActBGAdj;
+
 	float *refPFPCSynW;
 	float *curPFPCSynW;
 

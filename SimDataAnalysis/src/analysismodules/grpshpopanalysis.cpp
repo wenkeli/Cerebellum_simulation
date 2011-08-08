@@ -27,7 +27,9 @@ GRPSHPopAnalysis::GRPSHPopAnalysis(PSHData *grData)
 	}
 
 	refPFPCPopAct=new float[totalNumBins];
-	curPFPCPopAct=new float[totalNumBins];
+	curItePFPCPopActLTD=new float[totalNumBins];
+	curItePFPCPopActLTP=new float[totalNumBins];
+	curItePFPCPopActBGAdj=new float[totalNumBins];
 
 	refPFPCSynW=new float[numGR];
 	curPFPCSynW=new float[numGR];
@@ -55,7 +57,9 @@ GRPSHPopAnalysis::~GRPSHPopAnalysis()
 	delete[] grPSHNormalized;
 
 	delete[] refPFPCPopAct;
-	delete[] curPFPCPopAct;
+	delete[] curItePFPCPopActLTD;
+	delete[] curItePFPCPopActLTP;
+	delete[] curItePFPCPopActBGAdj;
 	delete[] refPFPCSynW;
 	delete[] curPFPCSynW;
 }
@@ -93,7 +97,7 @@ void GRPSHPopAnalysis::calcPFPCPlast(unsigned int usTime)
 		runPFPCPlastIteration(usTime);
 		cout<<"PFPC plast iteration "<<i<<endl;
 	}
-	calcPFPCPopActivity(curPFPCPopAct, curPFPCSynW);
+	calcPFPCPopActivity(curItePFPCPopActBGAdj, curPFPCSynW);
 //	cout<<curPFPCPopAct[100]<<endl;
 	cout<<"done"<<endl;
 }
@@ -110,15 +114,15 @@ void GRPSHPopAnalysis::runPFPCPlastIteration(unsigned int usTime)
 	usLTDEBinN=(((int)usTime)-100)/((int)binTimeSize)+(int)preStimNumBins;
 //	cout<<usTime<<" "<<usLTDSBinN<<" "<<usLTDEBinN<<endl;
 
-	calcPFPCPopActivity(curPFPCPopAct, curPFPCSynW);
+	calcPFPCPopActivity(curItePFPCPopActBGAdj, curPFPCSynW);
 	for(int i=usLTDSBinN; i<usLTDEBinN; i++)
 	{
 		float ltdStep;
-		ltdStep=-0.05*(curPFPCPopAct[i]/refPFPCPopAct[i]);
+		ltdStep=-0.1;//-0.05*(curItePFPCPopActBGAdj[i]/refPFPCPopAct[i]);
 		doPFPCPlast(ltdStep, grPSHNormalized[i], curPFPCSynW);
 	}
 
-	calcPFPCPopActivity(curPFPCPopAct, curPFPCSynW);
+	calcPFPCPopActivity(curItePFPCPopActLTD, curPFPCSynW);
 	for(int i=preStimNumBins; i<preStimNumBins+stimNumBins; i++)
 	{
 		if(i>=usLTDSBinN && i<usLTDEBinN)
@@ -130,11 +134,13 @@ void GRPSHPopAnalysis::runPFPCPlastIteration(unsigned int usTime)
 		{
 			float ltpStep;
 
-			ltpStep=(refPFPCPopAct[i]-curPFPCPopAct[i])/refPFPCPopAct[i];
-			ltpStep=0.03*(ltpStep>0)*ltpStep;
+			ltpStep=(refPFPCPopAct[i]-curItePFPCPopActLTD[i])/refPFPCPopAct[i];
+			ltpStep=0.2*(ltpStep>0)*ltpStep; //0.1
 			doPFPCPlast(ltpStep, grPSHNormalized[i], curPFPCSynW);
 		}
 	}
+	calcPFPCPopActivity(curItePFPCPopActLTP, curPFPCSynW);
+
 	adjustPFPCBG();
 }
 
@@ -160,10 +166,9 @@ void GRPSHPopAnalysis::adjustPFPCBG()
 	curBGPopAct=0;
 	refBGPopAct=0;
 
-	calcPFPCPopActivity(curPFPCPopAct, curPFPCSynW);
 	for(int i=0; i<preStimNumBins; i++)
 	{
-		curBGPopAct+=curPFPCPopAct[i];
+		curBGPopAct+=curItePFPCPopActLTP[i];
 		refBGPopAct+=refPFPCPopAct[i];
 	}
 
@@ -180,6 +185,10 @@ void GRPSHPopAnalysis::exportPFPCPlastAct(ofstream &outfile)
 {
 	for(int i=0; i<totalNumBins; i++)
 	{
-		outfile<<(i-((int)preStimNumBins))*((int)binTimeSize)<<", "<<refPFPCPopAct[i]<<", "<<curPFPCPopAct[i]<<endl;
+		outfile<<(i-((int)preStimNumBins))*((int)binTimeSize)<<", "
+				<<refPFPCPopAct[i]<<", "
+				<<curItePFPCPopActLTD[i]<<", "
+				<<curItePFPCPopActLTP[i]<<", "
+				<<curItePFPCPopActBGAdj[i]<<endl;
 	}
 }
