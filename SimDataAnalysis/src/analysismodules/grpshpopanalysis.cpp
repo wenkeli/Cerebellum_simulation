@@ -118,14 +118,14 @@ void GRPSHPopAnalysis::runPFPCPlastIteration(unsigned int usTime)
 	for(int i=usLTDSBinN; i<usLTDEBinN; i++)
 	{
 		float ltdStep;
-		ltdStep=-0.1;//-0.05*(curItePFPCPopActBGAdj[i]/refPFPCPopAct[i]);
+		ltdStep=-0.15;//-0.05*(curItePFPCPopActBGAdj[i]/refPFPCPopAct[i]);
 		doPFPCPlast(ltdStep, grPSHNormalized[i], curPFPCSynW);
 	}
 
 	calcPFPCPopActivity(curItePFPCPopActLTD, curPFPCSynW);
 	for(int i=preStimNumBins; i<preStimNumBins+stimNumBins; i++)
 	{
-		if(i>=usLTDSBinN && i<usLTDEBinN)
+		if(i>=usLTDSBinN && i<usBinN)//usLTDEBinN)
 		{
 //			doPFPCPlast(-0.05f*((float)binTimeSize), grPSHNormalized[i], curPFPCSynW);
 			continue;
