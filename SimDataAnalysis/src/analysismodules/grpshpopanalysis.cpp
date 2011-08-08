@@ -88,7 +88,7 @@ void GRPSHPopAnalysis::calcPFPCPlast(unsigned int usTime)
 		curPFPCSynW[i]=0.5;
 	}
 
-	for(int i=0; i<500; i++)
+	for(int i=0; i<100; i++)
 	{
 		runPFPCPlastIteration(usTime);
 		cout<<"PFPC plast iteration "<<i<<endl;
@@ -115,7 +115,7 @@ void GRPSHPopAnalysis::runPFPCPlastIteration(unsigned int usTime)
 	{
 		float ltdStep;
 		ltdStep=-0.05*(curPFPCPopAct[i]/refPFPCPopAct[i]);
-		doPFPCPlast(ltdStep/((float)binTimeSize), grPSHNormalized[i], curPFPCSynW);
+		doPFPCPlast(ltdStep, grPSHNormalized[i], curPFPCSynW);
 	}
 
 	calcPFPCPopActivity(curPFPCPopAct, curPFPCSynW);
@@ -131,10 +131,11 @@ void GRPSHPopAnalysis::runPFPCPlastIteration(unsigned int usTime)
 			float ltpStep;
 
 			ltpStep=(refPFPCPopAct[i]-curPFPCPopAct[i])/refPFPCPopAct[i];
-			ltpStep=0.03/(float)binTimeSize*(ltpStep>0)*ltpStep;
+			ltpStep=0.03*(ltpStep>0)*ltpStep;
 			doPFPCPlast(ltpStep, grPSHNormalized[i], curPFPCSynW);
 		}
 	}
+	adjustPFPCBG();
 }
 
 void GRPSHPopAnalysis::doPFPCPlast(float plastStep, const float *pshRow, float *pfPCSynW)
@@ -147,6 +148,31 @@ void GRPSHPopAnalysis::doPFPCPlast(float plastStep, const float *pshRow, float *
 		pfPCSynW[i]+=plastStep*pshRow[i];
 		pfPCSynW[i]=(pfPCSynW[i]>0)*pfPCSynW[i];
 		pfPCSynW[i]=(pfPCSynW[i]>=1)+(pfPCSynW[i]<1)*pfPCSynW[i];
+	}
+}
+
+void GRPSHPopAnalysis::adjustPFPCBG()
+{
+	float curBGPopAct;
+	float refBGPopAct;
+	float scaleFactor;
+
+	curBGPopAct=0;
+	refBGPopAct=0;
+
+	calcPFPCPopActivity(curPFPCPopAct, curPFPCSynW);
+	for(int i=0; i<preStimNumBins; i++)
+	{
+		curBGPopAct+=curPFPCPopAct[i];
+		refBGPopAct+=refPFPCPopAct[i];
+	}
+
+	scaleFactor=refBGPopAct/curBGPopAct;
+
+#pragma omp parallel for schedule(static)
+	for(int i=0; i<numGR; i++)
+	{
+		curPFPCSynW[i]=curPFPCSynW[i]*scaleFactor;
 	}
 }
 

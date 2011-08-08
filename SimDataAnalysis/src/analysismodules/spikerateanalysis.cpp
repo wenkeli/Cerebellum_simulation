@@ -57,7 +57,6 @@ void SpikeRateAnalysis::calcSR(float *spikeRates, unsigned int startBinN, unsign
 		{
 			spikeRates[j]+=psh[i][j];
 		}
-
 	}
 
 	for(int i=0; i<numCells; i++)

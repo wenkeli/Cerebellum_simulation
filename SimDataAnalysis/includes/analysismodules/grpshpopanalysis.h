@@ -49,6 +49,8 @@ protected:
 	void runPFPCPlastIteration(unsigned int usTime);
 	void doPFPCPlast(float plastStep, const float *pshRow, float *pfPCSynW);
 
+	void adjustPFPCBG();
+
 
 private:
 	GRPSHPopAnalysis();
