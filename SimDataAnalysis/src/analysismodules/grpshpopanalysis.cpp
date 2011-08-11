@@ -178,6 +178,8 @@ void GRPSHPopAnalysis::adjustPFPCBG()
 	for(int i=0; i<numGR; i++)
 	{
 		curPFPCSynW[i]=curPFPCSynW[i]*scaleFactor;
+		curPFPCSynW[i]=(curPFPCSynW[i]>0)*curPFPCSynW[i];
+		curPFPCSynW[i]=(curPFPCSynW[i]>=1)+(curPFPCSynW[i]<1)*curPFPCSynW[i];
 	}
 }
 
