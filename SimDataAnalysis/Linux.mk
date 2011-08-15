@@ -37,7 +37,7 @@ MOCOUT = $(INCPATH)/moc_mainw.h $(INCPATH)/moc_pshdispw.h
 COMINCS = $(INCPATH)/common.h $(INCPATH)/globalvars.h
 COREINCS = $(INCPATH)/main.h
 
-DAMINCS = $(DAMIP)/psh.h $(DAMIP)/pshgpu.h
+DAMINCS = $(DAMIP)/psh.h $(DAMIP)/pshgpu.h $(DAMIP)/simerrorec.h $(DAMIP)/simexternalec.h $(DAMIP)/siminnet.h $(DAMIP)/simmfinputec.h $(DAMIP)/simmzone.h $(DAMIP)/simoutputec.h
 ANMINCS = $(ANMIP)/grpshpopanalysis.h $(ANMIP)/spikerateanalysis.h
 
 INCS = $(MOCINC) $(UICOUT) $(MOCOUT) $(COMINCS) $(GUIINCS) $(COREINCS) $(DAMINCS) $(ANMINCS)
@@ -45,7 +45,7 @@ INCS = $(MOCINC) $(UICOUT) $(MOCOUT) $(COMINCS) $(GUIINCS) $(COREINCS) $(DAMINCS
 GUISRC = $(SRCPATH)/mainw.cpp $(SRCPATH)/pshdispw.cpp
 CORESRC = $(SRCPATH)/main.cpp
 
-DAMSRC = $(DAMSP)/psh.cpp $(DAMSP)/pshgpu.cpp
+DAMSRC = $(DAMSP)/psh.cpp $(DAMSP)/pshgpu.cpp $(DAMSP)/simerrorec.cpp $(DAMSP)/simexternalec.cpp $(DAMSP)/siminnet.cpp $(DAMSP)/simmfinputec.cpp $(DAMSP)/simmzone.cpp $(DAMSP)/simoutputec.cpp
 ANMSRC = $(ANMSP)/grpshpopanalysis.cpp $(ANMSP)/spikerateanalysis.cpp
 
 SRC = $(GUISRC) $(CORESRC) $(DAMSRC) $(ANMSRC)
@@ -53,7 +53,7 @@ SRC = $(GUISRC) $(CORESRC) $(DAMSRC) $(ANMSRC)
 GUIOBJ = $(OUTPATH)/mainw.obj $(OUTPATH)/pshdispw.obj
 COREOBJ = $(OUTPATH)/main.obj
 
-DAMOBJ = $(OUTPATH)/psh.obj $(OUTPATH)/pshgpu.obj
+DAMOBJ = $(OUTPATH)/psh.obj $(OUTPATH)/pshgpu.obj $(OUTPATH)/simerrorec.obj $(OUTPATH)/simexternalec.obj $(OUTPATH)/siminnet.obj $(OUTPATH)/simmfinputec.obj $(OUTPATH)/simmzone.obj $(OUTPATH)/simoutputec.obj
 ANMOBJ = $(OUTPATH)/grpshpopanalysis.obj $(OUTPATH)/spikerateanalysis.obj
 
 OBJ = $(GUIOBJ) $(COREOBJ) $(DAMOBJ) $(ANMOBJ)
@@ -71,6 +71,12 @@ gui: $(INC) $(GUISRC)
 dam: $(INC) $(DAMSRC)
 	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(DAMSP)/psh.cpp -o$(OUTPATH)/psh.obj
 	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(DAMSP)/pshgpu.cpp -o$(OUTPATH)/pshgpu.obj
+	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(DAMSP)/simerrorec.cpp -o$(OUTPATH)/simerrorec.obj
+	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(DAMSP)/simexternalec.cpp -o$(OUTPATH)/simexternalec.obj
+	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(DAMSP)/siminnet.cpp -o$(OUTPATH)/siminnet.obj
+	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(DAMSP)/simmfinputec.cpp -o$(OUTPATH)/simmfinputec.obj
+	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(DAMSP)/simmzone.cpp -o$(OUTPATH)/simmzone.obj
+	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(DAMSP)/simoutputec.cpp -o$(OUTPATH)/simoutputec.obj
 	
 anm: $(INC) $(ANMSRC)
 	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(ANMSP)/grpshpopanalysis.cpp -o$(OUTPATH)/grpshpopanalysis.obj

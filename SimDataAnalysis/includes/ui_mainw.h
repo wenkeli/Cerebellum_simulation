@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainw.ui'
 **
-** Created: Fri Jul 29 14:02:11 2011
+** Created: Mon Aug 15 18:13:12 2011
 **      by: Qt User Interface Compiler version 4.7.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -33,6 +33,7 @@ public:
     QWidget *verticalLayoutWidget;
     QVBoxLayout *verticalLayout;
     QPushButton *loadPSHButton;
+    QPushButton *loadSimButton;
     QPushButton *singleCellNPButton;
     QPushButton *multicellNPButton;
     QPushButton *calcPFPCPlastButton;
@@ -57,12 +58,12 @@ public:
     {
         if (MainWClass->objectName().isEmpty())
             MainWClass->setObjectName(QString::fromUtf8("MainWClass"));
-        MainWClass->resize(459, 298);
+        MainWClass->resize(459, 354);
         centralwidget = new QWidget(MainWClass);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         verticalLayoutWidget = new QWidget(centralwidget);
         verticalLayoutWidget->setObjectName(QString::fromUtf8("verticalLayoutWidget"));
-        verticalLayoutWidget->setGeometry(QRect(270, 10, 175, 271));
+        verticalLayoutWidget->setGeometry(QRect(270, 10, 175, 311));
         verticalLayout = new QVBoxLayout(verticalLayoutWidget);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         verticalLayout->setContentsMargins(0, 0, 0, 0);
@@ -70,6 +71,11 @@ public:
         loadPSHButton->setObjectName(QString::fromUtf8("loadPSHButton"));
 
         verticalLayout->addWidget(loadPSHButton);
+
+        loadSimButton = new QPushButton(verticalLayoutWidget);
+        loadSimButton->setObjectName(QString::fromUtf8("loadSimButton"));
+
+        verticalLayout->addWidget(loadSimButton);
 
         singleCellNPButton = new QPushButton(verticalLayoutWidget);
         singleCellNPButton->setObjectName(QString::fromUtf8("singleCellNPButton"));
@@ -176,6 +182,7 @@ public:
         QObject::connect(exportPFPCPlastActButton, SIGNAL(clicked()), MainWClass, SLOT(exportPFPCPlastAct()));
         QObject::connect(calcSpikeRatesButton, SIGNAL(clicked()), MainWClass, SLOT(calcSpikeRates()));
         QObject::connect(exportSpikeRatesButton, SIGNAL(clicked()), MainWClass, SLOT(exportSpikeRates()));
+        QObject::connect(loadSimButton, SIGNAL(clicked()), MainWClass, SLOT(loadSimFile()));
 
         QMetaObject::connectSlotsByName(MainWClass);
     } // setupUi
@@ -184,6 +191,7 @@ public:
     {
         MainWClass->setWindowTitle(QApplication::translate("MainWClass", "MainWindow", 0, QApplication::UnicodeUTF8));
         loadPSHButton->setText(QApplication::translate("MainWClass", "Load PSH data", 0, QApplication::UnicodeUTF8));
+        loadSimButton->setText(QApplication::translate("MainWClass", "Load Sim State", 0, QApplication::UnicodeUTF8));
         singleCellNPButton->setText(QApplication::translate("MainWClass", "new single cell PSH panel", 0, QApplication::UnicodeUTF8));
         multicellNPButton->setText(QApplication::translate("MainWClass", "new multi cell PSH panel", 0, QApplication::UnicodeUTF8));
         calcPFPCPlastButton->setText(QApplication::translate("MainWClass", "calc PF PC plasticity", 0, QApplication::UnicodeUTF8));

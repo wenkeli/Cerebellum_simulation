@@ -11,5 +11,7 @@ SimExternalEC::SimExternalEC(ifstream &infile)
 {
 	infile.read((char *)&timeStepSize, sizeof(float));
 	infile.read((char *)&tsUnitInS, sizeof(float));
+
+	cout<<"external mod read: "<<timeStepSize<<" "<<tsUnitInS<<endl;
 }
 

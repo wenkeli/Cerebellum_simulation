@@ -327,26 +327,47 @@ void MainW::exportSpikeRates()
 
 void MainW::loadSimFile()
 {
-//	ifstream infile;
-//	QString fileName;
-//
-//	fileName=QFileDialog::getOpenFileName(this, "Please select the simulation state file to open", "/", "");
-//
-//
-//	cout<<"Sim file name: "<<fileName.toStdString()<<endl;
-//
-//	infile.open(fileName.toStdString().c_str(), ios::binary);
-//	if(!infile.good() || !infile.is_open())
-//	{
-//		cerr<<"error opening file "<<fileName.toStdString()<<endl;
-//		return;
-//	}
-//
-//	cout<<"reading state data"<<endl;
+	ifstream infile;
+	QString fileName;
 
-//	cout<<"done"<<endl;
-//
-//	infile.close();
+	fileName=QFileDialog::getOpenFileName(this, "Please select the sim state file to open", "/", "");
+
+
+	cout<<"sim state file name: "<<fileName.toStdString()<<endl;
+
+	infile.open(fileName.toStdString().c_str(), ios::binary);
+	if(!infile.good() || !infile.is_open())
+	{
+		cerr<<"error opening file "<<fileName.toStdString()<<endl;
+		return;
+	}
+
+	for(int i=0; i<NUMMZONES; i++)
+	{
+		delete simErrMod[i];
+		simErrMod[i]=new SimErrorEC(infile);
+
+		delete simOutMod[i];
+		simOutMod[i]=new SimOutputEC(infile);
+	}
+
+	delete simExternalMod;
+	simExternalMod=new SimExternalEC(infile);
+
+	delete simMFInputMod;
+	simMFInputMod=new SimMFInputEC(infile);
+
+	delete simInNetMod;
+	simInNetMod=new SimInNet(infile);
+
+	for(int i=0; i<NUMMZONES; i++)
+	{
+		delete simMZoneMod[i];
+		simMZoneMod[i]=new SimMZone(infile);
+	}
+
+	cout<<"done!"<<endl;
+	infile.close();
 }
 
 void MainW::exportSim()

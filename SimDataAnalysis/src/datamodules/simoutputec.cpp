@@ -21,5 +21,9 @@ SimOutputEC::SimOutputEC(ifstream &infile)
 	infile.read((char *)&velocity, sizeof(float));
 	infile.read((char *)&positionDecay, sizeof(float));
 	infile.read((char *)&position, sizeof(float));
+
+	cout<<"output mod read:"<<numNCIn<<" "<<timeStepSize<<" "<<tsUnitInS
+			<<" "<<gForceDecay<<" "<<gForce<<" "<<gForceLeak<<" "<<" "<<vForce
+			<<" "<<velocityDecay<<" "<<velocity<<" "<<positionDecay<<" "<<position<<endl;
 }
 

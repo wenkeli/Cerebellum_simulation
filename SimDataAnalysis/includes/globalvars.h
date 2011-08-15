@@ -8,6 +8,13 @@
 #ifndef GLOBALVARS_H_
 #define GLOBALVARS_H_
 #include "datamodules/psh.h"
+#include "datamodules/simerrorec.h"
+#include "datamodules/simexternalec.h"
+#include "datamodules/siminnet.h"
+#include "datamodules/simmfinputec.h"
+#include "datamodules/simmzone.h"
+#include "datamodules/simoutputec.h"
+
 #include "analysismodules/grpshpopanalysis.h"
 #include "analysismodules/spikerateanalysis.h"
 #include "common.h"
@@ -21,6 +28,13 @@ extern PSHData *bcPSH[NUMMZONES];
 extern PSHData *pcPSH[NUMMZONES];
 extern PSHData *ioPSH[NUMMZONES];
 extern PSHData *ncPSH[NUMMZONES];
+
+extern SimErrorEC *simErrMod[NUMMZONES];
+extern SimOutputEC *simOutMod[NUMMZONES];
+extern SimExternalEC *simExternalMod;
+extern SimMFInputEC *simMFInputMod;
+extern SimInNet *simInNetMod;
+extern SimMZone *simMZoneMod[NUMMZONES];
 
 extern GRPSHPopAnalysis *grPopTimingAnalysis;
 

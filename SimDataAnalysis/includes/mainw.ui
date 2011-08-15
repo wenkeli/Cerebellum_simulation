@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>459</width>
-    <height>298</height>
+    <height>354</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
       <x>270</x>
       <y>10</y>
       <width>175</width>
-      <height>271</height>
+      <height>311</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -28,6 +28,13 @@
       <widget class="QPushButton" name="loadPSHButton">
        <property name="text">
         <string>Load PSH data</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="loadSimButton">
+       <property name="text">
+        <string>Load Sim State</string>
        </property>
       </widget>
      </item>
@@ -171,8 +178,8 @@
    <slot>dispSingleCellNP()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>443</x>
-     <y>65</y>
+     <x>430</x>
+     <y>106</y>
     </hint>
     <hint type="destinationlabel">
      <x>15</x>
@@ -187,8 +194,8 @@
    <slot>dispMultiCellNP()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>427</x>
-     <y>103</y>
+     <x>414</x>
+     <y>141</y>
     </hint>
     <hint type="destinationlabel">
      <x>15</x>
@@ -267,8 +274,8 @@
    <slot>calcPFPCPlasticity()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>410</x>
-     <y>136</y>
+     <x>398</x>
+     <y>176</y>
     </hint>
     <hint type="destinationlabel">
      <x>13</x>
@@ -283,8 +290,8 @@
    <slot>exportPFPCPlastAct()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>394</x>
-     <y>161</y>
+     <x>383</x>
+     <y>210</y>
     </hint>
     <hint type="destinationlabel">
      <x>3</x>
@@ -299,8 +306,8 @@
    <slot>calcSpikeRates()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>372</x>
-     <y>199</y>
+     <x>367</x>
+     <y>245</y>
     </hint>
     <hint type="destinationlabel">
      <x>1</x>
@@ -315,12 +322,28 @@
    <slot>exportSpikeRates()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>349</x>
-     <y>229</y>
+     <x>351</x>
+     <y>281</y>
     </hint>
     <hint type="destinationlabel">
      <x>0</x>
      <y>12</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>loadSimButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWClass</receiver>
+   <slot>loadSimFile()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>443</x>
+     <y>56</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>3</x>
+     <y>6</y>
     </hint>
    </hints>
   </connection>

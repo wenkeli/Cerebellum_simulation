@@ -9,6 +9,7 @@
 #define SIMERROREC_H_
 
 #include <fstream>
+#include <iostream>
 
 using namespace std;
 

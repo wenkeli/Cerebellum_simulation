@@ -34,6 +34,11 @@ SimMFInputEC::SimMFInputEC(ifstream &infile)
 	infile.read((char *)incStart, numMF*sizeof(float));
 	infile.read((char *)incEnd, numMF*sizeof(float));
 	infile.read((char *)threshold, numMF*sizeof(float));
+
+	cout<<"mf mod read: "<<numMF<<" "<<timeStepSize<<" "<<tsUnitInS<<" "<<threshDecay<<" "
+			<<contextMFProportion<<" "<<csTonicMFProportion<<" "<<csPhasicMFProportion<<" "
+			<<csStart<<" "<<csEnd<<" "<<csPhasicMFEnd<<" "<<(int)mfType[0]<<" "
+			<<bgFreq[0]<<" "<<incFreq[0]<<" "<<incStart[0]<<" "<<incEnd[0]<<" "<<threshold[0]<<endl;
 }
 
 SimMFInputEC::~SimMFInputEC()

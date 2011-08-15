@@ -9,7 +9,7 @@
 #define SIMINNET_H_
 
 #include <fstream>
-#include "common.h"
+#include <iostream>
 
 #define MAXNGRDENPERGL 80
 

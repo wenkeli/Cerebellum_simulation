@@ -13,6 +13,12 @@
 #include "common.h"
 #include "mainw.h"
 #include "datamodules/psh.h"
+#include "datamodules/simerrorec.h"
+#include "datamodules/simexternalec.h"
+#include "datamodules/siminnet.h"
+#include "datamodules/simmfinputec.h"
+#include "datamodules/simmzone.h"
+#include "datamodules/simoutputec.h"
 #include "analysismodules/grpshpopanalysis.h"
 
 PSHData *mfPSH;
@@ -24,6 +30,13 @@ PSHData *bcPSH[NUMMZONES];
 PSHData *pcPSH[NUMMZONES];
 PSHData *ioPSH[NUMMZONES];
 PSHData *ncPSH[NUMMZONES];
+
+SimErrorEC *simErrMod[NUMMZONES];
+SimOutputEC *simOutMod[NUMMZONES];
+SimExternalEC *simExternalMod;
+SimMFInputEC *simMFInputMod;
+SimInNet *simInNetMod;
+SimMZone *simMZoneMod[NUMMZONES];
 
 GRPSHPopAnalysis *grPopTimingAnalysis;
 

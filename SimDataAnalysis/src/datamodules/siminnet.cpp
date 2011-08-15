@@ -52,4 +52,6 @@ SimInNet::SimInNet(ifstream &infile)
 	infile.read((char *)vSC, numSC*sizeof(float));
 	infile.read((char *)apSC, numSC*sizeof(bool));
 	infile.read((char *)apBufSC, numSC*sizeof(unsigned int));
+
+	cout<<"input net read: "<<" "<<vGO[0]<<" "<<vSC[numSC-1]<<endl;
 }

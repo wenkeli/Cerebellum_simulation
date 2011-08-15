@@ -19,4 +19,7 @@ SimErrorEC::SimErrorEC(ifstream &infile)
 	infile.read((char *)&tsWindowInS, sizeof(float));
 	infile.read((char *)&errOnsetST, sizeof(float));
 	infile.read((char *)&errOnsetET, sizeof(float));
+
+	cout<<"error module read: "<<maxErrSig<<" "<<minErrSig<<" "<<timeStepSize<<" "<<tsUnitInS<<" "
+			<<errOnsetT<<" "<<tsWindowInS<<" "<<errOnsetST<<" "<<errOnsetET<<endl;
 }
