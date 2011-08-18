@@ -92,7 +92,7 @@ void GRPSHPopAnalysis::calcPFPCPlast(unsigned int usTime)
 		curPFPCSynW[i]=0.5;
 	}
 
-	for(int i=0; i<100; i++)
+	for(int i=0; i<200; i++)
 	{
 		runPFPCPlastIteration(usTime);
 		cout<<"PFPC plast iteration "<<i<<endl;
@@ -118,7 +118,7 @@ void GRPSHPopAnalysis::runPFPCPlastIteration(unsigned int usTime)
 	for(int i=usLTDSBinN; i<usLTDEBinN; i++)
 	{
 		float ltdStep;
-		ltdStep=-0.5;//-0.15;//-0.05*(curItePFPCPopActBGAdj[i]/refPFPCPopAct[i]);
+		ltdStep=-0.05;//-0.15;//-0.05*(curItePFPCPopActBGAdj[i]/refPFPCPopAct[i]);
 		doPFPCPlast(ltdStep, grPSHNormalized[i], curPFPCSynW);
 	}
 
@@ -135,7 +135,7 @@ void GRPSHPopAnalysis::runPFPCPlastIteration(unsigned int usTime)
 			float ltpStep;
 
 			ltpStep=(refPFPCPopAct[i]-curItePFPCPopActLTD[i])/refPFPCPopAct[i];
-			ltpStep=0.3*(ltpStep>0)*ltpStep; //0.2//0.1
+			ltpStep=0.07*(ltpStep>0)*ltpStep; //0.2//0.1
 			doPFPCPlast(ltpStep, grPSHNormalized[i], curPFPCSynW);
 		}
 	}
