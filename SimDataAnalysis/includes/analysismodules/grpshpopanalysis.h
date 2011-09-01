@@ -48,6 +48,9 @@ protected:
 	float *curPFPCSynW;
 
 	void calcPFPCPopActivity(float *actvivity, float *pfPCSynW);
+	float calcPFPCPopActivityBin(float *pfPCSynW, float *pshRow);
+
+	void runPFPCPlastIterationNew(unsigned int usTime);
 
 	void runPFPCPlastIteration(unsigned int usTime);
 	void doPFPCPlast(float plastStep, const float *pshRow, float *pfPCSynW);

@@ -68,15 +68,34 @@ void GRPSHPopAnalysis::calcPFPCPopActivity(float *activity, float *pfPCSynW)
 {
 	for(int i=0; i<totalNumBins; i++)
 	{
-		float tempSum;
+//		float tempSum;
+//
+//		tempSum=0;
+//		for(int j=0; j<numGR; j++)
+//		{
+//			tempSum+=grPSHNormalized[i][j]*pfPCSynW[j];
+//		}
+//		activity[i]=tempSum;
 
-		tempSum=0;
-		for(int j=0; j<numGR; j++)
-		{
-			tempSum+=grPSHNormalized[i][j]*pfPCSynW[j];
-		}
-		activity[i]=tempSum;
+		activity[i]=calcPFPCPopActivityBin(pfPCSynW, grPSHNormalized[i]);
 	}
+}
+
+float GRPSHPopAnalysis::calcPFPCPopActivityBin(float *pfPCSynW, float *pshRow)
+{
+	float tempSum;
+	int i, chunk;
+	chunk=16;
+
+	tempSum=0;
+
+#pragma omp parallel for default(shared) private(i) schedule(static, chunk) reduction(+:tempSum)
+	for(i=0; i<numGR; i++)
+	{
+		tempSum+=pshRow[i]*pfPCSynW[i];
+	}
+
+	return tempSum;
 }
 
 void GRPSHPopAnalysis::calcPFPCPlast(unsigned int usTime)
@@ -94,12 +113,53 @@ void GRPSHPopAnalysis::calcPFPCPlast(unsigned int usTime)
 
 	for(int i=0; i<200; i++)
 	{
-		runPFPCPlastIteration(usTime);
+		runPFPCPlastIterationNew(usTime);
+//		runPFPCPlastIteration(usTime);
 		cout<<"PFPC plast iteration "<<i<<endl;
 	}
 	calcPFPCPopActivity(curItePFPCPopActBGAdj, curPFPCSynW);
+	calcPFPCPopActivity(curItePFPCPopActLTD, curPFPCSynW);
+	calcPFPCPopActivity(curItePFPCPopActLTP, curPFPCSynW);
 //	cout<<curPFPCPopAct[100]<<endl;
 	cout<<"done"<<endl;
+}
+
+void GRPSHPopAnalysis::runPFPCPlastIterationNew(unsigned int usTime)
+{
+	unsigned int usBinN;
+
+	int usLTDSBinN;
+	int usLTDEBinN;
+
+	usBinN=usTime/binTimeSize+preStimNumBins;
+	usLTDSBinN=(((int)usTime)-200)/((int)binTimeSize)+(int)preStimNumBins;
+	usLTDEBinN=(((int)usTime)-100)/((int)binTimeSize)+(int)preStimNumBins;
+
+	for(int i=preStimNumBins; i<preStimNumBins+stimNumBins; i++)
+	{
+		if(i>=usLTDSBinN && i<usLTDEBinN)
+		{
+			float ltdStep;
+
+			ltdStep=-0.1;
+			doPFPCPlast(ltdStep, grPSHNormalized[i], curPFPCSynW);
+			continue;
+		}
+		else
+		{
+			float binActivity;
+			float ltpStep;
+
+			binActivity=calcPFPCPopActivityBin(curPFPCSynW, grPSHNormalized[i]);
+			ltpStep=(refPFPCPopAct[i]-binActivity)/refPFPCPopAct[i];
+			ltpStep=0.28*(ltpStep>0)*ltpStep; //0.07//0.2//0.1
+			doPFPCPlast(ltpStep, grPSHNormalized[i], curPFPCSynW);
+		}
+
+	}
+
+	calcPFPCPopActivity(curItePFPCPopActLTP, curPFPCSynW);
+	adjustPFPCBG();
 }
 
 void GRPSHPopAnalysis::runPFPCPlastIteration(unsigned int usTime)
