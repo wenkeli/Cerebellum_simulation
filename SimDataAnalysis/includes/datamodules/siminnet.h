@@ -10,6 +10,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <vector>
 
 #define MAXNGRDENPERGL 80
 
@@ -38,6 +39,8 @@ public:
 	static const unsigned int numSC=512;
 	static const unsigned int numBC=128;
 	static const unsigned int numGL=65536;
+
+
 
 private:
 	SimInNet();
