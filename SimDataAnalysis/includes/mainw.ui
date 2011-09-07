@@ -6,31 +6,24 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>459</width>
-    <height>354</height>
+    <width>614</width>
+    <height>367</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="verticalLayoutWidget">
+   <widget class="QWidget" name="horizontalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>10</y>
-      <width>175</width>
-      <height>311</height>
+      <x>30</x>
+      <y>300</y>
+      <width>561</width>
+      <height>41</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QPushButton" name="loadPSHButton">
-       <property name="text">
-        <string>Load PSH data</string>
-       </property>
-      </widget>
-     </item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QPushButton" name="loadSimButton">
        <property name="text">
@@ -39,44 +32,9 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="singleCellNPButton">
+      <widget class="QPushButton" name="loadPSHButton">
        <property name="text">
-        <string>new single cell PSH panel</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="multicellNPButton">
-       <property name="text">
-        <string>new multi cell PSH panel</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="calcPFPCPlastButton">
-       <property name="text">
-        <string>calc PF PC plasticity</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="exportPFPCPlastActButton">
-       <property name="text">
-        <string>export PFPC plast Activity</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="calcSpikeRatesButton">
-       <property name="text">
-        <string>calc spike rates</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="exportSpikeRatesButton">
-       <property name="text">
-        <string>export spike rates</string>
+        <string>Load PSH data</string>
        </property>
       </widget>
      </item>
@@ -89,23 +47,16 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="gridLayoutWidget">
+   <widget class="QWidget" name="gridLayoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>13</x>
-      <y>10</y>
-      <width>251</width>
-      <height>171</height>
+      <x>30</x>
+      <y>20</y>
+      <width>561</width>
+      <height>151</height>
      </rect>
     </property>
-    <layout class="QGridLayout" name="gridLayout">
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>multi disp page #</string>
-       </property>
-      </widget>
-     </item>
+    <layout class="QGridLayout" name="gridLayout_2">
      <item row="2" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
@@ -113,41 +64,138 @@
        </property>
       </widget>
      </item>
+     <item row="2" column="1">
+      <widget class="QSpinBox" name="multiCellStrideBox"/>
+     </item>
      <item row="3" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>multi disp page #</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QSpinBox" name="multiCellPageBox"/>
+     </item>
+     <item row="2" column="2">
       <widget class="QLabel" name="label_4">
        <property name="text">
         <string>single disp cell #</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QSpinBox" name="multiCellPageBox"/>
-     </item>
-     <item row="2" column="1">
-      <widget class="QSpinBox" name="multiCellStrideBox"/>
-     </item>
-     <item row="3" column="1">
+     <item row="2" column="3">
       <widget class="QSpinBox" name="singleCellNumBox"/>
      </item>
-     <item row="0" column="0">
+     <item row="0" column="2">
+      <widget class="QComboBox" name="dispCellTypeBox"/>
+     </item>
+     <item row="0" column="1">
       <widget class="QLabel" name="label_3">
        <property name="text">
         <string>Display cell type</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QComboBox" name="dispCellTypeBox"/>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="label_5">
+     <item row="4" column="2" colspan="2">
+      <widget class="QPushButton" name="singleCellNPButton">
        <property name="text">
-        <string>PFPC plasticity US time</string>
+        <string>new single cell PSH panel</string>
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
+     <item row="4" column="0" colspan="2">
+      <widget class="QPushButton" name="multicellNPButton">
+       <property name="text">
+        <string>new multi cell PSH panel</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QPushButton" name="calcSpikeRatesButton">
+       <property name="text">
+        <string>calc spike rates</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QPushButton" name="exportSpikeRatesButton">
+       <property name="text">
+        <string>export spike rates</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="gridLayoutWidget_3">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>210</y>
+      <width>241</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_3">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>PFPC US time</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
       <widget class="QSpinBox" name="pfPCPlastUSTimeSpinBox"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QPushButton" name="calcPFPCPlastButton">
+       <property name="text">
+        <string>calc PFPC</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QPushButton" name="exportPFPCPlastActButton">
+       <property name="text">
+        <string>export PFPC</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="gridLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>210</y>
+      <width>291</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>Granule cell #</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QSpinBox" name="grIndConAnaSpinBox"/>
+     </item>
+     <item row="1" column="1">
+      <widget class="QPushButton" name="dispGROutGOButton">
+       <property name="text">
+        <string>Disp GROutGO PSHs</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QPushButton" name="dispGRInMFGOButton">
+       <property name="text">
+        <string>Disp GRInMFGO PSHs</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -162,8 +210,8 @@
    <slot>loadPSHFile()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>387</x>
-     <y>33</y>
+     <x>338</x>
+     <y>331</y>
     </hint>
     <hint type="destinationlabel">
      <x>15</x>
@@ -178,8 +226,8 @@
    <slot>dispSingleCellNP()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>430</x>
-     <y>106</y>
+     <x>479</x>
+     <y>167</y>
     </hint>
     <hint type="destinationlabel">
      <x>15</x>
@@ -194,8 +242,8 @@
    <slot>dispMultiCellNP()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>414</x>
-     <y>141</y>
+     <x>175</x>
+     <y>167</y>
     </hint>
     <hint type="destinationlabel">
      <x>15</x>
@@ -210,8 +258,8 @@
    <slot>updateMultiCellDisp(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>167</x>
-     <y>63</y>
+     <x>308</x>
+     <y>133</y>
     </hint>
     <hint type="destinationlabel">
      <x>15</x>
@@ -242,8 +290,8 @@
    <slot>updateSingleCellDisp(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>224</x>
-     <y>139</y>
+     <x>589</x>
+     <y>105</y>
     </hint>
     <hint type="destinationlabel">
      <x>15</x>
@@ -258,8 +306,8 @@
    <slot>updateCellType(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>202</x>
-     <y>22</y>
+     <x>449</x>
+     <y>33</y>
     </hint>
     <hint type="destinationlabel">
      <x>2</x>
@@ -274,8 +322,8 @@
    <slot>calcPFPCPlasticity()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>398</x>
-     <y>176</y>
+     <x>465</x>
+     <y>259</y>
     </hint>
     <hint type="destinationlabel">
      <x>13</x>
@@ -290,8 +338,8 @@
    <slot>exportPFPCPlastAct()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>383</x>
-     <y>210</y>
+     <x>589</x>
+     <y>259</y>
     </hint>
     <hint type="destinationlabel">
      <x>3</x>
@@ -306,8 +354,8 @@
    <slot>calcSpikeRates()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>367</x>
-     <y>245</y>
+     <x>276</x>
+     <y>75</y>
     </hint>
     <hint type="destinationlabel">
      <x>1</x>
@@ -322,8 +370,8 @@
    <slot>exportSpikeRates()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>351</x>
-     <y>281</y>
+     <x>400</x>
+     <y>75</y>
     </hint>
     <hint type="destinationlabel">
      <x>0</x>
@@ -338,12 +386,44 @@
    <slot>loadSimFile()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>443</x>
-     <y>56</y>
+     <x>204</x>
+     <y>332</y>
     </hint>
     <hint type="destinationlabel">
      <x>3</x>
      <y>6</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>dispGRInMFGOButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWClass</receiver>
+   <slot>showGRInMFGOPSHs()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>145</x>
+     <y>249</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>11</x>
+     <y>25</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>dispGROutGOButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWClass</receiver>
+   <slot>showGROutGOPSHs()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>288</x>
+     <y>247</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>6</x>
+     <y>26</y>
     </hint>
    </hints>
   </connection>
@@ -363,5 +443,7 @@
   <slot>exportPFPCPlastAct()</slot>
   <slot>calcSpikeRates()</slot>
   <slot>exportSpikeRates()</slot>
+  <slot>showGRInMFGOPSHs()</slot>
+  <slot>showGROutGOPSHs()</slot>
  </slots>
 </ui>

@@ -310,6 +310,16 @@ void MainW::exportPFPCPlastAct()
 	outfile.close();
 }
 
+void MainW::showGRInMFGOPSHs()
+{
+
+}
+
+void MainW::showGROutGOPSHs()
+{
+
+}
+
 void MainW::calcSpikeRates()
 {
 	(*curSRAnalysis)->calcSpikeRates();

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainw.ui'
 **
-** Created: Mon Aug 15 18:13:12 2011
+** Created: Wed Sep 7 18:42:48 2011
 **      by: Qt User Interface Compiler version 4.7.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -16,12 +16,12 @@
 #include <QtGui/QButtonGroup>
 #include <QtGui/QComboBox>
 #include <QtGui/QGridLayout>
+#include <QtGui/QHBoxLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QMainWindow>
 #include <QtGui/QPushButton>
 #include <QtGui/QSpinBox>
-#include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -30,143 +30,183 @@ class Ui_MainWClass
 {
 public:
     QWidget *centralwidget;
-    QWidget *verticalLayoutWidget;
-    QVBoxLayout *verticalLayout;
-    QPushButton *loadPSHButton;
+    QWidget *horizontalLayoutWidget;
+    QHBoxLayout *horizontalLayout;
     QPushButton *loadSimButton;
+    QPushButton *loadPSHButton;
+    QPushButton *quitButton;
+    QWidget *gridLayoutWidget_2;
+    QGridLayout *gridLayout_2;
+    QLabel *label;
+    QSpinBox *multiCellStrideBox;
+    QLabel *label_2;
+    QSpinBox *multiCellPageBox;
+    QLabel *label_4;
+    QSpinBox *singleCellNumBox;
+    QComboBox *dispCellTypeBox;
+    QLabel *label_3;
     QPushButton *singleCellNPButton;
     QPushButton *multicellNPButton;
-    QPushButton *calcPFPCPlastButton;
-    QPushButton *exportPFPCPlastActButton;
     QPushButton *calcSpikeRatesButton;
     QPushButton *exportSpikeRatesButton;
-    QPushButton *quitButton;
-    QWidget *gridLayoutWidget;
-    QGridLayout *gridLayout;
-    QLabel *label_2;
-    QLabel *label;
-    QLabel *label_4;
-    QSpinBox *multiCellPageBox;
-    QSpinBox *multiCellStrideBox;
-    QSpinBox *singleCellNumBox;
-    QLabel *label_3;
-    QComboBox *dispCellTypeBox;
+    QWidget *gridLayoutWidget_3;
+    QGridLayout *gridLayout_3;
     QLabel *label_5;
     QSpinBox *pfPCPlastUSTimeSpinBox;
+    QPushButton *calcPFPCPlastButton;
+    QPushButton *exportPFPCPlastActButton;
+    QWidget *gridLayoutWidget;
+    QGridLayout *gridLayout;
+    QLabel *label_6;
+    QSpinBox *grIndConAnaSpinBox;
+    QPushButton *dispGROutGOButton;
+    QPushButton *dispGRInMFGOButton;
 
     void setupUi(QMainWindow *MainWClass)
     {
         if (MainWClass->objectName().isEmpty())
             MainWClass->setObjectName(QString::fromUtf8("MainWClass"));
-        MainWClass->resize(459, 354);
+        MainWClass->resize(614, 367);
         centralwidget = new QWidget(MainWClass);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
-        verticalLayoutWidget = new QWidget(centralwidget);
-        verticalLayoutWidget->setObjectName(QString::fromUtf8("verticalLayoutWidget"));
-        verticalLayoutWidget->setGeometry(QRect(270, 10, 175, 311));
-        verticalLayout = new QVBoxLayout(verticalLayoutWidget);
-        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-        verticalLayout->setContentsMargins(0, 0, 0, 0);
-        loadPSHButton = new QPushButton(verticalLayoutWidget);
-        loadPSHButton->setObjectName(QString::fromUtf8("loadPSHButton"));
-
-        verticalLayout->addWidget(loadPSHButton);
-
-        loadSimButton = new QPushButton(verticalLayoutWidget);
+        horizontalLayoutWidget = new QWidget(centralwidget);
+        horizontalLayoutWidget->setObjectName(QString::fromUtf8("horizontalLayoutWidget"));
+        horizontalLayoutWidget->setGeometry(QRect(30, 300, 561, 41));
+        horizontalLayout = new QHBoxLayout(horizontalLayoutWidget);
+        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
+        horizontalLayout->setContentsMargins(0, 0, 0, 0);
+        loadSimButton = new QPushButton(horizontalLayoutWidget);
         loadSimButton->setObjectName(QString::fromUtf8("loadSimButton"));
 
-        verticalLayout->addWidget(loadSimButton);
+        horizontalLayout->addWidget(loadSimButton);
 
-        singleCellNPButton = new QPushButton(verticalLayoutWidget);
-        singleCellNPButton->setObjectName(QString::fromUtf8("singleCellNPButton"));
+        loadPSHButton = new QPushButton(horizontalLayoutWidget);
+        loadPSHButton->setObjectName(QString::fromUtf8("loadPSHButton"));
 
-        verticalLayout->addWidget(singleCellNPButton);
+        horizontalLayout->addWidget(loadPSHButton);
 
-        multicellNPButton = new QPushButton(verticalLayoutWidget);
-        multicellNPButton->setObjectName(QString::fromUtf8("multicellNPButton"));
-
-        verticalLayout->addWidget(multicellNPButton);
-
-        calcPFPCPlastButton = new QPushButton(verticalLayoutWidget);
-        calcPFPCPlastButton->setObjectName(QString::fromUtf8("calcPFPCPlastButton"));
-
-        verticalLayout->addWidget(calcPFPCPlastButton);
-
-        exportPFPCPlastActButton = new QPushButton(verticalLayoutWidget);
-        exportPFPCPlastActButton->setObjectName(QString::fromUtf8("exportPFPCPlastActButton"));
-
-        verticalLayout->addWidget(exportPFPCPlastActButton);
-
-        calcSpikeRatesButton = new QPushButton(verticalLayoutWidget);
-        calcSpikeRatesButton->setObjectName(QString::fromUtf8("calcSpikeRatesButton"));
-
-        verticalLayout->addWidget(calcSpikeRatesButton);
-
-        exportSpikeRatesButton = new QPushButton(verticalLayoutWidget);
-        exportSpikeRatesButton->setObjectName(QString::fromUtf8("exportSpikeRatesButton"));
-
-        verticalLayout->addWidget(exportSpikeRatesButton);
-
-        quitButton = new QPushButton(verticalLayoutWidget);
+        quitButton = new QPushButton(horizontalLayoutWidget);
         quitButton->setObjectName(QString::fromUtf8("quitButton"));
 
-        verticalLayout->addWidget(quitButton);
+        horizontalLayout->addWidget(quitButton);
+
+        gridLayoutWidget_2 = new QWidget(centralwidget);
+        gridLayoutWidget_2->setObjectName(QString::fromUtf8("gridLayoutWidget_2"));
+        gridLayoutWidget_2->setGeometry(QRect(30, 20, 561, 151));
+        gridLayout_2 = new QGridLayout(gridLayoutWidget_2);
+        gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
+        gridLayout_2->setContentsMargins(0, 0, 0, 0);
+        label = new QLabel(gridLayoutWidget_2);
+        label->setObjectName(QString::fromUtf8("label"));
+
+        gridLayout_2->addWidget(label, 2, 0, 1, 1);
+
+        multiCellStrideBox = new QSpinBox(gridLayoutWidget_2);
+        multiCellStrideBox->setObjectName(QString::fromUtf8("multiCellStrideBox"));
+
+        gridLayout_2->addWidget(multiCellStrideBox, 2, 1, 1, 1);
+
+        label_2 = new QLabel(gridLayoutWidget_2);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+
+        gridLayout_2->addWidget(label_2, 3, 0, 1, 1);
+
+        multiCellPageBox = new QSpinBox(gridLayoutWidget_2);
+        multiCellPageBox->setObjectName(QString::fromUtf8("multiCellPageBox"));
+
+        gridLayout_2->addWidget(multiCellPageBox, 3, 1, 1, 1);
+
+        label_4 = new QLabel(gridLayoutWidget_2);
+        label_4->setObjectName(QString::fromUtf8("label_4"));
+
+        gridLayout_2->addWidget(label_4, 2, 2, 1, 1);
+
+        singleCellNumBox = new QSpinBox(gridLayoutWidget_2);
+        singleCellNumBox->setObjectName(QString::fromUtf8("singleCellNumBox"));
+
+        gridLayout_2->addWidget(singleCellNumBox, 2, 3, 1, 1);
+
+        dispCellTypeBox = new QComboBox(gridLayoutWidget_2);
+        dispCellTypeBox->setObjectName(QString::fromUtf8("dispCellTypeBox"));
+
+        gridLayout_2->addWidget(dispCellTypeBox, 0, 2, 1, 1);
+
+        label_3 = new QLabel(gridLayoutWidget_2);
+        label_3->setObjectName(QString::fromUtf8("label_3"));
+
+        gridLayout_2->addWidget(label_3, 0, 1, 1, 1);
+
+        singleCellNPButton = new QPushButton(gridLayoutWidget_2);
+        singleCellNPButton->setObjectName(QString::fromUtf8("singleCellNPButton"));
+
+        gridLayout_2->addWidget(singleCellNPButton, 4, 2, 1, 2);
+
+        multicellNPButton = new QPushButton(gridLayoutWidget_2);
+        multicellNPButton->setObjectName(QString::fromUtf8("multicellNPButton"));
+
+        gridLayout_2->addWidget(multicellNPButton, 4, 0, 1, 2);
+
+        calcSpikeRatesButton = new QPushButton(gridLayoutWidget_2);
+        calcSpikeRatesButton->setObjectName(QString::fromUtf8("calcSpikeRatesButton"));
+
+        gridLayout_2->addWidget(calcSpikeRatesButton, 1, 1, 1, 1);
+
+        exportSpikeRatesButton = new QPushButton(gridLayoutWidget_2);
+        exportSpikeRatesButton->setObjectName(QString::fromUtf8("exportSpikeRatesButton"));
+
+        gridLayout_2->addWidget(exportSpikeRatesButton, 1, 2, 1, 1);
+
+        gridLayoutWidget_3 = new QWidget(centralwidget);
+        gridLayoutWidget_3->setObjectName(QString::fromUtf8("gridLayoutWidget_3"));
+        gridLayoutWidget_3->setGeometry(QRect(350, 210, 241, 51));
+        gridLayout_3 = new QGridLayout(gridLayoutWidget_3);
+        gridLayout_3->setObjectName(QString::fromUtf8("gridLayout_3"));
+        gridLayout_3->setContentsMargins(0, 0, 0, 0);
+        label_5 = new QLabel(gridLayoutWidget_3);
+        label_5->setObjectName(QString::fromUtf8("label_5"));
+
+        gridLayout_3->addWidget(label_5, 0, 0, 1, 1);
+
+        pfPCPlastUSTimeSpinBox = new QSpinBox(gridLayoutWidget_3);
+        pfPCPlastUSTimeSpinBox->setObjectName(QString::fromUtf8("pfPCPlastUSTimeSpinBox"));
+
+        gridLayout_3->addWidget(pfPCPlastUSTimeSpinBox, 0, 1, 1, 1);
+
+        calcPFPCPlastButton = new QPushButton(gridLayoutWidget_3);
+        calcPFPCPlastButton->setObjectName(QString::fromUtf8("calcPFPCPlastButton"));
+
+        gridLayout_3->addWidget(calcPFPCPlastButton, 1, 0, 1, 1);
+
+        exportPFPCPlastActButton = new QPushButton(gridLayoutWidget_3);
+        exportPFPCPlastActButton->setObjectName(QString::fromUtf8("exportPFPCPlastActButton"));
+
+        gridLayout_3->addWidget(exportPFPCPlastActButton, 1, 1, 1, 1);
 
         gridLayoutWidget = new QWidget(centralwidget);
         gridLayoutWidget->setObjectName(QString::fromUtf8("gridLayoutWidget"));
-        gridLayoutWidget->setGeometry(QRect(13, 10, 251, 171));
+        gridLayoutWidget->setGeometry(QRect(30, 210, 291, 51));
         gridLayout = new QGridLayout(gridLayoutWidget);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         gridLayout->setContentsMargins(0, 0, 0, 0);
-        label_2 = new QLabel(gridLayoutWidget);
-        label_2->setObjectName(QString::fromUtf8("label_2"));
+        label_6 = new QLabel(gridLayoutWidget);
+        label_6->setObjectName(QString::fromUtf8("label_6"));
 
-        gridLayout->addWidget(label_2, 1, 0, 1, 1);
+        gridLayout->addWidget(label_6, 0, 0, 1, 1);
 
-        label = new QLabel(gridLayoutWidget);
-        label->setObjectName(QString::fromUtf8("label"));
+        grIndConAnaSpinBox = new QSpinBox(gridLayoutWidget);
+        grIndConAnaSpinBox->setObjectName(QString::fromUtf8("grIndConAnaSpinBox"));
 
-        gridLayout->addWidget(label, 2, 0, 1, 1);
+        gridLayout->addWidget(grIndConAnaSpinBox, 0, 1, 1, 1);
 
-        label_4 = new QLabel(gridLayoutWidget);
-        label_4->setObjectName(QString::fromUtf8("label_4"));
+        dispGROutGOButton = new QPushButton(gridLayoutWidget);
+        dispGROutGOButton->setObjectName(QString::fromUtf8("dispGROutGOButton"));
 
-        gridLayout->addWidget(label_4, 3, 0, 1, 1);
+        gridLayout->addWidget(dispGROutGOButton, 1, 1, 1, 1);
 
-        multiCellPageBox = new QSpinBox(gridLayoutWidget);
-        multiCellPageBox->setObjectName(QString::fromUtf8("multiCellPageBox"));
+        dispGRInMFGOButton = new QPushButton(gridLayoutWidget);
+        dispGRInMFGOButton->setObjectName(QString::fromUtf8("dispGRInMFGOButton"));
 
-        gridLayout->addWidget(multiCellPageBox, 1, 1, 1, 1);
-
-        multiCellStrideBox = new QSpinBox(gridLayoutWidget);
-        multiCellStrideBox->setObjectName(QString::fromUtf8("multiCellStrideBox"));
-
-        gridLayout->addWidget(multiCellStrideBox, 2, 1, 1, 1);
-
-        singleCellNumBox = new QSpinBox(gridLayoutWidget);
-        singleCellNumBox->setObjectName(QString::fromUtf8("singleCellNumBox"));
-
-        gridLayout->addWidget(singleCellNumBox, 3, 1, 1, 1);
-
-        label_3 = new QLabel(gridLayoutWidget);
-        label_3->setObjectName(QString::fromUtf8("label_3"));
-
-        gridLayout->addWidget(label_3, 0, 0, 1, 1);
-
-        dispCellTypeBox = new QComboBox(gridLayoutWidget);
-        dispCellTypeBox->setObjectName(QString::fromUtf8("dispCellTypeBox"));
-
-        gridLayout->addWidget(dispCellTypeBox, 0, 1, 1, 1);
-
-        label_5 = new QLabel(gridLayoutWidget);
-        label_5->setObjectName(QString::fromUtf8("label_5"));
-
-        gridLayout->addWidget(label_5, 4, 0, 1, 1);
-
-        pfPCPlastUSTimeSpinBox = new QSpinBox(gridLayoutWidget);
-        pfPCPlastUSTimeSpinBox->setObjectName(QString::fromUtf8("pfPCPlastUSTimeSpinBox"));
-
-        gridLayout->addWidget(pfPCPlastUSTimeSpinBox, 4, 1, 1, 1);
+        gridLayout->addWidget(dispGRInMFGOButton, 1, 0, 1, 1);
 
         MainWClass->setCentralWidget(centralwidget);
 
@@ -183,6 +223,8 @@ public:
         QObject::connect(calcSpikeRatesButton, SIGNAL(clicked()), MainWClass, SLOT(calcSpikeRates()));
         QObject::connect(exportSpikeRatesButton, SIGNAL(clicked()), MainWClass, SLOT(exportSpikeRates()));
         QObject::connect(loadSimButton, SIGNAL(clicked()), MainWClass, SLOT(loadSimFile()));
+        QObject::connect(dispGRInMFGOButton, SIGNAL(clicked()), MainWClass, SLOT(showGRInMFGOPSHs()));
+        QObject::connect(dispGROutGOButton, SIGNAL(clicked()), MainWClass, SLOT(showGROutGOPSHs()));
 
         QMetaObject::connectSlotsByName(MainWClass);
     } // setupUi
@@ -190,20 +232,23 @@ public:
     void retranslateUi(QMainWindow *MainWClass)
     {
         MainWClass->setWindowTitle(QApplication::translate("MainWClass", "MainWindow", 0, QApplication::UnicodeUTF8));
-        loadPSHButton->setText(QApplication::translate("MainWClass", "Load PSH data", 0, QApplication::UnicodeUTF8));
         loadSimButton->setText(QApplication::translate("MainWClass", "Load Sim State", 0, QApplication::UnicodeUTF8));
-        singleCellNPButton->setText(QApplication::translate("MainWClass", "new single cell PSH panel", 0, QApplication::UnicodeUTF8));
-        multicellNPButton->setText(QApplication::translate("MainWClass", "new multi cell PSH panel", 0, QApplication::UnicodeUTF8));
-        calcPFPCPlastButton->setText(QApplication::translate("MainWClass", "calc PF PC plasticity", 0, QApplication::UnicodeUTF8));
-        exportPFPCPlastActButton->setText(QApplication::translate("MainWClass", "export PFPC plast Activity", 0, QApplication::UnicodeUTF8));
-        calcSpikeRatesButton->setText(QApplication::translate("MainWClass", "calc spike rates", 0, QApplication::UnicodeUTF8));
-        exportSpikeRatesButton->setText(QApplication::translate("MainWClass", "export spike rates", 0, QApplication::UnicodeUTF8));
+        loadPSHButton->setText(QApplication::translate("MainWClass", "Load PSH data", 0, QApplication::UnicodeUTF8));
         quitButton->setText(QApplication::translate("MainWClass", "quit", 0, QApplication::UnicodeUTF8));
-        label_2->setText(QApplication::translate("MainWClass", "multi disp page #", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWClass", "multi disp page stride", 0, QApplication::UnicodeUTF8));
+        label_2->setText(QApplication::translate("MainWClass", "multi disp page #", 0, QApplication::UnicodeUTF8));
         label_4->setText(QApplication::translate("MainWClass", "single disp cell #", 0, QApplication::UnicodeUTF8));
         label_3->setText(QApplication::translate("MainWClass", "Display cell type", 0, QApplication::UnicodeUTF8));
-        label_5->setText(QApplication::translate("MainWClass", "PFPC plasticity US time", 0, QApplication::UnicodeUTF8));
+        singleCellNPButton->setText(QApplication::translate("MainWClass", "new single cell PSH panel", 0, QApplication::UnicodeUTF8));
+        multicellNPButton->setText(QApplication::translate("MainWClass", "new multi cell PSH panel", 0, QApplication::UnicodeUTF8));
+        calcSpikeRatesButton->setText(QApplication::translate("MainWClass", "calc spike rates", 0, QApplication::UnicodeUTF8));
+        exportSpikeRatesButton->setText(QApplication::translate("MainWClass", "export spike rates", 0, QApplication::UnicodeUTF8));
+        label_5->setText(QApplication::translate("MainWClass", "PFPC US time", 0, QApplication::UnicodeUTF8));
+        calcPFPCPlastButton->setText(QApplication::translate("MainWClass", "calc PFPC", 0, QApplication::UnicodeUTF8));
+        exportPFPCPlastActButton->setText(QApplication::translate("MainWClass", "export PFPC", 0, QApplication::UnicodeUTF8));
+        label_6->setText(QApplication::translate("MainWClass", "Granule cell #", 0, QApplication::UnicodeUTF8));
+        dispGROutGOButton->setText(QApplication::translate("MainWClass", "Disp GROutGO PSHs", 0, QApplication::UnicodeUTF8));
+        dispGRInMFGOButton->setText(QApplication::translate("MainWClass", "Disp GRInMFGO PSHs", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainw.h'
 **
-** Created: Mon Aug 15 18:13:12 2011
+** Created: Wed Sep 7 18:42:48 2011
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.2)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainW[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-      14,   14, // methods
+      16,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -41,10 +41,12 @@ static const uint qt_meta_data_MainW[] = {
      155,    6,    6,    6, 0x0a,
      176,    6,    6,    6, 0x0a,
      197,    6,    6,    6, 0x0a,
-     214,    6,    6,    6, 0x0a,
-     233,    6,    6,    6, 0x0a,
-     247,    6,    6,    6, 0x0a,
-     259,    6,    6,    6, 0x0a,
+     216,    6,    6,    6, 0x0a,
+     234,    6,    6,    6, 0x0a,
+     251,    6,    6,    6, 0x0a,
+     270,    6,    6,    6, 0x0a,
+     284,    6,    6,    6, 0x0a,
+     296,    6,    6,    6, 0x0a,
 
        0        // eod
 };
@@ -55,7 +57,8 @@ static const char qt_meta_stringdata_MainW[] = {
     "updateMultiCellDisp(int)\0"
     "updateMultiCellBound(int)\0updateCellType(int)\0"
     "loadPSHFile()\0calcPFPCPlasticity()\0"
-    "exportPFPCPlastAct()\0calcSpikeRates()\0"
+    "exportPFPCPlastAct()\0showGRInMFGOPSHs()\0"
+    "showGROutGOPSHs()\0calcSpikeRates()\0"
     "exportSpikeRates()\0loadSimFile()\0"
     "exportSim()\0exportSinglePSH()\0"
 };
@@ -98,14 +101,16 @@ int MainW::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 6: loadPSHFile(); break;
         case 7: calcPFPCPlasticity(); break;
         case 8: exportPFPCPlastAct(); break;
-        case 9: calcSpikeRates(); break;
-        case 10: exportSpikeRates(); break;
-        case 11: loadSimFile(); break;
-        case 12: exportSim(); break;
-        case 13: exportSinglePSH(); break;
+        case 9: showGRInMFGOPSHs(); break;
+        case 10: showGROutGOPSHs(); break;
+        case 11: calcSpikeRates(); break;
+        case 12: exportSpikeRates(); break;
+        case 13: loadSimFile(); break;
+        case 14: exportSim(); break;
+        case 15: exportSinglePSH(); break;
         default: ;
         }
-        _id -= 14;
+        _id -= 16;
     }
     return _id;
 }

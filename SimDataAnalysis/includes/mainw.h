@@ -93,8 +93,8 @@ public slots:
 	void calcPFPCPlasticity();
 	void exportPFPCPlastAct();
 
-//	void showGRInMFGOPSHs();
-//	void showGROutGOPSHs();
+	void showGRInMFGOPSHs();
+	void showGROutGOPSHs();
 
 	void calcSpikeRates();
 	void exportSpikeRates();
