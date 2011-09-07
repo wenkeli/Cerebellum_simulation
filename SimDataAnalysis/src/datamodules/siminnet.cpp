@@ -55,3 +55,26 @@ SimInNet::SimInNet(ifstream &infile)
 
 	cout<<"input net read: "<<" "<<vGO[0]<<" "<<vSC[numSC-1]<<endl;
 }
+
+
+void SimInNet::getGRInMFGOInds(unsigned int grInd,
+		vector<unsigned int> &goInds, vector<unsigned int> &mfInds)
+{
+	for(int i=0; i<numGOInPerGR[grInd]; i++)
+	{
+		goInds.push_back(grConGOOutGR[i][grInd]);
+	}
+
+	for(int i=0; i<numMFInPerGR[grInd]; i++)
+	{
+		mfInds.push_back(grConMFOutGR[i][grInd]);
+	}
+}
+
+void SimInNet::getGROutGOInds(unsigned int grInd, vector<unsigned int> &goInds)
+{
+	for(int i=0; i<numGOOutPerGR[grInd]; i++)
+	{
+		goInds.push_back(grConGROutGO[i][grInd]);
+	}
+}

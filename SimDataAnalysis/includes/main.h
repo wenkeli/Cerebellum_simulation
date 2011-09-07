@@ -20,6 +20,7 @@
 #include "datamodules/simmzone.h"
 #include "datamodules/simoutputec.h"
 #include "analysismodules/grpshpopanalysis.h"
+#include "analysismodules/spikerateanalysis.h"
 
 PSHData *mfPSH;
 PSHData *goPSH;

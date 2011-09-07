@@ -41,6 +41,10 @@ public:
 	static const unsigned int numGL=65536;
 
 
+	void getGRInMFGOInds(unsigned int grInd,
+			vector<unsigned int> &goInds, vector<unsigned int> &mfInds);
+
+	void getGROutGOInds(unsigned int grInd, vector<unsigned int> &goInds);
 
 private:
 	SimInNet();

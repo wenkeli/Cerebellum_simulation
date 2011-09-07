@@ -7,6 +7,9 @@ MainW::MainW(QWidget *parent, QApplication *a)
 	ui.setupUi(this);
 	ui.dispCellTypeBox->setEditable(false);
 
+	pshLoaded=false;
+	simLoaded=false;
+
 	cellTypes[0]="MF";
 	cellTypes[1]="GO";
 	cellTypes[2]="GR";
@@ -251,6 +254,15 @@ void MainW::loadPSHFile()
 	cout<<"done!"<<endl;
 	infile.close();
 
+	pshLoaded=true;
+
+	if(simLoaded)
+	{
+		delete grConAnalysis;
+		grConAnalysis=new GRConPSHAnalysis(goPSH, mfPSH, simInNetMod);
+		//enable button
+	}
+
 	ui.dispCellTypeBox->setEnabled(true);
 	updateCellType(ui.dispCellTypeBox->currentIndex());
 
@@ -368,6 +380,14 @@ void MainW::loadSimFile()
 
 	cout<<"done!"<<endl;
 	infile.close();
+
+	simLoaded=true;
+	if(pshLoaded)
+	{
+		delete grConAnalysis;
+		grConAnalysis=new GRConPSHAnalysis(goPSH, mfPSH, simInNetMod);
+		//enable button
+	}
 }
 
 void MainW::exportSim()

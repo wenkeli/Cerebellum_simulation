@@ -18,6 +18,7 @@
 #include "datamodules/simmzone.h"
 #include "datamodules/simoutputec.h"
 #include "analysismodules/grpshpopanalysis.h"
+#include "analysismodules/grconpshanalysis.h"
 #include "analysismodules/spikerateanalysis.h"
 #include "pshdispw.h"
 
@@ -44,8 +45,13 @@ private:
     PSHData **pshs[8];
     PSHData **curPSH;
 
+    GRConPSHAnalysis *grConAnalysis;
+
     SpikeRateAnalysis **srAnalysis[8];
     SpikeRateAnalysis **curSRAnalysis;
+
+    bool pshLoaded;
+    bool simLoaded;
 
 //    void calcGRTotalSpikes();
 //    void calcGRTotalSpikesPC();
@@ -83,8 +89,13 @@ public slots:
 	void updateMultiCellBound(int);
 	void updateCellType(int);
 	void loadPSHFile();
+
 	void calcPFPCPlasticity();
 	void exportPFPCPlastAct();
+
+//	void showGRInMFGOPSHs();
+//	void showGROutGOPSHs();
+
 	void calcSpikeRates();
 	void exportSpikeRates();
 
