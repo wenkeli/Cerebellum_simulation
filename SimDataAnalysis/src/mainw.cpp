@@ -115,6 +115,7 @@ void MainW::dispMultiCellNP()
 	if(curMultiWindow!=NULL)
 	{
 		curMultiWindow->setAttribute(Qt::WA_DeleteOnClose);
+		curMultiWindow->close();
 	}
 
 	curMultiWindow=new PSHDispw(NULL,
@@ -127,6 +128,7 @@ void MainW::dispSingleCellNP()
 	if(curSingleWindow!=NULL)
 	{
 		curSingleWindow->setAttribute(Qt::WA_DeleteOnClose);
+		curSingleWindow->close();
 	}
 	curSingleWindow=new PSHDispw(NULL,
 			(*curPSH)->paintPSHInd(ui.singleCellNumBox->value()),
