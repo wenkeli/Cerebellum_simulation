@@ -27,6 +27,7 @@ void PSHDispw::switchBuf(QPixmap *newBuf)
 
 PSHDispw::~PSHDispw()
 {
+	std::cout<<"deleting backbuf"<<std::endl;
 	delete backBuf;
 }
 

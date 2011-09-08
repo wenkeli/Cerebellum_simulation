@@ -43,6 +43,8 @@ MainW::MainW(QWidget *parent, QApplication *a)
 	curSingleWindow=NULL;
 	curMultiWindow=NULL;
 
+	grConAnalysis=NULL;
+
 //	cout<<"here3"<<endl;
 
 	for(int i=0; i<8; i++)
@@ -76,6 +78,10 @@ MainW::MainW(QWidget *parent, QApplication *a)
 	ui.pfPCPlastUSTimeSpinBox->setDisabled(true);
 	ui.calcPFPCPlastButton->setDisabled(true);
 	ui.exportPFPCPlastActButton->setDisabled(true);
+
+	ui.grIndConAnaSpinBox->setDisabled(true);
+	ui.dispGRInMFGOButton->setDisabled(true);
+	ui.dispGROutGOButton->setDisabled(true);
 
 	ui.calcSpikeRatesButton->setDisabled(true);
 	ui.exportSpikeRatesButton->setDisabled(true);
@@ -260,7 +266,12 @@ void MainW::loadPSHFile()
 	{
 		delete grConAnalysis;
 		grConAnalysis=new GRConPSHAnalysis(goPSH, mfPSH, simInNetMod);
-		//enable button
+
+		ui.grIndConAnaSpinBox->setEnabled(true);
+		ui.grIndConAnaSpinBox->setMinimum(0);
+		ui.grIndConAnaSpinBox->setMaximum(SimInNet::numGR);
+		ui.dispGRInMFGOButton->setEnabled(true);
+		ui.dispGROutGOButton->setEnabled(true);
 	}
 
 	ui.dispCellTypeBox->setEnabled(true);
@@ -312,12 +323,67 @@ void MainW::exportPFPCPlastAct()
 
 void MainW::showGRInMFGOPSHs()
 {
+	vector<QPixmap *> goBufs;
+	vector<QPixmap *> mfBufs;
 
+	stringstream str;
+	QString goStr;
+	QString mfStr;
+
+	str.str("");
+	str<<"GO in for GR # "<<ui.grIndConAnaSpinBox->value();
+	goStr=goStr.append(str.str().c_str());
+	str.str("");
+	str<<"MF in for GR # "<<ui.grIndConAnaSpinBox->value();
+	mfStr=mfStr.append(str.str().c_str());
+
+	grConAnalysis->getGRInMFGOPSHs(ui.grIndConAnaSpinBox->value(), goBufs, mfBufs);
+
+	for(int i=0; i<goBufs.size(); i++)
+	{
+		PSHDispw *psh;
+
+		psh=new PSHDispw(NULL, goBufs[i], goStr);
+
+		psh->setAttribute(Qt::WA_DeleteOnClose);
+		psh->show();
+	}
+
+	for(int i=0; i<mfBufs.size(); i++)
+	{
+		PSHDispw *psh;
+
+		psh=new PSHDispw(NULL, mfBufs[i], mfStr);
+		psh->setAttribute(Qt::WA_DeleteOnClose);
+		psh->show();
+	}
+
+//	cout<<"testing In"<<ui.grIndConAnaSpinBox->value()<<endl;
 }
 
 void MainW::showGROutGOPSHs()
 {
+	vector<QPixmap *> goBufs;
 
+	stringstream str;
+	QString goStr;
+
+	str.str("");
+	str<<"GO out for GR # "<<ui.grIndConAnaSpinBox->value();
+	goStr=goStr.append(str.str().c_str());
+
+	grConAnalysis->getGROutGOPSHs(ui.grIndConAnaSpinBox->value(), goBufs);
+
+	for(int i=0; i<goBufs.size(); i++)
+	{
+		PSHDispw *psh;
+
+		psh=new PSHDispw(NULL, goBufs[i], goStr);
+
+		psh->setAttribute(Qt::WA_DeleteOnClose);
+		psh->show();
+	}
+//	cout<<"testing Out "<<ui.grIndConAnaSpinBox->value()<<endl;
 }
 
 void MainW::calcSpikeRates()
@@ -396,7 +462,12 @@ void MainW::loadSimFile()
 	{
 		delete grConAnalysis;
 		grConAnalysis=new GRConPSHAnalysis(goPSH, mfPSH, simInNetMod);
-		//enable button
+
+		ui.grIndConAnaSpinBox->setEnabled(true);
+		ui.grIndConAnaSpinBox->setMinimum(0);
+		ui.grIndConAnaSpinBox->setMaximum(SimInNet::numGR);
+		ui.dispGRInMFGOButton->setEnabled(true);
+		ui.dispGROutGOButton->setEnabled(true);
 	}
 }
 
