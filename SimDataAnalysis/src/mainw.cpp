@@ -236,6 +236,7 @@ void MainW::loadPSHFile()
 	mfPSH=new PSHData(infile);
 	goPSH=new PSHData(infile);
 	grPSH=new PSHDataGPU(infile);
+	cout<<"numTrials: "<<grPSH->getNumTrials()<<endl;
 	scPSH=new PSHData(infile);
 	for(int i=0; i<NUMMZONES; i++)
 	{
