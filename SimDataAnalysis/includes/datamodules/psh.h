@@ -58,6 +58,8 @@ protected:
 	unsigned int pshBinMaxVal;
 	unsigned int **data;
 
+//	unsigned int **dataTrans
+
 private:
 	PSHData();
 };

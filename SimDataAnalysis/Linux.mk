@@ -38,7 +38,8 @@ COMINCS = $(INCPATH)/common.h $(INCPATH)/globalvars.h
 COREINCS = $(INCPATH)/main.h
 
 DAMINCS = $(DAMIP)/psh.h $(DAMIP)/pshgpu.h $(DAMIP)/simerrorec.h $(DAMIP)/simexternalec.h $(DAMIP)/siminnet.h $(DAMIP)/simmfinputec.h $(DAMIP)/simmzone.h $(DAMIP)/simoutputec.h
-ANMINCS = $(ANMIP)/grpshpopanalysis.h $(ANMIP)/grconpshanalysis.h $(ANMIP)/spikerateanalysis.h
+ANMINCS = $(ANMIP)/grpshpopanalysis.h $(ANMIP)/grconpshanalysis.h $(ANMIP)/spikerateanalysis.h \
+$(ANMIP)/pshtravclusterbase.h
 
 INCS = $(MOCINC) $(UICOUT) $(MOCOUT) $(COMINCS) $(GUIINCS) $(COREINCS) $(DAMINCS) $(ANMINCS)
 
@@ -46,7 +47,8 @@ GUISRC = $(SRCPATH)/mainw.cpp $(SRCPATH)/pshdispw.cpp
 CORESRC = $(SRCPATH)/main.cpp
 
 DAMSRC = $(DAMSP)/psh.cpp $(DAMSP)/pshgpu.cpp $(DAMSP)/simerrorec.cpp $(DAMSP)/simexternalec.cpp $(DAMSP)/siminnet.cpp $(DAMSP)/simmfinputec.cpp $(DAMSP)/simmzone.cpp $(DAMSP)/simoutputec.cpp
-ANMSRC = $(ANMSP)/grpshpopanalysis.cpp $(ANMSP)/grconpshanalysis.cpp $(ANMSP)/spikerateanalysis.cpp
+ANMSRC = $(ANMSP)/grpshpopanalysis.cpp $(ANMSP)/grconpshanalysis.cpp $(ANMSP)/spikerateanalysis.cpp \
+$(ANMSP)/pshtravclusterbase.cpp
 
 SRC = $(GUISRC) $(CORESRC) $(DAMSRC) $(ANMSRC)
 
@@ -54,7 +56,8 @@ GUIOBJ = $(OUTPATH)/mainw.obj $(OUTPATH)/pshdispw.obj
 COREOBJ = $(OUTPATH)/main.obj
 
 DAMOBJ = $(OUTPATH)/psh.obj $(OUTPATH)/pshgpu.obj $(OUTPATH)/simerrorec.obj $(OUTPATH)/simexternalec.obj $(OUTPATH)/siminnet.obj $(OUTPATH)/simmfinputec.obj $(OUTPATH)/simmzone.obj $(OUTPATH)/simoutputec.obj
-ANMOBJ = $(OUTPATH)/grpshpopanalysis.obj $(OUTPATH)/grconpshanalysis.obj $(OUTPATH)/spikerateanalysis.obj
+ANMOBJ = $(OUTPATH)/grpshpopanalysis.obj $(OUTPATH)/grconpshanalysis.obj $(OUTPATH)/spikerateanalysis.obj \
+$(OUTPATH)/pshtravclusterbase.obj
 
 OBJ = $(GUIOBJ) $(COREOBJ) $(DAMOBJ) $(ANMOBJ)
 
@@ -82,6 +85,7 @@ anm: $(INC) $(ANMSRC)
 	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(ANMSP)/grpshpopanalysis.cpp -o$(OUTPATH)/grpshpopanalysis.obj
 	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(ANMSP)/grconpshanalysis.cpp -o$(OUTPATH)/grconpshanalysis.obj
 	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(ANMSP)/spikerateanalysis.cpp -o$(OUTPATH)/spikerateanalysis.obj
+	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(ANMSP)/pshtravclusterbase.cpp -o$(OUTPATH)/pshtravclusterbase.obj
 	
 guiinc: mocs uis
 	
