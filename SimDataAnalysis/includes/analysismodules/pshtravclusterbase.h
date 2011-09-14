@@ -21,7 +21,7 @@ public:
 
 protected:
 
-	virtual bool isSimilar(float *psh1, float *psh2)=0;
+	virtual bool isDifferent(float *psh1, float *psh2)=0;
 
 	virtual void addMotif(float *row, int cellInd);
 	virtual void insertInMotif(int motifInd, int cellInd);

@@ -34,7 +34,7 @@ void BasePSHTravCluster::makeClusters()
 		motifExists=false;
 		for(int j=0; j<motifs.size(); j++)
 		{
-			if(isSimilar(dataRow, motifs[j]))
+			if(!isDifferent(dataRow, motifs[j]))
 			{
 				insertInMotif(j, i);
 				motifExists=true;

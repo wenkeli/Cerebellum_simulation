@@ -20,6 +20,9 @@
 #include "analysismodules/grpshpopanalysis.h"
 #include "analysismodules/grconpshanalysis.h"
 #include "analysismodules/spikerateanalysis.h"
+#include "analysismodules/pshtravclusterbase.h"
+#include "analysismodules/pshtravclusterpos2st.h"
+
 #include "pshdispw.h"
 
 #include "ui_mainw.h"
@@ -45,7 +48,9 @@ private:
     PSHData **pshs[8];
     PSHData **curPSH;
 
+
     GRConPSHAnalysis *grConAnalysis;
+    BasePSHTravCluster *pshTravCluster;
 
     SpikeRateAnalysis **srAnalysis[8];
     SpikeRateAnalysis **curSRAnalysis;

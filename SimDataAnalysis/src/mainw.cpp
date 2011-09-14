@@ -44,6 +44,7 @@ MainW::MainW(QWidget *parent, QApplication *a)
 	curMultiWindow=NULL;
 
 	grConAnalysis=NULL;
+	pshTravCluster=NULL;
 
 //	cout<<"here3"<<endl;
 
@@ -247,6 +248,7 @@ void MainW::loadPSHFile()
 	}
 
 	grPopTimingAnalysis=new GRPSHPopAnalysis(grPSH);
+	pshTravCluster=new Pos2STPSHTravCluster(grPSH);
 
 	mfSR=new SpikeRateAnalysis(mfPSH);
 	goSR=new SpikeRateAnalysis(goPSH);

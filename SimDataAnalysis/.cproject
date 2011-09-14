@@ -32,9 +32,11 @@
 								<option id="gnu.cpp.compiler.option.include.paths.686548137" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;C:\Qt\4.5.3\include&quot;"/>
 									<listOptionValue builtIn="false" value="/usr/include/qt4/"/>
+									<listOptionValue builtIn="false" value="/opt/intel/Compiler/11.1/072/include"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.140328359" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="CARTPOLE"/>
+									<listOptionValue builtIn="false" value="INTELCC"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.581046531" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
@@ -47,6 +49,7 @@
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.720813741" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="EYELID"/>
 									<listOptionValue builtIn="false" value="CARTPOLE"/>
+									<listOptionValue builtIn="false" value="INTELCC"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1919932019" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
@@ -520,6 +523,7 @@
 								</option>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.1007405393" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="CARTPOLE"/>
+									<listOptionValue builtIn="false" value="INTELCC"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.2066711631" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
@@ -532,6 +536,7 @@
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.94993298" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="EYELID"/>
 									<listOptionValue builtIn="false" value="CARTPOLE"/>
+									<listOptionValue builtIn="false" value="INTELCC"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.908207326" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
