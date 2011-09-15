@@ -43,6 +43,9 @@ MainW::MainW(QWidget *parent, QApplication *a)
 	curSingleWindow=NULL;
 	curMultiWindow=NULL;
 
+	curClusterWindow=NULL;
+	curClusterCellWindow=NULL;
+
 	grConAnalysis=NULL;
 	pshTravCluster=NULL;
 
@@ -76,7 +79,12 @@ MainW::MainW(QWidget *parent, QApplication *a)
 	ui.singleCellNPButton->setDisabled(true);
 	ui.multicellNPButton->setDisabled(true);
 
-
+	ui.clusterCellTypeBox->setDisabled(true);
+	ui.clusterNumBox->setDisabled(true);
+	ui.clusterCellNumBox->setDisabled(true);
+	ui.makeClusterButton->setDisabled(true);
+	ui.newClusterPButton->setDisabled(true);
+	ui.newClusterCellPButton->setDisabled(true);
 
 	ui.pfPCPlastUSTimeSpinBox->setDisabled(true);
 	ui.calcPFPCPlastButton->setDisabled(true);
@@ -223,6 +231,7 @@ void MainW::loadPSHFile()
 		delete ncPSH[i];
 	}
 	delete grPopTimingAnalysis;
+	delete pshTravCluster;
 
 	delete mfSR;
 	delete goSR;
@@ -290,6 +299,8 @@ void MainW::loadPSHFile()
 	ui.singleCellNumBox->setEnabled(true);
 	ui.singleCellNPButton->setEnabled(true);
 	ui.multicellNPButton->setEnabled(true);
+
+	ui.makeClusterButton->setEnabled(true);
 
 	ui.pfPCPlastUSTimeSpinBox->setEnabled(true);
 	ui.pfPCPlastUSTimeSpinBox->setMinimum(0);
@@ -418,6 +429,88 @@ void MainW::exportSpikeRates()
 
 	cout<<"done"<<endl;
 	outfile.close();
+}
+
+void MainW::updateClusterCellType(int ind)
+{
+
+}
+
+void MainW::makeClusters()
+{
+	pshTravCluster->makeClusters();
+
+//	ui.clusterCellTypeBox->setEnabled(true);
+	ui.clusterNumBox->setEnabled(true);
+	ui.clusterNumBox->setMinimum(0);
+	ui.clusterNumBox->setMaximum(pshTravCluster->getNumClusters()-1);
+
+	ui.clusterCellNumBox->setEnabled(true);
+	ui.clusterCellNumBox->setMinimum(0);
+	ui.clusterCellNumBox->setMaximum(pshTravCluster->getNumClusterCells(ui.clusterNumBox->value()));
+
+	ui.newClusterPButton->setEnabled(true);
+	ui.newClusterCellPButton->setEnabled(true);
+}
+
+void MainW::updateClusterDisp(int clusterN)
+{
+	int clusterMaxCells;
+	if(curClusterWindow==NULL)
+	{
+		return;
+	}
+
+	clusterMaxCells=pshTravCluster->getNumClusterCells(clusterN);
+	ui.clusterCellNumBox->setMaximum(clusterMaxCells-1);
+	ui.clusterCellNumBox->setValue(0);
+
+	curClusterWindow->switchBuf(pshTravCluster->viewCluster(clusterN));
+}
+
+void MainW::updateClusterCellDisp(int cellN)
+{
+	if(curClusterCellWindow==NULL)
+	{
+		return;
+	}
+
+	curClusterCellWindow->switchBuf(
+			pshTravCluster->viewClusterCell(ui.clusterNumBox->value(), cellN));
+}
+
+void MainW::dispClusterNP()
+{
+	unsigned clusterN;
+
+	if(curClusterWindow!=NULL)
+	{
+		curClusterWindow->setAttribute(Qt::WA_DeleteOnClose);
+		curClusterWindow->close();
+	}
+
+	clusterN=ui.clusterNumBox->value();
+	curClusterWindow=new PSHDispw(NULL,
+			pshTravCluster->viewCluster(clusterN),
+			"cluster motif");
+}
+
+void MainW::dispClusterCellNP()
+{
+	unsigned int clusterN;
+	unsigned int clusterCellN;
+
+	if(curClusterCellWindow!=NULL)
+	{
+		curClusterCellWindow->setAttribute(Qt::WA_DeleteOnClose);
+		curClusterCellWindow->close();
+	}
+
+	clusterN=ui.clusterNumBox->value();
+	clusterCellN=ui.clusterCellNumBox->value();
+	curClusterCellWindow=new PSHDispw(NULL,
+			pshTravCluster->viewClusterCell(clusterN, clusterCellN),
+			"cluster cell");
 }
 
 void MainW::loadSimFile()

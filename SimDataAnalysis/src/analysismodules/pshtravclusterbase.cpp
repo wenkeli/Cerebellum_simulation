@@ -29,6 +29,11 @@ void BasePSHTravCluster::makeClusters()
 	const unsigned int **data;
 	float *dataRow;
 
+	if(clustersMade)
+	{
+		return;
+	}
+
 	dataRow=new float[numBins];
 
 	data=pshData->getData();
@@ -36,6 +41,10 @@ void BasePSHTravCluster::makeClusters()
 	{
 		bool motifExists;
 
+		if(i%(numCells/10)==0)
+		{
+			cout<<"making clusters: "<<i/numCells*100<<" % done"<<endl;
+		}
 		for(int j=0; j<numBins; j++)
 		{
 			dataRow[j]=data[j][i];
@@ -65,6 +74,20 @@ void BasePSHTravCluster::makeClusters()
 bool BasePSHTravCluster::isAnalyzed()
 {
 	return clustersMade;
+}
+
+unsigned int BasePSHTravCluster::getNumClusters()
+{
+	return motifs.size();
+}
+
+unsigned int BasePSHTravCluster::getNumClusterCells(unsigned int clusterN)
+{
+	if(clusterN>=motifs.size())
+	{
+		clusterN=motifs.size()-1;
+	}
+	return clusterIndices[clusterN].size();
 }
 
 QPixmap *BasePSHTravCluster::viewCluster(unsigned int clusterN)

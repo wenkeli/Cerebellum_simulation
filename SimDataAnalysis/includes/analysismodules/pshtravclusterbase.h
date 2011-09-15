@@ -9,8 +9,11 @@
 #define PSHTRAVCLUSTERBASE_H_
 
 #include <vector>
+#include <iostream>
 #include <QtGui/QPixmap>
 #include "../datamodules/psh.h"
+
+using namespace std;
 
 class BasePSHTravCluster
 {
@@ -22,8 +25,11 @@ public:
 
 	bool isAnalyzed();
 
-	QPixmap *viewCluster(int clusterN);
-	QPixmap *viewClusterCell(int clusterN, int clusterCellN);
+	unsigned int getNumClusters();
+	unsigned int getNumClusterCells(unsigned int clusterN);
+
+	QPixmap *viewCluster(unsigned int clusterN);
+	QPixmap *viewClusterCell(unsigned int clusterN, unsigned int clusterCellN);
 
 protected:
 
