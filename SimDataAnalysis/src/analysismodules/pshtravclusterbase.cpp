@@ -21,6 +21,7 @@ BasePSHTravCluster::~BasePSHTravCluster()
 	for(int i=0; i<motifs.size(); i++)
 	{
 		delete[] motifs[i];
+		delete[] motifsTotal[i];
 	}
 }
 
@@ -43,7 +44,7 @@ void BasePSHTravCluster::makeClusters()
 
 		if(i%(numCells/10)==0)
 		{
-			cout<<"making clusters: "<<i/numCells*100<<" % done"<<endl;
+			cout<<"making clusters: "<<((float)i)/numCells*100<<" % done"<<endl;
 		}
 		for(int j=0; j<numBins; j++)
 		{
@@ -55,7 +56,7 @@ void BasePSHTravCluster::makeClusters()
 		{
 			if(!isDifferent(dataRow, motifs[j]))
 			{
-				insertInMotif(j, i);
+				insertInMotif(dataRow, j, i);
 				motifExists=true;
 				break;
 			}
@@ -67,6 +68,8 @@ void BasePSHTravCluster::makeClusters()
 	}
 
 	clustersMade=true;
+
+	cout<<"num clusters: "<<getNumClusters()<<endl;
 
 	delete[] dataRow;
 }
@@ -130,23 +133,36 @@ QPixmap *BasePSHTravCluster::viewClusterCell(unsigned int clusterN, unsigned int
 void BasePSHTravCluster::addMotif(float *row, int cellInd)
 {
 	float *dataRow;
+	unsigned long *dataRowTotal;
 	vector<unsigned int> inds;
 
 	dataRow=new float[numBins];
+	dataRowTotal= new unsigned long[numBins];
 
 	for(int i=0; i<numBins; i++)
 	{
 		dataRow[i]=row[i];
+		dataRowTotal[i]=row[i];
 	}
 
 	motifs.push_back(dataRow);
+	motifsTotal.push_back(dataRowTotal);
 
 	inds.push_back(cellInd);
 	clusterIndices.push_back(inds);
 }
 
-void BasePSHTravCluster::insertInMotif(int motifInd, int cellInd)
+void BasePSHTravCluster::insertInMotif(float *row, int motifInd, int cellInd)
 {
+	int numCells;
+
 	clusterIndices[motifInd].push_back(cellInd);
+	numCells=clusterIndices[motifInd].size();
+
+	for(int i=0; i<numBins; i++)
+	{
+		motifsTotal[motifInd][i]+=row[i];
+		motifs[motifInd][i]=((float)motifsTotal[motifInd][i])/numCells;
+	}
 }
 

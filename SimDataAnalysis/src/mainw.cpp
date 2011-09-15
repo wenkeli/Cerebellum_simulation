@@ -463,7 +463,7 @@ void MainW::updateClusterDisp(int clusterN)
 
 	clusterMaxCells=pshTravCluster->getNumClusterCells(clusterN);
 	ui.clusterCellNumBox->setMaximum(clusterMaxCells-1);
-	ui.clusterCellNumBox->setValue(0);
+	ui.clusterCellNumBox->setValue(clusterMaxCells-1);
 
 	curClusterWindow->switchBuf(pshTravCluster->viewCluster(clusterN));
 }

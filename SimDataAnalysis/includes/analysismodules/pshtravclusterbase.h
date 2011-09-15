@@ -36,7 +36,7 @@ protected:
 	virtual bool isDifferent(float *psh1, float *psh2)=0;
 
 	virtual void addMotif(float *row, int cellInd);
-	virtual void insertInMotif(int motifInd, int cellInd);
+	virtual void insertInMotif(float *row, int motifInd, int cellInd);
 
 	PSHData *pshData;
 	int numBins;
@@ -45,6 +45,7 @@ protected:
 	bool clustersMade;
 
 	vector<float *> motifs;
+	vector<unsigned long *> motifsTotal;
 	vector<vector<unsigned int> > clusterIndices;
 
 private:

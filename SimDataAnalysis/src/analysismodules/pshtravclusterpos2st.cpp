@@ -23,7 +23,7 @@ bool Pos2STPSHTravCluster::isDifferent(float *psh1, float *psh2)
 
 		pval=poisson2SampleT(psh1[i], psh2[i]);
 
-		if(pval<0.001)
+		if(pval<0.0001)
 		{
 			return true;
 		}
