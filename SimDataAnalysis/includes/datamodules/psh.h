@@ -42,6 +42,8 @@ public:
 
 	QPixmap *paintPSHPop(unsigned int startCellN, unsigned int endCellN);
 	QPixmap *paintPSHInd(unsigned int cellN);
+	QPixmap *paintPSH(float *psh);
+
 protected:
 
 	unsigned int numCells;
