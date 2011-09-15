@@ -41,6 +41,9 @@ private:
     PSHDispw *curSingleWindow;
     PSHDispw *curMultiWindow;
 
+    PSHDispw *curClusterWindow;
+    PSHDispw *curClusterCellWindow;
+
     int calcTempMetricBinN;
 
     QString cellTypes[8];
@@ -103,6 +106,13 @@ public slots:
 
 	void calcSpikeRates();
 	void exportSpikeRates();
+
+	void updateClusterCellType(int);
+	void makeClusters();
+	void updateClusterDisp(int);
+	void updateClusterCellDisp(int);
+	void dispClusterNP();
+	void dispClusterCellNP();
 
 	void loadSimFile();
 

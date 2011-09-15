@@ -9,6 +9,7 @@
 #define PSHTRAVCLUSTERBASE_H_
 
 #include <vector>
+#include <QtGui/QPixmap>
 #include "../datamodules/psh.h"
 
 class BasePSHTravCluster
@@ -18,6 +19,11 @@ public:
 	virtual ~BasePSHTravCluster();
 
 	void makeClusters();
+
+	bool isAnalyzed();
+
+	QPixmap *viewCluster(int clusterN);
+	QPixmap *viewClusterCell(int clusterN, int clusterCellN);
 
 protected:
 
@@ -29,6 +35,8 @@ protected:
 	PSHData *pshData;
 	int numBins;
 	int numCells;
+
+	bool clustersMade;
 
 	vector<float *> motifs;
 	vector<vector<unsigned int> > clusterIndices;

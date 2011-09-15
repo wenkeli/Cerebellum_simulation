@@ -12,6 +12,16 @@ BasePSHTravCluster::BasePSHTravCluster(PSHData *data)
 	pshData=data;
 	numBins=pshData->getTotalNumBins();
 	numCells=pshData->getCellNum();
+
+	clustersMade=false;
+}
+
+BasePSHTravCluster::~BasePSHTravCluster()
+{
+	for(int i=0; i<motifs.size(); i++)
+	{
+		delete[] motifs[i];
+	}
 }
 
 void BasePSHTravCluster::makeClusters()
@@ -47,15 +57,51 @@ void BasePSHTravCluster::makeClusters()
 		}
 	}
 
+	clustersMade=true;
+
 	delete[] dataRow;
 }
 
-BasePSHTravCluster::~BasePSHTravCluster()
+bool BasePSHTravCluster::isAnalyzed()
 {
-	for(int i=0; i<motifs.size(); i++)
+	return clustersMade;
+}
+
+QPixmap *BasePSHTravCluster::viewCluster(unsigned int clusterN)
+{
+
+	if(!clustersMade)
 	{
-		delete[] motifs[i];
+		return NULL;
 	}
+
+	if(clusterN>=motifs.size())
+	{
+		clusterN=motifs.size()-1;
+	}
+
+	return pshData->paintPSH(motifs[clusterN]);
+}
+
+QPixmap *BasePSHTravCluster::viewClusterCell(unsigned int clusterN, unsigned int clusterCellN)
+{
+
+	if(!clustersMade)
+	{
+		return NULL;
+	}
+
+	if(clusterN>=motifs.size())
+	{
+		clusterN=motifs.size()-1;
+	}
+
+	if(clusterCellN>=clusterIndices[clusterN].size())
+	{
+		clusterCellN=clusterIndices[clusterN].size()-1;
+	}
+
+	return pshData->paintPSHInd(clusterIndices[clusterN][clusterCellN]);
 }
 
 void BasePSHTravCluster::addMotif(float *row, int cellInd)

@@ -76,6 +76,8 @@ MainW::MainW(QWidget *parent, QApplication *a)
 	ui.singleCellNPButton->setDisabled(true);
 	ui.multicellNPButton->setDisabled(true);
 
+
+
 	ui.pfPCPlastUSTimeSpinBox->setDisabled(true);
 	ui.calcPFPCPlastButton->setDisabled(true);
 	ui.exportPFPCPlastActButton->setDisabled(true);

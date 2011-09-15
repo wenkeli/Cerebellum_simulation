@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainw.h'
 **
-** Created: Thu Sep 15 13:25:33 2011
+** Created: Thu Sep 15 15:01:29 2011
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.2)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainW[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-      16,   14, // methods
+      22,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -45,8 +45,14 @@ static const uint qt_meta_data_MainW[] = {
      234,    6,    6,    6, 0x0a,
      251,    6,    6,    6, 0x0a,
      270,    6,    6,    6, 0x0a,
-     284,    6,    6,    6, 0x0a,
-     296,    6,    6,    6, 0x0a,
+     297,    6,    6,    6, 0x0a,
+     312,    6,    6,    6, 0x0a,
+     335,    6,    6,    6, 0x0a,
+     362,    6,    6,    6, 0x0a,
+     378,    6,    6,    6, 0x0a,
+     398,    6,    6,    6, 0x0a,
+     412,    6,    6,    6, 0x0a,
+     424,    6,    6,    6, 0x0a,
 
        0        // eod
 };
@@ -59,7 +65,10 @@ static const char qt_meta_stringdata_MainW[] = {
     "loadPSHFile()\0calcPFPCPlasticity()\0"
     "exportPFPCPlastAct()\0showGRInMFGOPSHs()\0"
     "showGROutGOPSHs()\0calcSpikeRates()\0"
-    "exportSpikeRates()\0loadSimFile()\0"
+    "exportSpikeRates()\0updateClusterCellType(int)\0"
+    "makeClusters()\0updateClusterDisp(int)\0"
+    "updateClusterCellDisp(int)\0dispClusterNP()\0"
+    "dispClusterCellNP()\0loadSimFile()\0"
     "exportSim()\0exportSinglePSH()\0"
 };
 
@@ -105,12 +114,18 @@ int MainW::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 10: showGROutGOPSHs(); break;
         case 11: calcSpikeRates(); break;
         case 12: exportSpikeRates(); break;
-        case 13: loadSimFile(); break;
-        case 14: exportSim(); break;
-        case 15: exportSinglePSH(); break;
+        case 13: updateClusterCellType((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 14: makeClusters(); break;
+        case 15: updateClusterDisp((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 16: updateClusterCellDisp((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 17: dispClusterNP(); break;
+        case 18: dispClusterCellNP(); break;
+        case 19: loadSimFile(); break;
+        case 20: exportSim(); break;
+        case 21: exportSinglePSH(); break;
         default: ;
         }
-        _id -= 16;
+        _id -= 22;
     }
     return _id;
 }

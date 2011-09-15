@@ -329,16 +329,16 @@ p, li { white-space: pre-wrap; }
       <widget class="QSpinBox" name="clusterCellNumBox"/>
      </item>
      <item row="3" column="0" colspan="2">
-      <widget class="QPushButton" name="viewClusterButton">
+      <widget class="QPushButton" name="newClusterPButton">
        <property name="text">
-        <string>view cluster motif</string>
+        <string>new cluster panel</string>
        </property>
       </widget>
      </item>
      <item row="3" column="2" colspan="2">
-      <widget class="QPushButton" name="viewClusterCellButton">
+      <widget class="QPushButton" name="newClusterCellPButton">
        <property name="text">
-        <string>view cluster cell</string>
+        <string>new cluster cell panel</string>
        </property>
       </widget>
      </item>
@@ -523,7 +523,7 @@ p, li { white-space: pre-wrap; }
    <slot>calcSpikeRates()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>125</x>
+     <x>111</x>
      <y>289</y>
     </hint>
     <hint type="destinationlabel">
@@ -539,7 +539,7 @@ p, li { white-space: pre-wrap; }
    <slot>exportSpikeRates()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>229</x>
+     <x>209</x>
      <y>289</y>
     </hint>
     <hint type="destinationlabel">
@@ -596,6 +596,102 @@ p, li { white-space: pre-wrap; }
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>clusterNumBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWClass</receiver>
+   <slot>updateClusterDisp(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>379</x>
+     <y>279</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>25</x>
+     <y>31</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>clusterCellNumBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWClass</receiver>
+   <slot>updateClusterCellDisp(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>533</x>
+     <y>274</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>47</x>
+     <y>36</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>makeClusterButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWClass</receiver>
+   <slot>makeClusters()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>511</x>
+     <y>238</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>23</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>clusterCellTypeBox</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>MainWClass</receiver>
+   <slot>updateClusterCellType(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>400</x>
+     <y>241</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>0</x>
+     <y>26</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>newClusterPButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWClass</receiver>
+   <slot>dispClusterNP()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>357</x>
+     <y>308</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>55</x>
+     <y>33</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>newClusterCellPButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWClass</receiver>
+   <slot>dispClusterCellNP()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>488</x>
+     <y>310</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>18</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>loadPSHFile()</slot>
@@ -614,5 +710,11 @@ p, li { white-space: pre-wrap; }
   <slot>exportSpikeRates()</slot>
   <slot>showGRInMFGOPSHs()</slot>
   <slot>showGROutGOPSHs()</slot>
+  <slot>updateClusterDisp(int)</slot>
+  <slot>updateClusterCellDisp(int)</slot>
+  <slot>makeClusters()</slot>
+  <slot>updateClusterCellType(int)</slot>
+  <slot>dispClusterNP()</slot>
+  <slot>dispClusterCellNP()</slot>
  </slots>
 </ui>

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainw.ui'
 **
-** Created: Thu Sep 15 13:25:33 2011
+** Created: Thu Sep 15 15:01:29 2011
 **      by: Qt User Interface Compiler version 4.7.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -76,8 +76,8 @@ public:
     QSpinBox *clusterNumBox;
     QLabel *label_15;
     QSpinBox *clusterCellNumBox;
-    QPushButton *viewClusterButton;
-    QPushButton *viewClusterCellButton;
+    QPushButton *newClusterPButton;
+    QPushButton *newClusterCellPButton;
     QLabel *label_11;
     QComboBox *clusterCellTypeBox;
     QPushButton *makeClusterButton;
@@ -295,15 +295,15 @@ public:
 
         gridLayout_5->addWidget(clusterCellNumBox, 2, 3, 1, 1);
 
-        viewClusterButton = new QPushButton(gridLayoutWidget_5);
-        viewClusterButton->setObjectName(QString::fromUtf8("viewClusterButton"));
+        newClusterPButton = new QPushButton(gridLayoutWidget_5);
+        newClusterPButton->setObjectName(QString::fromUtf8("newClusterPButton"));
 
-        gridLayout_5->addWidget(viewClusterButton, 3, 0, 1, 2);
+        gridLayout_5->addWidget(newClusterPButton, 3, 0, 1, 2);
 
-        viewClusterCellButton = new QPushButton(gridLayoutWidget_5);
-        viewClusterCellButton->setObjectName(QString::fromUtf8("viewClusterCellButton"));
+        newClusterCellPButton = new QPushButton(gridLayoutWidget_5);
+        newClusterCellPButton->setObjectName(QString::fromUtf8("newClusterCellPButton"));
 
-        gridLayout_5->addWidget(viewClusterCellButton, 3, 2, 1, 2);
+        gridLayout_5->addWidget(newClusterCellPButton, 3, 2, 1, 2);
 
         label_11 = new QLabel(gridLayoutWidget_5);
         label_11->setObjectName(QString::fromUtf8("label_11"));
@@ -337,6 +337,12 @@ public:
         QObject::connect(loadSimButton, SIGNAL(clicked()), MainWClass, SLOT(loadSimFile()));
         QObject::connect(dispGRInMFGOButton, SIGNAL(clicked()), MainWClass, SLOT(showGRInMFGOPSHs()));
         QObject::connect(dispGROutGOButton, SIGNAL(clicked()), MainWClass, SLOT(showGROutGOPSHs()));
+        QObject::connect(clusterNumBox, SIGNAL(valueChanged(int)), MainWClass, SLOT(updateClusterDisp(int)));
+        QObject::connect(clusterCellNumBox, SIGNAL(valueChanged(int)), MainWClass, SLOT(updateClusterCellDisp(int)));
+        QObject::connect(makeClusterButton, SIGNAL(clicked()), MainWClass, SLOT(makeClusters()));
+        QObject::connect(clusterCellTypeBox, SIGNAL(currentIndexChanged(int)), MainWClass, SLOT(updateClusterCellType(int)));
+        QObject::connect(newClusterPButton, SIGNAL(clicked()), MainWClass, SLOT(dispClusterNP()));
+        QObject::connect(newClusterCellPButton, SIGNAL(clicked()), MainWClass, SLOT(dispClusterCellNP()));
 
         QMetaObject::connectSlotsByName(MainWClass);
     } // setupUi
@@ -411,8 +417,8 @@ public:
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">PSH cluster analysis</span></p></td></tr></table></body></html>", 0, QApplication::UnicodeUTF8));
         label_14->setText(QApplication::translate("MainWClass", "cluster #", 0, QApplication::UnicodeUTF8));
         label_15->setText(QApplication::translate("MainWClass", "cluster cell #", 0, QApplication::UnicodeUTF8));
-        viewClusterButton->setText(QApplication::translate("MainWClass", "view cluster motif", 0, QApplication::UnicodeUTF8));
-        viewClusterCellButton->setText(QApplication::translate("MainWClass", "view cluster cell", 0, QApplication::UnicodeUTF8));
+        newClusterPButton->setText(QApplication::translate("MainWClass", "new cluster panel", 0, QApplication::UnicodeUTF8));
+        newClusterCellPButton->setText(QApplication::translate("MainWClass", "new cluster cell panel", 0, QApplication::UnicodeUTF8));
         label_11->setText(QApplication::translate("MainWClass", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
