@@ -30,6 +30,8 @@ void BasePSHTravCluster::makeClusters()
 	const unsigned int **data;
 	float *dataRow;
 
+	unsigned int numClusters;
+
 	if(clustersMade)
 	{
 		return;
@@ -67,6 +69,22 @@ void BasePSHTravCluster::makeClusters()
 		}
 	}
 
+	numClusters=getNumClusters();
+	while(true)
+	{
+		unsigned int mergedNumClusters;
+
+		mergeMotifs();
+
+		mergedNumClusters=getNumClusters();
+
+		if(mergedNumClusters==numClusters)
+		{
+			break;
+		}
+		numClusters=mergedNumClusters;
+	}
+
 	clustersMade=true;
 
 	cout<<"num clusters: "<<getNumClusters()<<endl;
@@ -90,7 +108,7 @@ unsigned int BasePSHTravCluster::getNumClusterCells(unsigned int clusterN)
 	{
 		clusterN=motifs.size()-1;
 	}
-	return clusterIndices[clusterN].size();
+	return motifCellIndices[clusterN].size();
 }
 
 QPixmap *BasePSHTravCluster::viewCluster(unsigned int clusterN)
@@ -122,12 +140,12 @@ QPixmap *BasePSHTravCluster::viewClusterCell(unsigned int clusterN, unsigned int
 		clusterN=motifs.size()-1;
 	}
 
-	if(clusterCellN>=clusterIndices[clusterN].size())
+	if(clusterCellN>=motifCellIndices[clusterN].size())
 	{
-		clusterCellN=clusterIndices[clusterN].size()-1;
+		clusterCellN=motifCellIndices[clusterN].size()-1;
 	}
 
-	return pshData->paintPSHInd(clusterIndices[clusterN][clusterCellN]);
+	return pshData->paintPSHInd(motifCellIndices[clusterN][clusterCellN]);
 }
 
 void BasePSHTravCluster::addMotif(float *row, int cellInd)
@@ -149,15 +167,15 @@ void BasePSHTravCluster::addMotif(float *row, int cellInd)
 	motifsTotal.push_back(dataRowTotal);
 
 	inds.push_back(cellInd);
-	clusterIndices.push_back(inds);
+	motifCellIndices.push_back(inds);
 }
 
 void BasePSHTravCluster::insertInMotif(float *row, int motifInd, int cellInd)
 {
 	int numCells;
 
-	clusterIndices[motifInd].push_back(cellInd);
-	numCells=clusterIndices[motifInd].size();
+	motifCellIndices[motifInd].push_back(cellInd);
+	numCells=motifCellIndices[motifInd].size();
 
 	for(int i=0; i<numBins; i++)
 	{
@@ -165,4 +183,36 @@ void BasePSHTravCluster::insertInMotif(float *row, int motifInd, int cellInd)
 		motifs[motifInd][i]=((float)motifsTotal[motifInd][i])/numCells;
 	}
 }
+
+void BasePSHTravCluster::mergeMotifs()
+{
+	vector<float *> mergedMotifs;
+	vector<unsigned long *> mergedMotifsTotal;
+	vector< vector<unsigned int> > mergedMotifIndices;
+
+	for(int i=0; i<getNumClusters(); i++)
+	{
+		bool toMerge;
+
+		toMerge=false;
+		for(int j=0; j<mergedMotifs.size(); j++)
+		{
+			if(!isDifferentMotif())
+			{
+				toMerge=true;
+				doMotifsMerge();
+				break;
+			}
+		}
+
+		if(!toMerge)
+		{
+			insertMergeMotif();
+		}
+	}
+
+
+}
+
+
 

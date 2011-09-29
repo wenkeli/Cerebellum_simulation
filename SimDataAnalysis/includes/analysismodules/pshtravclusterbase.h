@@ -38,6 +38,8 @@ protected:
 	virtual void addMotif(float *row, int cellInd);
 	virtual void insertInMotif(float *row, int motifInd, int cellInd);
 
+	virtual void mergeMotifs();
+
 	PSHData *pshData;
 	int numBins;
 	int numCells;
@@ -46,10 +48,16 @@ protected:
 
 	vector<float *> motifs;
 	vector<unsigned long *> motifsTotal;
-	vector<vector<unsigned int> > clusterIndices;
+	vector<vector<unsigned int> > motifCellIndices;
 
 private:
 	BasePSHTravCluster();
+
+	void doMotifsMerge();
+	void insertMergeMotif();
+
+	bool isDifferentMotif();
+	double motifs2SampleTTest();
 };
 
 #endif /* PSHTRAVCLUSTERBASE_H_ */
