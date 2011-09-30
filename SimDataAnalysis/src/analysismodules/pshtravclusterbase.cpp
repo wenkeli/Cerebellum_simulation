@@ -211,9 +211,20 @@ void BasePSHTravCluster::mergeMotifs()
 		}
 	}
 
+	for(int i=0; i<motifs.size(); i++)
+	{
+		delete[] motifs[i];
+		delete[] motifsTotal;
+	}
+	motifs.clear();
+	motifsTotal.clear();
+	motifCellIndices.clear();
 
-
+	for(int i=0; i<mergedMotifs.size(); i++)
+	{
+		motifs.push_back(mergedMotifs[i]);
+		motifsTotal.push_back(mergedMotifsTotal[i]);
+		motifCellIndices.push_back(mergedMotifIndices[i]);
+	}
 }
-
-
 
