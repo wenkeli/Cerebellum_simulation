@@ -197,7 +197,7 @@ void BasePSHTravCluster::mergeMotifs()
 		toMerge=false;
 		for(int j=0; j<mergedMotifs.size(); j++)
 		{
-			if(!isDifferentMotif())
+			if(!isDifferentMotif(mergedMotifIndices[j], motifCellIndices[i]))
 			{
 				toMerge=true;
 				doMotifsMerge();
