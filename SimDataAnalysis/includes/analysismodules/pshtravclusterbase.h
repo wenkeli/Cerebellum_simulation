@@ -53,9 +53,10 @@ protected:
 private:
 	BasePSHTravCluster();
 
-	void doMotifsMerge(int originalInd, int mergedInd,
-			vector<float *> &mergedMotifs, vector<unsigned long *> mergedMotifsTotal, vector<unsigned int> &mergedIndices);
-	void insertMergeMotif(vector<float *> &mergedMotifs, vector<unsigned long *> &mergedMotifsTotal, vector<vector<unsigned int> > mergedMotifIndices);
+	void doMotifsMerge(int originalInd, float *mergedMotifs,
+			unsigned long *mergedMotifsTotal, vector<unsigned int> &mergedIndices);
+	void addMergeMotif(int insertInd, vector<float *> &mergedMotifs,
+			vector<unsigned long *> &mergedMotifsTotal, vector<vector<unsigned int> > mergedMotifIndices);
 
 	bool isDifferentMotif(vector<unsigned int> &sample1Inds, vector<unsigned int> &sample2Inds);
 	double motifs2SampleTTest(vector<unsigned int> &sample1, vector<unsigned int> &sample2);

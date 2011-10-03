@@ -200,14 +200,14 @@ void BasePSHTravCluster::mergeMotifs()
 			if(!isDifferentMotif(mergedMotifIndices[j], motifCellIndices[i]))
 			{
 				toMerge=true;
-				doMotifsMerge();
+				doMotifsMerge(i, mergedMotifs[j], mergedMotifsTotal[j], mergedMotifIndices[j]);
 				break;
 			}
 		}
 
 		if(!toMerge)
 		{
-			insertMergeMotif();
+			addMergeMotif(i, mergedMotifs, mergedMotifsTotal, mergedMotifIndices);
 		}
 	}
 
@@ -227,4 +227,77 @@ void BasePSHTravCluster::mergeMotifs()
 		motifCellIndices.push_back(mergedMotifIndices[i]);
 	}
 }
+
+void BasePSHTravCluster::doMotifsMerge(int originalInd, float *mergedMotifs,
+		unsigned long *mergedMotifsTotal, vector<unsigned int> &mergedIndices)
+{
+	mergedIndices.insert(mergedIndices.end(), motifCellIndices[originalInd].begin(),
+			motifCellIndices[originalInd].end());
+
+	for(int i=0; i<numBins; i++)
+	{
+		mergedMotifsTotal[i]+=motifsTotal[originalInd][i];
+		mergedMotifs[i]=mergedMotifsTotal/((float)mergedIndices.size());
+	}
+}
+
+void BasePSHTravCluster::addMergeMotif(int insertInd, vector<float *> &mergedMotifs,
+		vector<unsigned long *> &mergedMotifsTotal, vector<vector<unsigned int> > mergedMotifIndices)
+{
+	float *newMotif;
+	unsigned long *newMotifsTotal;
+	vector<unsigned int> newIndices;
+
+	newMotif=new float[numBins];
+	newMotifsTotal=new unsigned long[numBins];
+
+	newIndices.insert(newIndices.end(), motifCellIndices[insertInd].begin(),
+			motifCellIndices[insertInd].end());
+	for(int i=0; i<numBins; i++)
+	{
+		newMotif[i]=motifs[insertInd][i];
+		newMotifsTotal=motifsTotal[insertInd][i];
+	}
+
+	mergedMotifs.push_back(newMotif);
+	mergedMotifsTotal.push_back(newMotifsTotal);
+	mergedMotifIndices.push_back(newIndices);
+}
+
+
+bool BasePSHTravCluster::isDifferentMotif(vector<unsigned int> &sample1Inds, vector<unsigned int> &sample2Inds)
+{
+	const unsigned int **data;
+	vector<unsigned int> sample1;
+	vector<unsigned int> sample2;
+
+
+	data=pshData->getData();
+	for(int i=0; i<numBins; i++)
+	{
+		sample1.clear();
+		sample2.clear();
+
+		for(int j=0; j<sample1Inds.size(); j++)
+		{
+			sample1.push_back(data[i][sample1Inds[j]]);
+		}
+
+		for(int j=0; j<sample2Inds.size(); j++)
+		{
+			sample2.push_back(data[i][sample2Inds[j]]);
+		}
+
+		if(motifs2SampleTTest(sample1, sample2)<0.05)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+
+
+
 
