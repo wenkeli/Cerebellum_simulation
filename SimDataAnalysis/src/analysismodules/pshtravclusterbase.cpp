@@ -214,7 +214,7 @@ void BasePSHTravCluster::mergeMotifs()
 	for(int i=0; i<motifs.size(); i++)
 	{
 		delete[] motifs[i];
-		delete[] motifsTotal;
+		delete[] motifsTotal[i];
 	}
 	motifs.clear();
 	motifsTotal.clear();
@@ -237,7 +237,7 @@ void BasePSHTravCluster::doMotifsMerge(int originalInd, float *mergedMotifs,
 	for(int i=0; i<numBins; i++)
 	{
 		mergedMotifsTotal[i]+=motifsTotal[originalInd][i];
-		mergedMotifs[i]=mergedMotifsTotal/((float)mergedIndices.size());
+		mergedMotifs[i]=mergedMotifsTotal[i]/((float)mergedIndices.size());
 	}
 }
 
@@ -256,7 +256,7 @@ void BasePSHTravCluster::addMergeMotif(int insertInd, vector<float *> &mergedMot
 	for(int i=0; i<numBins; i++)
 	{
 		newMotif[i]=motifs[insertInd][i];
-		newMotifsTotal=motifsTotal[insertInd][i];
+		newMotifsTotal[i]=motifsTotal[insertInd][i];
 	}
 
 	mergedMotifs.push_back(newMotif);
@@ -295,6 +295,40 @@ bool BasePSHTravCluster::isDifferentMotif(vector<unsigned int> &sample1Inds, vec
 	}
 
 	return false;
+}
+
+double BasePSHTravCluster::motifs2SampleTTest(vector<unsigned int> &sample1, vector<unsigned int> &sample2)
+{
+	float mean1;
+	float mean2;
+	float s1;
+	float s2;
+	unsigned int n1;
+	unsigned int n2;
+
+	n1=sample1.size();
+	n2=sample2.size();
+
+	if(n1-1<=0 || n2-1<=0)
+	{
+		return 1;
+	}
+
+	mean1=0;
+	s1=0;
+	for(int i=0; i<n1; i++)
+	{
+
+	}
+
+	mean2=0;
+	s2=0;
+	for(int i=0; i<n2; i++)
+	{
+
+	}
+
+	return 0.1;
 }
 
 
