@@ -20,6 +20,12 @@ QTINCPATH = '/usr/include/qt4/'
 QTLIBPATH = '/usr/lib/qt4/'
 QTLIBS = -lQtGui -lQtCore
 
+GSLINCPATH = '/usr/include/gsl/'
+GSLLIBPATH = '/usr/lib/'
+GSLLIBS = -lgsl -lgslcblas
+
+EXTINCPATH = -I $(QTINCPATH) -I $(GSLINCPATH) 
+
 INCPATH = ./includes
 DAMIP = $(INCPATH)/datamodules
 ANMIP = $(INCPATH)/analysismodules
@@ -62,31 +68,31 @@ $(OUTPATH)/pshtravclusterbase.obj $(OUTPATH)/pshtravclusterpos2st.obj
 OBJ = $(GUIOBJ) $(COREOBJ) $(DAMOBJ) $(ANMOBJ)
 
 all: core gui dam anm
-	-$(CC) $(CFLAGS) $(OBJ) -o $(OUTPATH)/$(NAME) -L$(QTLIBPATH) $(QTLIBS)
+	-$(CC) $(CFLAGS) $(OBJ) -o $(OUTPATH)/$(NAME) -L$(QTLIBPATH) $(QTLIBS) -L$(GSLLIBPATH) $(GSLLIBS)
 
 core: $(INCS) $(CORESRC)
-	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(SRCPATH)/main.cpp -o$(OUTPATH)/main.obj
+	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(SRCPATH)/main.cpp -o$(OUTPATH)/main.obj
 	
 gui: $(INC) $(GUISRC)
-	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(SRCPATH)/mainw.cpp -o$(OUTPATH)/mainw.obj
-	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(SRCPATH)/pshdispw.cpp -o$(OUTPATH)/pshdispw.obj
+	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(SRCPATH)/mainw.cpp -o$(OUTPATH)/mainw.obj
+	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(SRCPATH)/pshdispw.cpp -o$(OUTPATH)/pshdispw.obj
 	
 dam: $(INC) $(DAMSRC)
-	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(DAMSP)/psh.cpp -o$(OUTPATH)/psh.obj
-	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(DAMSP)/pshgpu.cpp -o$(OUTPATH)/pshgpu.obj
-	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(DAMSP)/simerrorec.cpp -o$(OUTPATH)/simerrorec.obj
-	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(DAMSP)/simexternalec.cpp -o$(OUTPATH)/simexternalec.obj
-	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(DAMSP)/siminnet.cpp -o$(OUTPATH)/siminnet.obj
-	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(DAMSP)/simmfinputec.cpp -o$(OUTPATH)/simmfinputec.obj
-	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(DAMSP)/simmzone.cpp -o$(OUTPATH)/simmzone.obj
-	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(DAMSP)/simoutputec.cpp -o$(OUTPATH)/simoutputec.obj
+	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(DAMSP)/psh.cpp -o$(OUTPATH)/psh.obj
+	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(DAMSP)/pshgpu.cpp -o$(OUTPATH)/pshgpu.obj
+	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(DAMSP)/simerrorec.cpp -o$(OUTPATH)/simerrorec.obj
+	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(DAMSP)/simexternalec.cpp -o$(OUTPATH)/simexternalec.obj
+	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(DAMSP)/siminnet.cpp -o$(OUTPATH)/siminnet.obj
+	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(DAMSP)/simmfinputec.cpp -o$(OUTPATH)/simmfinputec.obj
+	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(DAMSP)/simmzone.cpp -o$(OUTPATH)/simmzone.obj
+	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(DAMSP)/simoutputec.cpp -o$(OUTPATH)/simoutputec.obj
 	
 anm: $(INC) $(ANMSRC)
-	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(ANMSP)/grpshpopanalysis.cpp -o$(OUTPATH)/grpshpopanalysis.obj
-	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(ANMSP)/grconpshanalysis.cpp -o$(OUTPATH)/grconpshanalysis.obj
-	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(ANMSP)/spikerateanalysis.cpp -o$(OUTPATH)/spikerateanalysis.obj
-	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(ANMSP)/pshtravclusterbase.cpp -o$(OUTPATH)/pshtravclusterbase.obj
-	-$(CC) $(CFLAGS) -I $(QTINCPATH) -c $(ANMSP)/pshtravclusterpos2st.cpp -o$(OUTPATH)/pshtravclusterpos2st.obj
+	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(ANMSP)/grpshpopanalysis.cpp -o$(OUTPATH)/grpshpopanalysis.obj
+	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(ANMSP)/grconpshanalysis.cpp -o$(OUTPATH)/grconpshanalysis.obj
+	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(ANMSP)/spikerateanalysis.cpp -o$(OUTPATH)/spikerateanalysis.obj
+	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(ANMSP)/pshtravclusterbase.cpp -o$(OUTPATH)/pshtravclusterbase.obj
+	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(ANMSP)/pshtravclusterpos2st.cpp -o$(OUTPATH)/pshtravclusterpos2st.obj
 	
 guiinc: mocs uis
 	

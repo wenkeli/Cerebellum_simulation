@@ -306,6 +306,10 @@ double BasePSHTravCluster::motifs2SampleTTest(vector<unsigned int> &sample1, vec
 	unsigned int n1;
 	unsigned int n2;
 
+	double t;
+	double pval;
+	double df;
+
 	n1=sample1.size();
 	n2=sample2.size();
 
@@ -315,20 +319,39 @@ double BasePSHTravCluster::motifs2SampleTTest(vector<unsigned int> &sample1, vec
 	}
 
 	mean1=0;
+	for(int i=0; i<n1; i++)
+	{
+		mean1+=sample1[i];
+	}
+	mean1=mean1/((float) n1);
+
+	mean2=0;
+	for(int i=0; i<n2; i++)
+	{
+		mean2+=sample2[i];
+	}
+	mean2=mean2/((float) n2);
+
 	s1=0;
 	for(int i=0; i<n1; i++)
 	{
-
+		s1+=(sample1[i]-mean1)*(sample1[i]-mean1);
 	}
+	s1=s1/((float)n1-1);
 
-	mean2=0;
 	s2=0;
 	for(int i=0; i<n2; i++)
 	{
-
+		s2+=(sample2[i]-mean2)*(sample2[i]-mean2);
 	}
+	s2=s2/((float)n2-1);
 
-	return 0.1;
+	t=(mean2-mean1)/(sqrt((s1/n1+s2/n2)));
+	df=pow((s1/n1+s2/n2), 2)/((pow(s1/n1, 2)/(n1-1))+(pow(s2/n2, 2)/(n2-1)));
+
+	pval=1/2.0+t*(gamma((df+1)/2.0)/(sqrt(M_PI*df)*gamma(df/2.0)))*gsl_sf_hyperg_2F1(1/2.0, (df+1)/2.0, 3/2.0, -t*t/df);
+
+	return pval;
 }
 
 

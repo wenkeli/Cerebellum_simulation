@@ -11,6 +11,7 @@
 #include <vector>
 #include <iostream>
 #include <QtGui/QPixmap>
+#include <gsl/gsl_sf_hyperg.h>
 #include "../datamodules/psh.h"
 
 using namespace std;
