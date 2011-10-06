@@ -74,9 +74,13 @@ void BasePSHTravCluster::makeClusters()
 	{
 		unsigned int mergedNumClusters;
 
+		cout<<"merging...:";
+		cout.flush();
 		mergeMotifs();
 
 		mergedNumClusters=getNumClusters();
+		cout<<"iteration done"<<"pre cluster #: "<<numClusters<<" "
+				<<"post cluster # "<<mergedNumClusters<<endl;
 
 		if(mergedNumClusters==numClusters)
 		{
@@ -192,6 +196,7 @@ void BasePSHTravCluster::mergeMotifs()
 
 	for(int i=0; i<getNumClusters(); i++)
 	{
+//		cout<<i<<endl;
 		bool toMerge;
 
 		toMerge=false;
@@ -242,7 +247,7 @@ void BasePSHTravCluster::doMotifsMerge(int originalInd, float *mergedMotifs,
 }
 
 void BasePSHTravCluster::addMergeMotif(int insertInd, vector<float *> &mergedMotifs,
-		vector<unsigned long *> &mergedMotifsTotal, vector<vector<unsigned int> > mergedMotifIndices)
+		vector<unsigned long *> &mergedMotifsTotal, vector<vector<unsigned int> > &mergedMotifIndices)
 {
 	float *newMotif;
 	unsigned long *newMotifsTotal;
@@ -349,6 +354,8 @@ double BasePSHTravCluster::motifs2SampleTTest(vector<unsigned int> &sample1, vec
 	t=(mean2-mean1)/(sqrt((s1/n1+s2/n2)));
 	df=pow((s1/n1+s2/n2), 2)/((pow(s1/n1, 2)/(n1-1))+(pow(s2/n2, 2)/(n2-1)));
 
+	cout<<mean2<<" "<<mean1<<" "<<s1<<" "<<s2<<endl;
+	cout<<(df+1)/2.0<<" "<<" "<<t<<" "<<-t*t/df<<endl;
 	pval=1/2.0+t*(gamma((df+1)/2.0)/(sqrt(M_PI*df)*gamma(df/2.0)))*gsl_sf_hyperg_2F1(1/2.0, (df+1)/2.0, 3/2.0, -t*t/df);
 
 	return pval;
