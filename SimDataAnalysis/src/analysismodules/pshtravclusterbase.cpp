@@ -79,7 +79,7 @@ void BasePSHTravCluster::makeClusters()
 		mergeMotifs();
 
 		mergedNumClusters=getNumClusters();
-		cout<<"iteration done"<<"pre cluster #: "<<numClusters<<" "
+		cout<<"iteration done, pre cluster #: "<<numClusters<<" "
 				<<"post cluster # "<<mergedNumClusters<<endl;
 
 		if(mergedNumClusters==numClusters)
@@ -293,7 +293,7 @@ bool BasePSHTravCluster::isDifferentMotif(vector<unsigned int> &sample1Inds, vec
 			sample2.push_back(data[i][sample2Inds[j]]);
 		}
 
-		if(motifs2SampleTTest(sample1, sample2)<0.05)
+		if(motifs2SampleTTest(sample1, sample2)<0.001)
 		{
 			return true;
 		}
@@ -311,8 +311,12 @@ double BasePSHTravCluster::motifs2SampleTTest(vector<unsigned int> &sample1, vec
 	unsigned int n1;
 	unsigned int n2;
 
+	unsigned int adjn1;
+	unsigned int adjn2;
+
 	double t;
 	double pval;
+	double pval1;
 	double df;
 
 	n1=sample1.size();
@@ -321,6 +325,18 @@ double BasePSHTravCluster::motifs2SampleTTest(vector<unsigned int> &sample1, vec
 	if(n1-1<=0 || n2-1<=0)
 	{
 		return 1;
+	}
+
+	adjn1=n1;
+	if(adjn1>20)
+	{
+		adjn1=20;
+	}
+
+	adjn2=n2;
+	if(adjn2>20)
+	{
+		adjn2=20;
 	}
 
 	mean1=0;
@@ -351,14 +367,29 @@ double BasePSHTravCluster::motifs2SampleTTest(vector<unsigned int> &sample1, vec
 	}
 	s2=s2/((float)n2-1);
 
-	t=(mean2-mean1)/(sqrt((s1/n1+s2/n2)));
-	df=pow((s1/n1+s2/n2), 2)/((pow(s1/n1, 2)/(n1-1))+(pow(s2/n2, 2)/(n2-1)));
+	t=(mean2-mean1)/(sqrt((s1/adjn1+s2/adjn2)));
+	t=abs(t);
+	df=pow((s1/adjn1+s2/adjn2), 2)/((pow(s1/adjn1, 2)/(adjn1-1))+(pow(s2/adjn2, 2)/(adjn2-1)));
 
-	cout<<mean2<<" "<<mean1<<" "<<s1<<" "<<s2<<endl;
-	cout<<(df+1)/2.0<<" "<<" "<<t<<" "<<-t*t/df<<endl;
-	pval=1/2.0+t*(gamma((df+1)/2.0)/(sqrt(M_PI*df)*gamma(df/2.0)))*gsl_sf_hyperg_2F1(1/2.0, (df+1)/2.0, 3/2.0, -t*t/df);
+//	cout<<df/2<<" "<<1/2<<" "<<df/(t*t+df)<<endl;
 
-	return pval;
+	if(df>200)
+	{
+		pval=(1/2)*(1+erf(t));
+	}
+	else
+	{
+		pval=1-(1/2)*gsl_sf_beta_inc(df/2.0, 1.0/2.0, (df/(t*t+df)));
+	}
+
+
+	pval1=1-pval;
+	if(pval1<pval)
+	{
+		return pval1*2;
+	}
+	return pval*2;
+
 }
 
 
