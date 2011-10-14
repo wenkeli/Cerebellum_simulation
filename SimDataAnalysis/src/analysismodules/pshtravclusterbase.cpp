@@ -371,8 +371,8 @@ double BasePSHTravCluster::motifs2SampleTTest(vector<unsigned int> &sample1, vec
 	t=fabs(t);
 	df=pow((s1/adjn1+s2/adjn2), 2)/((pow(s1/adjn1, 2)/(adjn1-1))+(pow(s2/adjn2, 2)/(adjn2-1)));
 
-	cout<<"- "<<s1<<" "<<s2<<" "<<adjn1<<" "<<adjn2<<" "<<n1<<" "<<n2<<endl;
-	cout<<mean1<<" "<<mean2<<" "<<t<<" "<<df<<" "<<df/(t*t+df)<<endl;
+//	cout<<"- "<<s1<<" "<<s2<<" "<<adjn1<<" "<<adjn2<<" "<<n1<<" "<<n2<<endl;
+//	cout<<mean1<<" "<<mean2<<" "<<t<<" "<<df<<" "<<df/(t*t+df)<<endl;
 
 	if(fabs(mean1-mean2)<=0)
 	{
