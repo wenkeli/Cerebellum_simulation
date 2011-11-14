@@ -111,7 +111,7 @@ void GRPSHPopAnalysis::calcPFPCPlast(unsigned int usTime)
 		curPFPCSynW[i]=0.5;
 	}
 
-	for(int i=0; i<200; i++)
+	for(int i=0; i<50; i++)
 	{
 		runPFPCPlastIterationNew(usTime);
 //		runPFPCPlastIteration(usTime);
