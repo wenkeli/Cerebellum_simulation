@@ -41,7 +41,13 @@ bool EucDistPSHTravCluster::isDifferent(float *psh1, float *psh2)
 
 void EucDistPSHTravCluster::generateDist()
 {
+	srand((unsigned int)time(NULL));
 
+	for(int i=0; i<numCells; i++)
+	{
+		int cellInd1, cellInd2;
+
+	}
 }
 
 float EucDistPSHTravCluster::calcEuclideanDist(float *psh1, float *psh2)

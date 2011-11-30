@@ -10,6 +10,7 @@
 
 #include "pshtravclusterbase.h"
 #include <stdlib.h>
+#include <ctime>
 #ifdef INTELCC
 #include <mathimf.h>
 #else
