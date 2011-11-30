@@ -15,16 +15,11 @@ EucDistPSHTravCluster::EucDistPSHTravCluster(PSHData *data, float thresh, unsign
 
 	eculideanPDF=new float[pshNumBins];
 	eculideanCDF=new float[pshNumBins];
+	distBinRightEdges=new float[pshNumBins];
 
 	generateDist();
 }
 
-EucDistPSHTravCluster::~EucDistPSHTravCluster()
-{
-	delete[] eculideanPDF;
-	delete[] eculideanCDF;
-	delete[] distances;
-}
 
 bool EucDistPSHTravCluster::isDifferent(float *psh1, float *psh2)
 {
@@ -45,14 +40,13 @@ void EucDistPSHTravCluster::generateDist()
 	const unsigned int **data;
 	float *pshRow1;
 	float *pshRow2;
-	float maxDistance;
-	float minDistance;
 	CRandomSFMT0 randGen((int)time(NULL));
+	unsigned int threshInd;
 
 	//	randGen=new CRandomSFMT0((int)time(NULL));
 	data=pshData->getData();
 
-	distances=new float[numCells];
+	distances.reserve(numCells);
 	pshRow1=new float[pshNumBins];
 	pshRow2=new float[pshNumBins];
 
@@ -75,21 +69,10 @@ void EucDistPSHTravCluster::generateDist()
 		distances[i]=calcEuclideanDist(pshRow1, pshRow2);
 	}
 
-	maxDistance=distances[0];
-	minDistance=distances[0];
-	for(int i=1; i<numCells; i++)
-	{
-		if(distances[i]>maxDistance)
-		{
-			maxDistance=distances[i];
-		}
-		if(distances[i]<minDistance)
-		{
-			minDistance=distances[i];
-		}
-	}
+	sort(distances.begin(), distances.end());
 
-
+	threshInd=floor(threshP*(numCells-1));
+	threshVal=distances[threshInd];
 }
 
 float EucDistPSHTravCluster::calcEuclideanDist(float *psh1, float *psh2)

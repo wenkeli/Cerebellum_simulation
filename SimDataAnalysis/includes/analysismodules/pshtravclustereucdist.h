@@ -16,13 +16,15 @@
 #include <math.h>
 #endif
 
+#include <vector>
+#include <algorithm>
+
 #include<gsl/gsl_histogram.h>
 
 class EucDistPSHTravCluster : public BasePSHTravCluster
 {
 public:
 	EucDistPSHTravCluster(PSHData *data, float thresh, unsigned int distNumBins);
-	~EucDistPSHTravCluster();
 protected:
 	bool isDifferent(float *psh1, float *psh2);
 
@@ -33,13 +35,10 @@ private:
 
 	float calcEuclideanDist(float *psh1, float *psh2);
 
-	float *eculideanPDF;
-	float *eculideanCDF;
-	unsigned int distNumBins;
 	float threshP;
 	float threshVal;
 
-	float *distances;
+	vector<float> distances;
 };
 
 #endif /* PSHTRAVCLUSTEREUCDIST_H_ */
