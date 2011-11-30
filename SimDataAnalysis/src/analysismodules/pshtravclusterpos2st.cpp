@@ -17,7 +17,7 @@ Pos2STPSHTravCluster::Pos2STPSHTravCluster(PSHData *data)
 
 bool Pos2STPSHTravCluster::isDifferent(float *psh1, float *psh2)
 {
-	for(int i=0; i<numBins; i++)
+	for(int i=0; i<pshNumBins; i++)
 	{
 		double pval;
 

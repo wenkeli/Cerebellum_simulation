@@ -42,7 +42,7 @@ protected:
 	virtual void mergeMotifs();
 
 	PSHData *pshData;
-	int numBins;
+	int pshNumBins;
 	int numCells;
 
 	bool clustersMade;

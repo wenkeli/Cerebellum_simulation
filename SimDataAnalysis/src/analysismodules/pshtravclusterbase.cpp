@@ -10,7 +10,7 @@
 BasePSHTravCluster::BasePSHTravCluster(PSHData *data)
 {
 	pshData=data;
-	numBins=pshData->getTotalNumBins();
+	pshNumBins=pshData->getTotalNumBins();
 	numCells=pshData->getCellNum();
 
 	clustersMade=false;
@@ -37,7 +37,7 @@ void BasePSHTravCluster::makeClusters()
 		return;
 	}
 
-	dataRow=new float[numBins];
+	dataRow=new float[pshNumBins];
 
 	data=pshData->getData();
 	for(int i=0; i<numCells; i++)
@@ -48,7 +48,7 @@ void BasePSHTravCluster::makeClusters()
 		{
 			cout<<"making clusters: "<<((float)i)/numCells*100<<" % done"<<endl;
 		}
-		for(int j=0; j<numBins; j++)
+		for(int j=0; j<pshNumBins; j++)
 		{
 			dataRow[j]=data[j][i];
 		}
@@ -158,10 +158,10 @@ void BasePSHTravCluster::addMotif(float *row, int cellInd)
 	unsigned long *dataRowTotal;
 	vector<unsigned int> inds;
 
-	dataRow=new float[numBins];
-	dataRowTotal= new unsigned long[numBins];
+	dataRow=new float[pshNumBins];
+	dataRowTotal= new unsigned long[pshNumBins];
 
-	for(int i=0; i<numBins; i++)
+	for(int i=0; i<pshNumBins; i++)
 	{
 		dataRow[i]=row[i];
 		dataRowTotal[i]=row[i];
@@ -181,7 +181,7 @@ void BasePSHTravCluster::insertInMotif(float *row, int motifInd, int cellInd)
 	motifCellIndices[motifInd].push_back(cellInd);
 	numCells=motifCellIndices[motifInd].size();
 
-	for(int i=0; i<numBins; i++)
+	for(int i=0; i<pshNumBins; i++)
 	{
 		motifsTotal[motifInd][i]+=row[i];
 		motifs[motifInd][i]=((float)motifsTotal[motifInd][i])/numCells;
@@ -239,7 +239,7 @@ void BasePSHTravCluster::doMotifsMerge(int originalInd, float *mergedMotifs,
 	mergedIndices.insert(mergedIndices.end(), motifCellIndices[originalInd].begin(),
 			motifCellIndices[originalInd].end());
 
-	for(int i=0; i<numBins; i++)
+	for(int i=0; i<pshNumBins; i++)
 	{
 		mergedMotifsTotal[i]+=motifsTotal[originalInd][i];
 		mergedMotifs[i]=mergedMotifsTotal[i]/((float)mergedIndices.size());
@@ -253,12 +253,12 @@ void BasePSHTravCluster::addMergeMotif(int insertInd, vector<float *> &mergedMot
 	unsigned long *newMotifsTotal;
 	vector<unsigned int> newIndices;
 
-	newMotif=new float[numBins];
-	newMotifsTotal=new unsigned long[numBins];
+	newMotif=new float[pshNumBins];
+	newMotifsTotal=new unsigned long[pshNumBins];
 
 	newIndices.insert(newIndices.end(), motifCellIndices[insertInd].begin(),
 			motifCellIndices[insertInd].end());
-	for(int i=0; i<numBins; i++)
+	for(int i=0; i<pshNumBins; i++)
 	{
 		newMotif[i]=motifs[insertInd][i];
 		newMotifsTotal[i]=motifsTotal[insertInd][i];
@@ -278,7 +278,7 @@ bool BasePSHTravCluster::isDifferentMotif(vector<unsigned int> &sample1Inds, vec
 
 
 	data=pshData->getData();
-	for(int i=0; i<numBins; i++)
+	for(int i=0; i<pshNumBins; i++)
 	{
 		sample1.clear();
 		sample2.clear();
