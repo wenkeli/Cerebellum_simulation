@@ -9,13 +9,14 @@
 #define PSHTRAVCLUSTEREUCDIST_H_
 
 #include "pshtravclusterbase.h"
-#include <stdlib.h>
 #include <ctime>
 #ifdef INTELCC
 #include <mathimf.h>
 #else
 #include <math.h>
 #endif
+
+#include<gsl/gsl_histogram.h>
 
 class EucDistPSHTravCluster : public BasePSHTravCluster
 {
@@ -37,6 +38,8 @@ private:
 	unsigned int distNumBins;
 	float threshP;
 	float threshVal;
+
+	float *distances;
 };
 
 #endif /* PSHTRAVCLUSTEREUCDIST_H_ */

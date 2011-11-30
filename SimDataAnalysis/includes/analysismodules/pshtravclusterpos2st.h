@@ -14,6 +14,9 @@
 #include <math.h>
 #endif
 
+#include "../randomc.h"
+#include "../sfmt.h"
+
 
 #include "pshtravclusterbase.h"
 
