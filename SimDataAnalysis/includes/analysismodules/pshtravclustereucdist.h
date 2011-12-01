@@ -19,7 +19,9 @@
 #include <vector>
 #include <algorithm>
 
-#include<gsl/gsl_histogram.h>
+#include <iostream>
+
+using namespace std;
 
 class EucDistPSHTravCluster : public BasePSHTravCluster
 {
