@@ -22,6 +22,7 @@
 #include "analysismodules/spikerateanalysis.h"
 #include "analysismodules/pshtravclusterbase.h"
 #include "analysismodules/pshtravclusterpos2st.h"
+#include "analysismodules/pshtravclustereucdist.h"
 
 #include "pshdispw.h"
 

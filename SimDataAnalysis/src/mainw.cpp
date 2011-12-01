@@ -259,7 +259,8 @@ void MainW::loadPSHFile()
 	}
 
 	grPopTimingAnalysis=new GRPSHPopAnalysis(grPSH);
-	pshTravCluster=new Pos2STPSHTravCluster(grPSH);
+//	pshTravCluster=new Pos2STPSHTravCluster(grPSH);
+	pshTravCluster=new EucDistPSHTravCluster(grPSH, 0.9);
 
 	mfSR=new SpikeRateAnalysis(mfPSH);
 	goSR=new SpikeRateAnalysis(goPSH);

@@ -41,29 +41,29 @@ MOCINC = $(INCPATH)/mainw.h $(INCPATH)/pshdispw.h
 UICOUT = $(INCPATH)/ui_mainw.h $(INCPATH)/ui_pshdispw.h
 MOCOUT = $(INCPATH)/moc_mainw.h $(INCPATH)/moc_pshdispw.h
 COMINCS = $(INCPATH)/common.h $(INCPATH)/globalvars.h
-COREINCS = $(INCPATH)/main.h
+COREINCS = $(INCPATH)/main.h $(INCPATH)/randomc.h $(INCPATH)/sfmt.h
 
 DAMINCS = $(DAMIP)/psh.h $(DAMIP)/pshgpu.h $(DAMIP)/simerrorec.h $(DAMIP)/simexternalec.h $(DAMIP)/siminnet.h $(DAMIP)/simmfinputec.h $(DAMIP)/simmzone.h $(DAMIP)/simoutputec.h
 ANMINCS = $(ANMIP)/grpshpopanalysis.h $(ANMIP)/grconpshanalysis.h $(ANMIP)/spikerateanalysis.h \
-$(ANMIP)/pshtravclusterbase.h $(ANMIP)/pshtravclusterpos2st.h
+$(ANMIP)/pshtravclusterbase.h $(ANMIP)/pshtravclusterpos2st.h $(ANMIP)/pshtravclustereucdist.h
 
 INCS = $(MOCINC) $(UICOUT) $(MOCOUT) $(COMINCS) $(GUIINCS) $(COREINCS) $(DAMINCS) $(ANMINCS)
 
 GUISRC = $(SRCPATH)/mainw.cpp $(SRCPATH)/pshdispw.cpp
-CORESRC = $(SRCPATH)/main.cpp
+CORESRC = $(SRCPATH)/main.cpp $(SRCPATH)/sfmt.cpp
 
 DAMSRC = $(DAMSP)/psh.cpp $(DAMSP)/pshgpu.cpp $(DAMSP)/simerrorec.cpp $(DAMSP)/simexternalec.cpp $(DAMSP)/siminnet.cpp $(DAMSP)/simmfinputec.cpp $(DAMSP)/simmzone.cpp $(DAMSP)/simoutputec.cpp
 ANMSRC = $(ANMSP)/grpshpopanalysis.cpp $(ANMSP)/grconpshanalysis.cpp $(ANMSP)/spikerateanalysis.cpp \
-$(ANMSP)/pshtravclusterbase.cpp $(ANMSP)/pshtravclusterpos2st.cpp
+$(ANMSP)/pshtravclusterbase.cpp $(ANMSP)/pshtravclusterpos2st.cpp $(ANMSP)/pshtravclustereucdist.cpp
 
 SRC = $(GUISRC) $(CORESRC) $(DAMSRC) $(ANMSRC)
 
 GUIOBJ = $(OUTPATH)/mainw.obj $(OUTPATH)/pshdispw.obj
-COREOBJ = $(OUTPATH)/main.obj
+COREOBJ = $(OUTPATH)/main.obj $(OUTPATH)/sfmt.obj
 
 DAMOBJ = $(OUTPATH)/psh.obj $(OUTPATH)/pshgpu.obj $(OUTPATH)/simerrorec.obj $(OUTPATH)/simexternalec.obj $(OUTPATH)/siminnet.obj $(OUTPATH)/simmfinputec.obj $(OUTPATH)/simmzone.obj $(OUTPATH)/simoutputec.obj
 ANMOBJ = $(OUTPATH)/grpshpopanalysis.obj $(OUTPATH)/grconpshanalysis.obj $(OUTPATH)/spikerateanalysis.obj \
-$(OUTPATH)/pshtravclusterbase.obj $(OUTPATH)/pshtravclusterpos2st.obj
+$(OUTPATH)/pshtravclusterbase.obj $(OUTPATH)/pshtravclusterpos2st.obj $(OUTPATH)/pshtravclustereucdist.obj
 
 OBJ = $(GUIOBJ) $(COREOBJ) $(DAMOBJ) $(ANMOBJ)
 
@@ -72,6 +72,7 @@ all: core gui dam anm
 
 core: $(INCS) $(CORESRC)
 	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(SRCPATH)/main.cpp -o$(OUTPATH)/main.obj
+	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(SRCPATH)/sfmt.cpp -o$(OUTPATH)/sfmt.obj
 	
 gui: $(INC) $(GUISRC)
 	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(SRCPATH)/mainw.cpp -o$(OUTPATH)/mainw.obj
@@ -93,6 +94,7 @@ anm: $(INC) $(ANMSRC)
 	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(ANMSP)/spikerateanalysis.cpp -o$(OUTPATH)/spikerateanalysis.obj
 	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(ANMSP)/pshtravclusterbase.cpp -o$(OUTPATH)/pshtravclusterbase.obj
 	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(ANMSP)/pshtravclusterpos2st.cpp -o$(OUTPATH)/pshtravclusterpos2st.obj
+	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(ANMSP)/pshtravclustereucdist.cpp -o$(OUTPATH)/pshtravclustereucdist.obj
 	
 guiinc: mocs uis
 	

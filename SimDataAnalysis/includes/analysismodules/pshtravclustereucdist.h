@@ -20,13 +20,15 @@
 #include <algorithm>
 
 #include <iostream>
+#include "../randomc.h"
+#include "../sfmt.h"
 
 using namespace std;
 
 class EucDistPSHTravCluster : public BasePSHTravCluster
 {
 public:
-	EucDistPSHTravCluster(PSHData *data, float thresh, unsigned int distNumBins);
+	EucDistPSHTravCluster(PSHData *data, float thresh);
 protected:
 	bool isDifferent(float *psh1, float *psh2);
 

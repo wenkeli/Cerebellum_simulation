@@ -7,16 +7,10 @@
 
 #include "../../includes/analysismodules/pshtravclustereucdist.h"
 
-EucDistPSHTravCluster::EucDistPSHTravCluster(PSHData *data, float thresh, unsigned int distNumBins)
+EucDistPSHTravCluster::EucDistPSHTravCluster(PSHData *data, float thresh)
 	:BasePSHTravCluster(data)
 {
 	threshP=thresh;
-	pshNumBins=distNumBins;
-
-	eculideanPDF=new float[pshNumBins];
-	eculideanCDF=new float[pshNumBins];
-	distBinRightEdges=new float[pshNumBins];
-
 	generateDist();
 }
 
@@ -27,7 +21,7 @@ bool EucDistPSHTravCluster::isDifferent(float *psh1, float *psh2)
 
 	distance=calcEuclideanDist(psh1, psh2);
 
-	if(dist>threshVal)
+	if(distance>threshVal)
 	{
 		return true;
 	}
