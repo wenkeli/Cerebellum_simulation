@@ -18,7 +18,7 @@ MainW::MainW(QWidget *parent, QApplication *a)
 	cellTypes[5]="PC";
 	cellTypes[6]="IO";
 	cellTypes[7]="NC";
-//	cout<<"here1"<<endl;
+//	cerr<<"here1"<<endl;
 
 	pshs[0]=&mfPSH;
 	pshs[1]=&goPSH;
@@ -38,7 +38,7 @@ MainW::MainW(QWidget *parent, QApplication *a)
 	srAnalysis[6]=&ioSR[0];
 	srAnalysis[7]=&ncSR[0];
 
-//	cout<<"here2"<<endl;
+//	cerr<<"here2"<<endl;
 
 	curSingleWindow=NULL;
 	curMultiWindow=NULL;
@@ -49,25 +49,25 @@ MainW::MainW(QWidget *parent, QApplication *a)
 	grConAnalysis=NULL;
 	pshTravCluster=NULL;
 
-//	cout<<"here3"<<endl;
+//	cerr<<"here3"<<endl;
 
 	for(int i=0; i<8; i++)
 	{
 		ui.dispCellTypeBox->addItem(cellTypes[i]);
 	}
 
-//	cout<<"here4";
+//	cerr<<"here4";
 
 	this->setAttribute(Qt::WA_DeleteOnClose);
 
 	app=a;
-//	cout<<"here5"<<endl;
+//	cerr<<"here5"<<endl;
 
 	calcTempMetricBinN=0;
 	connect(this, SIGNAL(destroyed()), app, SLOT(quit()));
 	connect(ui.quitButton, SIGNAL(clicked()), app, SLOT(quit()));
 
-//	cout<<"here6"<<endl;
+//	cerr<<"here6"<<endl;
 
 	ui.dispCellTypeBox->setDisabled(true);
 
@@ -96,7 +96,7 @@ MainW::MainW(QWidget *parent, QApplication *a)
 
 	ui.calcSpikeRatesButton->setDisabled(true);
 	ui.exportSpikeRatesButton->setDisabled(true);
-//	cout<<"here7"<<endl;
+//	cerr<<"here7"<<endl;
 }
 
 MainW::~MainW()
@@ -209,7 +209,7 @@ void MainW::loadPSHFile()
 	fileName=QFileDialog::getOpenFileName(this, "Please select the PSH file to open", "/", "");
 
 
-	cout<<"PSH file name: "<<fileName.toStdString()<<endl;
+	cerr<<"PSH file name: "<<fileName.toStdString()<<endl;
 
 	infile.open(fileName.toStdString().c_str(), ios::binary);
 	if(!infile.good() || !infile.is_open())
@@ -248,7 +248,7 @@ void MainW::loadPSHFile()
 	mfPSH=new PSHData(infile);
 	goPSH=new PSHData(infile);
 	grPSH=new PSHDataGPU(infile);
-	cout<<"numTrials: "<<grPSH->getNumTrials()<<endl;
+	cerr<<"numTrials: "<<grPSH->getNumTrials()<<endl;
 	scPSH=new PSHData(infile);
 	for(int i=0; i<NUMMZONES; i++)
 	{
@@ -274,7 +274,7 @@ void MainW::loadPSHFile()
 		ncSR[i]=new SpikeRateAnalysis(ncPSH[i]);
 	}
 
-	cout<<"done!"<<endl;
+	cerr<<"done!"<<endl;
 	infile.close();
 
 	pshLoaded=true;
@@ -325,7 +325,7 @@ void MainW::exportPFPCPlastAct()
 
 	fileName=QFileDialog::getSaveFileName(this, "Please select where to save PFPC activity file", "/", "");
 
-	cout<<"PSH file name: "<<fileName.toStdString()<<endl;
+	cerr<<"PSH file name: "<<fileName.toStdString()<<endl;
 
 	outfile.open(fileName.toStdString().c_str());
 	if(!outfile.good() || !outfile.is_open())
@@ -336,7 +336,7 @@ void MainW::exportPFPCPlastAct()
 
 	grPopTimingAnalysis->exportPFPCPlastAct(outfile);
 
-	cout<<"done"<<endl;
+	cerr<<"done"<<endl;
 	outfile.close();
 }
 
@@ -377,7 +377,7 @@ void MainW::showGRInMFGOPSHs()
 		psh->show();
 	}
 
-//	cout<<"testing In"<<ui.grIndConAnaSpinBox->value()<<endl;
+//	cerr<<"testing In"<<ui.grIndConAnaSpinBox->value()<<endl;
 }
 
 void MainW::showGROutGOPSHs()
@@ -402,7 +402,7 @@ void MainW::showGROutGOPSHs()
 		psh->setAttribute(Qt::WA_DeleteOnClose);
 		psh->show();
 	}
-//	cout<<"testing Out "<<ui.grIndConAnaSpinBox->value()<<endl;
+//	cerr<<"testing Out "<<ui.grIndConAnaSpinBox->value()<<endl;
 }
 
 void MainW::calcSpikeRates()
@@ -417,7 +417,7 @@ void MainW::exportSpikeRates()
 
 	fileName=QFileDialog::getSaveFileName(this, "Please select where to save spike rate file", "/", "");
 
-	cout<<"SR file name: "<<fileName.toStdString()<<endl;
+	cerr<<"SR file name: "<<fileName.toStdString()<<endl;
 
 	outfile.open(fileName.toStdString().c_str());
 	if(!outfile.good() || !outfile.is_open())
@@ -428,7 +428,7 @@ void MainW::exportSpikeRates()
 
 	(*curSRAnalysis)->exportSpikeRates(outfile);
 
-	cout<<"done"<<endl;
+	cerr<<"done"<<endl;
 	outfile.close();
 }
 
@@ -522,7 +522,7 @@ void MainW::loadSimFile()
 	fileName=QFileDialog::getOpenFileName(this, "Please select the sim state file to open", "/", "");
 
 
-	cout<<"sim state file name: "<<fileName.toStdString()<<endl;
+	cerr<<"sim state file name: "<<fileName.toStdString()<<endl;
 
 	infile.open(fileName.toStdString().c_str(), ios::binary);
 	if(!infile.good() || !infile.is_open())
@@ -555,7 +555,7 @@ void MainW::loadSimFile()
 		simMZoneMod[i]=new SimMZone(infile);
 	}
 
-	cout<<"done!"<<endl;
+	cerr<<"done!"<<endl;
 	infile.close();
 
 	simLoaded=true;
@@ -581,7 +581,7 @@ void MainW::exportSim()
 //	fileName=QFileDialog::getOpenFileName(this, "Please select where you want to save the sim", "/", "");
 //
 //
-//	cout<<"Sim file name: "<<fileName.toStdString()<<endl;
+//	cerr<<"Sim file name: "<<fileName.toStdString()<<endl;
 //
 //	outf.open(fileName.toStdString().c_str(), ios::binary);
 //	if(!outf.good() || !outf.is_open())
@@ -590,12 +590,12 @@ void MainW::exportSim()
 //		return;
 //	}
 //
-//	cout<<"writing state data"<<endl;
+//	cerr<<"writing state data"<<endl;
 //	outf.seekp(0, ios_base::beg);
 
 //
 //	outf.flush();
-//	cout<<"done"<<endl;
+//	cerr<<"done"<<endl;
 //
 //	outf.close();
 }
@@ -612,7 +612,7 @@ void MainW::exportSinglePSH()
 //	fileName=QFileDialog::getOpenFileName(this, "Please select where you want to save the single cell PSH", "/", "");
 //
 //
-//	cout<<"Single PSH file name: "<<fileName.toStdString()<<endl;
+//	cerr<<"Single PSH file name: "<<fileName.toStdString()<<endl;
 //
 //	outf.open(fileName.toStdString().c_str(), ios::out);
 //	if(!outf.good() || !outf.is_open())
@@ -621,14 +621,14 @@ void MainW::exportSinglePSH()
 //		return;
 //	}
 //
-//	cout<<"writing single PSH... ";
-//	cout.flush();
+//	cerr<<"writing single PSH... ";
+//	cerr.flush();
 //
 //	cellN=ui.dispSingleCellNum->value();
 //	cellT=ui.dispCellType->currentIndex();
 //
 //	outf.close();
-//	cout<<"done!"<<endl;
+//	cerr<<"done!"<<endl;
 }
 
 //void MainW::calcTempMetrics()
@@ -644,20 +644,20 @@ void MainW::exportSinglePSH()
 //		return;
 //	}
 //
-//	cout<<"Calculating total spikes"<<endl;
+//	cerr<<"Calculating total spikes"<<endl;
 //	calcGRTotalSpikes();
 //	calcGRTotalSpikesPC();
-////	cout<<"calculating individual temporal specificity"<<endl;
+////	cerr<<"calculating individual temporal specificity"<<endl;
 ////	calcGRTempSpecific();
-////	cout<<"calculating population metrics"<<endl;
+////	cerr<<"calculating population metrics"<<endl;
 ////	calcGRPopTempMetric();
-//	cout<<"calculating population plasticity metrics, all GR"<<endl;
+//	cerr<<"calculating population plasticity metrics, all GR"<<endl;
 ////	calcGRPlastTempMetric(outfile);
 //
-//	cout<<"calculating population plastiticy metrics, per PC"<<endl;
+//	cerr<<"calculating population plastiticy metrics, per PC"<<endl;
 //	calcGRPlastTempMetricPC(outfile);
 //
-//	cout<<"writing results"<<endl;
+//	cerr<<"writing results"<<endl;
 //
 ////	outfile<<"specGRSpM activeGRSpM totalGRSpM "<<
 ////			"specGRActM activeGRActM totalGRActM "<<
@@ -714,7 +714,7 @@ void MainW::exportSinglePSH()
 //		pfSynWeightPC[i]=grWeightsPlastPC[calcTempMetricBinN][i]/2;
 //		//grWeightsPlast
 //	}
-//	cout<<"done!"<<endl;
+//	cerr<<"done!"<<endl;
 //}
 
 //void MainW::changeTempMetricBinN(int bN)
@@ -803,7 +803,7 @@ void MainW::exportSinglePSH()
 //					continue;
 //				}
 //				tempSum=tempSum+pshGRTrans[i][k];
-////				cout<<"k="<<k<<" tempSum="<<tempSum<<endl;
+////				cerr<<"k="<<k<<" tempSum="<<tempSum<<endl;
 //			}
 //			if(grTotalSpikes[i]>0)
 //			{
@@ -811,10 +811,10 @@ void MainW::exportSinglePSH()
 //			}
 //			else
 //			{
-////				cout<<grTotalSpikes[i]<<" "<<tempSum<<" "<<endl;
+////				cerr<<grTotalSpikes[i]<<" "<<tempSum<<" "<<endl;
 //				grTempSpecificity[i][j]=0;
 //			}
-////			cout<<grTempSpecificity[i][j]<<endl;
+////			cerr<<grTempSpecificity[i][j]<<endl;
 //			if(grTempSpecificity[i][j]>peakVal)
 //			{
 //				peakVal=grTempSpecificity[i][j];
@@ -879,13 +879,13 @@ void MainW::exportSinglePSH()
 //		activeGRActSum=0;
 //		totalGRActSum=0;
 ////		grSpSumTemp=0;
-////		cout<<grSpSum<<" "<<specGRSpSum<<" "<<specAvg<<endl;
+////		cerr<<grSpSum<<" "<<specGRSpSum<<" "<<specAvg<<endl;
 //		for(int j=0; j<NUMGR; j++)
 //		{
 //			if(grIsSpecific[j])
 //			{
 //				specGRActSum=specGRActSum+grTempSpecificity[j][i]*grTotalSpikes[j];
-////				cout<<endl<<grTempSpecificity[j][i]<<" "<<grTotalSpikes[j]<<" "<<specGRSpSum<<" "<<grSpSum<<" "<<grSpSumTemp<<endl;
+////				cerr<<endl<<grTempSpecificity[j][i]<<" "<<grTotalSpikes[j]<<" "<<specGRSpSum<<" "<<grSpSum<<" "<<grSpSumTemp<<endl;
 //				specGRSpSum=specGRSpSum+grTempSpPeakVal[j];
 //			}
 //
@@ -896,8 +896,8 @@ void MainW::exportSinglePSH()
 //			}
 ////			if(grTempSpecificity[j][i]*grTotalSpikes[j]<0 || grTempSpecificity[j][i]*grTotalSpikes[j]>100000)
 ////			{
-////				cout<<grSpSum<<" ";
-////				cout<<grTempSpecificity[j][i]*grTotalSpikes[j]<<" "<<grTempSpecificity[j][i]<<" "<<grTotalSpikes[j]<<"|";
+////				cerr<<grSpSum<<" ";
+////				cerr<<grTempSpecificity[j][i]*grTotalSpikes[j]<<" "<<grTempSpecificity[j][i]<<" "<<grTotalSpikes[j]<<"|";
 ////			}
 //
 ////			grSpSumTemp=grSpSum;
@@ -905,7 +905,7 @@ void MainW::exportSinglePSH()
 //			totalGRActSum=totalGRActSum+grTempSpecificity[j][i]*grTotalSpikes[j];
 ////			if(grSpSum<0 && grSpSumTemp>=0)
 ////			{
-////				cout<<grSpSumTemp<<" "<<grSpSum<<" "<<grTempSpecificity[j][i]<<" "<<grTotalSpikes[j]<<" "<<grTempSpecificity[j][i]*grTotalSpikes[j]<<endl;
+////				cerr<<grSpSumTemp<<" "<<grSpSum<<" "<<grTempSpecificity[j][i]<<" "<<grTotalSpikes[j]<<" "<<grTempSpecificity[j][i]*grTotalSpikes[j]<<endl;
 ////			}
 //		}
 //
@@ -949,7 +949,7 @@ void MainW::exportSinglePSH()
 //
 ////		int startT;
 ////		startT=time(NULL);
-//		cout<<i<<endl;
+//		cerr<<i<<endl;
 //
 //		maxLTDBinDiff=0;
 //
@@ -957,10 +957,10 @@ void MainW::exportSinglePSH()
 //		lastLTPBinDiff=0;
 //
 ////		outfile<<i<<endl;
-////		cout<<"initializing LTD"<<endl;
+////		cerr<<"initializing LTD"<<endl;
 ////		for(int j=0; j<300; j++)
 ////		{
-////			cout<<j<<" ";
+////			cerr<<j<<" ";
 ////			calcGRLTDSynWeight(i, 1);
 ////			calcGRPlastPopAct(i);
 ////			calcGRPlastPopActDiff(i);
@@ -971,7 +971,7 @@ void MainW::exportSinglePSH()
 ////			outfile<<endl;
 ////		}
 //		calcGRLTDSynWeight(i, 1);
-////		cout<<endl;
+////		cerr<<endl;
 //		calcGRPlastPopAct(i);
 //		maxLTDBinDiff=calcGRPlastPopActDiff(i);
 //		lastLTDBinDiff=maxLTDBinDiff;
@@ -981,7 +981,7 @@ void MainW::exportSinglePSH()
 ////			outfile<<grPopActDiffPlast[i][j]<<" ";
 ////		}
 ////		outfile<<endl;
-////		cout<<"first LTD initialized, max val: "<<maxLTDBinDiff<<endl;
+////		cerr<<"first LTD initialized, max val: "<<maxLTDBinDiff<<endl;
 //
 //		for(int j=0; j<200; j++)//j>=0; j++)//<500; j++)
 //		{
@@ -990,7 +990,7 @@ void MainW::exportSinglePSH()
 //
 //			calcGRLTPSynWeight(i, maxLTDBinDiff);
 //
-////			cout<<j<<endl;
+////			cerr<<j<<endl;
 //			calcGRPlastPopAct(i);
 //			curLTPBinDiff=calcGRPlastPopActDiff(i);
 ////			for(int k=0; k<NUMBINS; k++)
@@ -1011,19 +1011,19 @@ void MainW::exportSinglePSH()
 //
 ////			if(fabs((lastLTDBinDiff-curLTDBinDiff)/maxLTDBinDiff)<0.0001)
 ////			{
-////				cout<<j;
+////				cerr<<j;
 ////				break;
 ////			}
 //			lastLTPBinDiff=curLTPBinDiff;
 //			lastLTDBinDiff=curLTDBinDiff;
 //		}
-////		cout<<"time for bin: "<<time(NULL)-startT<<endl;
+////		cerr<<"time for bin: "<<time(NULL)-startT<<endl;
 //
 ////		for(int j=0; j<NUMGR; j++)
 ////		{
 ////			if(grWeightsPlast[i][j]<0 || grWeightsPlast[i][j]>GRSYNWEIGHTMAX)
 ////			{
-////				cout<<j<<" "<<grWeightsPlast[i][j]<<endl;
+////				cerr<<j<<" "<<grWeightsPlast[i][j]<<endl;
 ////			}
 ////		}
 //	}
@@ -1033,7 +1033,7 @@ void MainW::exportSinglePSH()
 //{
 //	for(int i=calcTempMetricBinN; i<=calcTempMetricBinN; i++)
 //	{
-//		cout<<i<<endl;
+//		cerr<<i<<endl;
 //
 //#pragma omp parallel for schedule(static)
 //		for(int j=0; j<NUMPC; j++)
@@ -1049,12 +1049,12 @@ void MainW::exportSinglePSH()
 //			lastLTPBinDiff=0;
 //
 //			calcGRLTDSynWeightPC(i, 1, j);
-////			cout<<"here1"<<endl;
+////			cerr<<"here1"<<endl;
 //
 //			calcGRPlastPopActPC(i, j);
-////			cout<<"here2"<<endl;
+////			cerr<<"here2"<<endl;
 //			maxLTDBinDiff=calcGRPlastPopActDiffPC(i, j);
-////			cout<<"here3"<<endl;
+////			cerr<<"here3"<<endl;
 //			lastLTDBinDiff=maxLTDBinDiff;
 //
 //			for(int k=0; k<200; k++)
@@ -1063,20 +1063,20 @@ void MainW::exportSinglePSH()
 //				double curLTPBinDiff;
 //
 //				calcGRLTPSynWeightPC(i, maxLTDBinDiff, j);
-////				cout<<k<<" here4"<<endl;
+////				cerr<<k<<" here4"<<endl;
 //
 //				calcGRPlastPopActPC(i, j);
-////				cout<<k<<" here5"<<endl;
+////				cerr<<k<<" here5"<<endl;
 //				curLTPBinDiff=calcGRPlastPopActDiffPC(i, j);
-////				cout<<k<<" here6"<<endl;
+////				cerr<<k<<" here6"<<endl;
 //
 //				calcGRLTDSynWeightPC(i, (curLTPBinDiff<maxLTDBinDiff)*(1-(curLTPBinDiff/maxLTDBinDiff)), j);
-////				cout<<k<<" here7"<<endl;
+////				cerr<<k<<" here7"<<endl;
 //
 //				calcGRPlastPopActPC(i, j);
-////				cout<<k<<" here8"<<endl;
+////				cerr<<k<<" here8"<<endl;
 //				curLTDBinDiff=calcGRPlastPopActDiffPC(i, j);
-////				cout<<k<<" here9"<<endl;
+////				cerr<<k<<" here9"<<endl;
 //
 //				lastLTPBinDiff=curLTPBinDiff;
 //				lastLTDBinDiff=curLTDBinDiff;
@@ -1184,9 +1184,9 @@ void MainW::exportSinglePSH()
 //		synWeightScale[i]=grPopActDiffPlast[binN][i]/maxBinLTDDiff;
 //		synWeightScale[i]=(synWeightScale[i]>0)*synWeightScale[i];
 ////		synWeightScale[i]=1;
-////		cout<<synWeightScale[i]<<" ";
+////		cerr<<synWeightScale[i]<<" ";
 //	}
-////	cout<<endl;
+////	cerr<<endl;
 //
 //#pragma omp parallel for schedule(static)
 //	for(int i=0; i<NUMGR; i++)
@@ -1194,7 +1194,7 @@ void MainW::exportSinglePSH()
 //		float synWeight;
 //		synWeight=grWeightsPlast[binN][i];
 //
-////		cout<<i<<" "<<synWeight<<endl;
+////		cerr<<i<<" "<<synWeight<<endl;
 //		for(int j=0; j<NUMBINS; j++)
 //		{
 ////			float spikesPerTrial;
@@ -1237,7 +1237,7 @@ void MainW::exportSinglePSH()
 //		float synWeight;
 //		synWeight=grWeightsPlastPC[binN][i];
 //
-////		cout<<i<<" "<<synWeight<<endl;
+////		cerr<<i<<" "<<synWeight<<endl;
 //		for(int j=0; j<NUMBINS; j++)
 //		{
 ////			float spikesPerTrial;
@@ -1292,7 +1292,7 @@ void MainW::exportSinglePSH()
 //		return;
 //	}
 //
-////	cout<<binN<<" "<<pcN<<endl;
+////	cerr<<binN<<" "<<pcN<<endl;
 //
 //	for(int i=0; i<NUMBINS; i++)
 //	{
@@ -1303,18 +1303,18 @@ void MainW::exportSinglePSH()
 //		{
 //			double spikes;
 //
-////			cout<<j<<" ";
-////			cout.flush();
+////			cerr<<j<<" ";
+////			cerr.flush();
 //			spikes=grWeightsPlastPC[binN][j]*pshGR[i][j];
-////			cout<<spikes<<" ";
-////			cout.flush();
+////			cerr<<spikes<<" ";
+////			cerr.flush();
 //			binActSum=binActSum+spikes;
-////			cout<<binActSum<<" "<<endl;
+////			cerr<<binActSum<<" "<<endl;
 //
 //		}
-////		cout<<"herew"<<endl;
+////		cerr<<"herew"<<endl;
 //		grPopActPlastPC[binN][pcN][i]=binActSum/numTrials;
-////		cout<<"herewdone"<<endl;
+////		cerr<<"herewdone"<<endl;
 //	}
 //}
 
