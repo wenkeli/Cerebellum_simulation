@@ -46,7 +46,7 @@ void BasePSHTravCluster::makeClusters()
 
 		if(i%(numCells/10)==0)
 		{
-			cout<<"making clusters: "<<((float)i)/numCells*100<<" % done"<<endl;
+			cerr<<"making clusters: "<<((float)i)/numCells*100<<" % done"<<endl;
 		}
 		for(int j=0; j<pshNumBins; j++)
 		{
@@ -74,12 +74,12 @@ void BasePSHTravCluster::makeClusters()
 	{
 		unsigned int mergedNumClusters;
 
-		cout<<"merging...:";
-		cout.flush();
+		cerr<<"merging...:";
+		cerr.flush();
 		mergeMotifs();
 
 		mergedNumClusters=getNumClusters();
-		cout<<"iteration done, pre cluster #: "<<numClusters<<" "
+		cerr<<"iteration done, pre cluster #: "<<numClusters<<" "
 				<<"post cluster # "<<mergedNumClusters<<endl;
 
 		if(mergedNumClusters==numClusters)
@@ -91,7 +91,7 @@ void BasePSHTravCluster::makeClusters()
 
 	clustersMade=true;
 
-	cout<<"num clusters: "<<getNumClusters()<<endl;
+	cerr<<"num clusters: "<<getNumClusters()<<endl;
 
 	delete[] dataRow;
 }
@@ -196,7 +196,7 @@ void BasePSHTravCluster::mergeMotifs()
 
 	for(int i=0; i<getNumClusters(); i++)
 	{
-//		cout<<i<<endl;
+//		cerr<<i<<endl;
 		bool toMerge;
 
 		toMerge=false;
@@ -371,8 +371,8 @@ double BasePSHTravCluster::motifs2SampleTTest(vector<unsigned int> &sample1, vec
 	t=fabs(t);
 	df=pow((s1/adjn1+s2/adjn2), 2)/((pow(s1/adjn1, 2)/(adjn1-1))+(pow(s2/adjn2, 2)/(adjn2-1)));
 
-//	cout<<"- "<<s1<<" "<<s2<<" "<<adjn1<<" "<<adjn2<<" "<<n1<<" "<<n2<<endl;
-//	cout<<mean1<<" "<<mean2<<" "<<t<<" "<<df<<" "<<df/(t*t+df)<<endl;
+//	cerr<<"- "<<s1<<" "<<s2<<" "<<adjn1<<" "<<adjn2<<" "<<n1<<" "<<n2<<endl;
+//	cerr<<mean1<<" "<<mean2<<" "<<t<<" "<<df<<" "<<df/(t*t+df)<<endl;
 
 	if(fabs(mean1-mean2)<=0)
 	{
