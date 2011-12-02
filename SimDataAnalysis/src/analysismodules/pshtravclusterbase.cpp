@@ -70,24 +70,24 @@ void BasePSHTravCluster::makeClusters()
 	}
 
 	numClusters=getNumClusters();
-	while(true)
-	{
-		unsigned int mergedNumClusters;
-
-		cerr<<"merging...:";
-		cerr.flush();
-		mergeMotifs();
-
-		mergedNumClusters=getNumClusters();
-		cerr<<"iteration done, pre cluster #: "<<numClusters<<" "
-				<<"post cluster # "<<mergedNumClusters<<endl;
-
-		if(mergedNumClusters==numClusters)
-		{
-			break;
-		}
-		numClusters=mergedNumClusters;
-	}
+//	while(true)
+//	{
+//		unsigned int mergedNumClusters;
+//
+//		cerr<<"merging...:";
+//		cerr.flush();
+//		mergeMotifs();
+//
+//		mergedNumClusters=getNumClusters();
+//		cerr<<"iteration done, pre cluster #: "<<numClusters<<" "
+//				<<"post cluster # "<<mergedNumClusters<<endl;
+//
+//		if(mergedNumClusters==numClusters)
+//		{
+//			break;
+//		}
+//		numClusters=mergedNumClusters;
+//	}
 
 	clustersMade=true;
 

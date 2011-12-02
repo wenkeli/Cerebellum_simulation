@@ -72,6 +72,8 @@ void EucDistPSHTravCluster::generateDist()
 	{
 		cout<<distances[i]<<endl;
 	}
+
+	cerr<<"ThreshVal, ind: "<<threshVal<<" "<<threshInd<<endl;
 }
 
 float EucDistPSHTravCluster::calcEuclideanDist(float *psh1, float *psh2)
