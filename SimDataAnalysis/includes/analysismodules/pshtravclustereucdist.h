@@ -18,8 +18,10 @@
 
 #include <vector>
 #include <algorithm>
+#include <functional>
 
 #include <iostream>
+#include <iomanip>
 #include "../randomc.h"
 #include "../sfmt.h"
 
@@ -37,12 +39,12 @@ private:
 
 	void generateDist();
 
-	float calcEuclideanDist(float *psh1, float *psh2);
+	double calcEuclideanDist(float *psh1, float *psh2);
 
 	float threshP;
-	float threshVal;
+	double threshVal;
 
-	vector<float> distances;
+	vector<double> distances;
 };
 
 #endif /* PSHTRAVCLUSTEREUCDIST_H_ */

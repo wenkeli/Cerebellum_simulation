@@ -17,7 +17,7 @@ EucDistPSHTravCluster::EucDistPSHTravCluster(PSHData *data, float thresh)
 
 bool EucDistPSHTravCluster::isDifferent(float *psh1, float *psh2)
 {
-	float distance;
+	double distance;
 
 	distance=calcEuclideanDist(psh1, psh2);
 
@@ -63,28 +63,33 @@ void EucDistPSHTravCluster::generateDist()
 		distances[i]=calcEuclideanDist(pshRow1, pshRow2);
 	}
 
-	sort(distances.begin(), distances.end());
+	cerr<<distances[0]<<endl;
+
+	sort(&distances[0], &distances[numCells], less<double>());
 
 	threshInd=floor(threshP*(numCells-1));
 	threshVal=distances[threshInd];
 
+	cout.precision(15);
 	for(int i=0; i<numCells; i++)
 	{
-		cout<<distances[i]<<endl;
+		cout<<fixed<<distances[i]<<endl;
 	}
+	cerr<<distances[0]<<endl;
+	cerr<<*(distances.begin())<<endl;
 
 	cerr<<"ThreshVal, ind: "<<threshVal<<" "<<threshInd<<endl;
 }
 
-float EucDistPSHTravCluster::calcEuclideanDist(float *psh1, float *psh2)
+double EucDistPSHTravCluster::calcEuclideanDist(float *psh1, float *psh2)
 {
-	float distance;
+	double distance;
 
 	distance=0;
 
 	for(int i=0; i<pshNumBins; i++)
 	{
-		distance+=(psh1[i]-psh2[i])*(psh1[i]-psh2[i]);
+		distance+=(((double)psh1[i])-((double)psh2[i]))*(((double)psh1[i])-((double)psh2[i]));
 	}
 
 	distance=sqrt(distance);
