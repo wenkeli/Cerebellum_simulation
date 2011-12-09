@@ -52,6 +52,7 @@ void EucDistPSHTravCluster::generateDist()
 
 		while(cellInd2==cellInd1)
 		{
+			cellInd1=randGen.IRandom(0, numCells-1);
 			cellInd2=randGen.IRandom(0, numCells-1);
 		}
 
