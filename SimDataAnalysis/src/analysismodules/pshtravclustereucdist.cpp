@@ -34,6 +34,10 @@ void EucDistPSHTravCluster::generateDist()
 	const unsigned int **data;
 	float *pshRow1;
 	float *pshRow2;
+
+//	int *cellInd1List;
+//	int *cellInd2List;
+
 	CRandomSFMT0 randGen((int)time(NULL));
 	unsigned int threshInd;
 
@@ -41,6 +45,10 @@ void EucDistPSHTravCluster::generateDist()
 	data=pshData->getData();
 
 	distances.reserve(numCells);
+
+//	cellInd1List=new int[numCells];
+//	cellInd2List=new int[numCells];
+
 	pshRow1=new float[pshNumBins];
 	pshRow2=new float[pshNumBins];
 
@@ -62,7 +70,15 @@ void EucDistPSHTravCluster::generateDist()
 			pshRow2[j]=data[j][cellInd2];
 		}
 		distances[i]=calcEuclideanDist(pshRow1, pshRow2);
+		cout.precision(15);
+		cout<<cellInd1<<" "<<cellInd2<<" "<<fixed<<distances[i]<<endl;
 	}
+
+//	cout.precision(15);
+//	for(int i=0; i<numCells; i++)
+//	{
+//		cout<<cellInd1List[i]<<" "<<cellInd2List[i]<<" "<<fixed<<distances[i]<<endl;
+//	}
 
 	cerr<<distances[0]<<endl;
 
@@ -71,11 +87,6 @@ void EucDistPSHTravCluster::generateDist()
 	threshInd=floor(threshP*(numCells-1));
 	threshVal=distances[threshInd];
 
-	cout.precision(15);
-	for(int i=0; i<numCells; i++)
-	{
-		cout<<fixed<<distances[i]<<endl;
-	}
 	cerr<<distances[0]<<endl;
 	cerr<<*(distances.begin())<<endl;
 
