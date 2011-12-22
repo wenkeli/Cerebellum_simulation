@@ -18,7 +18,7 @@ int main(int argc, char **argv)
 
 	simCore=new CBMSimCore(1);
 	mf=new MFPoissonRegen(simCore->getNumMF());
-	freqs=float(simCore->getNumMF());
+	freqs=new float[simCore->getNumMF()];
 
 	for(int i=0; i<simCore->getNumMF(); i++)
 	{
