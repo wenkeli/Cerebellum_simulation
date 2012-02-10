@@ -1,22 +1,23 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>PSHDispwClass</class>
- <widget class="QWidget" name="PSHDispwClass" >
-  <property name="geometry" >
+ <widget class="QWidget" name="PSHDispwClass">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>816</width>
-    <height>369</height>
+    <width>443</width>
+    <height>206</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>PSHDispw</string>
   </property>
-  <property name="styleSheet" >
-   <string notr="true" >background-color: rgb(0, 0, 0);</string>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(0, 0, 0);</string>
   </property>
  </widget>
- <layoutdefault spacing="6" margin="11" />
+ <layoutdefault spacing="6" margin="11"/>
  <resources/>
  <connections/>
 </ui>
