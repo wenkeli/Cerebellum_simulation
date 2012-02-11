@@ -27,7 +27,7 @@ int main(int argc, char **argv)
 
 	cerr<<"starting run"<<endl;
 
-	for(int i=0; i<100; i++)
+	for(int i=0; i<1000; i++)
 	{
 		t=time(0);
 		cerr<<"iteration #"<<i<<": ";
