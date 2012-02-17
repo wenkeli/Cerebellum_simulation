@@ -30,6 +30,7 @@
 									<listOptionValue builtIn="false" value="/opt/intel/Compiler/11.1/072/include"/>
 									<listOptionValue builtIn="false" value="/usr/include/qt4"/>
 									<listOptionValue builtIn="false" value="/opt/cuda/include"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CBM_VISUAL_LIB/includes}&quot;"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.47972431" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="INTELCC"/>

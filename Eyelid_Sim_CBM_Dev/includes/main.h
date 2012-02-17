@@ -14,6 +14,7 @@
 
 #include <interface/cbmsimcore.h>
 #include <tools/mfpoissonregen.h>
+#include <actspatialview.h>
 
 int main(int argc, char **argv);
 

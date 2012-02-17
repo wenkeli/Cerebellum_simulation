@@ -12,6 +12,9 @@ int main(int argc, char **argv)
 {
 	CBMSimCore *simCore;
 	MFPoissonRegen *mf;
+
+	ActSpatialView *panel;
+
 	float *freqs;
 
 	int t;
@@ -27,7 +30,7 @@ int main(int argc, char **argv)
 
 	cerr<<"starting run"<<endl;
 
-	for(int i=0; i<1000; i++)
+	for(int i=0; i<10; i++)
 	{
 		t=time(0);
 		cerr<<"iteration #"<<i<<": ";
