@@ -15,9 +15,11 @@
 #include <QtCore/QMutex>
 #include <QtGui/qapplication.h>
 
-#include <interface/cbmsimcore.h>
-#include <tools/mfpoissonregen.h>
-#include <actspatialview.h>
+//#include <interface/cbmsimcore.h>
+//#include <tools/mfpoissonregen.h>
+//#include <actspatialview.h>
+
+#include <gui/mainw.h>
 
 
 int main(int argc, char **argv);
