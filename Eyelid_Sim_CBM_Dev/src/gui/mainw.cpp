@@ -51,7 +51,7 @@ void MainW::run()
 	cellColor.push_back(Qt::green);
 	cellColor.push_back(Qt::red);
 
-	panel = new ActSpatialView(cellGridX, cellGridY, cellSize, cellColor);
+	panel=new ActSpatialView(cellGridX, cellGridY, cellSize, cellColor);
 
 	for(int i=0; i<simCore->getNumMF(); i++)
 	{
@@ -61,6 +61,7 @@ void MainW::run()
 	cerr<<"starting run"<<endl;
 
 	panel->show();
+	panel->update();
 
 	for(int i=0; i<10; i++)
 	{
@@ -79,7 +80,7 @@ void MainW::run()
 		cerr<<time(0)-t<<" sec"<<endl;
 	}
 
-	panel->close();
+//	panel->close();
 
 	delete simCore;
 	delete mf;

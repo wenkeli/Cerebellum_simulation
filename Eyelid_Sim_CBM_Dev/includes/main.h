@@ -19,7 +19,7 @@
 //#include <tools/mfpoissonregen.h>
 //#include <actspatialview.h>
 
-#include <gui/mainw.h>
+#include "gui/mainw.h"
 
 
 int main(int argc, char **argv);
