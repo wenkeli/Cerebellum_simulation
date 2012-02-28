@@ -7,7 +7,7 @@
 #include <QtGui/QWidget>
 #include <QtGui/QApplication>
 #include <QtGui/QColor>
-#include "ui_mainw.h"
+#include "uic/ui_mainw.h"
 
 #include <interface/cbmsimcore.h>
 #include <tools/mfpoissonregen.h>
