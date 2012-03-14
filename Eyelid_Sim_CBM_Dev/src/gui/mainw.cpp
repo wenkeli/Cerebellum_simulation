@@ -18,7 +18,7 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	connect(ui.quitButton, SIGNAL(clicked()), app, SLOT(quit()));
 	connect(this, SIGNAL(destroyed()), app, SLOT(quit()));
 
-	manager=new ECManagement(5, 5000);
+	manager=new ECManagement(1, 5000);
 
 	xDims.push_back(manager->getGRX());
 	xDims.push_back(manager->getGOX());
@@ -31,9 +31,9 @@ MainW::MainW(QApplication *app, QWidget *parent)
 
 	colors.push_back(Qt::green);
 	colors.push_back(Qt::red);
-
-	spatialView=new ActSpatialView(xDims, yDims, sizes, colors, this);
-
+//
+	spatialView=new ActSpatialView(xDims, yDims, sizes, colors);
+//
 	compThread=new SimThread(this, manager, spatialView);
 }
 
@@ -43,6 +43,7 @@ MainW::~MainW()
 	delete manager;
 	delete spatialView;
 }
+
 
 void MainW::run()
 {

@@ -17,10 +17,10 @@ SimThread::SimThread(QObject *parent, ECManagement *ecsim, ActSpatialView *sview
 	management=ecsim;
 	spatialView=sview;
 
-	qRegisterMetaType<vector<bool> >("vector<bool>");
+	qRegisterMetaType<std::vector<bool> >("std::vector<bool>");
 
-	connect(this, SIGNAL(updateSpatialW(vector<bool>, int, bool)),
-			spatialView, SLOT(drawActivity(vector<bool>, int, bool)),
+	connect(this, SIGNAL(updateSpatialW(std::vector<bool>, int, bool)),
+			spatialView, SLOT(drawActivity(std::vector<bool>, int, bool)),
 			Qt::QueuedConnection);
 }
 
@@ -56,8 +56,10 @@ void SimThread::simLoop()
 	int numGR;
 	int numGO;
 
-	bool finished;
+	bool notDone;
 	int trialN;
+	int count;
+	count=0;
 
 	numGR=management->getNumGR();
 	numGO=management->getNumGO();
@@ -65,13 +67,15 @@ void SimThread::simLoop()
 	apGRVis.resize(numGR);
 	apGOVis.resize(numGO);
 
-	finished=false;
+	notDone=true;
 
-	while(!finished)
+	while(notDone)
 	{
 		lockAccessData();
+		cout<<count<<endl;
+		count++;
 
-		finished=management->runStep();
+		notDone=management->runStep();
 
 		apGR=management->exportAPGR();
 		for(int i=0; i<numGR; i++)
@@ -86,6 +90,7 @@ void SimThread::simLoop()
 			apGOVis[i]=apGO[i];
 		}
 		emit(updateSpatialW(apGOVis, 1, false));
+//		cout<<"here"<<endl;
 
 		unlockAccessData();
 	}

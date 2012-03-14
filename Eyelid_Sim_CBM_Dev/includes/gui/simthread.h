@@ -9,6 +9,7 @@
 #define SIMTHREAD_H_
 
 #include <vector>
+#include <iostream>
 
 #include <QtCore/QThread>
 #include <QtCore/QMutex>
