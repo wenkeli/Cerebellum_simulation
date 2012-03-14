@@ -7,11 +7,13 @@
 #include <QtGui/QWidget>
 #include <QtGui/QApplication>
 #include <QtGui/QColor>
-#include "uic/ui_mainw.h"
 
-#include <interface/cbmsimcore.h>
-#include <tools/mfpoissonregen.h>
 #include <actspatialview.h>
+
+#include "../ecmanagement.h"
+#include "simthread.h"
+
+#include "uic/ui_mainw.h"
 
 class MainW : public QWidget
 {
@@ -26,6 +28,9 @@ public slots:
 
 private:
     Ui::MainWClass ui;
+
+    ECManagement *manager;
+    SimThread *compThread;
 
     ActSpatialView *spatialView;
 };
