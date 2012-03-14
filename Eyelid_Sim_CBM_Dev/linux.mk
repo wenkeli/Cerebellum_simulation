@@ -57,12 +57,12 @@ MAININC= $(INCPATH)/main.h $(INCPATH)/ecmanagement.h
 
 INC = $(GUIINC) $(MAININC)
 
-GUISRC = $(GUISP)/mainw.cpp $(GUISP)/testpanel.cpp
+GUISRC = $(GUISP)/mainw.cpp $(GUISP)/testpanel.cpp $(GUISP)/simthread.cpp
 MAINSRC = $(SRCPATH)/main.cpp $(SRCPATH)/ecmanagement.cpp
 
 SRC = $(GUISRC) $(MAINSRC)
 
-GUIOBJ = $(OUTPATH)/mainw.obj $(OUTPATH)/testpanel.obj
+GUIOBJ = $(OUTPATH)/mainw.obj $(OUTPATH)/testpanel.obj $(OUTPATH)/simthread.obj
 MAINOBJ = $(OUTPATH)/main.obj $(OUTPATH)/ecmanagement.obj
 
 OBJ = $(GUIOBJ) $(MAINOBJ)

@@ -9,6 +9,7 @@
 #define ECMANAGEMENT_H_
 
 #include <interface/cbmsimcore.h>
+#include <tools/mfpoissonregen.h>
 
 class ECManagement
 {
