@@ -94,8 +94,8 @@ void SimThread::simLoop()
 		emit(updateSpatialW(apGOVis, 1, false));
 //		cout<<"here"<<endl;
 
-		cout<<"iteration: "<<count<<endl;
-		count++;
+//		cout<<"iteration: "<<count<<endl;
+//		count++;
 
 		unlockAccessData();
 	}
