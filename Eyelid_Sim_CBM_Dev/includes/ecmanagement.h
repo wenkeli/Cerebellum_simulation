@@ -8,6 +8,8 @@
 #ifndef ECMANAGEMENT_H_
 #define ECMANAGEMENT_H_
 
+#include <iostream>
+
 #include <interface/cbmsimcore.h>
 #include <tools/mfpoissonregen.h>
 

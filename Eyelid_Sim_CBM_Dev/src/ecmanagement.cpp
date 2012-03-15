@@ -7,10 +7,14 @@
 
 #include "../includes/ecmanagement.h"
 
+using namespace std;
+
 ECManagement::ECManagement(int numT, int iti)
 {
 	numTrials=numT;
 	interTrialI=iti;
+
+	cerr<<"numTrials: "<<numTrials<<" iti:"<<interTrialI<<endl;
 
 	currentTrial=0;
 	currentTime=0;
@@ -36,15 +40,14 @@ ECManagement::~ECManagement()
 
 bool ECManagement::runStep()
 {
-	if(currentTrial>=numTrials)
-	{
-		return false;
-	}
-
 	if(currentTime>=interTrialI)
 	{
 		currentTime=0;
 		currentTrial++;
+	}
+	if(currentTrial>=numTrials)
+	{
+		return false;
 	}
 
 	currentTime++;

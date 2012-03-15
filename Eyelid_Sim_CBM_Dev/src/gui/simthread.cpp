@@ -69,13 +69,15 @@ void SimThread::simLoop()
 
 	notDone=true;
 
-	while(notDone)
+	while(true)
 	{
 		lockAccessData();
-		cout<<count<<endl;
-		count++;
 
 		notDone=management->runStep();
+		if(!notDone)
+		{
+			break;
+		}
 
 		apGR=management->exportAPGR();
 		for(int i=0; i<numGR; i++)
@@ -91,6 +93,9 @@ void SimThread::simLoop()
 		}
 		emit(updateSpatialW(apGOVis, 1, false));
 //		cout<<"here"<<endl;
+
+		cout<<"iteration: "<<count<<endl;
+		count++;
 
 		unlockAccessData();
 	}

@@ -18,7 +18,7 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	connect(ui.quitButton, SIGNAL(clicked()), app, SLOT(quit()));
 	connect(this, SIGNAL(destroyed()), app, SLOT(quit()));
 
-	manager=new ECManagement(1, 5000);
+	manager=new ECManagement(1, 3);
 
 	xDims.push_back(manager->getGRX());
 	xDims.push_back(manager->getGOX());
