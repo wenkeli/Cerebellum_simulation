@@ -52,26 +52,27 @@ void SimThread::simLoop()
 
 	const bool *apGR;
 	const bool *apGO;
-	const bool *apMF;
 
 	int numGR;
 	int numGO;
-
-	bool notDone;
-	int trialN;
-	int count;
-	count=0;
+	int iti;
 
 	numGR=management->getNumGR();
 	numGO=management->getNumGO();
+	iti=management->getInterTrialI();
 
 	apGRVis.resize(numGR);
 	apGOVis.resize(numGO);
 
-	notDone=true;
+	timer.start();
 
 	while(true)
 	{
+		int runLen;
+		int currentTrial;
+		int currentTime;
+		bool notDone;
+
 		lockAccessData();
 
 		notDone=management->runStep();
@@ -79,22 +80,28 @@ void SimThread::simLoop()
 		{
 			break;
 		}
-
-		apMF=management->exportAPMF();
-
-		apGR=management->exportAPGR();
-		for(int i=0; i<numGR; i++)
+		currentTime=management->getCurrentTime();
+		if(currentTime>=iti)
 		{
-			apGRVis[i]=apGR[i];
-		}
-		emit(updateSpatialW(apGRVis, 0, true));
+			runLen=timer.restart();
+			currentTrial=management->getCurrentTrialN();
 
-		apGO=management->exportAPGO();
-		for(int i=0; i<numGO; i++)
-		{
-			apGOVis[i]=apGO[i];
+			cerr<<"run time for trial #"<<currentTrial<<": "<<runLen<<" ms"<<endl;
 		}
-		emit(updateSpatialW(apGOVis, 1, false));
+
+//		apGR=management->exportAPGR();
+//		for(int i=0; i<numGR; i++)
+//		{
+//			apGRVis[i]=apGR[i];
+//		}
+//		emit(updateSpatialW(apGRVis, 0, true));
+//
+//		apGO=management->exportAPGO();
+//		for(int i=0; i<numGO; i++)
+//		{
+//			apGOVis[i]=apGO[i];
+//		}
+//		emit(updateSpatialW(apGOVis, 1, false));
 
 		unlockAccessData();
 	}

@@ -90,6 +90,16 @@ int ECManagement::getCurrentTime()
 	return currentTime;
 }
 
+int ECManagement::getNumTrials()
+{
+	return numTrials;
+}
+
+int ECManagement::getInterTrialI()
+{
+	return interTrialI;
+}
+
 const bool* ECManagement::exportAPMF()
 {
 	return mf->getAPMF();

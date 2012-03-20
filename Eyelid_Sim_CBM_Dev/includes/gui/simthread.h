@@ -16,6 +16,7 @@
 #include <QtCore/QMutexLocker>
 #include <QtCore/QRect>
 #include <QtGui/QColor>
+#include <QtCore/QTime>
 
 #include <QtCore/QWaitCondition>
 
@@ -50,6 +51,7 @@ private:
 	SimThread();
 
 	QMutex accessDataLock;
+	QTime timer;
 };
 
 #endif /* SIMTHREAD_H_ */

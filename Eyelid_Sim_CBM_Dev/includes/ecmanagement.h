@@ -23,6 +23,8 @@ public:
 
 	int getCurrentTrialN();
 	int getCurrentTime();
+	int getNumTrials();
+	int getInterTrialI();
 
 	const bool* exportAPMF();
 	const bool* exportAPGO();
