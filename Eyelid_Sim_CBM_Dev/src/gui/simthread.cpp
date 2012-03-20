@@ -89,19 +89,19 @@ void SimThread::simLoop()
 			cerr<<"run time for trial #"<<currentTrial<<": "<<runLen<<" ms"<<endl;
 		}
 
-//		apGR=management->exportAPGR();
-//		for(int i=0; i<numGR; i++)
-//		{
-//			apGRVis[i]=apGR[i];
-//		}
-//		emit(updateSpatialW(apGRVis, 0, true));
-//
-//		apGO=management->exportAPGO();
-//		for(int i=0; i<numGO; i++)
-//		{
-//			apGOVis[i]=apGO[i];
-//		}
-//		emit(updateSpatialW(apGOVis, 1, false));
+		apGR=management->exportAPGR();
+		for(int i=0; i<numGR; i++)
+		{
+			apGRVis[i]=apGR[i];
+		}
+		emit(updateSpatialW(apGRVis, 0, true));
+
+		apGO=management->exportAPGO();
+		for(int i=0; i<numGO; i++)
+		{
+			apGOVis[i]=apGO[i];
+		}
+		emit(updateSpatialW(apGOVis, 1, false));
 
 		unlockAccessData();
 	}
