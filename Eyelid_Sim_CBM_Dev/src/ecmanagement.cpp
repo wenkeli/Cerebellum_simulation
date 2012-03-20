@@ -40,6 +40,28 @@ ECManagement::~ECManagement()
 
 bool ECManagement::runStep()
 {
+	const bool *apMF;
+	const bool *apGO;
+	const bool *apGR;
+	const float *vGR;
+	const float *gESumGR;
+	const float *gISumGR;
+
+//	apMF=mf->getAPMF();
+//	apGO=simulation->exportAPGO();
+//	apGR=simulation->exportAPGR();
+//	vGR=simulation->exportVmGR();
+//	gESumGR=simulation->exportGESumGR();
+//	gISumGR=simulation->exportGISumGR();
+
+//	cout<<currentTrial<<" "<<currentTime<<" "<<
+//			apMF[0]<<apMF[1]<<apMF[2]<<apMF[3]<<" "<<
+//			apGO[0]<<apGO[1]<<apGO[2]<<apGO[3]<<" "<<
+//			apGR[0]<<apGR[1]<<apGR[2]<<apGR[3]<<" "<<
+//			vGR[0]<<"|"<<vGR[1]<<"|"<<vGR[2]<<"|"<<vGR[3]<<" "<<
+//			gESumGR[0]<<"|"<<gESumGR[1]<<"|"<<gESumGR[2]<<"|"<<gESumGR[3]<<" "<<
+//			gISumGR[0]<<"|"<<gISumGR[1]<<"|"<<gISumGR[2]<<"|"<<gISumGR[3]<<endl;
+
 	if(currentTime>=interTrialI)
 	{
 		currentTime=0;
@@ -54,6 +76,7 @@ bool ECManagement::runStep()
 
 	simulation->updateMFInput(mf->calcActivity(mfFreq));
 	simulation->calcActivity();
+
 	return true;
 }
 

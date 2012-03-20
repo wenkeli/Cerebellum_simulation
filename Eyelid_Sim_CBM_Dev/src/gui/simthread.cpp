@@ -52,6 +52,7 @@ void SimThread::simLoop()
 
 	const bool *apGR;
 	const bool *apGO;
+	const bool *apMF;
 
 	int numGR;
 	int numGO;
@@ -79,6 +80,8 @@ void SimThread::simLoop()
 			break;
 		}
 
+		apMF=management->exportAPMF();
+
 		apGR=management->exportAPGR();
 		for(int i=0; i<numGR; i++)
 		{
@@ -92,10 +95,6 @@ void SimThread::simLoop()
 			apGOVis[i]=apGO[i];
 		}
 		emit(updateSpatialW(apGOVis, 1, false));
-//		cout<<"here"<<endl;
-
-//		cout<<"iteration: "<<count<<endl;
-//		count++;
 
 		unlockAccessData();
 	}
