@@ -6,6 +6,7 @@
 
 #include <interface/cbmsimcore.h>
 #include <tools/mfpoissonregen.h>
+#include <cbmViz.h>
 
 int main(int argc, char **argv);
 

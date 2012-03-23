@@ -21,6 +21,13 @@ CBMCORELIBPATHR = /home/mhauskn/projects/CBM_CORE_LIB_DEV/lib/
 CBMCORELIBPATH = '$(CBMCORELIBPATHR)'
 CBMCORELIBS = -lcbm_core
 
+VIZPATH = /home/mhauskn/projects/cerebellumViz
+VIZINCPATH = $(VIZPATH)/inc
+VIZLIBPATH = $(VIZPATH)/lib
+VIZLIBS = -lcbmViz_x86_64
+
+GLUTLIBS = -lglut -lGL -lGLU -lX11 -lXmu -lGLEW
+
 INCPATH = ./includes
 
 SRCPATH = ./src
@@ -34,10 +41,10 @@ MAINSRC = $(SRCPATH)/main.cpp
 MAINOBJ = $(OUTPATH)/main.obj
 
 mainapp: main
-	-$(CC) $(CFLAGS) $(MAINOBJ) -o $(OUTPATH)/$(NAME) -L $(CBMCORELIBPATH) $(CBMCORELIBS) -Xlinker -R $(CBMCORELIBPATHR)
+	-$(CC) $(CFLAGS) $(MAINOBJ) -o $(OUTPATH)/$(NAME) -L $(CBMCORELIBPATH) -L $(VIZLIBPATH) $(VIZLIBS) $(CBMCORELIBS) $(GLUTLIBS) -Xlinker -R $(CBMCORELIBPATHR)
 
 main: $(MAININC) $(MAINSRC)
-	-$(CC) $(CFLAGS) -I $(CBMCOREINCPATH) -I $(CUDAINCPATH) -c $(SRCPATH)/main.cpp -o $(OUTPATH)/main.obj
+	-$(CC) $(CFLAGS) -I $(CBMCOREINCPATH) -I $(CUDAINCPATH) -I $(VIZINCPATH) -c $(SRCPATH)/main.cpp -o $(OUTPATH)/main.obj
 
 clean:
 	-$(RM) $(OUTPATH)/$(NAME)
