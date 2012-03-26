@@ -6,27 +6,33 @@
 class MFInput {
  public:
   MFInput(int numMFs);
-  ~MFInput() { delete incFreq; };
+  ~MFInput();
 
   void addStateVariable(string name, float minVal, float maxVal);
 
   void updateStateVariable(string name, float currentVal);
 
-  const bool* calcActivity();
+  const bool* calcActivity(bool inTimeout);
 
   float* getFreqs() { return incFreq; };
 
- private:
+ protected:
   void updateMFFreq(float maxVal, float minVal, vector<int>& mfInds, float currentVal);
+  void cleanFreq();
 
+ protected:
   CRandomSFMT0 randGen;
   MFPoissonRegen mfpr;
-  float *incFreq;
+  bool cleaned;   // Frequencies need to be cleared between iterations
+  float *incFreq; // Increase frequency
+  float *bgFreq;  // Background frequency 
   int numMF;  // How many MFs are there total
   vector<int> unassignedMFs; // List of MFs which are still unnassigned
 
   static const float incFreqMax; 
   static const float incFreqMin;
+  static const float bgFreqMax;
+  static const float bgFreqMin;  
   static const float gaussWidth;
   static const int mfsPerStateVar;
 

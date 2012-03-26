@@ -6,8 +6,9 @@ using namespace std;
 
 float calcMZOutputForce(const bool* ncFirings, int numNC) {
     float inputSum = 0;
-    for (int i=0; i<numNC; ++i)
+    for (int i=0; i<numNC; ++i) {
         inputSum += ncFirings[i];
+    }
     inputSum = inputSum/(float)numNC;
     return inputSum;
 }
@@ -19,8 +20,8 @@ int main(int argc, char **argv) {
     cout<<"Creating Sim Core..."<< endl;
     CBMSimCore simCore(numMZ);
 
-    cout<<"Creating visualization..."<< endl;
-    CerebellumViz viz(&simCore);
+    // cout<<"Creating visualization..."<< endl;
+    // CerebellumViz viz(&simCore);
 
     cout<<"Creating Cartpole Domain..."<<endl;
     CartPole cp;
@@ -32,7 +33,7 @@ int main(int argc, char **argv) {
 
     cerr<<"Starting run..."<<endl;
     int t;
-    for(int i=0; i<2; i++) {
+    for(int i=0; i<25; i++) {
         t=time(0);
         cerr<<"iteration #"<<i<<": ";
         cerr.flush();
@@ -42,7 +43,15 @@ int main(int argc, char **argv) {
             mf.updateStateVariable("poleVelocity",cp.getPoleVelocity());
 
             // Calc MF activity
-            const bool *mfAct = mf.calcActivity();
+            const bool *mfAct = mf.calcActivity(cp.isInTimeout());
+            int firing = 0;
+            for (int i=0; i<simCore.getNumMF(); ++i)
+              if (mfAct[i])
+                firing++;
+            //cout << "Number of Firing MFs: " << firing << "/" << simCore.getNumMF() <<  endl;
+
+            if (j%50==0)
+              cout << "Angle: " << cp.getPoleAngle() << endl;
 
             // Update the mf activity to both microzones
             simCore.updateMFInput(mfAct);
@@ -55,12 +64,14 @@ int main(int argc, char **argv) {
             simCore.calcActivity();
 
             // Visualize the resulting firings
-            viz.update();
+            // viz.update();
 
             // Get the MZ output
             float mz0Force = calcMZOutputForce(simCore.exportAPNC(0),simCore.getNumNC());
             float mz1Force = calcMZOutputForce(simCore.exportAPNC(1),simCore.getNumNC());
             float netForce = mz0Force - mz1Force;
+            if (j%50==0)
+              cout << "Mz0: " << mz0Force << " Mz1: " << mz1Force << " Net Force: " << netForce << endl;
             cp.run(netForce);
         }
         cerr<<time(0)-t<<" sec"<<endl;

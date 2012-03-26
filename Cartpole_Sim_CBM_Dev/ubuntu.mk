@@ -16,8 +16,8 @@ INTELLIBS =
 
 CUDAINCPATH = '/usr/local/cuda/include/'
 
-CBMCOREINCPATH = '/home/mhauskn/projects/CBM_CORE_LIB_DEV/includes/'
-CBMCORELIBPATHR = /home/mhauskn/projects/CBM_CORE_LIB_DEV/lib/
+CBMCOREINCPATH = '/home/mhauskn/projects/CBM_CORE_LIB_MGPU_DEV/includes/'
+CBMCORELIBPATHR = /home/mhauskn/projects/CBM_CORE_LIB_MGPU_DEV/lib/
 CBMCORELIBPATH = '$(CBMCORELIBPATHR)'
 CBMCORELIBS = -lcbm_core
 
