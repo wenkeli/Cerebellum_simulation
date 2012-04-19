@@ -22,15 +22,19 @@ MainW::MainW(QApplication *app, QWidget *parent)
 
 	xDims.push_back(manager->getGRX());
 	xDims.push_back(manager->getGOX());
+	xDims.push_back(manager->getGLX());
 
 	yDims.push_back(manager->getGRY());
 	yDims.push_back(manager->getGOY());
+	yDims.push_back(manager->getGLY());
 
 	sizes.push_back(1);
-	sizes.push_back(9);
+	sizes.push_back(5);
+	sizes.push_back(2);
 
 	colors.push_back(Qt::green);
 	colors.push_back(Qt::red);
+	colors.push_back(Qt::blue);
 //
 	spatialView=new ActSpatialView(xDims, yDims, sizes, colors);
 //

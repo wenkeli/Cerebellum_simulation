@@ -29,6 +29,7 @@ public:
 	const bool* exportAPMF();
 	const bool* exportAPGO();
 	const bool* exportAPGR();
+	const bool* exportAPGL();
 	const bool* exportAPSC();
 	const bool* exportAPBC();
 	const bool* exportAPPC();
@@ -54,6 +55,7 @@ public:
 	unsigned int getNumMF();
 	unsigned int getNumGO();
 	unsigned int getNumGR();
+	unsigned int getNumGL();
 	unsigned int getNumSC();
 	unsigned int getNumBC();
 	unsigned int getNumPC();

@@ -49,20 +49,25 @@ void SimThread::simLoop()
 {
 	vector<bool> apGRVis;
 	vector<bool> apGOVis;
+	vector<bool> apGLVis;
 
 	const bool *apGR;
 	const bool *apGO;
+	const bool *apGL;
 
 	int numGR;
 	int numGO;
+	int numGL;
 	int iti;
 
 	numGR=management->getNumGR();
 	numGO=management->getNumGO();
+	numGL=management->getNumGL();
 	iti=management->getInterTrialI();
 
 	apGRVis.resize(numGR);
 	apGOVis.resize(numGO);
+	apGLVis.resize(numGL);
 
 	timer.start();
 
@@ -102,6 +107,14 @@ void SimThread::simLoop()
 			apGOVis[i]=apGO[i];
 		}
 		emit(updateSpatialW(apGOVis, 1, false));
+
+		apGL=management->exportAPGL();
+		for(int i=0; i<numGL; i++)
+		{
+			apGLVis[i]=apGL[i];
+		}
+
+		emit(updateSpatialW(apGLVis, 2, false));
 
 		unlockAccessData();
 	}

@@ -115,6 +115,11 @@ const bool* ECManagement::exportAPGR()
 	return simulation->exportAPGR();
 }
 
+const bool* ECManagement::exportAPGL()
+{
+	return simulation->exportAPGL();
+}
+
 const bool* ECManagement::exportAPSC()
 {
 	return simulation->exportAPSC();
@@ -223,6 +228,11 @@ unsigned int ECManagement::getNumGO()
 unsigned int ECManagement::getNumGR()
 {
 	return simulation->getNumGR();
+}
+
+unsigned int ECManagement::getNumGL()
+{
+	return simulation->getNumGL();
 }
 
 unsigned int ECManagement::getNumSC()
