@@ -23,6 +23,7 @@
 #include "analysismodules/pshtravclusterbase.h"
 #include "analysismodules/pshtravclusterpos2st.h"
 #include "analysismodules/pshtravclustereucdist.h"
+#include "analysismodules/innetspatialvis.h"
 
 #include "pshdispw.h"
 
@@ -45,6 +46,8 @@ private:
     PSHDispw *curClusterWindow;
     PSHDispw *curClusterCellWindow;
 
+    PSHDispw *curSpatialWindow;
+
     int calcTempMetricBinN;
 
     QString cellTypes[8];
@@ -58,6 +61,8 @@ private:
 
     SpikeRateAnalysis **srAnalysis[8];
     SpikeRateAnalysis **curSRAnalysis;
+
+    InNetSpatialVis *spatialVis;
 
     bool pshLoaded;
     bool simLoaded;
@@ -114,6 +119,9 @@ public slots:
 	void updateClusterCellDisp(int);
 	void dispClusterNP();
 	void dispClusterCellNP();
+
+	void dispInNetSpatialNP();
+	void updateInNetSpatial(int);
 
 	void loadSimFile();
 

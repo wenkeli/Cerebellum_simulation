@@ -46,6 +46,8 @@ MainW::MainW(QWidget *parent, QApplication *a)
 	curClusterWindow=NULL;
 	curClusterCellWindow=NULL;
 
+	curSpatialWindow=NULL;
+
 	grConAnalysis=NULL;
 	pshTravCluster=NULL;
 
@@ -96,6 +98,9 @@ MainW::MainW(QWidget *parent, QApplication *a)
 
 	ui.calcSpikeRatesButton->setDisabled(true);
 	ui.exportSpikeRatesButton->setDisabled(true);
+
+	ui.dispSpatialButton->setDisabled(true);
+	ui.spatialBinNBox->setDisabled(true);
 //	cerr<<"here7"<<endl;
 }
 
@@ -114,6 +119,8 @@ MainW::~MainW()
 		delete ncPSH[i];
 	}
 	delete grPopTimingAnalysis;
+
+	delete spatialVis;
 }
 
 void MainW::dispMultiCellNP()
@@ -259,8 +266,10 @@ void MainW::loadPSHFile()
 	}
 
 	grPopTimingAnalysis=new GRPSHPopAnalysis(grPSH);
-//	pshTravCluster=new Pos2STPSHTravCluster(grPSH);
-	pshTravCluster=new EucDistPSHTravCluster(grPSH, 0.7);
+	pshTravCluster=new Pos2STPSHTravCluster(grPSH);
+//	pshTravCluster=new EucDistPSHTravCluster(grPSH, 0.7);
+
+	spatialVis=new InNetSpatialVis(grPSH, goPSH);
 
 	mfSR=new SpikeRateAnalysis(mfPSH);
 	goSR=new SpikeRateAnalysis(goPSH);
@@ -311,6 +320,12 @@ void MainW::loadPSHFile()
 
 	ui.calcSpikeRatesButton->setEnabled(true);
 	ui.exportSpikeRatesButton->setEnabled(true);
+
+	ui.dispSpatialButton->setEnabled(true);
+	ui.spatialBinNBox->setMinimum(0);
+	ui.spatialBinNBox->setMaximum(grPSH->getTotalNumBins()-1);
+	ui.spatialBinNBox->setValue(0);
+	ui.spatialBinNBox->setEnabled(true);
 }
 
 void MainW::calcPFPCPlasticity()
@@ -629,6 +644,28 @@ void MainW::exportSinglePSH()
 //
 //	outf.close();
 //	cerr<<"done!"<<endl;
+}
+
+void MainW::dispInNetSpatialNP()
+{
+	if(curSpatialWindow!=NULL)
+	{
+		curSpatialWindow->setAttribute(Qt::WA_DeleteOnClose);
+		curSpatialWindow->close();
+	}
+
+	curSpatialWindow=new PSHDispw(NULL, spatialVis->paintSpatial(ui.spatialBinNBox->value()),
+			"Input net sptial view");
+}
+
+void MainW::updateInNetSpatial(int binN)
+{
+	if(curSpatialWindow==NULL)
+	{
+		return;
+	}
+
+	curSpatialWindow->switchBuf(spatialVis->paintSpatial(binN));
 }
 
 //void MainW::calcTempMetrics()

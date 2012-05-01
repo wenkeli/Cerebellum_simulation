@@ -1,8 +1,8 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainw.h'
 **
-** Created: Thu Sep 15 15:01:29 2011
-**      by: The Qt Meta Object Compiler version 62 (Qt 4.7.2)
+** Created: Tue May 1 15:26:21 2012
+**      by: The Qt Meta Object Compiler version 62 (Qt 4.7.4)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -11,7 +11,7 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'mainw.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 62
-#error "This file was generated using the moc from 4.7.2. It"
+#error "This file was generated using the moc from 4.7.4. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainW[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-      22,   14, // methods
+      24,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -51,8 +51,10 @@ static const uint qt_meta_data_MainW[] = {
      362,    6,    6,    6, 0x0a,
      378,    6,    6,    6, 0x0a,
      398,    6,    6,    6, 0x0a,
-     412,    6,    6,    6, 0x0a,
-     424,    6,    6,    6, 0x0a,
+     419,    6,    6,    6, 0x0a,
+     443,    6,    6,    6, 0x0a,
+     457,    6,    6,    6, 0x0a,
+     469,    6,    6,    6, 0x0a,
 
        0        // eod
 };
@@ -68,7 +70,8 @@ static const char qt_meta_stringdata_MainW[] = {
     "exportSpikeRates()\0updateClusterCellType(int)\0"
     "makeClusters()\0updateClusterDisp(int)\0"
     "updateClusterCellDisp(int)\0dispClusterNP()\0"
-    "dispClusterCellNP()\0loadSimFile()\0"
+    "dispClusterCellNP()\0dispInNetSpatialNP()\0"
+    "updateInNetSpatial(int)\0loadSimFile()\0"
     "exportSim()\0exportSinglePSH()\0"
 };
 
@@ -120,12 +123,14 @@ int MainW::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 16: updateClusterCellDisp((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 17: dispClusterNP(); break;
         case 18: dispClusterCellNP(); break;
-        case 19: loadSimFile(); break;
-        case 20: exportSim(); break;
-        case 21: exportSinglePSH(); break;
+        case 19: dispInNetSpatialNP(); break;
+        case 20: updateInNetSpatial((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 21: loadSimFile(); break;
+        case 22: exportSim(); break;
+        case 23: exportSinglePSH(); break;
         default: ;
         }
-        _id -= 22;
+        _id -= 24;
     }
     return _id;
 }

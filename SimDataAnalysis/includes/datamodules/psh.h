@@ -38,6 +38,7 @@ public:
 	unsigned int getBinTimeSize();
 	unsigned int getPSHBinMaxVal();
 
+	const unsigned int *getDataRow(unsigned int binN);
 	const unsigned int **getData();
 
 	QPixmap *paintPSHPop(unsigned int startCellN, unsigned int endCellN);

@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'pshdispw.ui'
 **
-** Created: Thu Sep 15 15:01:29 2011
-**      by: Qt User Interface Compiler version 4.7.2
+** Created: Tue May 1 15:26:21 2012
+**      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -27,7 +27,7 @@ public:
     {
         if (PSHDispwClass->objectName().isEmpty())
             PSHDispwClass->setObjectName(QString::fromUtf8("PSHDispwClass"));
-        PSHDispwClass->resize(816, 369);
+        PSHDispwClass->resize(443, 206);
         PSHDispwClass->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 0);"));
 
         retranslateUi(PSHDispwClass);

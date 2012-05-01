@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainw.ui'
 **
-** Created: Thu Sep 15 15:01:29 2011
-**      by: Qt User Interface Compiler version 4.7.2
+** Created: Tue May 1 15:26:21 2012
+**      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -81,17 +81,23 @@ public:
     QLabel *label_11;
     QComboBox *clusterCellTypeBox;
     QPushButton *makeClusterButton;
+    QWidget *gridLayoutWidget_6;
+    QGridLayout *gridLayout_6;
+    QLabel *label_16;
+    QLabel *label_17;
+    QPushButton *dispSpatialButton;
+    QSpinBox *spatialBinNBox;
 
     void setupUi(QMainWindow *MainWClass)
     {
         if (MainWClass->objectName().isEmpty())
             MainWClass->setObjectName(QString::fromUtf8("MainWClass"));
-        MainWClass->resize(614, 523);
+        MainWClass->resize(614, 637);
         centralwidget = new QWidget(MainWClass);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         horizontalLayoutWidget = new QWidget(centralwidget);
         horizontalLayoutWidget->setObjectName(QString::fromUtf8("horizontalLayoutWidget"));
-        horizontalLayoutWidget->setGeometry(QRect(30, 450, 561, 41));
+        horizontalLayoutWidget->setGeometry(QRect(30, 570, 561, 41));
         horizontalLayout = new QHBoxLayout(horizontalLayoutWidget);
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
         horizontalLayout->setContentsMargins(0, 0, 0, 0);
@@ -320,6 +326,32 @@ public:
 
         gridLayout_5->addWidget(makeClusterButton, 1, 2, 1, 2);
 
+        gridLayoutWidget_6 = new QWidget(centralwidget);
+        gridLayoutWidget_6->setObjectName(QString::fromUtf8("gridLayoutWidget_6"));
+        gridLayoutWidget_6->setGeometry(QRect(170, 460, 311, 98));
+        gridLayout_6 = new QGridLayout(gridLayoutWidget_6);
+        gridLayout_6->setObjectName(QString::fromUtf8("gridLayout_6"));
+        gridLayout_6->setContentsMargins(0, 0, 0, 0);
+        label_16 = new QLabel(gridLayoutWidget_6);
+        label_16->setObjectName(QString::fromUtf8("label_16"));
+
+        gridLayout_6->addWidget(label_16, 0, 0, 1, 2);
+
+        label_17 = new QLabel(gridLayoutWidget_6);
+        label_17->setObjectName(QString::fromUtf8("label_17"));
+
+        gridLayout_6->addWidget(label_17, 1, 0, 1, 1);
+
+        dispSpatialButton = new QPushButton(gridLayoutWidget_6);
+        dispSpatialButton->setObjectName(QString::fromUtf8("dispSpatialButton"));
+
+        gridLayout_6->addWidget(dispSpatialButton, 2, 0, 1, 2);
+
+        spatialBinNBox = new QSpinBox(gridLayoutWidget_6);
+        spatialBinNBox->setObjectName(QString::fromUtf8("spatialBinNBox"));
+
+        gridLayout_6->addWidget(spatialBinNBox, 1, 1, 1, 1);
+
         MainWClass->setCentralWidget(centralwidget);
 
         retranslateUi(MainWClass);
@@ -343,6 +375,8 @@ public:
         QObject::connect(clusterCellTypeBox, SIGNAL(currentIndexChanged(int)), MainWClass, SLOT(updateClusterCellType(int)));
         QObject::connect(newClusterPButton, SIGNAL(clicked()), MainWClass, SLOT(dispClusterNP()));
         QObject::connect(newClusterCellPButton, SIGNAL(clicked()), MainWClass, SLOT(dispClusterCellNP()));
+        QObject::connect(dispSpatialButton, SIGNAL(clicked()), MainWClass, SLOT(dispInNetSpatialNP()));
+        QObject::connect(spatialBinNBox, SIGNAL(valueChanged(int)), MainWClass, SLOT(updateInNetSpatial(int)));
 
         QMetaObject::connectSlotsByName(MainWClass);
     } // setupUi
@@ -428,6 +462,16 @@ public:
 "<td style=\"border: none;\">\n"
 "<p align=\"right\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Cell type</p></td></tr></table></body></html>", 0, QApplication::UnicodeUTF8));
         makeClusterButton->setText(QApplication::translate("MainWClass", "make clusters", 0, QApplication::UnicodeUTF8));
+        label_16->setText(QApplication::translate("MainWClass", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<table style=\"-qt-table-type: root; margin-top:4px; margin-bottom:4px; margin-left:4px; margin-right:4px;\">\n"
+"<tr>\n"
+"<td style=\"border: none;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Input net spatial view</span></p></td></tr></table></body></html>", 0, QApplication::UnicodeUTF8));
+        label_17->setText(QApplication::translate("MainWClass", "bin #", 0, QApplication::UnicodeUTF8));
+        dispSpatialButton->setText(QApplication::translate("MainWClass", "Display Spatial", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

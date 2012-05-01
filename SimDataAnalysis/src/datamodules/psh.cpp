@@ -104,6 +104,10 @@ unsigned int PSHData::getPSHBinMaxVal()
 	return pshBinMaxVal;
 }
 
+const unsigned int *PSHData::getDataRow(unsigned int binN)
+{
+	return data[binN];
+}
 const unsigned int **PSHData::getData()
 {
 	return (const unsigned int **)data;
@@ -428,6 +432,3 @@ QPixmap *PSHData::paintPSH(float *psh)
 
 	return paintBuf;
 }
-
-
-

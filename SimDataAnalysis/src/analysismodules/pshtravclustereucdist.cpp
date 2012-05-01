@@ -70,8 +70,8 @@ void EucDistPSHTravCluster::generateDist()
 			pshRow2[j]=data[j][cellInd2];
 		}
 		distances[i]=calcEuclideanDist(pshRow1, pshRow2);
-		cout.precision(15);
-		cout<<cellInd1<<" "<<cellInd2<<" "<<fixed<<distances[i]<<endl;
+//		cout.precision(15);
+//		cout<<cellInd1<<" "<<cellInd2<<" "<<fixed<<distances[i]<<endl;
 	}
 
 //	cout.precision(15);
