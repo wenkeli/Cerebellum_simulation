@@ -24,6 +24,7 @@ public:
 	~InNetSpatialVis();
 
 	QPixmap *paintSpatial(unsigned int binN);
+
 private:
 	InNetSpatialVis();
 

@@ -122,6 +122,7 @@ public slots:
 
 	void dispInNetSpatialNP();
 	void updateInNetSpatial(int);
+	void exportInNetBinData();
 
 	void loadSimFile();
 

@@ -399,7 +399,7 @@ p, li { white-space: pre-wrap; }
        </property>
       </widget>
      </item>
-     <item row="2" column="0" colspan="2">
+     <item row="2" column="0">
       <widget class="QPushButton" name="dispSpatialButton">
        <property name="text">
         <string>Display Spatial</string>
@@ -408,6 +408,13 @@ p, li { white-space: pre-wrap; }
      </item>
      <item row="1" column="1">
       <widget class="QSpinBox" name="spatialBinNBox"/>
+     </item>
+     <item row="2" column="1">
+      <widget class="QPushButton" name="exportInNetBinButton">
+       <property name="text">
+        <string>Export bin data</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -742,7 +749,7 @@ p, li { white-space: pre-wrap; }
    <slot>dispInNetSpatialNP()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>431</x>
+     <x>320</x>
      <y>544</y>
     </hint>
     <hint type="destinationlabel">
@@ -764,6 +771,22 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel">
      <x>16</x>
      <y>31</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>exportInNetBinButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWClass</receiver>
+   <slot>exportInNetBinData()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>439</x>
+     <y>547</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>0</x>
+     <y>15</y>
     </hint>
    </hints>
   </connection>
@@ -793,5 +816,6 @@ p, li { white-space: pre-wrap; }
   <slot>dispClusterCellNP()</slot>
   <slot>dispInNetSpatialNP()</slot>
   <slot>updateInNetSpatial(int)</slot>
+  <slot>exportInNetBinData()</slot>
  </slots>
 </ui>

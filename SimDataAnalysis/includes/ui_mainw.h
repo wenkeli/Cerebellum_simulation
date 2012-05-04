@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainw.ui'
 **
-** Created: Tue May 1 15:26:21 2012
+** Created: Wed May 2 13:40:15 2012
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -87,6 +87,7 @@ public:
     QLabel *label_17;
     QPushButton *dispSpatialButton;
     QSpinBox *spatialBinNBox;
+    QPushButton *exportInNetBinButton;
 
     void setupUi(QMainWindow *MainWClass)
     {
@@ -345,12 +346,17 @@ public:
         dispSpatialButton = new QPushButton(gridLayoutWidget_6);
         dispSpatialButton->setObjectName(QString::fromUtf8("dispSpatialButton"));
 
-        gridLayout_6->addWidget(dispSpatialButton, 2, 0, 1, 2);
+        gridLayout_6->addWidget(dispSpatialButton, 2, 0, 1, 1);
 
         spatialBinNBox = new QSpinBox(gridLayoutWidget_6);
         spatialBinNBox->setObjectName(QString::fromUtf8("spatialBinNBox"));
 
         gridLayout_6->addWidget(spatialBinNBox, 1, 1, 1, 1);
+
+        exportInNetBinButton = new QPushButton(gridLayoutWidget_6);
+        exportInNetBinButton->setObjectName(QString::fromUtf8("exportInNetBinButton"));
+
+        gridLayout_6->addWidget(exportInNetBinButton, 2, 1, 1, 1);
 
         MainWClass->setCentralWidget(centralwidget);
 
@@ -377,6 +383,7 @@ public:
         QObject::connect(newClusterCellPButton, SIGNAL(clicked()), MainWClass, SLOT(dispClusterCellNP()));
         QObject::connect(dispSpatialButton, SIGNAL(clicked()), MainWClass, SLOT(dispInNetSpatialNP()));
         QObject::connect(spatialBinNBox, SIGNAL(valueChanged(int)), MainWClass, SLOT(updateInNetSpatial(int)));
+        QObject::connect(exportInNetBinButton, SIGNAL(clicked()), MainWClass, SLOT(exportInNetBinData()));
 
         QMetaObject::connectSlotsByName(MainWClass);
     } // setupUi
@@ -472,6 +479,7 @@ public:
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">Input net spatial view</span></p></td></tr></table></body></html>", 0, QApplication::UnicodeUTF8));
         label_17->setText(QApplication::translate("MainWClass", "bin #", 0, QApplication::UnicodeUTF8));
         dispSpatialButton->setText(QApplication::translate("MainWClass", "Display Spatial", 0, QApplication::UnicodeUTF8));
+        exportInNetBinButton->setText(QApplication::translate("MainWClass", "Export bin data", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

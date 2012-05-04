@@ -56,7 +56,7 @@ InNetSpatialVis::InNetSpatialVis(PSHData *gr, PSHData *go)
 			int paintX;
 			int paintY;
 
-			greyVal=(int)(((float)grPSHRow[j]/numTrials)*255);
+			greyVal=(int)(((float)grPSHRow[j]/grPSHMaxVal*2)*255);
 			greyVal=(greyVal>255)*255+(greyVal<=255)*greyVal;
 			paintColor.setRgb(greyVal, greyVal, greyVal, 255);
 
@@ -95,7 +95,5 @@ QPixmap *InNetSpatialVis::paintSpatial(unsigned int binN)
 
 	return paintBuf;
 }
-
-
 
 

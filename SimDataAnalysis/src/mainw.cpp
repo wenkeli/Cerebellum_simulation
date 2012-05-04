@@ -101,6 +101,7 @@ MainW::MainW(QWidget *parent, QApplication *a)
 
 	ui.dispSpatialButton->setDisabled(true);
 	ui.spatialBinNBox->setDisabled(true);
+	ui.exportInNetBinButton->setDisabled(true);
 //	cerr<<"here7"<<endl;
 }
 
@@ -326,6 +327,7 @@ void MainW::loadPSHFile()
 	ui.spatialBinNBox->setMaximum(grPSH->getTotalNumBins()-1);
 	ui.spatialBinNBox->setValue(0);
 	ui.spatialBinNBox->setEnabled(true);
+	ui.exportInNetBinButton->setEnabled(true);
 }
 
 void MainW::calcPFPCPlasticity()
@@ -666,6 +668,51 @@ void MainW::updateInNetSpatial(int binN)
 	}
 
 	curSpatialWindow->switchBuf(spatialVis->paintSpatial(binN));
+}
+
+void MainW::exportInNetBinData()
+{
+	ofstream outfile;
+	QString fileName;
+	int binN;
+	int numGR;
+	int numGO;
+
+	const unsigned int *grPSHRow;
+	const unsigned int *goPSHRow;
+
+	binN=ui.spatialBinNBox->value();
+
+	fileName=QFileDialog::getSaveFileName(this, "please choose the file to write to",
+			"/", "");
+
+	cerr<<"bin Save file name: "<<fileName.toStdString()<<endl;
+
+	outfile.open(fileName.toStdString().c_str());
+	if(!outfile.good() || !outfile.is_open())
+	{
+		cerr<<"error opening file "<<fileName.toStdString()<<endl;
+		return;
+	}
+
+	grPSHRow=grPSH->getDataRow(binN);
+	goPSHRow=goPSH->getDataRow(binN);
+	numGR=grPSH->getCellNum();
+	numGO=goPSH->getCellNum();
+
+//	for(int i=0; i<numGO; i++)
+//	{
+//		outfile<<goPSHRow[i]<<" ";
+//	}
+//	outfile<<endl;
+
+	for(int i=0; i<numGR; i++)
+	{
+		outfile<<grPSHRow[i]<<" ";
+	}
+	outfile.flush();
+	outfile.close();
+	cerr<<"done!"<<endl;
 }
 
 //void MainW::calcTempMetrics()

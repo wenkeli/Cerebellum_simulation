@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainw.h'
 **
-** Created: Tue May 1 15:26:21 2012
+** Created: Wed May 2 13:40:15 2012
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainW[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-      24,   14, // methods
+      25,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -53,8 +53,9 @@ static const uint qt_meta_data_MainW[] = {
      398,    6,    6,    6, 0x0a,
      419,    6,    6,    6, 0x0a,
      443,    6,    6,    6, 0x0a,
-     457,    6,    6,    6, 0x0a,
-     469,    6,    6,    6, 0x0a,
+     464,    6,    6,    6, 0x0a,
+     478,    6,    6,    6, 0x0a,
+     490,    6,    6,    6, 0x0a,
 
        0        // eod
 };
@@ -71,8 +72,8 @@ static const char qt_meta_stringdata_MainW[] = {
     "makeClusters()\0updateClusterDisp(int)\0"
     "updateClusterCellDisp(int)\0dispClusterNP()\0"
     "dispClusterCellNP()\0dispInNetSpatialNP()\0"
-    "updateInNetSpatial(int)\0loadSimFile()\0"
-    "exportSim()\0exportSinglePSH()\0"
+    "updateInNetSpatial(int)\0exportInNetBinData()\0"
+    "loadSimFile()\0exportSim()\0exportSinglePSH()\0"
 };
 
 const QMetaObject MainW::staticMetaObject = {
@@ -125,12 +126,13 @@ int MainW::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 18: dispClusterCellNP(); break;
         case 19: dispInNetSpatialNP(); break;
         case 20: updateInNetSpatial((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 21: loadSimFile(); break;
-        case 22: exportSim(); break;
-        case 23: exportSinglePSH(); break;
+        case 21: exportInNetBinData(); break;
+        case 22: loadSimFile(); break;
+        case 23: exportSim(); break;
+        case 24: exportSinglePSH(); break;
         default: ;
         }
-        _id -= 24;
+        _id -= 25;
     }
     return _id;
 }
