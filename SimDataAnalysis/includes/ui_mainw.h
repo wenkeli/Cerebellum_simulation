@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainw.ui'
 **
-** Created: Wed May 2 13:40:15 2012
+** Created: Thu May 10 13:25:43 2012
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -37,17 +37,20 @@ public:
     QPushButton *quitButton;
     QWidget *gridLayoutWidget_2;
     QGridLayout *gridLayout_2;
+    QLabel *label_3;
+    QLabel *label_13;
+    QComboBox *dispCellTypeBox;
     QLabel *label;
     QSpinBox *multiCellStrideBox;
-    QLabel *label_2;
     QSpinBox *multiCellPageBox;
+    QLabel *label_2;
+    QPushButton *multicellNPButton;
+    QPushButton *singleCellNPButton;
     QLabel *label_4;
     QSpinBox *singleCellNumBox;
-    QComboBox *dispCellTypeBox;
-    QLabel *label_3;
-    QPushButton *singleCellNPButton;
-    QPushButton *multicellNPButton;
-    QLabel *label_13;
+    QPushButton *fuseBinsButton;
+    QLabel *label_18;
+    QSpinBox *numBinsFuseBox;
     QWidget *gridLayoutWidget_3;
     QGridLayout *gridLayout_3;
     QLabel *label_5;
@@ -88,17 +91,32 @@ public:
     QPushButton *dispSpatialButton;
     QSpinBox *spatialBinNBox;
     QPushButton *exportInNetBinButton;
+    QWidget *gridLayoutWidget_7;
+    QGridLayout *gridLayout_7;
+    QLabel *label_20;
+    QLabel *label_21;
+    QLabel *label_22;
+    QLabel *label_19;
+    QSpinBox *dimension1StartBNBox;
+    QSpinBox *dimension1EndBNBox;
+    QSpinBox *dimension2StartBNBox;
+    QSpinBox *dimension2EndBNBox;
+    QSpinBox *dimension3StartBNBox;
+    QSpinBox *dimension3EndBNBox;
+    QLabel *label_23;
+    QLabel *label_24;
+    QPushButton *generate3DClusterButton;
 
     void setupUi(QMainWindow *MainWClass)
     {
         if (MainWClass->objectName().isEmpty())
             MainWClass->setObjectName(QString::fromUtf8("MainWClass"));
-        MainWClass->resize(614, 637);
+        MainWClass->resize(626, 814);
         centralwidget = new QWidget(MainWClass);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         horizontalLayoutWidget = new QWidget(centralwidget);
         horizontalLayoutWidget->setObjectName(QString::fromUtf8("horizontalLayoutWidget"));
-        horizontalLayoutWidget->setGeometry(QRect(30, 570, 561, 41));
+        horizontalLayoutWidget->setGeometry(QRect(30, 750, 561, 41));
         horizontalLayout = new QHBoxLayout(horizontalLayoutWidget);
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
         horizontalLayout->setContentsMargins(0, 0, 0, 0);
@@ -119,29 +137,54 @@ public:
 
         gridLayoutWidget_2 = new QWidget(centralwidget);
         gridLayoutWidget_2->setObjectName(QString::fromUtf8("gridLayoutWidget_2"));
-        gridLayoutWidget_2->setGeometry(QRect(30, 20, 561, 151));
+        gridLayoutWidget_2->setGeometry(QRect(30, 20, 561, 171));
         gridLayout_2 = new QGridLayout(gridLayoutWidget_2);
         gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
         gridLayout_2->setContentsMargins(0, 0, 0, 0);
+        label_3 = new QLabel(gridLayoutWidget_2);
+        label_3->setObjectName(QString::fromUtf8("label_3"));
+
+        gridLayout_2->addWidget(label_3, 1, 1, 1, 1);
+
+        label_13 = new QLabel(gridLayoutWidget_2);
+        label_13->setObjectName(QString::fromUtf8("label_13"));
+
+        gridLayout_2->addWidget(label_13, 1, 0, 1, 1);
+
+        dispCellTypeBox = new QComboBox(gridLayoutWidget_2);
+        dispCellTypeBox->setObjectName(QString::fromUtf8("dispCellTypeBox"));
+
+        gridLayout_2->addWidget(dispCellTypeBox, 1, 2, 1, 1);
+
         label = new QLabel(gridLayoutWidget_2);
         label->setObjectName(QString::fromUtf8("label"));
 
-        gridLayout_2->addWidget(label, 3, 0, 1, 1);
+        gridLayout_2->addWidget(label, 2, 0, 1, 1);
 
         multiCellStrideBox = new QSpinBox(gridLayoutWidget_2);
         multiCellStrideBox->setObjectName(QString::fromUtf8("multiCellStrideBox"));
 
-        gridLayout_2->addWidget(multiCellStrideBox, 3, 1, 1, 1);
-
-        label_2 = new QLabel(gridLayoutWidget_2);
-        label_2->setObjectName(QString::fromUtf8("label_2"));
-
-        gridLayout_2->addWidget(label_2, 4, 0, 1, 1);
+        gridLayout_2->addWidget(multiCellStrideBox, 2, 1, 1, 1);
 
         multiCellPageBox = new QSpinBox(gridLayoutWidget_2);
         multiCellPageBox->setObjectName(QString::fromUtf8("multiCellPageBox"));
 
-        gridLayout_2->addWidget(multiCellPageBox, 4, 1, 1, 1);
+        gridLayout_2->addWidget(multiCellPageBox, 3, 1, 1, 1);
+
+        label_2 = new QLabel(gridLayoutWidget_2);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+
+        gridLayout_2->addWidget(label_2, 3, 0, 1, 1);
+
+        multicellNPButton = new QPushButton(gridLayoutWidget_2);
+        multicellNPButton->setObjectName(QString::fromUtf8("multicellNPButton"));
+
+        gridLayout_2->addWidget(multicellNPButton, 4, 0, 1, 2);
+
+        singleCellNPButton = new QPushButton(gridLayoutWidget_2);
+        singleCellNPButton->setObjectName(QString::fromUtf8("singleCellNPButton"));
+
+        gridLayout_2->addWidget(singleCellNPButton, 4, 2, 1, 2);
 
         label_4 = new QLabel(gridLayoutWidget_2);
         label_4->setObjectName(QString::fromUtf8("label_4"));
@@ -153,30 +196,20 @@ public:
 
         gridLayout_2->addWidget(singleCellNumBox, 3, 3, 1, 1);
 
-        dispCellTypeBox = new QComboBox(gridLayoutWidget_2);
-        dispCellTypeBox->setObjectName(QString::fromUtf8("dispCellTypeBox"));
+        fuseBinsButton = new QPushButton(gridLayoutWidget_2);
+        fuseBinsButton->setObjectName(QString::fromUtf8("fuseBinsButton"));
 
-        gridLayout_2->addWidget(dispCellTypeBox, 1, 2, 1, 1);
+        gridLayout_2->addWidget(fuseBinsButton, 5, 2, 1, 2);
 
-        label_3 = new QLabel(gridLayoutWidget_2);
-        label_3->setObjectName(QString::fromUtf8("label_3"));
+        label_18 = new QLabel(gridLayoutWidget_2);
+        label_18->setObjectName(QString::fromUtf8("label_18"));
 
-        gridLayout_2->addWidget(label_3, 1, 1, 1, 1);
+        gridLayout_2->addWidget(label_18, 5, 0, 1, 1);
 
-        singleCellNPButton = new QPushButton(gridLayoutWidget_2);
-        singleCellNPButton->setObjectName(QString::fromUtf8("singleCellNPButton"));
+        numBinsFuseBox = new QSpinBox(gridLayoutWidget_2);
+        numBinsFuseBox->setObjectName(QString::fromUtf8("numBinsFuseBox"));
 
-        gridLayout_2->addWidget(singleCellNPButton, 5, 2, 1, 2);
-
-        multicellNPButton = new QPushButton(gridLayoutWidget_2);
-        multicellNPButton->setObjectName(QString::fromUtf8("multicellNPButton"));
-
-        gridLayout_2->addWidget(multicellNPButton, 5, 0, 1, 2);
-
-        label_13 = new QLabel(gridLayoutWidget_2);
-        label_13->setObjectName(QString::fromUtf8("label_13"));
-
-        gridLayout_2->addWidget(label_13, 0, 1, 1, 2);
+        gridLayout_2->addWidget(numBinsFuseBox, 5, 1, 1, 1);
 
         gridLayoutWidget_3 = new QWidget(centralwidget);
         gridLayoutWidget_3->setObjectName(QString::fromUtf8("gridLayoutWidget_3"));
@@ -242,7 +275,7 @@ public:
 
         gridLayoutWidget_4 = new QWidget(centralwidget);
         gridLayoutWidget_4->setObjectName(QString::fromUtf8("gridLayoutWidget_4"));
-        gridLayoutWidget_4->setGeometry(QRect(30, 190, 181, 101));
+        gridLayoutWidget_4->setGeometry(QRect(30, 200, 181, 101));
         gridLayout_4 = new QGridLayout(gridLayoutWidget_4);
         gridLayout_4->setObjectName(QString::fromUtf8("gridLayout_4"));
         gridLayout_4->setContentsMargins(0, 0, 0, 0);
@@ -273,7 +306,7 @@ public:
 
         gridLayoutWidget_5 = new QWidget(centralwidget);
         gridLayoutWidget_5->setObjectName(QString::fromUtf8("gridLayoutWidget_5"));
-        gridLayoutWidget_5->setGeometry(QRect(220, 190, 371, 131));
+        gridLayoutWidget_5->setGeometry(QRect(220, 200, 371, 131));
         gridLayout_5 = new QGridLayout(gridLayoutWidget_5);
         gridLayout_5->setObjectName(QString::fromUtf8("gridLayout_5"));
         gridLayout_5->setContentsMargins(0, 0, 0, 0);
@@ -329,7 +362,7 @@ public:
 
         gridLayoutWidget_6 = new QWidget(centralwidget);
         gridLayoutWidget_6->setObjectName(QString::fromUtf8("gridLayoutWidget_6"));
-        gridLayoutWidget_6->setGeometry(QRect(170, 460, 311, 98));
+        gridLayoutWidget_6->setGeometry(QRect(160, 460, 311, 98));
         gridLayout_6 = new QGridLayout(gridLayoutWidget_6);
         gridLayout_6->setObjectName(QString::fromUtf8("gridLayout_6"));
         gridLayout_6->setContentsMargins(0, 0, 0, 0);
@@ -357,6 +390,77 @@ public:
         exportInNetBinButton->setObjectName(QString::fromUtf8("exportInNetBinButton"));
 
         gridLayout_6->addWidget(exportInNetBinButton, 2, 1, 1, 1);
+
+        gridLayoutWidget_7 = new QWidget(centralwidget);
+        gridLayoutWidget_7->setObjectName(QString::fromUtf8("gridLayoutWidget_7"));
+        gridLayoutWidget_7->setGeometry(QRect(40, 580, 541, 151));
+        gridLayout_7 = new QGridLayout(gridLayoutWidget_7);
+        gridLayout_7->setObjectName(QString::fromUtf8("gridLayout_7"));
+        gridLayout_7->setContentsMargins(0, 0, 0, 0);
+        label_20 = new QLabel(gridLayoutWidget_7);
+        label_20->setObjectName(QString::fromUtf8("label_20"));
+
+        gridLayout_7->addWidget(label_20, 2, 1, 1, 1);
+
+        label_21 = new QLabel(gridLayoutWidget_7);
+        label_21->setObjectName(QString::fromUtf8("label_21"));
+
+        gridLayout_7->addWidget(label_21, 2, 2, 1, 1);
+
+        label_22 = new QLabel(gridLayoutWidget_7);
+        label_22->setObjectName(QString::fromUtf8("label_22"));
+
+        gridLayout_7->addWidget(label_22, 2, 3, 1, 1);
+
+        label_19 = new QLabel(gridLayoutWidget_7);
+        label_19->setObjectName(QString::fromUtf8("label_19"));
+
+        gridLayout_7->addWidget(label_19, 1, 1, 1, 2);
+
+        dimension1StartBNBox = new QSpinBox(gridLayoutWidget_7);
+        dimension1StartBNBox->setObjectName(QString::fromUtf8("dimension1StartBNBox"));
+
+        gridLayout_7->addWidget(dimension1StartBNBox, 3, 1, 1, 1);
+
+        dimension1EndBNBox = new QSpinBox(gridLayoutWidget_7);
+        dimension1EndBNBox->setObjectName(QString::fromUtf8("dimension1EndBNBox"));
+
+        gridLayout_7->addWidget(dimension1EndBNBox, 4, 1, 1, 1);
+
+        dimension2StartBNBox = new QSpinBox(gridLayoutWidget_7);
+        dimension2StartBNBox->setObjectName(QString::fromUtf8("dimension2StartBNBox"));
+
+        gridLayout_7->addWidget(dimension2StartBNBox, 3, 2, 1, 1);
+
+        dimension2EndBNBox = new QSpinBox(gridLayoutWidget_7);
+        dimension2EndBNBox->setObjectName(QString::fromUtf8("dimension2EndBNBox"));
+
+        gridLayout_7->addWidget(dimension2EndBNBox, 4, 2, 1, 1);
+
+        dimension3StartBNBox = new QSpinBox(gridLayoutWidget_7);
+        dimension3StartBNBox->setObjectName(QString::fromUtf8("dimension3StartBNBox"));
+
+        gridLayout_7->addWidget(dimension3StartBNBox, 3, 3, 1, 1);
+
+        dimension3EndBNBox = new QSpinBox(gridLayoutWidget_7);
+        dimension3EndBNBox->setObjectName(QString::fromUtf8("dimension3EndBNBox"));
+
+        gridLayout_7->addWidget(dimension3EndBNBox, 4, 3, 1, 1);
+
+        label_23 = new QLabel(gridLayoutWidget_7);
+        label_23->setObjectName(QString::fromUtf8("label_23"));
+
+        gridLayout_7->addWidget(label_23, 3, 0, 1, 1);
+
+        label_24 = new QLabel(gridLayoutWidget_7);
+        label_24->setObjectName(QString::fromUtf8("label_24"));
+
+        gridLayout_7->addWidget(label_24, 4, 0, 1, 1);
+
+        generate3DClusterButton = new QPushButton(gridLayoutWidget_7);
+        generate3DClusterButton->setObjectName(QString::fromUtf8("generate3DClusterButton"));
+
+        gridLayout_7->addWidget(generate3DClusterButton, 5, 1, 1, 2);
 
         MainWClass->setCentralWidget(centralwidget);
 
@@ -394,12 +498,7 @@ public:
         loadSimButton->setText(QApplication::translate("MainWClass", "Load Sim State", 0, QApplication::UnicodeUTF8));
         loadPSHButton->setText(QApplication::translate("MainWClass", "Load PSH data", 0, QApplication::UnicodeUTF8));
         quitButton->setText(QApplication::translate("MainWClass", "quit", 0, QApplication::UnicodeUTF8));
-        label->setText(QApplication::translate("MainWClass", "multi disp page stride", 0, QApplication::UnicodeUTF8));
-        label_2->setText(QApplication::translate("MainWClass", "multi disp page #", 0, QApplication::UnicodeUTF8));
-        label_4->setText(QApplication::translate("MainWClass", "single disp cell #", 0, QApplication::UnicodeUTF8));
         label_3->setText(QApplication::translate("MainWClass", "Display cell type", 0, QApplication::UnicodeUTF8));
-        singleCellNPButton->setText(QApplication::translate("MainWClass", "new single cell PSH panel", 0, QApplication::UnicodeUTF8));
-        multicellNPButton->setText(QApplication::translate("MainWClass", "new multi cell PSH panel", 0, QApplication::UnicodeUTF8));
         label_13->setText(QApplication::translate("MainWClass", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -408,6 +507,13 @@ public:
 "<tr>\n"
 "<td style=\"border: none;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">PSH display</span></p></td></tr></table></body></html>", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("MainWClass", "multi disp page stride", 0, QApplication::UnicodeUTF8));
+        label_2->setText(QApplication::translate("MainWClass", "multi disp page #", 0, QApplication::UnicodeUTF8));
+        multicellNPButton->setText(QApplication::translate("MainWClass", "new multi cell PSH panel", 0, QApplication::UnicodeUTF8));
+        singleCellNPButton->setText(QApplication::translate("MainWClass", "new single cell PSH panel", 0, QApplication::UnicodeUTF8));
+        label_4->setText(QApplication::translate("MainWClass", "single disp cell #", 0, QApplication::UnicodeUTF8));
+        fuseBinsButton->setText(QApplication::translate("MainWClass", "fuseBins", 0, QApplication::UnicodeUTF8));
+        label_18->setText(QApplication::translate("MainWClass", "#bins to fuse", 0, QApplication::UnicodeUTF8));
         label_5->setText(QApplication::translate("MainWClass", "PFPC US time", 0, QApplication::UnicodeUTF8));
         calcPFPCPlastButton->setText(QApplication::translate("MainWClass", "calc PFPC", 0, QApplication::UnicodeUTF8));
         exportPFPCPlastActButton->setText(QApplication::translate("MainWClass", "export PFPC", 0, QApplication::UnicodeUTF8));
@@ -480,6 +586,20 @@ public:
         label_17->setText(QApplication::translate("MainWClass", "bin #", 0, QApplication::UnicodeUTF8));
         dispSpatialButton->setText(QApplication::translate("MainWClass", "Display Spatial", 0, QApplication::UnicodeUTF8));
         exportInNetBinButton->setText(QApplication::translate("MainWClass", "Export bin data", 0, QApplication::UnicodeUTF8));
+        label_20->setText(QApplication::translate("MainWClass", "dimension1", 0, QApplication::UnicodeUTF8));
+        label_21->setText(QApplication::translate("MainWClass", "dimension2", 0, QApplication::UnicodeUTF8));
+        label_22->setText(QApplication::translate("MainWClass", "dimension3", 0, QApplication::UnicodeUTF8));
+        label_19->setText(QApplication::translate("MainWClass", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<table border=\"0\" style=\"-qt-table-type: root; margin-top:4px; margin-bottom:4px; margin-left:4px; margin-right:4px;\">\n"
+"<tr>\n"
+"<td style=\"border: none;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">3D clustering</span></p></td></tr></table></body></html>", 0, QApplication::UnicodeUTF8));
+        label_23->setText(QApplication::translate("MainWClass", "startBin#", 0, QApplication::UnicodeUTF8));
+        label_24->setText(QApplication::translate("MainWClass", "endBin#", 0, QApplication::UnicodeUTF8));
+        generate3DClusterButton->setText(QApplication::translate("MainWClass", "generate 3D cluster data", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };
