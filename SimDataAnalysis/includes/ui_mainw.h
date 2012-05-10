@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainw.ui'
 **
-** Created: Thu May 10 13:25:43 2012
+** Created: Thu May 10 13:44:52 2012
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -96,7 +96,6 @@ public:
     QLabel *label_20;
     QLabel *label_21;
     QLabel *label_22;
-    QLabel *label_19;
     QSpinBox *dimension1StartBNBox;
     QSpinBox *dimension1EndBNBox;
     QSpinBox *dimension2StartBNBox;
@@ -106,6 +105,9 @@ public:
     QLabel *label_23;
     QLabel *label_24;
     QPushButton *generate3DClusterButton;
+    QLabel *label_19;
+    QLabel *label_25;
+    QComboBox *cluster3DCellTypeBox;
 
     void setupUi(QMainWindow *MainWClass)
     {
@@ -412,11 +414,6 @@ public:
 
         gridLayout_7->addWidget(label_22, 2, 3, 1, 1);
 
-        label_19 = new QLabel(gridLayoutWidget_7);
-        label_19->setObjectName(QString::fromUtf8("label_19"));
-
-        gridLayout_7->addWidget(label_19, 1, 1, 1, 2);
-
         dimension1StartBNBox = new QSpinBox(gridLayoutWidget_7);
         dimension1StartBNBox->setObjectName(QString::fromUtf8("dimension1StartBNBox"));
 
@@ -462,6 +459,21 @@ public:
 
         gridLayout_7->addWidget(generate3DClusterButton, 5, 1, 1, 2);
 
+        label_19 = new QLabel(gridLayoutWidget_7);
+        label_19->setObjectName(QString::fromUtf8("label_19"));
+
+        gridLayout_7->addWidget(label_19, 1, 0, 1, 1);
+
+        label_25 = new QLabel(gridLayoutWidget_7);
+        label_25->setObjectName(QString::fromUtf8("label_25"));
+
+        gridLayout_7->addWidget(label_25, 1, 1, 1, 1);
+
+        cluster3DCellTypeBox = new QComboBox(gridLayoutWidget_7);
+        cluster3DCellTypeBox->setObjectName(QString::fromUtf8("cluster3DCellTypeBox"));
+
+        gridLayout_7->addWidget(cluster3DCellTypeBox, 1, 2, 1, 1);
+
         MainWClass->setCentralWidget(centralwidget);
 
         retranslateUi(MainWClass);
@@ -488,6 +500,7 @@ public:
         QObject::connect(dispSpatialButton, SIGNAL(clicked()), MainWClass, SLOT(dispInNetSpatialNP()));
         QObject::connect(spatialBinNBox, SIGNAL(valueChanged(int)), MainWClass, SLOT(updateInNetSpatial(int)));
         QObject::connect(exportInNetBinButton, SIGNAL(clicked()), MainWClass, SLOT(exportInNetBinData()));
+        QObject::connect(generate3DClusterButton, SIGNAL(clicked()), MainWClass, SLOT(generate3DClusterData()));
 
         QMetaObject::connectSlotsByName(MainWClass);
     } // setupUi
@@ -589,6 +602,9 @@ public:
         label_20->setText(QApplication::translate("MainWClass", "dimension1", 0, QApplication::UnicodeUTF8));
         label_21->setText(QApplication::translate("MainWClass", "dimension2", 0, QApplication::UnicodeUTF8));
         label_22->setText(QApplication::translate("MainWClass", "dimension3", 0, QApplication::UnicodeUTF8));
+        label_23->setText(QApplication::translate("MainWClass", "startBin#", 0, QApplication::UnicodeUTF8));
+        label_24->setText(QApplication::translate("MainWClass", "endBin#", 0, QApplication::UnicodeUTF8));
+        generate3DClusterButton->setText(QApplication::translate("MainWClass", "generate 3D cluster data", 0, QApplication::UnicodeUTF8));
         label_19->setText(QApplication::translate("MainWClass", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -597,9 +613,14 @@ public:
 "<tr>\n"
 "<td style=\"border: none;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">3D clustering</span></p></td></tr></table></body></html>", 0, QApplication::UnicodeUTF8));
-        label_23->setText(QApplication::translate("MainWClass", "startBin#", 0, QApplication::UnicodeUTF8));
-        label_24->setText(QApplication::translate("MainWClass", "endBin#", 0, QApplication::UnicodeUTF8));
-        generate3DClusterButton->setText(QApplication::translate("MainWClass", "generate 3D cluster data", 0, QApplication::UnicodeUTF8));
+        label_25->setText(QApplication::translate("MainWClass", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<table style=\"-qt-table-type: root; margin-top:4px; margin-bottom:4px; margin-left:4px; margin-right:4px;\">\n"
+"<tr>\n"
+"<td style=\"border: none;\">\n"
+"<p align=\"right\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Cell Type</p></td></tr></table></body></html>", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

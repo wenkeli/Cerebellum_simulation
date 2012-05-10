@@ -124,6 +124,8 @@ public slots:
 	void updateInNetSpatial(int);
 	void exportInNetBinData();
 
+	void generate3DClusterData();
+
 	void loadSimFile();
 
 	void exportSim();

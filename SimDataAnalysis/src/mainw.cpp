@@ -56,6 +56,7 @@ MainW::MainW(QWidget *parent, QApplication *a)
 	for(int i=0; i<8; i++)
 	{
 		ui.dispCellTypeBox->addItem(cellTypes[i]);
+		ui.cluster3DCellTypeBox->addItem(cellTypes[i]);
 	}
 
 //	cerr<<"here4";
@@ -102,6 +103,8 @@ MainW::MainW(QWidget *parent, QApplication *a)
 	ui.dispSpatialButton->setDisabled(true);
 	ui.spatialBinNBox->setDisabled(true);
 	ui.exportInNetBinButton->setDisabled(true);
+
+	ui.generate3DClusterButton->setDisabled(true);
 //	cerr<<"here7"<<endl;
 }
 
@@ -327,6 +330,8 @@ void MainW::loadPSHFile()
 	ui.spatialBinNBox->setMaximum(grPSH->getTotalNumBins()-1);
 	ui.spatialBinNBox->setValue(0);
 	ui.spatialBinNBox->setEnabled(true);
+	ui.exportInNetBinButton->setEnabled(true);
+
 	ui.exportInNetBinButton->setEnabled(true);
 }
 
@@ -713,6 +718,11 @@ void MainW::exportInNetBinData()
 	outfile.flush();
 	outfile.close();
 	cerr<<"done!"<<endl;
+}
+
+void MainW::generate3DClusterData()
+{
+
 }
 
 //void MainW::calcTempMetrics()
