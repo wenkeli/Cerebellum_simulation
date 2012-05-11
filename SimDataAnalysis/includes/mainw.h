@@ -24,6 +24,7 @@
 #include "analysismodules/pshtravclusterpos2st.h"
 #include "analysismodules/pshtravclustereucdist.h"
 #include "analysismodules/innetspatialvis.h"
+#include "analysismodules/pshmultibinact.h"
 
 #include "pshdispw.h"
 

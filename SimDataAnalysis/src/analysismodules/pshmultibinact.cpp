@@ -14,9 +14,9 @@ PSHMultiBinAct::PSHMultiBinAct(unsigned int startBN, unsigned int endBN, PSHData
 
 	maxPSHBinN=psh->getTotalNumBins();
 
-	if(startBN>=maxPSHBinN || endBN>=maxPSHBinN || startBN<endBN)
+	if(startBN>=maxPSHBinN || endBN>=maxPSHBinN || startBN>endBN)
 	{
-		cerr<<"PSHMultiBinN: bad bin numbers"<<maxPSHBinN<<" "<<startBN<<" "<<endBN<<endl;
+		cerr<<"PSHMultiBinN: bad bin numbers "<<maxPSHBinN<<" "<<startBN<<" "<<endBN<<endl;
 		delete this;
 		return;
 	}

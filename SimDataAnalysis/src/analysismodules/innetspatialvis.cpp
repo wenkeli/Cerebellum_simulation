@@ -48,24 +48,24 @@ InNetSpatialVis::InNetSpatialVis(PSHData *gr, PSHData *go)
 
 	//	cout<<"here"<<endl;
 
-		p.begin(paintBuf);
-		for(int j=0; j<numGR; j++)
-		{
-			QColor paintColor;
-			int greyVal;
-			int paintX;
-			int paintY;
-
-			greyVal=(int)(((float)grPSHRow[j]/grPSHMaxVal*2)*255);
-			greyVal=(greyVal>255)*255+(greyVal<=255)*greyVal;
-			paintColor.setRgb(greyVal, greyVal, greyVal, 255);
-
-			paintX=j%grGridX;
-			paintY=j/grGridX;
-			p.setPen(paintColor);
-			p.drawPoint(paintX, paintY);
-		}
-		p.end();
+//		p.begin(paintBuf);
+//		for(int j=0; j<numGR; j++)
+//		{
+//			QColor paintColor;
+//			int greyVal;
+//			int paintX;
+//			int paintY;
+//
+//			greyVal=(int)(((float)grPSHRow[j]/grPSHMaxVal*2)*255);
+//			greyVal=(greyVal>255)*255+(greyVal<=255)*greyVal;
+//			paintColor.setRgb(greyVal, greyVal, greyVal, 255);
+//
+//			paintX=j%grGridX;
+//			paintY=j/grGridX;
+//			p.setPen(paintColor);
+//			p.drawPoint(paintX, paintY);
+//		}
+//		p.end();
 
 		bufs[i]=paintBuf;
 	}

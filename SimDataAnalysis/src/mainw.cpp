@@ -332,7 +332,21 @@ void MainW::loadPSHFile()
 	ui.spatialBinNBox->setEnabled(true);
 	ui.exportInNetBinButton->setEnabled(true);
 
-	ui.exportInNetBinButton->setEnabled(true);
+	ui.dimension1StartBNBox->setMinimum(0);
+	ui.dimension2StartBNBox->setMinimum(0);
+	ui.dimension3StartBNBox->setMinimum(0);
+	ui.dimension1StartBNBox->setMaximum(grPSH->getTotalNumBins()-1);
+	ui.dimension2StartBNBox->setMaximum(grPSH->getTotalNumBins()-1);
+	ui.dimension3StartBNBox->setMaximum(grPSH->getTotalNumBins()-1);
+
+	ui.dimension1EndBNBox->setMinimum(0);
+	ui.dimension2EndBNBox->setMinimum(0);
+	ui.dimension3EndBNBox->setMinimum(0);
+	ui.dimension1EndBNBox->setMaximum(grPSH->getTotalNumBins()-1);
+	ui.dimension2EndBNBox->setMaximum(grPSH->getTotalNumBins()-1);
+	ui.dimension3EndBNBox->setMaximum(grPSH->getTotalNumBins()-1);
+
+	ui.generate3DClusterButton->setEnabled(true);
 }
 
 void MainW::calcPFPCPlasticity()
@@ -722,7 +736,86 @@ void MainW::exportInNetBinData()
 
 void MainW::generate3DClusterData()
 {
+	ofstream outfile;
+	QString fileName;
 
+	int cellTInd;
+	PSHData *psh;
+	PSHMultiBinAct *dims[3];
+	const float *dimsData[3];
+
+	int dimStartBNs[3];
+	int dimEndBNs[3];
+	int maxBinN;
+	int numCells;
+
+	cellTInd=ui.cluster3DCellTypeBox->currentIndex();
+
+	psh=*pshs[cellTInd];
+
+	maxBinN=psh->getTotalNumBins()-1;
+	numCells=psh->getCellNum();
+
+	dimStartBNs[0]=ui.dimension1StartBNBox->value();
+	dimStartBNs[1]=ui.dimension2StartBNBox->value();
+	dimStartBNs[2]=ui.dimension3StartBNBox->value();
+
+	dimEndBNs[0]=ui.dimension1EndBNBox->value();
+	dimEndBNs[1]=ui.dimension2EndBNBox->value();
+	dimEndBNs[2]=ui.dimension3EndBNBox->value();
+
+	for(int i=0; i<3; i++)
+	{
+		if(dimStartBNs[i]>maxBinN || dimStartBNs[i]<0)
+		{
+			return;
+		}
+		if(dimEndBNs[i]>maxBinN || dimEndBNs[i]<0)
+		{
+			return;
+		}
+
+		if(dimStartBNs[i]>dimEndBNs[i])
+		{
+			return;
+		}
+	}
+
+	for(int i=0; i<3; i++)
+	{
+		dims[i]=new PSHMultiBinAct(dimStartBNs[i], dimEndBNs[i], psh);
+		dimsData[i]=dims[i]->getActData();
+	}
+
+	fileName=QFileDialog::getSaveFileName(this, "Please select where to save 3d cluster data to", "/", "");
+
+	cerr<<"3d cluster file name: "<<fileName.toStdString()<<endl;
+
+	outfile.open(fileName.toStdString().c_str());
+	if(!outfile.good() || !outfile.is_open())
+	{
+		cerr<<"error opening file "<<fileName.toStdString()<<endl;
+
+		for(int i=0; i<3; i++)
+		{
+			delete dims[i];
+		}
+		return;
+	}
+
+	for(int i=0; i<numCells; i++)
+	{
+		for(int j=0; j<3; j++)
+		{
+			outfile<<dimsData[j][i]<<" ";
+		}
+		outfile<<endl;
+	}
+
+	for(int i=0; i<3; i++)
+	{
+		delete dims[i];
+	}
 }
 
 //void MainW::calcTempMetrics()
