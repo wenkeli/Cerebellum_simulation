@@ -23,6 +23,7 @@
 #include <interface/cbmsimcore.h>
 #include <tools/mfpoissonregen.h>
 #include <actspatialview.h>
+#include <acttemporalview.h>
 
 #include "../ecmanagement.h"
 
@@ -31,7 +32,8 @@ class SimThread : public QThread
 	Q_OBJECT
 
 public:
-	explicit SimThread(QObject *parent, ECManagement *ecsim, ActSpatialView *sview);
+	explicit SimThread(QObject *parent, ECManagement *ecsim,
+			ActSpatialView *sview, ActTemporalView *pcTV);
 	~SimThread();
 
 	void run();
@@ -40,11 +42,13 @@ public:
 	void unlockAccessData();
 signals:
 	void updateSpatialW(std::vector<bool>, int cellT, bool refresh);
+	void updatePCTW(std::vector<bool>, std::vector<float>, int t);
 
 private:
 	ECManagement *management;
 
 	ActSpatialView *spatialView;
+	ActTemporalView *pcTView;
 
 	void simLoop();
 

@@ -36,23 +36,45 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	colors.push_back(Qt::red);
 	colors.push_back(Qt::blue);
 //
-	spatialView=new ActSpatialView(xDims, yDims, sizes, colors);
+	inputNetSpatialView=new ActSpatialView(xDims, yDims, sizes, colors);
+
+	inputNetTView=new ActTemporalView(manager->getNumGO(), 1, manager->getInterTrialI(),
+			manager->getInterTrialI()/2, manager->getNumGO(), Qt::white);
+	scTView=new ActTemporalView(manager->getNumSC(), 1, manager->getInterTrialI(),
+			manager->getInterTrialI()/2, manager->getNumSC(), Qt::white);
+	bcTView=new ActTemporalView(manager->getNumBC(), 1, manager->getInterTrialI(),
+			manager->getInterTrialI()/2, manager->getNumBC(), Qt::green);
+	pcTView=new ActTemporalView(manager->getNumPC(), 24, manager->getInterTrialI(),
+			manager->getInterTrialI()/2, manager->getNumPC()*24, Qt::red);
+	ncTView=new ActTemporalView(manager->getNumNC(), 24, manager->getInterTrialI(),
+			manager->getInterTrialI()/2, manager->getNumNC()*24, Qt::green);
+	ioTView=new ActTemporalView(manager->getNumIO(), 64, manager->getInterTrialI(),
+			manager->getInterTrialI()/2, manager->getNumIO()*64, Qt::white);
 //
-	compThread=new SimThread(this, manager, spatialView);
+	compThread=new SimThread(this, manager, inputNetSpatialView, pcTView);
 }
 
 MainW::~MainW()
 {
 	delete compThread;
 	delete manager;
-	delete spatialView;
+	delete inputNetSpatialView;
+	delete inputNetTView;
+	delete scTView;
+	delete bcTView;
+	delete pcTView;
+	delete ncTView;
+	delete ioTView;
 }
 
 
 void MainW::run()
 {
-	spatialView->show();
-	spatialView->update();
+	inputNetSpatialView->show();
+	inputNetSpatialView->update();
+
+	pcTView->show();
+	pcTView->update();
 
 	compThread->start(QThread::TimeCriticalPriority);
 }

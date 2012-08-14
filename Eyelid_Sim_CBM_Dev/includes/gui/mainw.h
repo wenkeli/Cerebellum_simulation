@@ -9,6 +9,7 @@
 #include <QtGui/QColor>
 
 #include <actspatialview.h>
+#include <acttemporalview.h>
 
 #include "../ecmanagement.h"
 #include "simthread.h"
@@ -32,7 +33,15 @@ private:
     ECManagement *manager;
     SimThread *compThread;
 
-    ActSpatialView *spatialView;
+    ActSpatialView *inputNetSpatialView;
+
+    ActTemporalView *inputNetTView;
+    ActTemporalView *scTView;
+    ActTemporalView *bcTView;
+    ActTemporalView *pcTView;
+    ActTemporalView *ncTView;
+    ActTemporalView *ioTView;
+
 };
 
 #endif // MAINW_H

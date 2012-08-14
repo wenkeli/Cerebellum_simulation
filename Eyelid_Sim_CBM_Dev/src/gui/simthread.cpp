@@ -11,16 +11,22 @@
 
 using namespace std;
 
-SimThread::SimThread(QObject *parent, ECManagement *ecsim, ActSpatialView *sview)
+SimThread::SimThread(QObject *parent, ECManagement *ecsim,
+		ActSpatialView *sview, ActTemporalView *pcTV)
 	: QThread(parent)
 {
 	management=ecsim;
 	spatialView=sview;
+	pcTView=pcTV;
 
 	qRegisterMetaType<std::vector<bool> >("std::vector<bool>");
+	qRegisterMetaType<std::vector<float> >("std::vector<float>");
 
 	connect(this, SIGNAL(updateSpatialW(std::vector<bool>, int, bool)),
 			spatialView, SLOT(drawActivity(std::vector<bool>, int, bool)),
+			Qt::QueuedConnection);
+	connect(this, SIGNAL(updatePCTW(std::vector<bool>, std::vector<float>, int)),
+			pcTView, SLOT(drawVmRaster(std::vector<bool>, std::vector<float>, int)),
 			Qt::QueuedConnection);
 }
 
@@ -51,23 +57,32 @@ void SimThread::simLoop()
 	vector<bool> apGOVis;
 	vector<bool> apGLVis;
 
+	vector<bool> apPCVis;
+	vector<float> vmPCVis;
+
 	const bool *apGR;
 	const bool *apGO;
 	const bool *apGL;
+	const bool *apPC;
+	const float *vmPC;
 
 	int numGR;
 	int numGO;
 	int numGL;
+	int numPC;
 	int iti;
 
 	numGR=management->getNumGR();
 	numGO=management->getNumGO();
 	numGL=management->getNumGL();
+	numPC=management->getNumPC();
 	iti=management->getInterTrialI();
 
 	apGRVis.resize(numGR);
 	apGOVis.resize(numGO);
 	apGLVis.resize(numGL);
+	apPCVis.resize(numPC);
+	vmPCVis.resize(numPC);
 
 	timer.start();
 
@@ -113,8 +128,16 @@ void SimThread::simLoop()
 		{
 			apGLVis[i]=apGL[i];
 		}
-
 		emit(updateSpatialW(apGLVis, 2, false));
+
+		apPC=management->exportAPPC();
+		vmPC=management->exportVmPC();
+		for(int i=0; i<numPC; i++)
+		{
+			apPCVis[i]=apPC[i];
+			vmPCVis[i]=(vmPC[i]+80)/80;
+		}
+		emit(updatePCTW(apPCVis, vmPCVis, currentTime));
 
 		unlockAccessData();
 	}

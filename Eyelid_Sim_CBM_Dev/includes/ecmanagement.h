@@ -36,6 +36,8 @@ public:
 	const bool* exportAPIO();
 	const bool* exportAPNC();
 
+	const float* exportVmPC();
+
 	const unsigned int* exportAPBufMF();
 	const unsigned int* exportAPBufGO();
 	const unsigned int* exportAPBufGR();

@@ -145,6 +145,12 @@ const bool* ECManagement::exportAPNC()
 	return simulation->exportAPNC(0);
 }
 
+const float *ECManagement::exportVmPC()
+{
+	return simulation->exportVmPC(0);
+}
+
+
 const unsigned int* ECManagement::exportAPBufMF()
 {
 	return simulation->exportAPBufMF();
