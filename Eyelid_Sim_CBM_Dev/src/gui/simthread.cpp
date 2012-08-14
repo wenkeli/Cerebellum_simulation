@@ -121,12 +121,12 @@ void SimThread::simLoop()
 //		}
 //		emit(updateSpatialW(apGRVis, 0, true));
 
-		apGO=management->exportAPGO();
-		for(int i=0; i<numGO; i++)
-		{
-			apGOVis[i]=apGO[i];
-		}
-		emit(updateSpatialW(apGOVis, 1, true));
+//		apGO=management->exportAPGO();
+//		for(int i=0; i<numGO; i++)
+//		{
+//			apGOVis[i]=apGO[i];
+//		}
+//		emit(updateSpatialW(apGOVis, 1, true));
 
 //		apGL=management->exportAPGL();
 //		for(int i=0; i<numGL; i++)
