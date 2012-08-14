@@ -44,19 +44,17 @@ MainW::MainW(QApplication *app, QWidget *parent)
 			manager->getInterTrialI()/2, manager->getNumSC(), Qt::white);
 	bcTView=new ActTemporalView(manager->getNumBC(), 1, manager->getInterTrialI(),
 			manager->getInterTrialI()/2, manager->getNumBC(), Qt::green);
-	pcTView=new ActTemporalView(manager->getNumPC(), 16, manager->getInterTrialI(),
-			manager->getInterTrialI()/2, manager->getNumPC()*16, Qt::red);
-	ncTView=new ActTemporalView(manager->getNumNC(), 24, manager->getInterTrialI(),
-			manager->getInterTrialI()/2, manager->getNumNC()*24, Qt::green);
-	ioTView=new ActTemporalView(manager->getNumIO(), 64, manager->getInterTrialI(),
-			manager->getInterTrialI()/2, manager->getNumIO()*64, Qt::white);
+	pcTView=new ActTemporalView(manager->getNumPC(), 8, manager->getInterTrialI(),
+			manager->getInterTrialI()/2, manager->getNumPC()*8, Qt::red);
+	ncTView=new ActTemporalView(manager->getNumNC(), 16, manager->getInterTrialI(),
+			manager->getInterTrialI()/2, manager->getNumNC()*16, Qt::green);
+	ioTView=new ActTemporalView(manager->getNumIO(), 32, manager->getInterTrialI(),
+			manager->getInterTrialI()/2, manager->getNumIO()*32, Qt::white);
 //
 	compThread=new SimThread(this, manager, inputNetSpatialView, pcTView);
 
-	pcTView->drawBlank(Qt::blue);
-	pcTView->drawVertLine(500, Qt::white);
-	pcTView->show();
-	pcTView->update();
+//	pcTView->drawBlank(Qt::blue);
+//	pcTView->drawVertLine(500, Qt::white);
 }
 
 MainW::~MainW()
@@ -78,8 +76,8 @@ void MainW::run()
 	inputNetSpatialView->show();
 	inputNetSpatialView->update();
 
-//	pcTView->show();
-//	pcTView->update();
+	pcTView->show();
+	pcTView->update();
 
 	compThread->start(QThread::TimeCriticalPriority);
 }

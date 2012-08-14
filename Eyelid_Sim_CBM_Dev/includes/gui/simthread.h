@@ -43,6 +43,7 @@ public:
 signals:
 	void updateSpatialW(std::vector<bool>, int cellT, bool refresh);
 	void updatePCTW(std::vector<bool>, std::vector<float>, int t);
+	void blankPCTW(QColor bc);
 
 private:
 	ECManagement *management;
