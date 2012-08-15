@@ -51,7 +51,14 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	ioTView=new ActTemporalView(manager->getNumIO(), 32, manager->getInterTrialI(),
 			manager->getInterTrialI()/2, manager->getNumIO()*32, Qt::white);
 //
-	compThread=new SimThread(this, manager, inputNetSpatialView, pcTView);
+	compThread=new SimThread(this, manager,
+			inputNetSpatialView,
+			inputNetTView,
+			scTView,
+			bcTView,
+			pcTView,
+			ncTView,
+			ioTView);
 
 //	pcTView->drawBlank(Qt::blue);
 //	pcTView->drawVertLine(500, Qt::white);
@@ -73,8 +80,10 @@ MainW::~MainW()
 
 void MainW::run()
 {
-	inputNetSpatialView->show();
-	inputNetSpatialView->update();
+//	inputNetSpatialView->show();
+//	inputNetSpatialView->update();
+
+
 
 	pcTView->show();
 	pcTView->update();

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'simthread.h'
 **
-** Created: Tue Aug 14 15:30:25 2012
+** Created: Wed Aug 15 12:38:37 2012
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.2)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -42,7 +42,7 @@ static const char qt_meta_stringdata_SimThread[] = {
     "SimThread\0\0,cellT,refresh\0"
     "updateSpatialW(std::vector<bool>,int,bool)\0"
     ",,t\0updatePCTW(std::vector<bool>,std::vector<float>,int)\0"
-    "bc\0blankPCTW(QColor)\0"
+    "bc\0blankTW(QColor)\0"
 };
 
 void SimThread::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -53,7 +53,7 @@ void SimThread::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
         switch (_id) {
         case 0: _t->updateSpatialW((*reinterpret_cast< std::vector<bool>(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< bool(*)>(_a[3]))); break;
         case 1: _t->updatePCTW((*reinterpret_cast< std::vector<bool>(*)>(_a[1])),(*reinterpret_cast< std::vector<float>(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3]))); break;
-        case 2: _t->blankPCTW((*reinterpret_cast< QColor(*)>(_a[1]))); break;
+        case 2: _t->blankTW((*reinterpret_cast< QColor(*)>(_a[1]))); break;
         default: ;
         }
     }
@@ -113,7 +113,7 @@ void SimThread::updatePCTW(std::vector<bool> _t1, std::vector<float> _t2, int _t
 }
 
 // SIGNAL 2
-void SimThread::blankPCTW(QColor _t1)
+void SimThread::blankTW(QColor _t1)
 {
     void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 2, _a);

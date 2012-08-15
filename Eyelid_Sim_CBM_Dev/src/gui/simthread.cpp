@@ -12,24 +12,47 @@
 using namespace std;
 
 SimThread::SimThread(QObject *parent, ECManagement *ecsim,
-		ActSpatialView *sview, ActTemporalView *pcTV)
+		ActSpatialView *inputNetSV,
+		ActTemporalView *inputNetTV,
+		ActTemporalView *scTV,
+		ActTemporalView *bcTV,
+		ActTemporalView *pcTV,
+		ActTemporalView *ncTV,
+		ActTemporalView *ioTV)
 	: QThread(parent)
 {
 	management=ecsim;
-	spatialView=sview;
+	inputNetSView=inputNetSV;
+
+	inputNetTView=inputNetTV;
+	scTView=scTV;
+	bcTView=bcTV;
 	pcTView=pcTV;
+	ioTView=ioTV;
+	ncTView=ncTV;
 
 	qRegisterMetaType<std::vector<bool> >("std::vector<bool>");
 	qRegisterMetaType<std::vector<float> >("std::vector<float>");
 	qRegisterMetaType<QColor>("QColor");
 
 	connect(this, SIGNAL(updateSpatialW(std::vector<bool>, int, bool)),
-			spatialView, SLOT(drawActivity(std::vector<bool>, int, bool)),
+			inputNetSView, SLOT(drawActivity(std::vector<bool>, int, bool)),
 			Qt::QueuedConnection);
+	connect(this, SIGNAL(blankTW(QColor)), inputNetTView, SLOT(drawBlank(QColor)),
+			Qt::QueuedConnection);
+	connect(this, SIGNAL(blankTW(QColor)), scTView, SLOT(drawBlank(QColor)),
+				Qt::QueuedConnection);
+	connect(this, SIGNAL(blankTW(QColor)), bcTView, SLOT(drawBlank(QColor)),
+					Qt::QueuedConnection);
+	connect(this, SIGNAL(blankTW(QColor)), pcTView, SLOT(drawBlank(QColor)),
+					Qt::QueuedConnection);
+	connect(this, SIGNAL(blankTW(QColor)), ncTView, SLOT(drawBlank(QColor)),
+					Qt::QueuedConnection);
+	connect(this, SIGNAL(blankTW(QColor)), ioTView, SLOT(drawBlank(QColor)),
+					Qt::QueuedConnection);
+
 	connect(this, SIGNAL(updatePCTW(std::vector<bool>, std::vector<float>, int)),
 			pcTView, SLOT(drawVmRaster(std::vector<bool>, std::vector<float>, int)),
-			Qt::QueuedConnection);
-	connect(this, SIGNAL(blankPCTW(QColor)), pcTView, SLOT(drawBlank(QColor)),
 			Qt::QueuedConnection);
 }
 
@@ -109,7 +132,7 @@ void SimThread::simLoop()
 			runLen=timer.restart();
 			currentTrial=management->getCurrentTrialN();
 
-			emit(blankPCTW(Qt::black));
+			emit(blankTW(Qt::black));
 
 			cerr<<"run time for trial #"<<currentTrial<<": "<<runLen<<" ms"<<endl;
 		}

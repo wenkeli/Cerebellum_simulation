@@ -33,7 +33,13 @@ class SimThread : public QThread
 
 public:
 	explicit SimThread(QObject *parent, ECManagement *ecsim,
-			ActSpatialView *sview, ActTemporalView *pcTV);
+			ActSpatialView *inputNetSV,
+			ActTemporalView *inputNetTV,
+			ActTemporalView *scTV,
+			ActTemporalView *bcTV,
+			ActTemporalView *pcTV,
+			ActTemporalView *ncTV,
+			ActTemporalView *ioTV);
 	~SimThread();
 
 	void run();
@@ -42,14 +48,23 @@ public:
 	void unlockAccessData();
 signals:
 	void updateSpatialW(std::vector<bool>, int cellT, bool refresh);
+
+	void updateSCTW(std::vector<bool>, int t);
+	void updateBCTW(std::vector<bool>, int t);
 	void updatePCTW(std::vector<bool>, std::vector<float>, int t);
-	void blankPCTW(QColor bc);
+	void blankTW(QColor bc);
 
 private:
 	ECManagement *management;
 
-	ActSpatialView *spatialView;
+	ActSpatialView *inputNetSView;
+
+	ActTemporalView *inputNetTView;
+	ActTemporalView *scTView;
+	ActTemporalView *bcTView;
 	ActTemporalView *pcTView;
+	ActTemporalView *ncTView;
+	ActTemporalView *ioTView;
 
 	void simLoop();
 
