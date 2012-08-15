@@ -22,13 +22,13 @@ QTLIBS = -lQtGui -lQtCore
 
 CUDAINCPATH = '/opt/cuda/include/'
 
-CBMCOREINCPATH = '/home/consciousness/work/projects/CBM_CORE_LIB/includes/'
-CBMCORELIBPATHR = /home/consciousness/work/projects/CBM_CORE_LIB/lib/
+CBMCOREINCPATH = '../CBM_CORE_LIB/includes/'
+CBMCORELIBPATHR = ../CBM_CORE_LIB/lib/
 CBMCORELIBPATH = '$(CBMCORELIBPATHR)'
 CBMCORELIB = cbm_core
 
-CBMVISUALINCPATH = '/home/consciousness/work/projects/CBM_VISUAL_LIB/includes/'
-CBMVISUALLIBPATHR = /home/consciousness/work/projects/CBM_VISUAL_LIB/lib/
+CBMVISUALINCPATH = '../CBM_VISUAL_LIB/includes/'
+CBMVISUALLIBPATHR = ../CBM_VISUAL_LIB/lib/
 CBMVISUALLIBPATH = '$(CBMVISUALLIBPATHR)'
 CBMVISUALLIB = cbm_visual
 
