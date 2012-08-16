@@ -91,5 +91,8 @@ void MainW::run()
 	ncTView->show();
 	ncTView->update();
 
+	ioTView->show();
+	ioTView->update();
+
 	compThread->start(QThread::TimeCriticalPriority);
 }

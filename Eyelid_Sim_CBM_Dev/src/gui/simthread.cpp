@@ -67,7 +67,7 @@ SimThread::SimThread(QObject *parent, ECManagement *ecsim,
 	connect(this, SIGNAL(updateNCTW(std::vector<bool>, std::vector<float>, int)),
 			ncTView, SLOT(drawVmRaster(std::vector<bool>, std::vector<float>, int)),
 			Qt::QueuedConnection);
-	connect(this, SIGNAL(updateIOW(std::vector<bool>, std::vector<float>, int)),
+	connect(this, SIGNAL(updateIOTW(std::vector<bool>, std::vector<float>, int)),
 			ioTView, SLOT(drawVmRaster(std::vector<bool>, std::vector<float>, int)),
 			Qt::QueuedConnection);
 }
