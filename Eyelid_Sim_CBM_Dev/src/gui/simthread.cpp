@@ -210,6 +210,13 @@ void SimThread::simLoop()
 //		}
 //		emit(updateSpatialW(apGLVis, 2, false));
 
+		apGO=management->exportAPGO();
+		for(int i=0; i<numGO; i++)
+		{
+			apGOVis[i]=apGO[i];
+		}
+		emit(updateINTW(apGOVis, currentTime));
+
 		apPC=management->exportAPPC();
 		vmPC=management->exportVmPC();
 		for(int i=0; i<numPC; i++)
