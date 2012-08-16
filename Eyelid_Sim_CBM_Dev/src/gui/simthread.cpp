@@ -38,6 +38,7 @@ SimThread::SimThread(QObject *parent, ECManagement *ecsim,
 	connect(this, SIGNAL(updateSpatialW(std::vector<bool>, int, bool)),
 			inputNetSView, SLOT(drawActivity(std::vector<bool>, int, bool)),
 			Qt::QueuedConnection);
+
 	connect(this, SIGNAL(blankTW(QColor)), inputNetTView, SLOT(drawBlank(QColor)),
 			Qt::QueuedConnection);
 	connect(this, SIGNAL(blankTW(QColor)), scTView, SLOT(drawBlank(QColor)),
@@ -51,8 +52,23 @@ SimThread::SimThread(QObject *parent, ECManagement *ecsim,
 	connect(this, SIGNAL(blankTW(QColor)), ioTView, SLOT(drawBlank(QColor)),
 					Qt::QueuedConnection);
 
+	connect(this, SIGNAL(updateINTW(std::vector<bool>, int)),
+			inputNetTView, SLOT(drawRaster(std::vector<bool>, int)),
+			Qt::QueuedConnection);
+	connect(this, SIGNAL(updateBCTW(std::vector<bool>, int)),
+			bcTView, SLOT(drawRaster(std::vector<bool>, int)),
+			Qt::QueuedConnection);
+	connect(this, SIGNAL(updateSCTW(std::vector<bool>, int)),
+			scTView, SLOT(drawRaster(std::vector<bool>, int)),
+			Qt::QueuedConnection);
 	connect(this, SIGNAL(updatePCTW(std::vector<bool>, std::vector<float>, int)),
 			pcTView, SLOT(drawVmRaster(std::vector<bool>, std::vector<float>, int)),
+			Qt::QueuedConnection);
+	connect(this, SIGNAL(updateNCTW(std::vector<bool>, std::vector<float>, int)),
+			ncTView, SLOT(drawVmRaster(std::vector<bool>, std::vector<float>, int)),
+			Qt::QueuedConnection);
+	connect(this, SIGNAL(updateIOW(std::vector<bool>, std::vector<float>, int)),
+			ioTView, SLOT(drawVmRaster(std::vector<bool>, std::vector<float>, int)),
 			Qt::QueuedConnection);
 }
 
@@ -82,33 +98,69 @@ void SimThread::simLoop()
 	vector<bool> apGRVis;
 	vector<bool> apGOVis;
 	vector<bool> apGLVis;
+	vector<bool> apMFVis;
+
+	vector<bool> apSCVis;
+	vector<bool> apBCVis;
 
 	vector<bool> apPCVis;
 	vector<float> vmPCVis;
+	vector<bool> apNCVis;
+	vector<float> vmNCVis;
+	vector<bool> apIOVis;
+	vector<float> vmIOVis;
 
 	const bool *apGR;
 	const bool *apGO;
 	const bool *apGL;
+	const bool *apMF;
+
+	const bool *apSC;
+	const bool *apBC;
+
 	const bool *apPC;
 	const float *vmPC;
+	const bool *apNC;
+	const float *vmNC;
+	const bool *apIO;
+	const float *vmIO;
 
 	int numGR;
 	int numGO;
 	int numGL;
+	int numMF;
+	int numSC;
+	int numBC;
 	int numPC;
+	int numNC;
+	int numIO;
 	int iti;
 
 	numGR=management->getNumGR();
 	numGO=management->getNumGO();
 	numGL=management->getNumGL();
+	numMF=management->getNumMF();
+
+	numSC=management->getNumSC();
+	numBC=management->getNumBC();
 	numPC=management->getNumPC();
+	numNC=management->getNumNC();
+	numIO=management->getNumIO();
 	iti=management->getInterTrialI();
 
 	apGRVis.resize(numGR);
 	apGOVis.resize(numGO);
 	apGLVis.resize(numGL);
+	apMFVis.resize(numMF);
+
+	apSCVis.resize(numSC);
+	apBCVis.resize(numBC);
 	apPCVis.resize(numPC);
 	vmPCVis.resize(numPC);
+	apNCVis.resize(numNC);
+	vmNCVis.resize(numNC);
+	apIOVis.resize(numIO);
+	vmIOVis.resize(numIO);
 
 	timer.start();
 
@@ -166,6 +218,24 @@ void SimThread::simLoop()
 			vmPCVis[i]=(vmPC[i]+80)/80;
 		}
 		emit(updatePCTW(apPCVis, vmPCVis, currentTime));
+
+		apNC=management->exportAPNC();
+		vmNC=management->exportVmNC();
+		for(int i=0; i<numNC; i++)
+		{
+			apNCVis[i]=apNC[i];
+			vmNCVis[i]=(vmNC[i]+80)/80;
+		}
+		emit(updateNCTW(apNCVis, vmNCVis, currentTime));
+
+		apIO=management->exportAPIO();
+		vmIO=management->exportVmIO();
+		for(int i=0; i<numIO; i++)
+		{
+			apIOVis[i]=apIO[i];
+			vmIOVis[i]=(vmIO[i]+80)/80;
+		}
+		emit(updateIOTW(apIOVis, vmIOVis, currentTime));
 
 		unlockAccessData();
 	}

@@ -145,11 +145,35 @@ const bool* ECManagement::exportAPNC()
 	return simulation->exportAPNC(0);
 }
 
-const float *ECManagement::exportVmPC()
+const float* ECManagement::exportVmGO()
+{
+	return simulation->exportVmGO();
+}
+
+const float* ECManagement::exportVmSC()
+{
+	return simulation->exportVmSC();
+}
+
+const float* ECManagement::exportVmBC()
+{
+	return simulation->exportVmBC(0);
+}
+
+const float* ECManagement::exportVmPC()
 {
 	return simulation->exportVmPC(0);
 }
 
+const float* ECManagement::exportVmIO()
+{
+	return simulation->exportVmIO(0);
+}
+
+const float* ECManagement::exportVmNC()
+{
+	return simulation->exportVmNC(0);
+}
 
 const unsigned int* ECManagement::exportAPBufMF()
 {

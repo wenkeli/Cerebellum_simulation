@@ -88,5 +88,8 @@ void MainW::run()
 	pcTView->show();
 	pcTView->update();
 
+	ncTView->show();
+	ncTView->update();
+
 	compThread->start(QThread::TimeCriticalPriority);
 }
