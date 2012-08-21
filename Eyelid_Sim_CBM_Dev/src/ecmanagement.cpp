@@ -11,6 +11,10 @@ using namespace std;
 
 ECManagement::ECManagement(int numT, int iti)
 {
+	CRandomSFMT0 randGen(time(0));
+	unsigned int numContextMFs;
+	unsigned int *contextMFInds;
+
 	numTrials=numT;
 	interTrialI=iti;
 
@@ -27,8 +31,41 @@ ECManagement::ECManagement(int numT, int iti)
 
 	for(int i=0; i<numMF; i++)
 	{
-		mfFreq[i]=10;
+		mfFreq[i]=randGen.Random()*10;
 	}
+
+	numContextMFs=numMF*0.03;
+
+	contextMFInds=new unsigned int[numContextMFs];
+
+	for(int i=0; i<numContextMFs; i++)
+	{
+		while(true)
+		{
+			unsigned int newInd;
+			bool indExist;
+
+			indExist=false;
+
+			newInd=randGen.IRandom(0, numMF);
+			for(int j=0; j<i; j++)
+			{
+				if(contextMFInds[j]==newInd)
+				{
+					indExist=true;
+				}
+			}
+
+			if(!indExist)
+			{
+				contextMFInds[i]=newInd;
+				mfFreq[contextMFInds[i]]=randGen.Random()*30+30;
+				break;
+			}
+		}
+	}
+
+	delete[] contextMFInds;
 }
 
 ECManagement::~ECManagement()

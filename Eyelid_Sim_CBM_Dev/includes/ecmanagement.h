@@ -9,9 +9,12 @@
 #define ECMANAGEMENT_H_
 
 #include <iostream>
+#include <time.h>
 
 #include <interface/cbmsimcore.h>
 #include <tools/mfpoissonregen.h>
+#include <tools/randomc.h>
+#include <tools/sfmt.h>
 
 class ECManagement
 {
