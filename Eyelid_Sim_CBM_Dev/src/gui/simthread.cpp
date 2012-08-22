@@ -217,6 +217,20 @@ void SimThread::simLoop()
 		}
 		emit(updateINTW(apGOVis, currentTime));
 
+		apSC=management->exportAPSC();
+		for(int i=0; i<numSC; i++)
+		{
+			apSCVis[i]=apSC[i];
+		}
+		emit(updateSCTW(apSCVis, currentTime));
+
+		apBC=management->exportAPBC();
+		for(int i=0; i<numBC; i++)
+		{
+			apBCVis[i]=apBC[i];
+		}
+		emit(updateBCTW(apBCVis, currentTime));
+
 		apPC=management->exportAPPC();
 		vmPC=management->exportVmPC();
 		for(int i=0; i<numPC; i++)

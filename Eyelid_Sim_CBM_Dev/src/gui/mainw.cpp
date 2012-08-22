@@ -83,7 +83,11 @@ void MainW::run()
 //	inputNetSpatialView->show();
 //	inputNetSpatialView->update();
 
+	bcTView->show();
+	bcTView->update();
 
+	scTView->show();
+	scTView->update();
 
 	pcTView->show();
 	pcTView->update();
