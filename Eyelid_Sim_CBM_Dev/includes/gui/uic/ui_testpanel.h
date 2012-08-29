@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'testpanel.ui'
 **
-** Created: Thu Aug 16 12:48:07 2012
+** Created: Wed Aug 29 16:42:23 2012
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
