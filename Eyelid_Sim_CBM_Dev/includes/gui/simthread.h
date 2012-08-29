@@ -22,8 +22,8 @@
 
 #include <interface/cbmsimcore.h>
 #include <tools/mfpoissonregen.h>
-#include <actspatialview.h>
-#include <acttemporalview.h>
+#include <CBMVisualInclude/actspatialview.h>
+#include <CBMVisualInclude/acttemporalview.h>
 
 #include "../ecmanagement.h"
 

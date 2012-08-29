@@ -8,8 +8,8 @@
 #include <QtGui/QApplication>
 #include <QtGui/QColor>
 
-#include <actspatialview.h>
-#include <acttemporalview.h>
+#include <CBMVisualInclude/actspatialview.h>
+#include <CBMVisualInclude/acttemporalview.h>
 
 #include "../ecmanagement.h"
 #include "simthread.h"
