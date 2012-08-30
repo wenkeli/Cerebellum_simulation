@@ -11,10 +11,10 @@
 #include <iostream>
 #include <time.h>
 
-#include <interface/cbmsimcore.h>
-#include <tools/mfpoissonregen.h>
-#include <tools/randomc.h>
-#include <tools/sfmt.h>
+#include <CBMCoreInclude/interface/cbmsimcore.h>
+#include <CBMCoreInclude/tools/mfpoissonregen.h>
+#include <CBMCoreInclude/tools/randomc.h>
+#include <CBMCoreInclude/tools/sfmt.h>
 
 class ECManagement
 {

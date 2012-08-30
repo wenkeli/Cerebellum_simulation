@@ -20,8 +20,6 @@
 
 #include <QtCore/QWaitCondition>
 
-#include <interface/cbmsimcore.h>
-#include <tools/mfpoissonregen.h>
 #include <CBMVisualInclude/actspatialview.h>
 #include <CBMVisualInclude/acttemporalview.h>
 
