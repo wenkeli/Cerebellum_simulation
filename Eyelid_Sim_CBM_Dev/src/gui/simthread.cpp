@@ -11,7 +11,7 @@
 
 using namespace std;
 
-SimThread::SimThread(QObject *parent, ECManagement *ecsim,
+SimThread::SimThread(QObject *parent, ECManagementBase *ecsim,
 		ActSpatialView *inputNetSV,
 		ActTemporalView *inputNetTV,
 		ActTemporalView *scTV,

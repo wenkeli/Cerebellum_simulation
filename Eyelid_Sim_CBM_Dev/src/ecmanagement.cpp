@@ -9,7 +9,7 @@
 
 using namespace std;
 
-ECManagement::ECManagement(int numT, int iti)
+ECManagementBase::ECManagementBase(int numT, int iti)
 {
 	CRandomSFMT0 randGen(time(0));
 	unsigned int numContextMFs;
@@ -68,14 +68,14 @@ ECManagement::ECManagement(int numT, int iti)
 	delete[] contextMFInds;
 }
 
-ECManagement::~ECManagement()
+ECManagementBase::~ECManagementBase()
 {
 	delete[] mfFreq;
 	delete simulation;
 	delete mf;
 }
 
-bool ECManagement::runStep()
+bool ECManagementBase::runStep()
 {
 	const bool *apMF;
 	const bool *apGO;
@@ -117,212 +117,212 @@ bool ECManagement::runStep()
 	return true;
 }
 
-int ECManagement::getCurrentTrialN()
+int ECManagementBase::getCurrentTrialN()
 {
 	return currentTrial;
 }
 
-int ECManagement::getCurrentTime()
+int ECManagementBase::getCurrentTime()
 {
 	return currentTime;
 }
 
-int ECManagement::getNumTrials()
+int ECManagementBase::getNumTrials()
 {
 	return numTrials;
 }
 
-int ECManagement::getInterTrialI()
+int ECManagementBase::getInterTrialI()
 {
 	return interTrialI;
 }
 
-const bool* ECManagement::exportAPMF()
+const bool* ECManagementBase::exportAPMF()
 {
 	return mf->getAPMF();
 }
 
-const bool* ECManagement::exportAPGO()
+const bool* ECManagementBase::exportAPGO()
 {
 	return simulation->exportAPGO();
 }
 
-const bool* ECManagement::exportAPGR()
+const bool* ECManagementBase::exportAPGR()
 {
 	return simulation->exportAPGR();
 }
 
-const bool* ECManagement::exportAPGL()
+const bool* ECManagementBase::exportAPGL()
 {
 	return simulation->exportAPGL();
 }
 
-const bool* ECManagement::exportAPSC()
+const bool* ECManagementBase::exportAPSC()
 {
 	return simulation->exportAPSC();
 }
 
-const bool* ECManagement::exportAPBC()
+const bool* ECManagementBase::exportAPBC()
 {
 	return simulation->exportAPBC(0);
 }
 
-const bool* ECManagement::exportAPPC()
+const bool* ECManagementBase::exportAPPC()
 {
 	return simulation->exportAPPC(0);
 }
 
-const bool* ECManagement::exportAPIO()
+const bool* ECManagementBase::exportAPIO()
 {
 	return simulation->exportAPIO(0);
 }
 
-const bool* ECManagement::exportAPNC()
+const bool* ECManagementBase::exportAPNC()
 {
 	return simulation->exportAPNC(0);
 }
 
-const float* ECManagement::exportVmGO()
+const float* ECManagementBase::exportVmGO()
 {
 	return simulation->exportVmGO();
 }
 
-const float* ECManagement::exportVmSC()
+const float* ECManagementBase::exportVmSC()
 {
 	return simulation->exportVmSC();
 }
 
-const float* ECManagement::exportVmBC()
+const float* ECManagementBase::exportVmBC()
 {
 	return simulation->exportVmBC(0);
 }
 
-const float* ECManagement::exportVmPC()
+const float* ECManagementBase::exportVmPC()
 {
 	return simulation->exportVmPC(0);
 }
 
-const float* ECManagement::exportVmIO()
+const float* ECManagementBase::exportVmIO()
 {
 	return simulation->exportVmIO(0);
 }
 
-const float* ECManagement::exportVmNC()
+const float* ECManagementBase::exportVmNC()
 {
 	return simulation->exportVmNC(0);
 }
 
-const unsigned int* ECManagement::exportAPBufMF()
+const unsigned int* ECManagementBase::exportAPBufMF()
 {
 	return simulation->exportAPBufMF();
 }
 
-const unsigned int* ECManagement::exportAPBufGO()
+const unsigned int* ECManagementBase::exportAPBufGO()
 {
 	return simulation->exportAPBufGO();
 }
 
-const unsigned int* ECManagement::exportAPBufGR()
+const unsigned int* ECManagementBase::exportAPBufGR()
 {
 	return simulation->exportAPBufGR();
 }
 
-const unsigned int* ECManagement::exportAPBufSC()
+const unsigned int* ECManagementBase::exportAPBufSC()
 {
 	return simulation->exportAPBufSC();
 }
 
-const unsigned int* ECManagement::exportAPBufBC()
+const unsigned int* ECManagementBase::exportAPBufBC()
 {
 	return simulation->exportAPBufBC(0);
 }
 
-const unsigned int* ECManagement::exportAPBufPC()
+const unsigned int* ECManagementBase::exportAPBufPC()
 {
 	return simulation->exportAPBufPC(0);
 }
 
-const unsigned int* ECManagement::exportAPBufIO()
+const unsigned int* ECManagementBase::exportAPBufIO()
 {
 	return simulation->exportAPBufIO(0);
 }
 
-const unsigned int* ECManagement::exportAPBufNC()
+const unsigned int* ECManagementBase::exportAPBufNC()
 {
 	return simulation->exportAPBufNC(0);
 }
 
-unsigned int ECManagement::getGRX()
+unsigned int ECManagementBase::getGRX()
 {
 	return simulation->getGRX();
 }
 
-unsigned int ECManagement::getGRY()
+unsigned int ECManagementBase::getGRY()
 {
 	return simulation->getGRY();
 }
 
-unsigned int ECManagement::getGOX()
+unsigned int ECManagementBase::getGOX()
 {
 	return simulation->getGOX();
 }
 
-unsigned int ECManagement::getGOY()
+unsigned int ECManagementBase::getGOY()
 {
 	return simulation->getGOY();
 }
 
-unsigned int ECManagement::getGLX()
+unsigned int ECManagementBase::getGLX()
 {
 	return simulation->getGLX();
 }
 
-unsigned int ECManagement::getGLY()
+unsigned int ECManagementBase::getGLY()
 {
 	return simulation->getGLY();
 }
 
-unsigned int ECManagement::getNumMF()
+unsigned int ECManagementBase::getNumMF()
 {
 	return simulation->getNumMF();
 }
 
-unsigned int ECManagement::getNumGO()
+unsigned int ECManagementBase::getNumGO()
 {
 	return simulation->getNumGO();
 }
 
-unsigned int ECManagement::getNumGR()
+unsigned int ECManagementBase::getNumGR()
 {
 	return simulation->getNumGR();
 }
 
-unsigned int ECManagement::getNumGL()
+unsigned int ECManagementBase::getNumGL()
 {
 	return simulation->getNumGL();
 }
 
-unsigned int ECManagement::getNumSC()
+unsigned int ECManagementBase::getNumSC()
 {
 	return simulation->getNumSC();
 }
 
-unsigned int ECManagement::getNumBC()
+unsigned int ECManagementBase::getNumBC()
 {
 	return simulation->getNumBC();
 }
 
-unsigned int ECManagement::getNumPC()
+unsigned int ECManagementBase::getNumPC()
 {
 	return simulation->getNumPC();
 }
 
-unsigned int ECManagement::getNumNC()
+unsigned int ECManagementBase::getNumNC()
 {
 	return simulation->getNumNC();
 }
 
-unsigned int ECManagement::getNumIO()
+unsigned int ECManagementBase::getNumIO()
 {
 	return simulation->getNumIO();
 }

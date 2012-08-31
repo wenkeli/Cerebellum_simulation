@@ -30,7 +30,7 @@ public slots:
 private:
     Ui::MainWClass ui;
 
-    ECManagement *manager;
+    ECManagementBase *manager;
     SimThread *compThread;
 
     ActSpatialView *inputNetSpatialView;

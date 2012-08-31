@@ -30,7 +30,7 @@ class SimThread : public QThread
 	Q_OBJECT
 
 public:
-	explicit SimThread(QObject *parent, ECManagement *ecsim,
+	explicit SimThread(QObject *parent, ECManagementBase *ecsim,
 			ActSpatialView *inputNetSV,
 			ActTemporalView *inputNetTV,
 			ActTemporalView *scTV,
@@ -56,7 +56,7 @@ signals:
 	void blankTW(QColor bc);
 
 private:
-	ECManagement *management;
+	ECManagementBase *management;
 
 	ActSpatialView *inputNetSView;
 

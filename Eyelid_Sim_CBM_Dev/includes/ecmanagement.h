@@ -16,11 +16,13 @@
 #include <CBMCoreInclude/tools/randomc.h>
 #include <CBMCoreInclude/tools/sfmt.h>
 
-class ECManagement
+#include <CBMDataInclude/interfaces/ecrastertrial.h>
+
+class ECManagementBase
 {
 public:
-	ECManagement(int numT, int iti);
-	virtual ~ECManagement();
+	ECManagementBase(int numT, int iti);
+	virtual ~ECManagementBase();
 
 	bool runStep();
 
