@@ -75,7 +75,7 @@ public:
 	unsigned int getNumIO();
 
 
-private:
+protected:
 	CBMSimCore *simulation;
 	MFPoissonRegen *mf;
 
@@ -87,6 +87,9 @@ private:
 
 	int currentTrial;
 	int currentTime;
+
+private:
+	ECManagementBase();
 };
 
 #endif /* ECMANAGEMENT_H_ */
