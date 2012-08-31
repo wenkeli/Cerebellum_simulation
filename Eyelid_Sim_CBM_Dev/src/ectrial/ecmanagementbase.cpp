@@ -5,7 +5,7 @@
  *      Author: consciousness
  */
 
-#include "../includes/ecmanagementbase.h"
+#include "../../includes/ectrial/ecmanagementbase.h"
 
 using namespace std;
 

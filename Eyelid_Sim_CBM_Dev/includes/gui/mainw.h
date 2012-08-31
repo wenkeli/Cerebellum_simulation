@@ -11,7 +11,7 @@
 #include <CBMVisualInclude/actspatialview.h>
 #include <CBMVisualInclude/acttemporalview.h>
 
-#include "../ecmanagementbase.h"
+#include "../ectrial/ecmanagementbase.h"
 #include "simthread.h"
 
 #include "uic/ui_mainw.h"
