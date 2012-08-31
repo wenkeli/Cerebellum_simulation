@@ -23,7 +23,7 @@
 #include <CBMVisualInclude/actspatialview.h>
 #include <CBMVisualInclude/acttemporalview.h>
 
-#include "../ecmanagement.h"
+#include "../ecmanagementbase.h"
 
 class SimThread : public QThread
 {

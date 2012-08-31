@@ -32,9 +32,15 @@ CBMVISUALLIBPATHR = ../CBM_VISUAL_LIB/lib/
 CBMVISUALLIBPATH = '$(CBMVISUALLIBPATHR)'
 CBMVISUALLIB = cbm_visual
 
-EXTINCPATH = -I $(QTINCPATH) -I $(CUDAINCPATH) -I $(CBMCOREINCPATH) -I $(CBMVISUALINCPATH)
+CBMDATAINCPATH = '../CBM_DATA_LIB/'
+CBMDATALIBPATHR = ../CBM_DATA_LIB/lib/
+CBMDATALIBPATH = '$(CBMDATALIBPATHR)'
+CBMDATALIB = cbm_data
 
-LIBS = $(CBMCORELIBS) $(CBMVISUALLIBS)
+EXTINCPATH = -I $(QTINCPATH) -I $(CUDAINCPATH) -I $(CBMCOREINCPATH) -I $(CBMVISUALINCPATH) \
+-I $(CBMDATAINCPATH)
+
+LIBS = $(CBMCORELIB) $(CBMVISUALLIB) $(CBMDATALIB)
 
 INCPATH = ./includes
 GUIIP = $(INCPATH)/gui
@@ -42,8 +48,11 @@ GUIMOCIP = $(GUIIP)/moc
 GUIUICIP = $(GUIIP)/uic
 GUIUIIP = $(GUIIP)/ui
 
+ECTRIALIP = $(INCPATH)/ectrial
+
 SRCPATH = ./src
 GUISP = $(SRCPATH)/gui
+ECTRIALSP = $(SRCPATH)/ectrial
 
 OUTPATH = ./output
 
@@ -53,30 +62,41 @@ UICOUT = $(GUIUICIP)/ui_mainw.h $(GUIUICIP)/ui_testpanel.h
 MOCOUT = $(GUIMOCIP)/moc_mainw.h $(GUIMOCIP)/moc_testpanel.h $(GUIMOCIP)/moc_simthread.h
 GUIINC = $(MOCINC) $(MOCOUT) $(UICOUT)
 
-MAININC= $(INCPATH)/main.h $(INCPATH)/ecmanagement.h
+ECTRIALINC = $(ECTRIALIP)/ecmanagementbase.h
 
-INC = $(GUIINC) $(MAININC)
+MAININC= $(INCPATH)/main.h
+
+INC = $(GUIINC) $(ECTRIALINC) $(MAININC)
 
 GUISRC = $(GUISP)/mainw.cpp $(GUISP)/testpanel.cpp $(GUISP)/simthread.cpp
-MAINSRC = $(SRCPATH)/main.cpp $(SRCPATH)/ecmanagement.cpp
+ECTRIALSRC = $(ECTRIALSP)/ecmanagementbase.cpp
+MAINSRC = $(SRCPATH)/main.cpp
 
-SRC = $(GUISRC) $(MAINSRC)
+SRC = $(GUISRC) $(ECTRIALSRC) $(MAINSRC)
 
 GUIOBJ = $(OUTPATH)/mainw.obj $(OUTPATH)/testpanel.obj $(OUTPATH)/simthread.obj
-MAINOBJ = $(OUTPATH)/main.obj $(OUTPATH)/ecmanagement.obj
+ECTRIALOBJ = $(OUTPATH)/ecmanagementbase.obj
+MAINOBJ = $(OUTPATH)/main.obj
 
-OBJ = $(GUIOBJ) $(MAINOBJ)
+OBJ = $(GUIOBJ) $(ECTRIALOBJ) $(MAINOBJ)
 
-mainapp: main gui
+mainapp: main gui ectrial
 	-$(CC) $(CFLAGS) $(OBJ) -o $(OUTPATH)/$(NAME) \
 	-L$(QTLIBPATH) $(QTLIBS) -L$(INTELLIBPATH) $(INTELLIBS) \
 	-Xlinker -rpath=$(CBMCORELIBPATHR) -Xlinker -rpath=$(CBMVISUALLIBPATHR) \
+	-Xlinker -rpath=$(CBMDATALIBPATHR) \
+	\
 	-Xlinker --library-path=$(CBMCORELIBPATHR) -Xlinker --library-path=$(CBMVISUALLIBPATHR) \
-	-Xlinker --library=$(CBMCORELIB) -Xlinker --library=$(CBMVISUALLIB)
+	-Xlinker --library-path=$(CBMDATALIBPATHR) \
+	\
+	-Xlinker --library=$(CBMCORELIB) -Xlinker --library=$(CBMVISUALLIB) \
+	-Xlinker --library=$(CBMDATALIB)
 	
 main: $(MAININC) $(MAINSRC)
 	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(SRCPATH)/main.cpp -o $(OUTPATH)/main.obj
-	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(SRCPATH)/ecmanagement.cpp -o $(OUTPATH)/ecmanagement.obj
+	
+ectrial: $(ECTRIALINC) $(ECTRIALSRC)
+	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(ECTRIALSP)/ecmanagementbase.cpp -o $(OUTPATH)/ecmanagementbase.obj
 	
 gui: $(GUIINC) $(GUISRC)
 	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(GUISP)/mainw.cpp -o $(OUTPATH)/mainw.obj
