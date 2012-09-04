@@ -76,10 +76,15 @@ public:
 
 
 protected:
+
+	virtual void calcMFActivity();
+	virtual void calcSimActivity();
+
 	CBMSimCore *simulation;
 	MFPoissonRegen *mf;
 
 	float *mfFreq;
+	const bool *apMF;
 	int numMF;
 
 	int numTrials;

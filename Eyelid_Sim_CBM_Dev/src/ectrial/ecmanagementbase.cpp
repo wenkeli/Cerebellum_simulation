@@ -28,6 +28,7 @@ ECManagementBase::ECManagementBase(int numT, int iti)
 	numMF=simulation->getNumMF();
 	mf=new MFPoissonRegen(numMF, 1, 0.001);
 	mfFreq=new float[numMF];
+	apMF=0;
 
 	for(int i=0; i<numMF; i++)
 	{
@@ -77,12 +78,12 @@ ECManagementBase::~ECManagementBase()
 
 bool ECManagementBase::runStep()
 {
-	const bool *apMF;
-	const bool *apGO;
-	const bool *apGR;
-	const float *vGR;
-	const float *gESumGR;
-	const float *gISumGR;
+//	const bool *apMF;
+//	const bool *apGO;
+//	const bool *apGR;
+//	const float *vGR;
+//	const float *gESumGR;
+//	const float *gISumGR;
 
 //	apMF=mf->getAPMF();
 //	apGO=simulation->exportAPGO();
@@ -111,8 +112,12 @@ bool ECManagementBase::runStep()
 
 	currentTime++;
 
-	simulation->updateMFInput(mf->calcActivity(mfFreq));
-	simulation->calcActivity();
+	calcMFActivity();
+
+	calcSimActivity();
+
+//	simulation->updateMFInput(mf->calcActivity(mfFreq));
+//	simulation->calcActivity();
 
 	return true;
 }
@@ -325,4 +330,15 @@ unsigned int ECManagementBase::getNumNC()
 unsigned int ECManagementBase::getNumIO()
 {
 	return simulation->getNumIO();
+}
+
+void ECManagementBase:: calcMFActivity()
+{
+	apMF=mf->calcActivity(mfFreq);
+}
+
+void ECManagementBase::calcSimActivity()
+{
+	simulation->updateMFInput(apMF);
+	simulation->calcActivity();
 }
