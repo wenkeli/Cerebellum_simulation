@@ -145,9 +145,32 @@ ECManagementDelay::ECManagementDelay(int numT, int iti, int csOn, int csOff, int
 		}
 	}
 
-	delete isCSTonic;
-	delete isCSPhasic;
-	delete isContext;
+	delete[] isCSTonic;
+	delete[] isCSPhasic;
+	delete[] isContext;
 }
 
+ECManagementDelay::~ECManagementDelay()
+{
+	delete[] mfFreqInCSTonic;
+	delete[] mfFreqInCSPhasic;
+}
 
+void ECManagementDelay::calcMFActivity()
+{
+	if(currentTime>=csOnTime && currentTime<csOffTime)
+	{
+		if(currentTime<csPOffTime)
+		{
+			apMF=mf->calcActivity(mfFreqInCSPhasic);
+		}
+		else
+		{
+			apMF=mf->calcActivity(mfFreqInCSTonic);
+		}
+	}
+	else
+	{
+		apMF=mf->calcActivity(mfFreq);
+	}
+}

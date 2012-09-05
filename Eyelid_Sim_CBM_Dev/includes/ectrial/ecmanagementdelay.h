@@ -30,7 +30,6 @@ public:
 
 protected:
 	virtual void calcMFActivity();
-	virtual void calcSimActivity();
 
 	int csOnTime;
 	int csOffTime;
