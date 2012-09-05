@@ -10,6 +10,8 @@
 
 #include "ecmanagementbase.h"
 
+#include <time.h>
+
 #include <CBMDataInclude/interfaces/ecrastertrial.h>
 
 #include <CBMCoreInclude/tools/randomc.h>
@@ -21,8 +23,8 @@ public:
 	ECManagementDelay(int numT, int iti, int csOn, int csOff, int csPOff,
 			int csStartTN, int dataStartTN, int nDataT,
 			float fracCSTMF, float fracCSPMF, float fracCtxtMF,
-			float bgFreqMin, float csBGFreqMin, float CtxtFreqMin, float csTFreqMin, float csPFreqMin,
-			float bgFreqMax, float csBGFreqMax, float CtxtFreqMax, float csTFreqMax, float csPFreqMax);
+			float bgFreqMin, float csBGFreqMin, float ctxtFreqMin, float csTFreqMin, float csPFreqMin,
+			float bgFreqMax, float csBGFreqMax, float ctxtFreqMax, float csTFreqMax, float csPFreqMax);
 
 	virtual ~ECManagementDelay();
 
@@ -42,21 +44,20 @@ protected:
 	float fracCSPhasicMF;
 	float fracContextMF;
 
-	float backgroundFreqMin;
-	float csBackgroundFreqMin;
+	float backGFreqMin;
+	float csBackGFreqMin;
 	float contextFreqMin;
 	float csTonicFreqMin;
 	float csPhasicFreqMin;
 
-	float backgroundFreqMax;
-	float csBackgroundFreqMax;
+	float backGFreqMax;
+	float csBackGFreqMax;
 	float contextFreqMax;
 	float csTonicFreqMax;
 	float csPhasicFreqMax;
 
-//	float *mfBGFreq;
-	float *mfCSTonicFreq;
-	float *mfCSPhasicFreq;
+	float *mfFreqInCSTonic;
+	float *mfFreqInCSPhasic;
 
 private:
 	ECManagementDelay();
