@@ -12,6 +12,7 @@
 #include <CBMVisualInclude/acttemporalview.h>
 
 #include "../ectrial/ecmanagementbase.h"
+#include "../ectrial/ecmanagementdelay.h"
 #include "simthread.h"
 
 #include "uic/ui_mainw.h"
