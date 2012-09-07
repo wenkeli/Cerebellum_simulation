@@ -11,6 +11,7 @@
 #include "ecmanagementbase.h"
 
 #include <time.h>
+#include <fstream>
 
 #include <CBMDataInclude/interfaces/ecrastertrial.h>
 
@@ -20,7 +21,7 @@
 class ECManagementDelay : public ECManagementBase
 {
 public:
-	ECManagementDelay(int numT, int iti, int csOn, int csOff, int csPOff,
+	ECManagementDelay(std::ofstream *dfOut, int numT, int iti, int csOn, int csOff, int csPOff,
 			int csStartTN, int dataStartTN, int nDataT,
 			float fracCSTMF, float fracCSPMF, float fracCtxtMF,
 			float bgFreqMin, float csBGFreqMin, float ctxtFreqMin, float csTFreqMin, float csPFreqMin,
@@ -58,6 +59,8 @@ protected:
 
 	float *mfFreqInCSTonic;
 	float *mfFreqInCSPhasic;
+
+	std::ofstream *dataFileOut;
 
 private:
 	ECManagementDelay();

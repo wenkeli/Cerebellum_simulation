@@ -6,8 +6,9 @@
  */
 
 #include "../../includes/ectrial/ecmanagementdelay.h"
+using namespace std;
 
-ECManagementDelay::ECManagementDelay(int numT, int iti, int csOn, int csOff, int csPOff,
+ECManagementDelay::ECManagementDelay(ofstream *dfOut, int numT, int iti, int csOn, int csOff, int csPOff,
 		int csStartTN, int dataStartTN, int nDataT,
 		float fracCSTMF, float fracCSPMF, float fracCtxtMF,
 		float bgFreqMin, float csBGFreqMin, float ctxtFreqMin, float csTFreqMin, float csPFreqMin,
@@ -50,6 +51,8 @@ ECManagementDelay::ECManagementDelay(int numT, int iti, int csOn, int csOff, int
 
 	mfFreqInCSTonic=new float[numMF];
 	mfFreqInCSPhasic=new float[numMF];
+
+	dataFileOut=dfOut;
 
 	isCSTonic=new bool[numMF];
 	isCSPhasic=new bool[numMF];
@@ -195,4 +198,5 @@ void ECManagementDelay::calcSimActivity()
 	simulation->updateMFInput(apMF);
 
 	simulation->calcActivity();
+
 }

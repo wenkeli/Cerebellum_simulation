@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <fstream>
 
 #include <QtGui/QWidget>
 #include <QtGui/QApplication>
@@ -42,6 +43,8 @@ private:
     ActTemporalView *pcTView;
     ActTemporalView *ncTView;
     ActTemporalView *ioTView;
+
+    std::ofstream dataFileOut;
 
 };
 
