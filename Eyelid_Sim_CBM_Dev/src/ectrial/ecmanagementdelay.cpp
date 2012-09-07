@@ -158,7 +158,7 @@ ECManagementDelay::~ECManagementDelay()
 
 void ECManagementDelay::calcMFActivity()
 {
-	if(numTrials<csStartTrialN)
+	if(currentTrial<csStartTrialN)
 	{
 		apMF=mf->calcActivity(mfFreq);
 
