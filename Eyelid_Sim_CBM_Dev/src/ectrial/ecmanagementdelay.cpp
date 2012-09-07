@@ -158,6 +158,13 @@ ECManagementDelay::~ECManagementDelay()
 
 void ECManagementDelay::calcMFActivity()
 {
+	if(numTrials<csStartTrialN)
+	{
+		apMF=mf->calcActivity(mfFreq);
+
+		return;
+	}
+
 	if(currentTime>=csOnTime && currentTime<csOffTime)
 	{
 		if(currentTime<csPOffTime)
@@ -173,4 +180,19 @@ void ECManagementDelay::calcMFActivity()
 	{
 		apMF=mf->calcActivity(mfFreq);
 	}
+}
+
+void ECManagementDelay::calcSimActivity()
+{
+	if(currentTime==(csOffTime-1) && currentTrial>=csStartTrialN)
+	{
+		simulation->updateErrDrive(0, 1);
+	}
+	else
+	{
+		simulation->updateErrDrive(0, 0);
+	}
+	simulation->updateMFInput(apMF);
+
+	simulation->calcActivity();
 }
