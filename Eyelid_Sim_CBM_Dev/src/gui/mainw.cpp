@@ -21,7 +21,7 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	connect(this, SIGNAL(destroyed()), app, SLOT(quit()));
 
 //	manager=new ECManagementBase(10000, 5000);
-	manager=new ECManagementDelay(&dataFileOut, 2000, 5000, 2000, 2750, 2040, 10, 1000, 1000, 0.01, 0.012, 0.03,
+	manager=new ECManagementDelay(&dataFileOut, 2000, 5000, 2000, 2750, 2040, 10, 1000, 1000, 0.025, 0.03, 0.03,
 			1, 1, 30, 40, 120, 10, 5, 60, 50, 130);
 
 
