@@ -44,17 +44,17 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	inputNetSpatialView=new ActSpatialView(xDims, yDims, sizes, colors);
 
 	inputNetTView=new ActTemporalView(manager->getNumGO(), 1, manager->getInterTrialI(),
-			manager->getInterTrialI()/4, manager->getNumGO(), Qt::white);
+			manager->getInterTrialI()/2, manager->getNumGO(), Qt::white);
 	scTView=new ActTemporalView(manager->getNumSC(), 1, manager->getInterTrialI(),
-			manager->getInterTrialI()/4, manager->getNumSC(), Qt::white);
+			manager->getInterTrialI()/2, manager->getNumSC(), Qt::white);
 	bcTView=new ActTemporalView(manager->getNumBC(), 1, manager->getInterTrialI(),
-			manager->getInterTrialI()/4, manager->getNumBC(), Qt::green);
+			manager->getInterTrialI()/2, manager->getNumBC(), Qt::green);
 	pcTView=new ActTemporalView(manager->getNumPC(), 8, manager->getInterTrialI(),
-			manager->getInterTrialI()/4, manager->getNumPC()*8, Qt::red);
+			manager->getInterTrialI()/2, manager->getNumPC()*8, Qt::red);
 	ncTView=new ActTemporalView(manager->getNumNC(), 16, manager->getInterTrialI(),
-			manager->getInterTrialI()/4, manager->getNumNC()*16, Qt::green);
+			manager->getInterTrialI()/2, manager->getNumNC()*16, Qt::green);
 	ioTView=new ActTemporalView(manager->getNumIO(), 32, manager->getInterTrialI(),
-			manager->getInterTrialI()/4, manager->getNumIO()*32, Qt::white);
+			manager->getInterTrialI()/2, manager->getNumIO()*32, Qt::white);
 //
 	compThread=new SimThread(this, manager,
 			inputNetSpatialView,

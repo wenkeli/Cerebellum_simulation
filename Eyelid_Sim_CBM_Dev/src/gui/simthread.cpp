@@ -210,53 +210,53 @@ void SimThread::simLoop()
 //		}
 //		emit(updateSpatialW(apGLVis, 2, false));
 
-//		apGO=management->exportAPGO();
-//		for(int i=0; i<numGO; i++)
-//		{
-//			apGOVis[i]=apGO[i];
-//		}
-//		emit(updateINTW(apGOVis, currentTime));
-//
-//		apSC=management->exportAPSC();
-//		for(int i=0; i<numSC; i++)
-//		{
-//			apSCVis[i]=apSC[i];
-//		}
-//		emit(updateSCTW(apSCVis, currentTime));
-//
-//		apBC=management->exportAPBC();
-//		for(int i=0; i<numBC; i++)
-//		{
-//			apBCVis[i]=apBC[i];
-//		}
-//		emit(updateBCTW(apBCVis, currentTime));
-//
-//		apPC=management->exportAPPC();
-//		vmPC=management->exportVmPC();
-//		for(int i=0; i<numPC; i++)
-//		{
-//			apPCVis[i]=apPC[i];
-//			vmPCVis[i]=(vmPC[i]+80)/80;
-//		}
-//		emit(updatePCTW(apPCVis, vmPCVis, currentTime));
-//
-//		apNC=management->exportAPNC();
-//		vmNC=management->exportVmNC();
-//		for(int i=0; i<numNC; i++)
-//		{
-//			apNCVis[i]=apNC[i];
-//			vmNCVis[i]=(vmNC[i]+80)/80;
-//		}
-//		emit(updateNCTW(apNCVis, vmNCVis, currentTime));
-//
-//		apIO=management->exportAPIO();
-//		vmIO=management->exportVmIO();
-//		for(int i=0; i<numIO; i++)
-//		{
-//			apIOVis[i]=apIO[i];
-//			vmIOVis[i]=(vmIO[i]+80)/80;
-//		}
-//		emit(updateIOTW(apIOVis, vmIOVis, currentTime));
+		apGO=management->exportAPGO();
+		for(int i=0; i<numGO; i++)
+		{
+			apGOVis[i]=apGO[i];
+		}
+		emit(updateINTW(apGOVis, currentTime));
+
+		apSC=management->exportAPSC();
+		for(int i=0; i<numSC; i++)
+		{
+			apSCVis[i]=apSC[i];
+		}
+		emit(updateSCTW(apSCVis, currentTime));
+
+		apBC=management->exportAPBC();
+		for(int i=0; i<numBC; i++)
+		{
+			apBCVis[i]=apBC[i];
+		}
+		emit(updateBCTW(apBCVis, currentTime));
+
+		apPC=management->exportAPPC();
+		vmPC=management->exportVmPC();
+		for(int i=0; i<numPC; i++)
+		{
+			apPCVis[i]=apPC[i];
+			vmPCVis[i]=(vmPC[i]+80)/80;
+		}
+		emit(updatePCTW(apPCVis, vmPCVis, currentTime));
+
+		apNC=management->exportAPNC();
+		vmNC=management->exportVmNC();
+		for(int i=0; i<numNC; i++)
+		{
+			apNCVis[i]=apNC[i];
+			vmNCVis[i]=(vmNC[i]+80)/80;
+		}
+		emit(updateNCTW(apNCVis, vmNCVis, currentTime));
+
+		apIO=management->exportAPIO();
+		vmIO=management->exportVmIO();
+		for(int i=0; i<numIO; i++)
+		{
+			apIOVis[i]=apIO[i];
+			vmIOVis[i]=(vmIO[i]+80)/80;
+		}
+		emit(updateIOTW(apIOVis, vmIOVis, currentTime));
 
 		unlockAccessData();
 	}
