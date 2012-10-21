@@ -373,7 +373,7 @@ QPixmap *PSHData::paintPSH(float *psh)
 	}
 
 	paintBuf=new QPixmap(paintTimeWidth+100, paintSpC+100);
-	paintBuf->fill(Qt::black);
+	paintBuf->fill(Qt::white);
 	p.begin(paintBuf);
 
 	//setting up axes
@@ -414,7 +414,7 @@ QPixmap *PSHData::paintPSH(float *psh)
 	//end axes
 
 	p.fillRect((int)preStimNumBins*binTimeSize, 0,
-			(int)stimNumBins*binTimeSize, (int)paintSpC, Qt::blue);
+			(int)stimNumBins*binTimeSize, (int)paintSpC, Qt::gray);
 	for(int i=0; i<totalNumBins; i++)
 	{
 		int binX;
@@ -425,7 +425,7 @@ QPixmap *PSHData::paintPSH(float *psh)
 		binHeight=paintSpC*(psh[i])/pshBinMaxVal;
 		binY=paintSpC-binHeight;
 
-		p.fillRect(binX, binY, (int)binTimeSize, binHeight, Qt::white);
+		p.fillRect(binX, binY, (int)binTimeSize, binHeight, Qt::black);
 	}
 
 	p.end();
