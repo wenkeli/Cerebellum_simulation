@@ -19,6 +19,9 @@ PSHData::PSHData(ifstream &infile)
 	infile.read((char *)&numBinsInBuf, sizeof(unsigned int));
 	infile.read((char *)&numTrials, sizeof(unsigned int));
 
+	stimNumBins=750/binTimeSize;
+	postStimNumBins=totalNumBins-preStimNumBins-stimNumBins;
+
 	data=new unsigned int *[totalNumBins];
 	data[0]=new unsigned int[totalNumBins*numCells];
 	for(int i=1; i<totalNumBins; i++)
