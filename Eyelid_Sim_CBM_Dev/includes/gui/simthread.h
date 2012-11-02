@@ -46,6 +46,7 @@ public:
 	void unlockAccessData();
 signals:
 	void updateSpatialW(std::vector<bool>, int cellT, bool refresh);
+	void spatialFrameDump();
 
 	void updateINTW(std::vector<bool>, int t);
 	void updateSCTW(std::vector<bool>, int t);

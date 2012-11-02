@@ -11,6 +11,8 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	vector<int> sizes;
 	vector<QColor> colors;
 
+	QColor temp(255, 165, 0);
+
 	ui.setupUi(this);
 
 	dataFileOut.open("dataout", ios::binary);
@@ -21,7 +23,7 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	connect(this, SIGNAL(destroyed()), app, SLOT(quit()));
 
 //	manager=new ECManagementBase(10000, 5000);
-	manager=new ECManagementDelay(&dataFileOut, 2000, 5000, 2000, 2750, 2040, 10, 1000, 1000, 0.025, 0.03, 0.03,
+	manager=new ECManagementDelay(&dataFileOut, 2000, 5000, 2000, 2750, 2040, 1, 1000, 1000, 0.025, 0.03, 0.03,
 			1, 1, 30, 40, 120, 10, 5, 60, 50, 130);
 
 
@@ -33,15 +35,15 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	yDims.push_back(manager->getGOY());
 	yDims.push_back(manager->getGLY());
 
-	sizes.push_back(1);
-	sizes.push_back(5);
+	sizes.push_back(2);
+	sizes.push_back(10);
 	sizes.push_back(2);
 
 	colors.push_back(Qt::green);
-	colors.push_back(Qt::red);
+	colors.push_back(temp);
 	colors.push_back(Qt::blue);
 //
-	inputNetSpatialView=new ActSpatialView(xDims, yDims, sizes, colors);
+	inputNetSpatialView=new ActSpatialView(xDims, yDims, sizes, colors, "/mnt/FastData/movie/");
 
 	inputNetTView=new ActTemporalView(manager->getNumGO(), 1, manager->getInterTrialI(),
 			manager->getInterTrialI()/4, manager->getNumGO(), Qt::white);
@@ -85,24 +87,24 @@ MainW::~MainW()
 
 void MainW::run()
 {
-//	inputNetSpatialView->show();
-//	inputNetSpatialView->update();
+	inputNetSpatialView->show();
+	inputNetSpatialView->update();
 
-	bcTView->show();
-	bcTView->update();
-
-	scTView->show();
-	scTView->update();
-
-	pcTView->show();
-	pcTView->update();
-
-	ncTView->show();
-	ncTView->update();
-
-	ioTView->show();
-	ioTView->update();
-
+//	bcTView->show();
+//	bcTView->update();
+//
+//	scTView->show();
+//	scTView->update();
+//
+//	pcTView->show();
+//	pcTView->update();
+//
+//	ncTView->show();
+//	ncTView->update();
+//
+//	ioTView->show();
+//	ioTView->update();
+//
 	inputNetTView->show();
 	inputNetTView->update();
 

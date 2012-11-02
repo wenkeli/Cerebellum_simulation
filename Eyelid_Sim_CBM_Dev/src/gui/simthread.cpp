@@ -38,6 +38,10 @@ SimThread::SimThread(QObject *parent, ECManagementBase *ecsim,
 	connect(this, SIGNAL(updateSpatialW(std::vector<bool>, int, bool)),
 			inputNetSView, SLOT(drawActivity(std::vector<bool>, int, bool)),
 			Qt::QueuedConnection);
+	connect(this, SIGNAL(spatialFrameDump()),
+			inputNetSView, SLOT(saveBuf()),
+			Qt::QueuedConnection);
+
 
 	connect(this, SIGNAL(blankTW(QColor)), inputNetTView, SLOT(drawBlank(QColor)),
 			Qt::QueuedConnection);
@@ -189,19 +193,28 @@ void SimThread::simLoop()
 			cerr<<"run time for trial #"<<currentTrial<<": "<<runLen<<" ms"<<endl;
 		}
 
-//		apGR=management->exportAPGR();
-//		for(int i=0; i<numGR; i++)
-//		{
-//			apGRVis[i]=apGR[i];
-//		}
-//		emit(updateSpatialW(apGRVis, 0, true));
+		if(currentTrial==2)
+		{
+			if(currentTime>1750 && currentTime<3000)
+			{
+				emit(spatialFrameDump());
+			}
+		}
 
-//		apGO=management->exportAPGO();
-//		for(int i=0; i<numGO; i++)
-//		{
-//			apGOVis[i]=apGO[i];
-//		}
-//		emit(updateSpatialW(apGOVis, 1, true));
+		apGR=management->exportAPGR();
+		for(int i=0; i<numGR; i++)
+		{
+			apGRVis[i]=apGR[i];
+		}
+		emit(updateSpatialW(apGRVis, 0, true));
+
+
+		apGO=management->exportAPGO();
+		for(int i=0; i<numGO; i++)
+		{
+			apGOVis[i]=apGO[i];
+		}
+		emit(updateSpatialW(apGOVis, 1, false));
 
 //		apGL=management->exportAPGL();
 //		for(int i=0; i<numGL; i++)
@@ -216,47 +229,47 @@ void SimThread::simLoop()
 			apGOVis[i]=apGO[i];
 		}
 		emit(updateINTW(apGOVis, currentTime));
-
-		apSC=management->exportAPSC();
-		for(int i=0; i<numSC; i++)
-		{
-			apSCVis[i]=apSC[i];
-		}
-		emit(updateSCTW(apSCVis, currentTime));
-
-		apBC=management->exportAPBC();
-		for(int i=0; i<numBC; i++)
-		{
-			apBCVis[i]=apBC[i];
-		}
-		emit(updateBCTW(apBCVis, currentTime));
-
-		apPC=management->exportAPPC();
-		vmPC=management->exportVmPC();
-		for(int i=0; i<numPC; i++)
-		{
-			apPCVis[i]=apPC[i];
-			vmPCVis[i]=(vmPC[i]+80)/80;
-		}
-		emit(updatePCTW(apPCVis, vmPCVis, currentTime));
-
-		apNC=management->exportAPNC();
-		vmNC=management->exportVmNC();
-		for(int i=0; i<numNC; i++)
-		{
-			apNCVis[i]=apNC[i];
-			vmNCVis[i]=(vmNC[i]+80)/80;
-		}
-		emit(updateNCTW(apNCVis, vmNCVis, currentTime));
-
-		apIO=management->exportAPIO();
-		vmIO=management->exportVmIO();
-		for(int i=0; i<numIO; i++)
-		{
-			apIOVis[i]=apIO[i];
-			vmIOVis[i]=(vmIO[i]+80)/80;
-		}
-		emit(updateIOTW(apIOVis, vmIOVis, currentTime));
+//
+//		apSC=management->exportAPSC();
+//		for(int i=0; i<numSC; i++)
+//		{
+//			apSCVis[i]=apSC[i];
+//		}
+//		emit(updateSCTW(apSCVis, currentTime));
+//
+//		apBC=management->exportAPBC();
+//		for(int i=0; i<numBC; i++)
+//		{
+//			apBCVis[i]=apBC[i];
+//		}
+//		emit(updateBCTW(apBCVis, currentTime));
+//
+//		apPC=management->exportAPPC();
+//		vmPC=management->exportVmPC();
+//		for(int i=0; i<numPC; i++)
+//		{
+//			apPCVis[i]=apPC[i];
+//			vmPCVis[i]=(vmPC[i]+80)/80;
+//		}
+//		emit(updatePCTW(apPCVis, vmPCVis, currentTime));
+//
+//		apNC=management->exportAPNC();
+//		vmNC=management->exportVmNC();
+//		for(int i=0; i<numNC; i++)
+//		{
+//			apNCVis[i]=apNC[i];
+//			vmNCVis[i]=(vmNC[i]+80)/80;
+//		}
+//		emit(updateNCTW(apNCVis, vmNCVis, currentTime));
+//
+//		apIO=management->exportAPIO();
+//		vmIO=management->exportVmIO();
+//		for(int i=0; i<numIO; i++)
+//		{
+//			apIOVis[i]=apIO[i];
+//			vmIOVis[i]=(vmIO[i]+80)/80;
+//		}
+//		emit(updateIOTW(apIOVis, vmIOVis, currentTime));
 
 		unlockAccessData();
 	}
