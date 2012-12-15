@@ -37,7 +37,6 @@ public:
 	virtual ~ECManagementDelay();
 
 protected:
-	virtual void initMF();
 	virtual void calcMFActivity();
 	virtual void calcSimActivity();
 

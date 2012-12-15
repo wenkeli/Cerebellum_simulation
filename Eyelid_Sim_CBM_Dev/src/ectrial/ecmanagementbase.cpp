@@ -32,8 +32,6 @@ ECManagementBase::ECManagementBase
 
 	currentTrial=0;
 	currentTime=0;
-
-	initMF();
 }
 
 ECManagementBase::~ECManagementBase()

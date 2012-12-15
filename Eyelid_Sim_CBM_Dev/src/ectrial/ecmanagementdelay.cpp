@@ -52,6 +52,9 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 	csTonicFreqMax=csTFreqMax;
 	csPhasicFreqMax=csPFreqMax;
 
+	mfs=new PoissonRegenCells(numMF, rSeed, 4, 1);
+
+	mfFreqBG=new float[numMF];
 	mfFreqInCSTonic=new float[numMF];
 	mfFreqInCSPhasic=new float[numMF];
 
@@ -161,11 +164,6 @@ ECManagementDelay::~ECManagementDelay()
 	delete[] mfFreqBG;
 	delete[] mfFreqInCSTonic;
 	delete[] mfFreqInCSPhasic;
-}
-
-void ECManagementDelay::initMF()
-{
-	mfs=new PoissonRegenCells(numMF, rSeed, 4, 1);
 }
 
 void ECManagementDelay::calcMFActivity()

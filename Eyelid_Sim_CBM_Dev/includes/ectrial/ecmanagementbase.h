@@ -43,7 +43,6 @@ public:
 	const ct_uint8_t* exportAPMF();
 
 protected:
-	virtual void initMF()=0;
 	virtual void calcMFActivity()=0;
 	virtual void calcSimActivity();
 

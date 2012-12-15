@@ -88,7 +88,7 @@ ectrial: $(ECTRIALINC) $(ECTRIALSRC)
 	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(ECTRIALSP)/ecmanagementbase.cpp -o $(OUTPATH)/ecmanagementbase.obj
 	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(ECTRIALSP)/ecmanagementdelay.cpp -o $(OUTPATH)/ecmanagementdelay.obj
 	
-gui: $(GUIINC) $(GUISRC)
+gui: guiinc $(GUIINC) $(GUISRC)
 	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(GUISP)/mainw.cpp -o $(OUTPATH)/mainw.obj
 	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(GUISP)/testpanel.cpp -o $(OUTPATH)/testpanel.obj
 	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(GUISP)/simthread.cpp -o $(OUTPATH)/simthread.obj

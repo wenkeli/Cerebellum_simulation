@@ -101,20 +101,20 @@ void MainW::run()
 	inputNetSpatialView->show();
 	inputNetSpatialView->update();
 
-//	bcTView->show();
-//	bcTView->update();
-//
-//	scTView->show();
-//	scTView->update();
-//
-//	pcTView->show();
-//	pcTView->update();
-//
-//	ncTView->show();
-//	ncTView->update();
-//
-//	ioTView->show();
-//	ioTView->update();
+	bcTView->show();
+	bcTView->update();
+
+	scTView->show();
+	scTView->update();
+
+	pcTView->show();
+	pcTView->update();
+
+	ncTView->show();
+	ncTView->update();
+
+	ioTView->show();
+	ioTView->update();
 //
 	inputNetTView->show();
 	inputNetTView->update();
