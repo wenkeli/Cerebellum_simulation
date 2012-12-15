@@ -9,12 +9,22 @@
 
 using namespace std;
 
-ECManagementBase::ECManagementBase(int numT, int iti)
+ECManagementBase::ECManagementBase
+	(string conParamFile, string actParamFile, int numT, int iti, int randSeed)
 {
-	CRandomSFMT0 randGen(time(0));
-	unsigned int numContextMFs;
-	unsigned int *contextMFInds;
+	ifstream conPF;
+	ifstream actPF;
 
+	conPF.open(conParamFile.c_str());
+	actPF.open(actParamFile.c_str());
+
+	simState=new CBMState(actPF, conPF, 1, randSeed, &randSeed, &randSeed);
+	simulation=new CBMSimCore(simState, &randSeed);
+
+	conPF.close();
+	actPF.close();
+
+	numMF=simState->getConnectivityParams()->getNumMF();
 	numTrials=numT;
 	interTrialI=iti;
 
@@ -23,57 +33,14 @@ ECManagementBase::ECManagementBase(int numT, int iti)
 	currentTrial=0;
 	currentTime=0;
 
-	simulation=new CBMSimCore(1);
-
-	numMF=simulation->getNumMF();
-	mf=new MFPoissonRegen(numMF, 1, 0.001);
-	mfFreq=new float[numMF];
-	apMF=0;
-
-	for(int i=0; i<numMF; i++)
-	{
-		mfFreq[i]=randGen.Random()*10;
-	}
-
-	numContextMFs=numMF*0.03;
-
-	contextMFInds=new unsigned int[numContextMFs];
-
-	for(int i=0; i<numContextMFs; i++)
-	{
-		while(true)
-		{
-			unsigned int newInd;
-			bool indExist;
-
-			indExist=false;
-
-			newInd=randGen.IRandom(0, numMF);
-			for(int j=0; j<i; j++)
-			{
-				if(contextMFInds[j]==newInd)
-				{
-					indExist=true;
-				}
-			}
-
-			if(!indExist)
-			{
-				contextMFInds[i]=newInd;
-				mfFreq[contextMFInds[i]]=randGen.Random()*30+30;
-				break;
-			}
-		}
-	}
-
-	delete[] contextMFInds;
+	initMF();
 }
 
 ECManagementBase::~ECManagementBase()
 {
 	delete[] mfFreq;
 	delete simulation;
-	delete mf;
+	delete mfs;
 }
 
 bool ECManagementBase::runStep()
@@ -140,201 +107,6 @@ int ECManagementBase::getNumTrials()
 int ECManagementBase::getInterTrialI()
 {
 	return interTrialI;
-}
-
-const bool* ECManagementBase::exportAPMF()
-{
-	return mf->getAPMF();
-}
-
-const bool* ECManagementBase::exportAPGO()
-{
-	return simulation->exportAPGO();
-}
-
-const bool* ECManagementBase::exportAPGR()
-{
-	return simulation->exportAPGR();
-}
-
-const bool* ECManagementBase::exportAPGL()
-{
-	return simulation->exportAPGL();
-}
-
-const bool* ECManagementBase::exportAPSC()
-{
-	return simulation->exportAPSC();
-}
-
-const bool* ECManagementBase::exportAPBC()
-{
-	return simulation->exportAPBC(0);
-}
-
-const bool* ECManagementBase::exportAPPC()
-{
-	return simulation->exportAPPC(0);
-}
-
-const bool* ECManagementBase::exportAPIO()
-{
-	return simulation->exportAPIO(0);
-}
-
-const bool* ECManagementBase::exportAPNC()
-{
-	return simulation->exportAPNC(0);
-}
-
-const float* ECManagementBase::exportVmGO()
-{
-	return simulation->exportVmGO();
-}
-
-const float* ECManagementBase::exportVmSC()
-{
-	return simulation->exportVmSC();
-}
-
-const float* ECManagementBase::exportVmBC()
-{
-	return simulation->exportVmBC(0);
-}
-
-const float* ECManagementBase::exportVmPC()
-{
-	return simulation->exportVmPC(0);
-}
-
-const float* ECManagementBase::exportVmIO()
-{
-	return simulation->exportVmIO(0);
-}
-
-const float* ECManagementBase::exportVmNC()
-{
-	return simulation->exportVmNC(0);
-}
-
-const unsigned int* ECManagementBase::exportAPBufMF()
-{
-	return simulation->exportAPBufMF();
-}
-
-const unsigned int* ECManagementBase::exportAPBufGO()
-{
-	return simulation->exportAPBufGO();
-}
-
-const unsigned int* ECManagementBase::exportAPBufGR()
-{
-	return simulation->exportAPBufGR();
-}
-
-const unsigned int* ECManagementBase::exportAPBufSC()
-{
-	return simulation->exportAPBufSC();
-}
-
-const unsigned int* ECManagementBase::exportAPBufBC()
-{
-	return simulation->exportAPBufBC(0);
-}
-
-const unsigned int* ECManagementBase::exportAPBufPC()
-{
-	return simulation->exportAPBufPC(0);
-}
-
-const unsigned int* ECManagementBase::exportAPBufIO()
-{
-	return simulation->exportAPBufIO(0);
-}
-
-const unsigned int* ECManagementBase::exportAPBufNC()
-{
-	return simulation->exportAPBufNC(0);
-}
-
-unsigned int ECManagementBase::getGRX()
-{
-	return simulation->getGRX();
-}
-
-unsigned int ECManagementBase::getGRY()
-{
-	return simulation->getGRY();
-}
-
-unsigned int ECManagementBase::getGOX()
-{
-	return simulation->getGOX();
-}
-
-unsigned int ECManagementBase::getGOY()
-{
-	return simulation->getGOY();
-}
-
-unsigned int ECManagementBase::getGLX()
-{
-	return simulation->getGLX();
-}
-
-unsigned int ECManagementBase::getGLY()
-{
-	return simulation->getGLY();
-}
-
-unsigned int ECManagementBase::getNumMF()
-{
-	return simulation->getNumMF();
-}
-
-unsigned int ECManagementBase::getNumGO()
-{
-	return simulation->getNumGO();
-}
-
-unsigned int ECManagementBase::getNumGR()
-{
-	return simulation->getNumGR();
-}
-
-unsigned int ECManagementBase::getNumGL()
-{
-	return simulation->getNumGL();
-}
-
-unsigned int ECManagementBase::getNumSC()
-{
-	return simulation->getNumSC();
-}
-
-unsigned int ECManagementBase::getNumBC()
-{
-	return simulation->getNumBC();
-}
-
-unsigned int ECManagementBase::getNumPC()
-{
-	return simulation->getNumPC();
-}
-
-unsigned int ECManagementBase::getNumNC()
-{
-	return simulation->getNumNC();
-}
-
-unsigned int ECManagementBase::getNumIO()
-{
-	return simulation->getNumIO();
-}
-
-void ECManagementBase:: calcMFActivity()
-{
-	apMF=mf->calcActivity(mfFreq);
 }
 
 void ECManagementBase::calcSimActivity()

@@ -20,6 +20,8 @@
 
 #include <QtCore/QWaitCondition>
 
+#include <CXXToolsInclude/stdDefinitions/pstdint.h>
+
 #include <CBMVisualInclude/actspatialview.h>
 #include <CBMVisualInclude/acttemporalview.h>
 
@@ -45,15 +47,15 @@ public:
 	void lockAccessData();
 	void unlockAccessData();
 signals:
-	void updateSpatialW(std::vector<bool>, int cellT, bool refresh);
+	void updateSpatialW(std::vector<ct_uint8_t>, int cellT, bool refresh);
 	void spatialFrameDump();
 
-	void updateINTW(std::vector<bool>, int t);
-	void updateSCTW(std::vector<bool>, int t);
-	void updateBCTW(std::vector<bool>, int t);
-	void updatePCTW(std::vector<bool>, std::vector<float>, int t);
-	void updateNCTW(std::vector<bool>, std::vector<float>, int t);
-	void updateIOTW(std::vector<bool>, std::vector<float>, int t);
+	void updateINTW(std::vector<ct_uint8_t>, int t);
+	void updateSCTW(std::vector<ct_uint8_t>, int t);
+	void updateBCTW(std::vector<ct_uint8_t>, int t);
+	void updatePCTW(std::vector<ct_uint8_t>, std::vector<float>, int t);
+	void updateNCTW(std::vector<ct_uint8_t>, std::vector<float>, int t);
+	void updateIOTW(std::vector<ct_uint8_t>, std::vector<float>, int t);
 	void blankTW(QColor bc);
 
 private:

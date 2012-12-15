@@ -9,19 +9,24 @@
 #define ECMANAGEMENT_H_
 
 #include <iostream>
+#include <fstream>
+#include <string>
 #include <time.h>
 
+#include <CBMToolsInclude/poissonregencells.h>
+
+#include <CBMStateInclude/interfaces/cbmstate.h>
+
 #include <CBMCoreInclude/interface/cbmsimcore.h>
-#include <CBMCoreInclude/tools/mfpoissonregen.h>
-#include <CBMCoreInclude/tools/randomc.h>
-#include <CBMCoreInclude/tools/sfmt.h>
+#include <CBMCoreInclude/interface/innetinterface.h>
+#include <CBMCoreInclude/interface/mzoneinterface.h>
 
 #include <CBMDataInclude/interfaces/ecrastertrial.h>
 
 class ECManagementBase
 {
 public:
-	ECManagementBase(int numT, int iti);
+	ECManagementBase(std::string conParamFile, std::string actParamFile, int numT, int iti, int randSeed);
 	virtual ~ECManagementBase();
 
 	bool runStep();
@@ -31,60 +36,22 @@ public:
 	int getNumTrials();
 	int getInterTrialI();
 
-	const bool* exportAPMF();
-	const bool* exportAPGO();
-	const bool* exportAPGR();
-	const bool* exportAPGL();
-	const bool* exportAPSC();
-	const bool* exportAPBC();
-	const bool* exportAPPC();
-	const bool* exportAPIO();
-	const bool* exportAPNC();
-
-	const float* exportVmGO();
-	const float* exportVmSC();
-	const float* exportVmBC();
-	const float* exportVmPC();
-	const float* exportVmNC();
-	const float* exportVmIO();
-
-	const unsigned int* exportAPBufMF();
-	const unsigned int* exportAPBufGO();
-	const unsigned int* exportAPBufGR();
-	const unsigned int* exportAPBufSC();
-	const unsigned int* exportAPBufBC();
-	const unsigned int* exportAPBufPC();
-	const unsigned int* exportAPBufIO();
-	const unsigned int* exportAPBufNC();
-
-	unsigned int getGRX();
-	unsigned int getGRY();
-	unsigned int getGOX();
-	unsigned int getGOY();
-	unsigned int getGLX();
-	unsigned int getGLY();
-
-	unsigned int getNumMF();
-	unsigned int getNumGO();
-	unsigned int getNumGR();
-	unsigned int getNumGL();
-	unsigned int getNumSC();
-	unsigned int getNumBC();
-	unsigned int getNumPC();
-	unsigned int getNumNC();
-	unsigned int getNumIO();
-
+	InNetInterface* getInputNet();
+	MZoneInterface* getMZone();
 
 protected:
-
-	virtual void calcMFActivity();
+	virtual void initMF()=0;
+	virtual void calcMFActivity()=0;
 	virtual void calcSimActivity();
 
+	CBMState *simState;
+
 	CBMSimCore *simulation;
-	MFPoissonRegen *mf;
+
+	PoissonRegenCells *mfs;
 
 	float *mfFreq;
-	const bool *apMF;
+	const ct_uint8_t *apMF;
 	int numMF;
 
 	int numTrials;

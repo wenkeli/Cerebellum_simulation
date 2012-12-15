@@ -13,10 +13,20 @@
 #include <time.h>
 #include <fstream>
 
+#include <CXXToolsInclude/stdDefinitions/pstdint.h>
+#include <CXXToolsInclude/randGenerators/sfmt.h>
+
+#include <CBMToolsInclude/poissonregencells.h>
+
+#include <CBMStateInclude/interfaces/cbmstate.h>
+#include <CBMStateInclude/interfaces/iconnectivityparams.h>
+
+#include <CBMCoreInclude/interface/cbmsimcore.h>
+#include <CBMCoreInclude/interface/innetinterface.h>
+#include <CBMCoreInclude/interface/mzoneinterface.h>
+
 #include <CBMDataInclude/interfaces/ecrastertrial.h>
 
-#include <CBMCoreInclude/tools/randomc.h>
-#include <CBMCoreInclude/tools/sfmt.h>
 
 class ECManagementDelay : public ECManagementBase
 {
