@@ -38,9 +38,8 @@ ECManagementBase::ECManagementBase
 
 ECManagementBase::~ECManagementBase()
 {
-	delete[] mfFreq;
 	delete simulation;
-	delete mfs;
+	delete simState;
 }
 
 bool ECManagementBase::runStep()
@@ -83,9 +82,6 @@ bool ECManagementBase::runStep()
 
 	calcSimActivity();
 
-//	simulation->updateMFInput(mf->calcActivity(mfFreq));
-//	simulation->calcActivity();
-
 	return true;
 }
 
@@ -109,8 +105,29 @@ int ECManagementBase::getInterTrialI()
 	return interTrialI;
 }
 
+IConnectivityParams* ECManagementBase::getConParams()
+{
+	return simState->getConnectivityParams();
+}
+
+InNetInterface* ECManagementBase::getInputNet()
+{
+	return simulation->getInputNet();
+}
+
+MZoneInterface* ECManagementBase::getMZone()
+{
+	return simulation->getMZoneList()[0];
+}
+
+const ct_uint8_t* ECManagementBase::exportAPMF()
+{
+	return apMF;
+}
+
 void ECManagementBase::calcSimActivity()
 {
 	simulation->updateMFInput(apMF);
 	simulation->calcActivity();
 }
+

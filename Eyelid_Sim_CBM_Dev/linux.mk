@@ -13,34 +13,29 @@ RM = rm
 MOC = moc
 UIC = uic
 
-INTELLIBPATH ='/opt/intel/Compiler/11.0/072/lib/intel64/'
+CUDAIP = '/opt/cuda/include/'
+QTIP = '/usr/include/qt4/'
+CXXTOOLSIP = '../CXX_TOOLS_LIB'
+CBMTOOLSIP = '../CBM_TOOLS_LIB'
+CBMSTATEIP = '../CBM_STATE_LIB'
+CBMCOREIP = '../CBM_CORE_LIB'
+CBMVISUALIP = '../CBM_VISUAL_LIB'
+CBMDATAIP = '../CBM_DATA_LIB'
+EXTINCPATH = -I $(CUDAIP) -I $(QTIP) -I $(CXXTOOLSIP) -I $(CBMTOOLSIP) -I $(CBMSTATEIP) -I $(CBMCOREIP) \
+-I $(CBMVISUALIP) -I $(CBMDATAIP)
+
+INTELLIBPATH = '/opt/intel/Compiler/11.0/072/lib/intel64'
 INTELLIBS = -lirc -lcxaguard -limf
 
-QTINCPATH = '/usr/include/qt4/'
-QTLIBPATH = '/usr/lib/qt4/'
+QTLIBPATH = '/usr/lib/qt4'
 QTLIBS = -lQtGui -lQtCore
 
-CUDAINCPATH = '/opt/cuda/include/'
+DEPLIBPATH = ../libs/
+DEPLIBS = -Xlinker --library=cxx_tools -Xlinker --library=cbm_tools -Xlinker --library=cbm_state \
+-Xlinker --library=cbm_core -Xlinker --library=cbm_visual -Xlinker --library=cbm_data 
 
-CBMCOREINCPATH = '../CBM_CORE_LIB/'
-CBMCORELIBPATHR = ../CBM_CORE_LIB/lib/
-CBMCORELIBPATH = '$(CBMCORELIBPATHR)'
-CBMCORELIB = cbm_core
 
-CBMVISUALINCPATH = '../CBM_VISUAL_LIB/'
-CBMVISUALLIBPATHR = ../CBM_VISUAL_LIB/lib/
-CBMVISUALLIBPATH = '$(CBMVISUALLIBPATHR)'
-CBMVISUALLIB = cbm_visual
 
-CBMDATAINCPATH = '../CBM_DATA_LIB/'
-CBMDATALIBPATHR = ../CBM_DATA_LIB/lib/
-CBMDATALIBPATH = '$(CBMDATALIBPATHR)'
-CBMDATALIB = cbm_data
-
-EXTINCPATH = -I $(QTINCPATH) -I $(CUDAINCPATH) -I $(CBMCOREINCPATH) -I $(CBMVISUALINCPATH) \
--I $(CBMDATAINCPATH)
-
-LIBS = $(CBMCORELIB) $(CBMVISUALLIB) $(CBMDATALIB)
 
 INCPATH = ./includes
 GUIIP = $(INCPATH)/gui
@@ -83,14 +78,8 @@ OBJ = $(GUIOBJ) $(ECTRIALOBJ) $(MAINOBJ)
 mainapp: main gui ectrial
 	-$(CC) $(CFLAGS) $(OBJ) -o $(OUTPATH)/$(NAME) \
 	-L$(QTLIBPATH) $(QTLIBS) -L$(INTELLIBPATH) $(INTELLIBS) \
-	-Xlinker -rpath=$(CBMCORELIBPATHR) -Xlinker -rpath=$(CBMVISUALLIBPATHR) \
-	-Xlinker -rpath=$(CBMDATALIBPATHR) \
-	\
-	-Xlinker --library-path=$(CBMCORELIBPATHR) -Xlinker --library-path=$(CBMVISUALLIBPATHR) \
-	-Xlinker --library-path=$(CBMDATALIBPATHR) \
-	\
-	-Xlinker --library=$(CBMCORELIB) -Xlinker --library=$(CBMVISUALLIB) \
-	-Xlinker --library=$(CBMDATALIB)
+	-Xlinker -rpath=$(DEPLIBPATH) -Xlinker --library-path=$(DEPLIBPATH) \
+	$(DEPLIBS)
 	
 main: $(MAININC) $(MAINSRC)
 	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(SRCPATH)/main.cpp -o $(OUTPATH)/main.obj

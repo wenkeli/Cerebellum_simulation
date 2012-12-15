@@ -13,9 +13,8 @@
 #include <string>
 #include <time.h>
 
-#include <CBMToolsInclude/poissonregencells.h>
-
 #include <CBMStateInclude/interfaces/cbmstate.h>
+#include <CBMStateInclude/interfaces/iconnectivityparams.h>
 
 #include <CBMCoreInclude/interface/cbmsimcore.h>
 #include <CBMCoreInclude/interface/innetinterface.h>
@@ -26,7 +25,8 @@
 class ECManagementBase
 {
 public:
-	ECManagementBase(std::string conParamFile, std::string actParamFile, int numT, int iti, int randSeed);
+	ECManagementBase(std::string conParamFile, std::string actParamFile,
+			int numT, int iti, int randSeed);
 	virtual ~ECManagementBase();
 
 	bool runStep();
@@ -36,8 +36,11 @@ public:
 	int getNumTrials();
 	int getInterTrialI();
 
+	IConnectivityParams* getConParams();
 	InNetInterface* getInputNet();
 	MZoneInterface* getMZone();
+
+	const ct_uint8_t* exportAPMF();
 
 protected:
 	virtual void initMF()=0;
@@ -48,9 +51,6 @@ protected:
 
 	CBMSimCore *simulation;
 
-	PoissonRegenCells *mfs;
-
-	float *mfFreq;
 	const ct_uint8_t *apMF;
 	int numMF;
 

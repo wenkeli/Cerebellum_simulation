@@ -15,25 +15,36 @@ MainW::MainW(QApplication *app, QWidget *parent)
 
 	ui.setupUi(this);
 
-	dataFileOut.open("dataout", ios::binary);
+	string conPF;
+	string actPF;
+	QStringList args;
+
+	args=app->arguments();
+
+	conPF=args[1].toStdString();
+	actPF=args[2].toStdString();
 
 	this->setAttribute(Qt::WA_DeleteOnClose);
 
 	connect(ui.quitButton, SIGNAL(clicked()), app, SLOT(quit()));
 	connect(this, SIGNAL(destroyed()), app, SLOT(quit()));
 
-//	manager=new ECManagementBase(10000, 5000);
-	manager=new ECManagementDelay(&dataFileOut, 2000, 5000, 2000, 2750, 2040, 1, 1000, 1000, 0.025, 0.03, 0.03,
+	cout<<"conPF "<<conPF<<endl;
+	cout<<"actPF "<<actPF<<endl;
+
+	manager=new ECManagementDelay(conPF, actPF, 10, 2000, 5000, 2000, 2750, 2040,
+			1, 1000, 1000, 0.025, 0.03, 0.03,
 			1, 1, 30, 40, 120, 10, 5, 60, 50, 130);
 
+	conParams=manager->getConParams();
 
-	xDims.push_back(manager->getGRX());
-	xDims.push_back(manager->getGOX());
-	xDims.push_back(manager->getGLX());
+	xDims.push_back(conParams->getGRX());
+	xDims.push_back(conParams->getGOX());
+	xDims.push_back(conParams->getGLX());
 
-	yDims.push_back(manager->getGRY());
-	yDims.push_back(manager->getGOY());
-	yDims.push_back(manager->getGLY());
+	yDims.push_back(conParams->getGRY());
+	yDims.push_back(conParams->getGOY());
+	yDims.push_back(conParams->getGLY());
 
 	sizes.push_back(2);
 	sizes.push_back(10);
@@ -45,18 +56,18 @@ MainW::MainW(QApplication *app, QWidget *parent)
 //
 	inputNetSpatialView=new ActSpatialView(xDims, yDims, sizes, colors, "/mnt/FastData/movie/");
 
-	inputNetTView=new ActTemporalView(manager->getNumGO(), 1, manager->getInterTrialI(),
-			manager->getInterTrialI()/4, manager->getNumGO(), Qt::white);
-	scTView=new ActTemporalView(manager->getNumSC(), 1, manager->getInterTrialI(),
-			manager->getInterTrialI()/4, manager->getNumSC(), Qt::white);
-	bcTView=new ActTemporalView(manager->getNumBC(), 1, manager->getInterTrialI(),
-			manager->getInterTrialI()/4, manager->getNumBC(), Qt::green);
-	pcTView=new ActTemporalView(manager->getNumPC(), 8, manager->getInterTrialI(),
-			manager->getInterTrialI()/4, manager->getNumPC()*8, Qt::red);
-	ncTView=new ActTemporalView(manager->getNumNC(), 16, manager->getInterTrialI(),
-			manager->getInterTrialI()/4, manager->getNumNC()*16, Qt::green);
-	ioTView=new ActTemporalView(manager->getNumIO(), 32, manager->getInterTrialI(),
-			manager->getInterTrialI()/4, manager->getNumIO()*32, Qt::white);
+	inputNetTView=new ActTemporalView(conParams->getNumGO(), 1, manager->getInterTrialI(),
+			manager->getInterTrialI()/4, conParams->getNumGO(), Qt::white);
+	scTView=new ActTemporalView(conParams->getNumSC(), 1, manager->getInterTrialI(),
+			manager->getInterTrialI()/4, conParams->getNumSC(), Qt::white);
+	bcTView=new ActTemporalView(conParams->getNumBC(), 1, manager->getInterTrialI(),
+			manager->getInterTrialI()/4, conParams->getNumBC(), Qt::green);
+	pcTView=new ActTemporalView(conParams->getNumPC(), 8, manager->getInterTrialI(),
+			manager->getInterTrialI()/4, conParams->getNumPC()*8, Qt::red);
+	ncTView=new ActTemporalView(conParams->getNumNC(), 16, manager->getInterTrialI(),
+			manager->getInterTrialI()/4, conParams->getNumNC()*16, Qt::green);
+	ioTView=new ActTemporalView(conParams->getNumIO(), 32, manager->getInterTrialI(),
+			manager->getInterTrialI()/4, conParams->getNumIO()*32, Qt::white);
 //
 	compThread=new SimThread(this, manager,
 			inputNetSpatialView,

@@ -8,14 +8,15 @@
 #include "../../includes/ectrial/ecmanagementdelay.h"
 using namespace std;
 
-ECManagementDelay::ECManagementDelay(ofstream *dfOut, int numT, int iti, int csOn, int csOff, int csPOff,
+ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, int randSeed,
+		int numT, int iti, int csOn, int csOff, int csPOff,
 		int csStartTN, int dataStartTN, int nDataT,
 		float fracCSTMF, float fracCSPMF, float fracCtxtMF,
 		float bgFreqMin, float csBGFreqMin, float ctxtFreqMin, float csTFreqMin, float csPFreqMin,
 		float bgFreqMax, float csBGFreqMax, float ctxtFreqMax, float csTFreqMax, float csPFreqMax)
-		:ECManagementBase(numT, iti)
+		:ECManagementBase(conParamFile, actParamFile, numT, iti, randSeed)
 {
-	CRandomSFMT0 randGen(time(0));
+	CRandomSFMT0 randGen(randSeed);
 
 	int numCSTMF;
 	int numCSPMF;
@@ -24,6 +25,8 @@ ECManagementDelay::ECManagementDelay(ofstream *dfOut, int numT, int iti, int csO
 	bool *isCSTonic;
 	bool *isCSPhasic;
 	bool *isContext;
+
+	rSeed=randSeed;
 
 	csOnTime=csOn;
 	csOffTime=csOff;
@@ -52,7 +55,6 @@ ECManagementDelay::ECManagementDelay(ofstream *dfOut, int numT, int iti, int csO
 	mfFreqInCSTonic=new float[numMF];
 	mfFreqInCSPhasic=new float[numMF];
 
-	dataFileOut=dfOut;
 
 	isCSTonic=new bool[numMF];
 	isCSPhasic=new bool[numMF];
@@ -60,9 +62,9 @@ ECManagementDelay::ECManagementDelay(ofstream *dfOut, int numT, int iti, int csO
 
 	for(int i=0; i<numMF; i++)
 	{
-		mfFreq[i]=randGen.Random()*(backGFreqMax-backGFreqMin)+backGFreqMin;
-		mfFreqInCSTonic[i]=mfFreq[i];
-		mfFreqInCSPhasic[i]=mfFreq[i];
+		mfFreqBG[i]=randGen.Random()*(backGFreqMax-backGFreqMin)+backGFreqMin;
+		mfFreqInCSTonic[i]=mfFreqBG[i];
+		mfFreqInCSPhasic[i]=mfFreqBG[i];
 
 		isCSTonic[i]=false;
 		isCSPhasic[i]=false;
@@ -79,7 +81,7 @@ ECManagementDelay::ECManagementDelay(ofstream *dfOut, int numT, int iti, int csO
 		{
 			int mfInd;
 
-			mfInd=randGen.IRandom(0, numMF);
+			mfInd=randGen.IRandom(0, numMF-1);
 
 			if(isCSTonic[mfInd])
 			{
@@ -97,7 +99,7 @@ ECManagementDelay::ECManagementDelay(ofstream *dfOut, int numT, int iti, int csO
 		{
 			int mfInd;
 
-			mfInd=randGen.IRandom(0, numMF);
+			mfInd=randGen.IRandom(0, numMF-1);
 
 			if(isCSPhasic[mfInd] || isCSTonic[mfInd])
 			{
@@ -115,7 +117,7 @@ ECManagementDelay::ECManagementDelay(ofstream *dfOut, int numT, int iti, int csO
 		{
 			int mfInd;
 
-			mfInd=randGen.IRandom(0, numMF);
+			mfInd=randGen.IRandom(0, numMF-1);
 
 			if(isContext[mfInd] || isCSPhasic[mfInd] || isCSTonic[mfInd])
 			{
@@ -131,9 +133,9 @@ ECManagementDelay::ECManagementDelay(ofstream *dfOut, int numT, int iti, int csO
 	{
 		if(isContext[i])
 		{
-			mfFreq[i]=randGen.Random()*(contextFreqMax-contextFreqMin)+contextFreqMin;
-			mfFreqInCSTonic[i]=mfFreq[i];
-			mfFreqInCSPhasic[i]=mfFreq[i];
+			mfFreqBG[i]=randGen.Random()*(contextFreqMax-contextFreqMin)+contextFreqMin;
+			mfFreqInCSTonic[i]=mfFreqBG[i];
+			mfFreqInCSPhasic[i]=mfFreqBG[i];
 		}
 
 		if(isCSTonic[i])
@@ -155,15 +157,22 @@ ECManagementDelay::ECManagementDelay(ofstream *dfOut, int numT, int iti, int csO
 
 ECManagementDelay::~ECManagementDelay()
 {
+	delete mfs;
+	delete[] mfFreqBG;
 	delete[] mfFreqInCSTonic;
 	delete[] mfFreqInCSPhasic;
+}
+
+void ECManagementDelay::initMF()
+{
+	mfs=new PoissonRegenCells(numMF, rSeed, 4, 1);
 }
 
 void ECManagementDelay::calcMFActivity()
 {
 	if(currentTrial<csStartTrialN)
 	{
-		apMF=mf->calcActivity(mfFreq);
+		apMF=mfs->calcActivity(mfFreqBG);
 
 		return;
 	}
@@ -172,16 +181,16 @@ void ECManagementDelay::calcMFActivity()
 	{
 		if(currentTime<csPOffTime)
 		{
-			apMF=mf->calcActivity(mfFreqInCSPhasic);
+			apMF=mfs->calcActivity(mfFreqInCSPhasic);
 		}
 		else
 		{
-			apMF=mf->calcActivity(mfFreqInCSTonic);
+			apMF=mfs->calcActivity(mfFreqInCSTonic);
 		}
 	}
 	else
 	{
-		apMF=mf->calcActivity(mfFreq);
+		apMF=mfs->calcActivity(mfFreqBG);
 	}
 }
 

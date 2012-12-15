@@ -8,9 +8,13 @@
 #include <QtGui/QWidget>
 #include <QtGui/QApplication>
 #include <QtGui/QColor>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
 
 #include <CBMVisualInclude/actspatialview.h>
 #include <CBMVisualInclude/acttemporalview.h>
+
+#include <CBMStateInclude/interfaces/iconnectivityparams.h>
 
 #include "../ectrial/ecmanagementbase.h"
 #include "../ectrial/ecmanagementdelay.h"
@@ -35,6 +39,8 @@ private:
     ECManagementBase *manager;
     SimThread *compThread;
 
+    IConnectivityParams *conParams;
+
     ActSpatialView *inputNetSpatialView;
 
     ActTemporalView *inputNetTView;
@@ -43,9 +49,6 @@ private:
     ActTemporalView *pcTView;
     ActTemporalView *ncTView;
     ActTemporalView *ioTView;
-
-    std::ofstream dataFileOut;
-
 };
 
 #endif // MAINW_H

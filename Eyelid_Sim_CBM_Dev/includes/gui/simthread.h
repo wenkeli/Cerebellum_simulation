@@ -22,6 +22,11 @@
 
 #include <CXXToolsInclude/stdDefinitions/pstdint.h>
 
+#include <CBMCoreInclude/interface/innetinterface.h>
+#include <CBMCoreInclude/interface/mzoneinterface.h>
+
+#include <CBMStateInclude/interfaces/iconnectivityparams.h>
+
 #include <CBMVisualInclude/actspatialview.h>
 #include <CBMVisualInclude/acttemporalview.h>
 
@@ -62,6 +67,11 @@ private:
 	ECManagementBase *management;
 
 	ActSpatialView *inputNetSView;
+
+	IConnectivityParams *conParams;
+
+	InNetInterface *inputNet;
+	MZoneInterface *mZone;
 
 	ActTemporalView *inputNetTView;
 	ActTemporalView *scTView;

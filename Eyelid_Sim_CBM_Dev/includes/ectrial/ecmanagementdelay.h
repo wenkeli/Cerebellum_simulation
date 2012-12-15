@@ -8,30 +8,27 @@
 #ifndef ECMANAGEMENTDELAY_H_
 #define ECMANAGEMENTDELAY_H_
 
-#include "ecmanagementbase.h"
-
 #include <time.h>
 #include <fstream>
+#include <string>
 
 #include <CXXToolsInclude/stdDefinitions/pstdint.h>
 #include <CXXToolsInclude/randGenerators/sfmt.h>
 
 #include <CBMToolsInclude/poissonregencells.h>
 
-#include <CBMStateInclude/interfaces/cbmstate.h>
-#include <CBMStateInclude/interfaces/iconnectivityparams.h>
-
 #include <CBMCoreInclude/interface/cbmsimcore.h>
 #include <CBMCoreInclude/interface/innetinterface.h>
 #include <CBMCoreInclude/interface/mzoneinterface.h>
 
-#include <CBMDataInclude/interfaces/ecrastertrial.h>
+#include "ecmanagementbase.h"
 
 
 class ECManagementDelay : public ECManagementBase
 {
 public:
-	ECManagementDelay(std::ofstream *dfOut, int numT, int iti, int csOn, int csOff, int csPOff,
+	ECManagementDelay(std::string conParamFile, std::string actParamFile, int randSeed,
+			int numT, int iti, int csOn, int csOff, int csPOff,
 			int csStartTN, int dataStartTN, int nDataT,
 			float fracCSTMF, float fracCSPMF, float fracCtxtMF,
 			float bgFreqMin, float csBGFreqMin, float ctxtFreqMin, float csTFreqMin, float csPFreqMin,
@@ -40,8 +37,12 @@ public:
 	virtual ~ECManagementDelay();
 
 protected:
+	virtual void initMF();
 	virtual void calcMFActivity();
 	virtual void calcSimActivity();
+
+	PoissonRegenCells *mfs;
+	int rSeed;
 
 	int csOnTime;
 	int csOffTime;
@@ -67,10 +68,9 @@ protected:
 	float csTonicFreqMax;
 	float csPhasicFreqMax;
 
+	float *mfFreqBG;
 	float *mfFreqInCSTonic;
 	float *mfFreqInCSPhasic;
-
-	std::ofstream *dataFileOut;
 
 private:
 	ECManagementDelay();
