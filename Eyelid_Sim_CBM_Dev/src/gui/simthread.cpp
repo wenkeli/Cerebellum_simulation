@@ -9,6 +9,8 @@
 #include "../../includes/gui/simthread.h"
 #include "../../includes/gui/moc/moc_simthread.h"
 
+#include <math.h>
+
 using namespace std;
 
 SimThread::SimThread(QObject *parent, ECManagementBase *ecsim,
@@ -181,6 +183,8 @@ void SimThread::simLoop()
 		int currentTrial;
 		int currentTime;
 		bool notDone;
+		const float *gESumGR;
+		const float *vmGR;
 
 		lockAccessData();
 
@@ -200,29 +204,28 @@ void SimThread::simLoop()
 			cerr<<"run time for trial #"<<currentTrial<<": "<<runLen<<" ms"<<endl;
 		}
 
-		if(currentTrial==2)
-		{
-			if(currentTime>1750 && currentTime<3000)
-			{
-				emit(spatialFrameDump());
-			}
-		}
+//		if(currentTrial==2)
+//		{
+//			if(currentTime>1750 && currentTime<3000)
+//			{
+//				emit(spatialFrameDump());
+//			}
+//		}
 
-		apGR=inputNet->exportAPGR();
-		for(int i=0; i<numGR; i++)
-		{
-			apGRVis[i]=apGR[i];
-		}
-		emit(updateSpatialW(apGRVis, 0, true));
-
-
+//		apGR=inputNet->exportAPGR();
+//		for(int i=0; i<numGR; i++)
+//		{
+//			apGRVis[i]=apGR[i];
+//		}
+//		emit(updateSpatialW(apGRVis, 0, true));
+//
+//
 //		apGO=inputNet->exportAPGO();
-		apGO=management->exportAPMF();
-		for(int i=0; i<numGO; i++)
-		{
-			apGOVis[i]=apGO[i];
-		}
-		emit(updateSpatialW(apGOVis, 1, false));
+//		for(int i=0; i<numGO; i++)
+//		{
+//			apGOVis[i]=apGO[i];
+//		}
+//		emit(updateSpatialW(apGOVis, 1, false));
 
 //		apGL=management->exportAPGL();
 //		for(int i=0; i<numGL; i++)
@@ -232,6 +235,25 @@ void SimThread::simLoop()
 //		emit(updateSpatialW(apGLVis, 2, false));
 
 		apGO=inputNet->exportAPGO();
+//		apGO=management->exportAPMF();
+//		gESumGR=inputNet->exportGESumGR();
+//		cout<<"gESumGR "<<gESumGR[0]<<" "<<gESumGR[100]<<" "<<gESumGR[200]<<gESumGR[1048575]<<endl;
+//		vmGR=inputNet->exportVmGR();
+//		cout<<"vmGR "<<vmGR[0]<<" "<<vmGR[100]<<" "<<vmGR[200]<<" "<<vmGR[1048575]<<endl;
+//		int numBadGRs=0;
+//		for(int i=0; i<numGR; i++)
+//		{
+////			if(vmGR[i]==numeric_limits<float>::infinity() || vmGR[i]==-numeric_limits<float>::infinity() ||
+////					vmGR[i]==numeric_limits<float>::quiet_NaN())
+//			if(isnanf(vmGR[i]) || isinff(vmGR[i]))
+//			{
+//				numBadGRs++;
+//			}
+//		}
+
+//		cout<<"numBadGRs "<<numBadGRs<<endl;
+//		apGO=inputNet->exportAPGR();
+//		}
 		for(int i=0; i<numGO; i++)
 		{
 			apGOVis[i]=apGO[i];

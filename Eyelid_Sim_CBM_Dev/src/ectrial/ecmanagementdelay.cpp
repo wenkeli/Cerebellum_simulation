@@ -153,6 +153,8 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 		}
 	}
 
+	simState->getActivityParams()->showParams(cout);
+
 	delete[] isCSTonic;
 	delete[] isCSPhasic;
 	delete[] isContext;
