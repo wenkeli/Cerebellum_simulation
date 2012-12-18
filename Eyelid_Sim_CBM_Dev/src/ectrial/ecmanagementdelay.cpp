@@ -198,11 +198,11 @@ void ECManagementDelay::calcSimActivity()
 {
 	if(currentTime==(csOffTime-1) && currentTrial>=csStartTrialN)
 	{
-		simulation->updateErrDrive(0, 1);
+		simulation->updateErrDrive(0, 1.0);
 	}
 	else
 	{
-		simulation->updateErrDrive(0, 0);
+//		simulation->updateErrDrive(0, 0);
 	}
 	simulation->updateMFInput(apMF);
 
