@@ -57,17 +57,17 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	inputNetSpatialView=new ActSpatialView(xDims, yDims, sizes, colors, "/mnt/FastData/movie/");
 
 	inputNetTView=new ActTemporalView(conParams->getNumGO(), 1, manager->getInterTrialI(),
-			manager->getInterTrialI()/4, conParams->getNumGO(), Qt::white);
+			manager->getInterTrialI()/4, conParams->getNumGO(), Qt::white, "inputNet");
 	scTView=new ActTemporalView(conParams->getNumSC(), 1, manager->getInterTrialI(),
-			manager->getInterTrialI()/4, conParams->getNumSC(), Qt::white);
+			manager->getInterTrialI()/4, conParams->getNumSC(), Qt::white, "stellate");
 	bcTView=new ActTemporalView(conParams->getNumBC(), 1, manager->getInterTrialI(),
-			manager->getInterTrialI()/4, conParams->getNumBC(), Qt::green);
+			manager->getInterTrialI()/4, conParams->getNumBC(), Qt::green, "basket");
 	pcTView=new ActTemporalView(conParams->getNumPC(), 8, manager->getInterTrialI(),
-			manager->getInterTrialI()/4, conParams->getNumPC()*8, Qt::red);
+			manager->getInterTrialI()/4, conParams->getNumPC()*8, Qt::red, "purkinje");
 	ncTView=new ActTemporalView(conParams->getNumNC(), 16, manager->getInterTrialI(),
-			manager->getInterTrialI()/2, conParams->getNumNC()*16, Qt::green);
+			manager->getInterTrialI()/2, conParams->getNumNC()*16, Qt::green, "nucleus");
 	ioTView=new ActTemporalView(conParams->getNumIO(), 32, manager->getInterTrialI(),
-			manager->getInterTrialI()/4, conParams->getNumIO()*32, Qt::white);
+			manager->getInterTrialI()/4, conParams->getNumIO()*32, Qt::white, "inferior olive");
 //
 	compThread=new SimThread(this, manager,
 			inputNetSpatialView,
