@@ -21,8 +21,8 @@ struct Glomerulus
 	bool hasGODen;
 	bool hasGOAx;
 	bool hasMF;
-	short goDenInd;
-	short goAxInd;
+	short goDenInds;
+	short goAxInds;
 	short mfInd;
 	int grDenInds[MAXNGRDENPERGL];
 	char numGRDen;
