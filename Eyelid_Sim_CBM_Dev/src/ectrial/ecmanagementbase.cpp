@@ -12,8 +12,8 @@ using namespace std;
 ECManagementBase::ECManagementBase
 	(string conParamFile, string actParamFile, int numT, int iti, int randSeed)
 {
-	ifstream conPF;
-	ifstream actPF;
+	fstream conPF;
+	fstream actPF;
 
 	conPF.open(conParamFile.c_str());
 	actPF.open(actParamFile.c_str());
