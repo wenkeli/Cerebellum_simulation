@@ -65,7 +65,7 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	pcTView=new ActTemporalView(conParams->getNumPC(), 8, manager->getInterTrialI(),
 			manager->getInterTrialI()/4, conParams->getNumPC()*8, Qt::red, "purkinje");
 	ncTView=new ActTemporalView(conParams->getNumNC(), 16, manager->getInterTrialI(),
-			manager->getInterTrialI()/2, conParams->getNumNC()*16, Qt::green, "nucleus");
+			manager->getInterTrialI()/4, conParams->getNumNC()*16, Qt::green, "nucleus");
 	ioTView=new ActTemporalView(conParams->getNumIO(), 32, manager->getInterTrialI(),
 			manager->getInterTrialI()/4, conParams->getNumIO()*32, Qt::white, "inferior olive");
 //
@@ -77,6 +77,8 @@ MainW::MainW(QApplication *app, QWidget *parent)
 			pcTView,
 			ncTView,
 			ioTView);
+
+	inputNetSpatialView->hide();
 
 //	pcTView->drawBlank(Qt::blue);
 //	pcTView->drawVertLine(500, Qt::white);
