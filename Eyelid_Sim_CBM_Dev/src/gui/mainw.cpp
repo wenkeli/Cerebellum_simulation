@@ -11,6 +11,9 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	vector<int> sizes;
 	vector<QColor> colors;
 
+	vector<int> csLineTs;
+	vector<QColor> csLineColors;
+
 	QColor temp(255, 165, 0);
 
 	ui.setupUi(this);
@@ -53,21 +56,32 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	colors.push_back(Qt::green);
 	colors.push_back(temp);
 	colors.push_back(Qt::blue);
+
+	csLineTs.push_back(2000);
+	csLineTs.push_back(2500);
+	csLineColors.push_back(Qt::yellow);
+	csLineColors.push_back(Qt::yellow);
 //
 	inputNetSpatialView=new ActSpatialView(xDims, yDims, sizes, colors, "/mnt/FastData/movie/");
 
 	inputNetTView=new ActTemporalView(conParams->getNumGO(), 1, manager->getInterTrialI(),
-			manager->getInterTrialI()/4, conParams->getNumGO(), Qt::white, "inputNet");
+			manager->getInterTrialI()/4, conParams->getNumGO(),
+			csLineTs, csLineColors, Qt::white, "inputNet");
 	scTView=new ActTemporalView(conParams->getNumSC(), 1, manager->getInterTrialI(),
-			manager->getInterTrialI()/2, conParams->getNumSC(), Qt::white, "stellate");
+			manager->getInterTrialI()/2, conParams->getNumSC(),
+			csLineTs, csLineColors, Qt::white, "stellate");
 	bcTView=new ActTemporalView(conParams->getNumBC(), 1, manager->getInterTrialI(),
-			manager->getInterTrialI()/2, conParams->getNumBC(), Qt::green, "basket");
+			manager->getInterTrialI()/2, conParams->getNumBC(),
+			csLineTs, csLineColors, Qt::green, "basket");
 	pcTView=new ActTemporalView(conParams->getNumPC(), 8, manager->getInterTrialI(),
-			manager->getInterTrialI()/2, conParams->getNumPC()*8, Qt::red, "purkinje");
+			manager->getInterTrialI()/2, conParams->getNumPC()*8,
+			csLineTs, csLineColors, Qt::red, "purkinje");
 	ncTView=new ActTemporalView(conParams->getNumNC(), 16, manager->getInterTrialI(),
-			manager->getInterTrialI()/2, conParams->getNumNC()*16, Qt::green, "nucleus");
+			manager->getInterTrialI()/2, conParams->getNumNC()*16,
+			csLineTs, csLineColors, Qt::green, "nucleus");
 	ioTView=new ActTemporalView(conParams->getNumIO(), 32, manager->getInterTrialI(),
-			manager->getInterTrialI()/2, conParams->getNumIO()*32, Qt::white, "inferior olive");
+			manager->getInterTrialI()/2, conParams->getNumIO()*32,
+			csLineTs, csLineColors, Qt::white, "inferior olive");
 //
 	compThread=new SimThread(this, manager,
 			inputNetSpatialView,
