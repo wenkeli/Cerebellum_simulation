@@ -32,7 +32,7 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	cout<<"conPF "<<conPF<<endl;
 	cout<<"actPF "<<actPF<<endl;
 
-	manager=new ECManagementDelay(conPF, actPF, 10, 50000, 20000, 2000, 2750, 2040,
+	manager=new ECManagementDelay(conPF, actPF, 10, 50000, 10000, 2000, 2750, 2040,
 			5, 1000, 1000, 0.025, 0.03, 0.03,
 			1, 1, 30, 40, 120, 10, 5, 60, 50, 130);
 
@@ -57,17 +57,17 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	inputNetSpatialView=new ActSpatialView(xDims, yDims, sizes, colors, "/mnt/FastData/movie/");
 
 	inputNetTView=new ActTemporalView(conParams->getNumGO(), 1, manager->getInterTrialI(),
-			manager->getInterTrialI()/8, conParams->getNumGO(), Qt::white, "inputNet");
+			manager->getInterTrialI()/4, conParams->getNumGO(), Qt::white, "inputNet");
 	scTView=new ActTemporalView(conParams->getNumSC(), 1, manager->getInterTrialI(),
-			manager->getInterTrialI()/8, conParams->getNumSC(), Qt::white, "stellate");
+			manager->getInterTrialI()/4, conParams->getNumSC(), Qt::white, "stellate");
 	bcTView=new ActTemporalView(conParams->getNumBC(), 1, manager->getInterTrialI(),
-			manager->getInterTrialI()/8, conParams->getNumBC(), Qt::green, "basket");
+			manager->getInterTrialI()/4, conParams->getNumBC(), Qt::green, "basket");
 	pcTView=new ActTemporalView(conParams->getNumPC(), 8, manager->getInterTrialI(),
-			manager->getInterTrialI()/8, conParams->getNumPC()*8, Qt::red, "purkinje");
+			manager->getInterTrialI()/4, conParams->getNumPC()*8, Qt::red, "purkinje");
 	ncTView=new ActTemporalView(conParams->getNumNC(), 16, manager->getInterTrialI(),
-			manager->getInterTrialI()/8, conParams->getNumNC()*16, Qt::green, "nucleus");
+			manager->getInterTrialI()/4, conParams->getNumNC()*16, Qt::green, "nucleus");
 	ioTView=new ActTemporalView(conParams->getNumIO(), 32, manager->getInterTrialI(),
-			manager->getInterTrialI()/8, conParams->getNumIO()*32, Qt::white, "inferior olive");
+			manager->getInterTrialI()/4, conParams->getNumIO()*32, Qt::white, "inferior olive");
 //
 	compThread=new SimThread(this, manager,
 			inputNetSpatialView,
