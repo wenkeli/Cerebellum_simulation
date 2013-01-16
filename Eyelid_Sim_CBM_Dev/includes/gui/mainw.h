@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <time.h>
 
 #include <QtGui/QWidget>
 #include <QtGui/QApplication>
