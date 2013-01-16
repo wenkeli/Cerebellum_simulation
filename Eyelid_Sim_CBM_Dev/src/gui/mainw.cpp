@@ -35,7 +35,7 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	cout<<"conPF "<<conPF<<endl;
 	cout<<"actPF "<<actPF<<endl;
 
-	manager=new ECManagementDelay(conPF, actPF, time(0), 50000, 5000, 2000, 2500, 2040,
+	manager=new ECManagementDelay(conPF, actPF, time(0), 50000, 5000, 2000, 2750, 2040,
 			5, 1000, 1000, 0.025, 0.03, 0.03,
 			1, 1, 30, 40, 120, 10, 5, 60, 50, 130);
 
@@ -58,7 +58,7 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	colors.push_back(Qt::blue);
 
 	csLineTs.push_back(2000);
-	csLineTs.push_back(2500);
+	csLineTs.push_back(2300);
 	csLineColors.push_back(Qt::yellow);
 	csLineColors.push_back(Qt::yellow);
 //
@@ -92,7 +92,7 @@ MainW::MainW(QApplication *app, QWidget *parent)
 			ncTView,
 			ioTView);
 
-	inputNetSpatialView->hide();
+//	inputNetSpatialView->hide();
 
 //	pcTView->drawBlank(Qt::blue);
 //	pcTView->drawVertLine(500, Qt::white);
