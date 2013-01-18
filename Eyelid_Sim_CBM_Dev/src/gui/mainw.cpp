@@ -83,6 +83,8 @@ MainW::MainW(QApplication *app, QWidget *parent)
 			manager->getInterTrialI()/2, conParams->getNumIO()*32,
 			csLineTs, csLineColors, Qt::white, "inferior olive");
 //
+	itc=new InterThreadComm();
+
 	compThread=new SimThread(this, manager,
 			inputNetSpatialView,
 			inputNetTView,
@@ -90,7 +92,9 @@ MainW::MainW(QApplication *app, QWidget *parent)
 			bcTView,
 			pcTView,
 			ncTView,
-			ioTView);
+			ioTView,
+			itc);
+
 
 //	inputNetSpatialView->hide();
 
@@ -136,4 +140,11 @@ void MainW::run()
 	inputNetTView->update();
 
 	compThread->start(QThread::TimeCriticalPriority);
+}
+
+void MainW::updateInNetCellT(int cellT)
+{
+	itc->accessDispParamLock.lock();
+	itc->inNetDispCellT=cellT;
+	itc->accessDispParamLock.unlock();
 }

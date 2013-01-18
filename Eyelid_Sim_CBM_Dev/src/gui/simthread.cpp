@@ -20,7 +20,8 @@ SimThread::SimThread(QObject *parent, ECManagementBase *ecsim,
 		ActTemporalView *bcTV,
 		ActTemporalView *pcTV,
 		ActTemporalView *ncTV,
-		ActTemporalView *ioTV)
+		ActTemporalView *ioTV,
+		InterThreadComm *interThreadData)
 	: QThread(parent)
 {
 	management=ecsim;
@@ -83,6 +84,8 @@ SimThread::SimThread(QObject *parent, ECManagementBase *ecsim,
 	connect(this, SIGNAL(updateIOTW(std::vector<ct_uint8_t>, std::vector<float>, int)),
 			ioTView, SLOT(drawVmRaster(std::vector<ct_uint8_t>, std::vector<float>, int)),
 			Qt::QueuedConnection);
+
+	itc=interThreadData;
 }
 
 
@@ -148,6 +151,8 @@ void SimThread::simLoop()
 	int numNC;
 	int numIO;
 	int iti;
+
+	int inNetDispCellT;
 
 	numGR=conParams->getNumGR();
 	numGO=conParams->getNumGO();
@@ -234,7 +239,21 @@ void SimThread::simLoop()
 //		}
 //		emit(updateSpatialW(apGLVis, 2, false));
 
-		apGO=inputNet->exportAPGO();
+		itc->accessDispParamLock.lock();
+		inNetDispCellT=itc->inNetDispCellT;
+		itc->accessDispParamLock.unlock();
+		if(inNetDispCellT==0)
+		{
+			apGO=management->exportAPMF();
+		}
+		else if(inNetDispCellT==1)
+		{
+			apGO=inputNet->exportAPGO();
+		}
+		else
+		{
+			apGO=inputNet->exportAPGR();
+		}
 //		apGO=management->exportAPMF();
 //		gESumGR=inputNet->exportGESumGR();
 //		cout<<"gESumGR "<<gESumGR[0]<<" "<<gESumGR[100]<<" "<<gESumGR[200]<<gESumGR[1048575]<<endl;

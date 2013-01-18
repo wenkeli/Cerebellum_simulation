@@ -6,6 +6,8 @@
 #include <fstream>
 #include <time.h>
 
+#include <QtCore/QMutex>
+
 #include <QtGui/QWidget>
 #include <QtGui/QApplication>
 #include <QtGui/QColor>
@@ -21,6 +23,8 @@
 #include "../ectrial/ecmanagementdelay.h"
 #include "simthread.h"
 
+#include "../interthreadcomm.h"
+
 #include "uic/ui_mainw.h"
 
 class MainW : public QWidget
@@ -33,6 +37,8 @@ public:
 
 public slots:
 	void run();
+
+	void updateInNetCellT(int cellT);
 
 private:
     Ui::MainWClass ui;
@@ -50,6 +56,8 @@ private:
     ActTemporalView *pcTView;
     ActTemporalView *ncTView;
     ActTemporalView *ioTView;
+
+    InterThreadComm *itc;
 };
 
 #endif // MAINW_H

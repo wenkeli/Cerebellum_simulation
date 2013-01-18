@@ -59,19 +59,19 @@ GUIINC = $(MOCINC) $(MOCOUT) $(UICOUT)
 
 ECTRIALINC = $(ECTRIALIP)/ecmanagementbase.h $(ECTRIALIP)/ecmanagementdelay.h
 
-MAININC= $(INCPATH)/main.h
+MAININC= $(INCPATH)/main.h $(INCPATH)/interthreadcomm.h
 
 INC = $(GUIINC) $(ECTRIALINC) $(MAININC)
 
 GUISRC = $(GUISP)/mainw.cpp $(GUISP)/testpanel.cpp $(GUISP)/simthread.cpp
 ECTRIALSRC = $(ECTRIALSP)/ecmanagementbase.cpp $(ECTRIALSP)/ecmanagementdelay.cpp
-MAINSRC = $(SRCPATH)/main.cpp
+MAINSRC = $(SRCPATH)/main.cpp $(SRCPATH)/interthreadcomm.cpp
 
 SRC = $(GUISRC) $(ECTRIALSRC) $(MAINSRC)
 
 GUIOBJ = $(OUTPATH)/mainw.obj $(OUTPATH)/testpanel.obj $(OUTPATH)/simthread.obj
 ECTRIALOBJ = $(OUTPATH)/ecmanagementbase.obj $(OUTPATH)/ecmanagementdelay.obj
-MAINOBJ = $(OUTPATH)/main.obj
+MAINOBJ = $(OUTPATH)/main.obj $(OUTPATH)/interthreadcomm.obj
 
 OBJ = $(GUIOBJ) $(ECTRIALOBJ) $(MAINOBJ)
 
@@ -83,6 +83,7 @@ mainapp: main gui ectrial
 	
 main: $(MAININC) $(MAINSRC)
 	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(SRCPATH)/main.cpp -o $(OUTPATH)/main.obj
+	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(SRCPATH)/interthreadcomm.cpp -o $(OUTPATH)/interthreadcomm.obj
 	
 ectrial: $(ECTRIALINC) $(ECTRIALSRC)
 	-$(CC) $(CFLAGS) $(EXTINCPATH) -c $(ECTRIALSP)/ecmanagementbase.cpp -o $(OUTPATH)/ecmanagementbase.obj

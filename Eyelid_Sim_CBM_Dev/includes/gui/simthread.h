@@ -30,6 +30,8 @@
 #include <CBMVisualInclude/actspatialview.h>
 #include <CBMVisualInclude/acttemporalview.h>
 
+#include "../interthreadcomm.h"
+
 #include "../ectrial/ecmanagementbase.h"
 
 class SimThread : public QThread
@@ -44,7 +46,8 @@ public:
 			ActTemporalView *bcTV,
 			ActTemporalView *pcTV,
 			ActTemporalView *ncTV,
-			ActTemporalView *ioTV);
+			ActTemporalView *ioTV,
+			InterThreadComm *interThreadData);
 	~SimThread();
 
 	void run();
@@ -86,6 +89,8 @@ private:
 
 	QMutex accessDataLock;
 	QTime timer;
+
+	InterThreadComm *itc;
 };
 
 #endif /* SIMTHREAD_H_ */
