@@ -12,6 +12,8 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
+#include <QPushButton>
+
 #include <CBMVisualInclude/actspatialview.h>
 #include <CBMVisualInclude/acttemporalview.h>
 
@@ -25,7 +27,7 @@ class MainW : public QWidget
 
 public:
     MainW(QApplication *app, QWidget *parent, int numMZ, int randSeed, std::string conPF, std::string actPF);
-    ~MainW() { thread.wait(); };
+    ~MainW();
 
 protected:
     void keyPressEvent(QKeyEvent *);
@@ -34,7 +36,12 @@ protected:
     SimThread thread;
 
 public slots:
-    void checked(int state);
+    void displayInputNetTView() { thread.displayInputNetTView(); };
+    void displayStellateTView() { thread.displayStellateTView(); };
+    void displayBasketTView()   { thread.displayBasketTView(); };
+    void displayPurkinjeTView() { thread.displayPurkinjeTView(); };
+    void displayNucleusTView()  { thread.displayNucleusTView(); };
+    void displayOliveTView()    { thread.displayOliveTView(); };
 };
 
 #endif // MAINW_H

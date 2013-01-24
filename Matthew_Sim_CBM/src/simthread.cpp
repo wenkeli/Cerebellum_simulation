@@ -6,7 +6,8 @@
 using namespace std;
 
 SimThread::SimThread(QObject *parent, int numMZ, int randSeed, string conPF, string actPF)
-    : QThread(parent), running(true), numMZ(numMZ)
+    : QThread(parent), alive(true), running(true), trialLength(5000), numMZ(numMZ),
+      inputNetTView(NULL), scTView(NULL), bcTView(NULL), pcTView(NULL), ncTView(NULL), ioTView(NULL)
 {
     if (randSeed >= 0) {
         cout << "Using random seed: " << randSeed << endl;
@@ -48,15 +49,25 @@ SimThread::SimThread(QObject *parent, int numMZ, int randSeed, string conPF, str
     conPStream.close();
     actPStream.close();
 
-    // Setup the Mossy Fibers
+    // Get the number of cells of each type
+    numGR = simState->getConnectivityParams()->getNumGR();
+    numGO = simState->getConnectivityParams()->getNumGO();
+    numGL = simState->getConnectivityParams()->getNumGL();
     numMF = simState->getConnectivityParams()->getNumMF();
+    numSC = simState->getConnectivityParams()->getNumSC();
+    numBC = simState->getConnectivityParams()->getNumBC();
+    numPC = simState->getConnectivityParams()->getNumPC();
+    numNC = simState->getConnectivityParams()->getNumNC();
+    numIO = simState->getConnectivityParams()->getNumIO();
+
+    // Setup the Mossy Fibers
     float threshDecayTau = 4.0f; // Rate of decay = 1-exp(-msPerTS/threshDecayTau)
     float msPerTimeStep = 1.0f;
     mfs = new PoissonRegenCells(numMF, randSeed, threshDecayTau, msPerTimeStep);
-    for (int i=0; i<numMF; i++)
-        mfFreq.push_back(0); // MF Firings Frequencies
+    mfFreq.resize(numMF);
 
-    numGO = simState->getConnectivityParams()->getNumGO();
+    inNet = simCore->getInputNet();
+    mZone = simCore->getMZoneList()[0];
 }
 
 SimThread::~SimThread()
@@ -64,28 +75,81 @@ SimThread::~SimThread()
     delete simState;
     delete simCore;
     delete mfs;
+    if (inputNetTView) delete inputNetTView;
+    if (scTView)       delete scTView;
 }
 
-void SimThread::handleCheck()
+ActTemporalView* SimThread::createTemporalView(int numCells, int windowWidth, int windowHeight,
+                                                QColor col, string name, vector<ct_uint8_t>* visVec,
+                                                vector<float> *vmVec)
 {
-    cout << "Got a call from the main window." << endl;
+    int pixelsPerCell = windowHeight / numCells;
+    ActTemporalView *view = new ActTemporalView(numCells, pixelsPerCell, trialLength,
+                                                windowWidth, windowHeight,
+                                                col, name.c_str()); 
+    view->setAttribute(Qt::WA_DeleteOnClose);
+    view->show();
+    view->update();
+    visVec->resize(numCells);
+    if (vmVec) vmVec->resize(numCells);
+    return view;
+}
+
+/* --------------- Methods to view cell groups --------------------- */
+void SimThread::displayInputNetTView() {
+    if (inputNetTView) return;
+    inputNetTView = createTemporalView(1024, trialLength/4, 1024, Qt::white, "inputNet", &apMFVis);
+    connect(inputNetTView, SIGNAL(destroyed(QObject*)), this, SLOT(destroyInputNetTView()));
+}
+void SimThread::displayStellateTView() {
+    if (scTView) return;
+    scTView = createTemporalView(numSC, trialLength/4, numSC, Qt::white, "stellate", &apSCVis);
+    connect(scTView, SIGNAL(destroyed(QObject*)), this, SLOT(destroyStellateTView()));
+}
+void SimThread::displayBasketTView() {
+    if (bcTView) return;
+    bcTView = createTemporalView(numBC, trialLength/4, numBC, Qt::green, "basket", &apBCVis);
+    connect(bcTView, SIGNAL(destroyed(QObject*)), this, SLOT(destroyBasketTView()));
+}
+void SimThread::displayPurkinjeTView() {
+    if (pcTView) return;
+    pcTView = createTemporalView(numPC, trialLength/4, numPC*8, Qt::red, "purkinje", &apPCVis, &vmPCVis);
+    connect(pcTView, SIGNAL(destroyed(QObject*)), this, SLOT(destroyPurkinjeTView()));
+}
+void SimThread::displayNucleusTView() {
+    if (ncTView) return;
+    ncTView = createTemporalView(numNC, trialLength/2, numNC*16, Qt::green, "nucleus", &apNCVis, &vmNCVis);
+    connect(ncTView, SIGNAL(destroyed(QObject*)), this, SLOT(destroyNucleusTView()));
+}
+void SimThread::displayOliveTView() {
+    if (ioTView) return;
+    ioTView = createTemporalView(numIO, trialLength/4, numIO*32, Qt::white, "inferior olive", &apIOVis, &vmIOVis);
+    connect(ioTView, SIGNAL(destroyed(QObject*)), this, SLOT(destroyOliveTView()));
+}
+
+void SimThread::displayFirings(ActTemporalView *view, const ct_uint8_t* ap, vector<ct_uint8_t>& vis, int simStep,
+                               int numCells, const float *vm, vector<float> *vmVis) {
+    if (!view) return;
+    for (int i=0; i<numCells; i++) {
+        vis[i] = ap[i];
+        if (vmVis)
+            (*vmVis)[i] = vm[i];
+    }
+    if (vmVis)
+        view->drawVmRaster(vis, *vmVis, simStep);
+    else
+        view->drawRaster(vis, simStep);
+    view->show();
+    view->update();
+    if (simStep % trialLength == 0)
+        view->drawBlank(Qt::black);
 }
 
 void SimThread::run()
 {
-    // Create the input visualization
-    // int windowWidth  = 800;
-    // int windowHeight = numGO;
-    // ActTemporalView inputNetTView(numGO, 1, windowWidth, windowWidth, windowHeight, Qt::white, "inputNet");
-
-    // inputNetTView.show();
-    // inputNetTView.update();    
-
-    for (int simStep=0; ; simStep++) {
-        if (simStep % 10000 == 0)
-            cout << endl;
-        if (simStep % 1000 == 0)
-            cout << "." << flush;
+    for (int simStep=0; alive; simStep++) {
+        if (simStep % 10000 == 0) cout << endl;
+        if (simStep % 1000 == 0) cout << "." << flush;
 
         // Calculate MF Activity
         for (int i=0; i<numMF; i++) {
@@ -94,22 +158,15 @@ void SimThread::run()
             mfFreq[i] = randGen->Random()*(contextFreqMax-contextFreqMin)+contextFreqMin;    
         }
         const ct_uint8_t *apMF = mfs->calcActivity(&mfFreq[0]);
-        
-        // Calculate Sim Activity
         simCore->updateMFInput(apMF);
         simCore->calcActivity();
 
-        // Display the activity
-        // const ct_uint8_t* ap = simCore->getInputNet()->exportHistMF();
-        // vector<ct_uint8_t> tmp;
-        // for (int i=0; i<numGO; i++) {
-        //     tmp.push_back(ap[i]);
-        // }
-        // inputNetTView.drawRaster(tmp, simStep);
-        // inputNetTView.show();
-        // inputNetTView.update();
-
-        // if (simStep % windowWidth == 0)
-        //     inputNetTView.drawBlank(Qt::black);
+        // Display activity of the different cellular groups
+        displayFirings(inputNetTView, inNet->exportHistMF(), apMFVis, simStep, numGO);
+        displayFirings(scTView, inNet->exportAPSC(), apSCVis, simStep, numSC);
+        displayFirings(bcTView, mZone->exportAPBC(), apBCVis, simStep, numBC);
+        displayFirings(pcTView, mZone->exportAPPC(), apPCVis, simStep, numPC);
+        displayFirings(ncTView, mZone->exportAPNC(), apNCVis, simStep, numNC);
+        displayFirings(ioTView, mZone->exportAPIO(), apIOVis, simStep, numIO);
     }
 }

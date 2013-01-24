@@ -37,11 +37,10 @@ int main(int argc, char **argv)
 
     QApplication app(argc, argv);
     MainW *mainW = new MainW(&app, NULL, numMZ, randSeed, conPF, actPF);
-
-    //app.setQuitOnLastWindowClosed(true);
     app.setActiveWindow(mainW);
     mainW->show();
 
+    app.connect(mainW, SIGNAL(destroyed()), &app, SLOT(quit()));
     return app.exec();
 }
 
