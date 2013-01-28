@@ -199,7 +199,7 @@ void SimThread::simLoop()
 			break;
 		}
 		currentTime=management->getCurrentTime();
-		if(currentTime>=iti)
+		if(currentTime>=(iti-1))
 		{
 			runLen=timer.restart();
 			currentTrial=management->getCurrentTrialN();
