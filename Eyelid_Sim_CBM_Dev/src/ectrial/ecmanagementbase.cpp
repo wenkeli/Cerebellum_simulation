@@ -31,7 +31,7 @@ ECManagementBase::ECManagementBase
 	cerr<<"numTrials: "<<numTrials<<" iti:"<<interTrialI<<endl;
 
 	currentTrial=0;
-	currentTime=0;
+	currentTime=-1;
 }
 
 ECManagementBase::~ECManagementBase()
@@ -64,6 +64,8 @@ bool ECManagementBase::runStep()
 //			gESumGR[0]<<"|"<<gESumGR[1]<<"|"<<gESumGR[2]<<"|"<<gESumGR[3]<<" "<<
 //			gISumGR[0]<<"|"<<gISumGR[1]<<"|"<<gISumGR[2]<<"|"<<gISumGR[3]<<endl;
 
+	currentTime++;
+
 	if(currentTime>=interTrialI)
 	{
 		currentTime=0;
@@ -73,8 +75,6 @@ bool ECManagementBase::runStep()
 	{
 		return false;
 	}
-
-	currentTime++;
 
 	calcMFActivity();
 
