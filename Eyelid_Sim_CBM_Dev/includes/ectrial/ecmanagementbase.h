@@ -20,7 +20,7 @@
 #include <CBMCoreInclude/interface/innetinterface.h>
 #include <CBMCoreInclude/interface/mzoneinterface.h>
 
-#include <CBMDataInclude/interfaces/ecrastertrial.h>
+#include <CBMDataInclude/interfaces/ectrialsdata.h>
 
 class ECManagementBase
 {
