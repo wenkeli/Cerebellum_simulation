@@ -16,10 +16,13 @@
 #include <CXXToolsInclude/randGenerators/sfmt.h>
 
 #include <CBMToolsInclude/poissonregencells.h>
+#include <CBMToolsInclude/eyelidintegrator.h>
 
 #include <CBMCoreInclude/interface/cbmsimcore.h>
 #include <CBMCoreInclude/interface/innetinterface.h>
 #include <CBMCoreInclude/interface/mzoneinterface.h>
+
+#include <CBMDataInclude/interfaces/ectrialsdata.h>
 
 #include "ecmanagementbase.h"
 
@@ -35,6 +38,8 @@ public:
 			float bgFreqMax, float csBGFreqMax, float ctxtFreqMax, float csTFreqMax, float csPFreqMax);
 
 	virtual ~ECManagementDelay();
+
+	void writeDataToFile();
 
 protected:
 	virtual void calcMFActivity();
@@ -70,6 +75,10 @@ protected:
 	float *mfFreqBG;
 	float *mfFreqInCSTonic;
 	float *mfFreqInCSPhasic;
+
+	EyelidIntegrator *eyelidFunc;
+
+	ECTrialsData *data;
 
 private:
 	ECManagementDelay();

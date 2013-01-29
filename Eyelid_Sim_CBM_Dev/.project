@@ -3,6 +3,12 @@
 	<name>Eyelid_Sim_CBM</name>
 	<comment></comment>
 	<projects>
+		<project>CBM_CORE_LIB</project>
+		<project>CBM_DATA_LIB</project>
+		<project>CBM_STATE_LIB</project>
+		<project>CBM_TOOLS_LIB</project>
+		<project>CBM_VISUAL_LIB</project>
+		<project>CXX_TOOLS_LIB</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

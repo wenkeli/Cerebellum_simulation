@@ -33,6 +33,7 @@
 #include "../interthreadcomm.h"
 
 #include "../ectrial/ecmanagementbase.h"
+#include "../ectrial/ecmanagementdelay.h"
 
 class SimThread : public QThread
 {

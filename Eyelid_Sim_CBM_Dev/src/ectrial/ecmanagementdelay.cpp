@@ -156,6 +156,20 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 	simState->getActivityParams()->showParams(cout);
 	simState->getConnectivityParams()->showParams(cout);
 
+	eyelidFunc=new EyelidIntegrator(simState->getConnectivityParams()->getNumNC(),
+			simState->getActivityParams()->getMSPerTimeStep(), 11, 0.012, 0.1, 100);
+
+	{
+		EyelidOutParams eyelidParams;
+		map<string, PSHParams> pshParams;
+		map<string, RasterParams> rasterParams;
+
+
+
+		data=new ECTrialsData(500, csOff-csOn, 500, simState->getActivityParams()->getMSPerTimeStep(),
+				numDataTrials, pshParams, rasterParams, eyelidParams);
+	}
+
 	delete[] isCSTonic;
 	delete[] isCSPhasic;
 	delete[] isContext;
@@ -208,5 +222,25 @@ void ECManagementDelay::calcSimActivity()
 	simulation->updateMFInput(apMF);
 
 	simulation->calcActivity();
+
+	if(currentTime>=csOnTime-500 && currentTime<csOffTime+500
+			&& currentTrial>=dataStartTrialN && currentTrial<dataStartTrialN+numDataTrials)
+	{
+		int ct=currentTime-(csOnTime-500);
+		if(ct%data->getTSPerRasterUpdate()==0 &&ct>0)
+		{
+
+		}
+
+	}
+
+}
+
+void ECManagementDelay::writeDataToFile()
+{
+	fstream dataOut;
+
+	dataOut.open("rasterOut", ios::out|ios::binary);
+	dataOut.close();
 
 }

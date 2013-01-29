@@ -322,4 +322,6 @@ void SimThread::simLoop()
 
 		unlockAccessData();
 	}
+
+	((ECManagementDelay*)management)->writeDataToFile();
 }
