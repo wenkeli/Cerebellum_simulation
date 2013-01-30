@@ -6,8 +6,7 @@
 using namespace std;
 
 SimThread::SimThread(QObject *parent, int numMZ, int randSeed, string conPF, string actPF)
-    : QThread(parent), alive(true), running(true), trialLength(5000), numMZ(numMZ),
-      inputNetTView(NULL), scTView(NULL), bcTView(NULL), pcTView(NULL), ncTView(NULL), ioTView(NULL)
+    : QThread(parent), alive(true), running(true), trialLength(5000), numMZ(numMZ)
 {
     if (randSeed >= 0) {
         cout << "Using random seed: " << randSeed << endl;
@@ -68,6 +67,11 @@ SimThread::SimThread(QObject *parent, int numMZ, int randSeed, string conPF, str
 
     inNet = simCore->getInputNet();
     mZone = simCore->getMZoneList()[0];
+
+    // Register the data types to be used
+    qRegisterMetaType<std::vector<ct_uint8_t> >("std::vector<ct_uint8_t>");
+    qRegisterMetaType<std::vector<float> >("std::vector<float>");
+    qRegisterMetaType<QColor>("QColor");
 }
 
 SimThread::~SimThread()
@@ -75,74 +79,6 @@ SimThread::~SimThread()
     delete simState;
     delete simCore;
     delete mfs;
-    if (inputNetTView) delete inputNetTView;
-    if (scTView)       delete scTView;
-}
-
-ActTemporalView* SimThread::createTemporalView(int numCells, int windowWidth, int windowHeight,
-                                                QColor col, string name, vector<ct_uint8_t>* visVec,
-                                                vector<float> *vmVec)
-{
-    int pixelsPerCell = windowHeight / numCells;
-    ActTemporalView *view = new ActTemporalView(numCells, pixelsPerCell, trialLength,
-                                                windowWidth, windowHeight,
-                                                col, name.c_str()); 
-    view->setAttribute(Qt::WA_DeleteOnClose);
-    view->show();
-    view->update();
-    visVec->resize(numCells);
-    if (vmVec) vmVec->resize(numCells);
-    return view;
-}
-
-/* --------------- Methods to view cell groups --------------------- */
-void SimThread::displayInputNetTView() {
-    if (inputNetTView) return;
-    inputNetTView = createTemporalView(1024, trialLength/4, 1024, Qt::white, "inputNet", &apMFVis);
-    connect(inputNetTView, SIGNAL(destroyed(QObject*)), this, SLOT(destroyInputNetTView()));
-}
-void SimThread::displayStellateTView() {
-    if (scTView) return;
-    scTView = createTemporalView(numSC, trialLength/4, numSC, Qt::white, "stellate", &apSCVis);
-    connect(scTView, SIGNAL(destroyed(QObject*)), this, SLOT(destroyStellateTView()));
-}
-void SimThread::displayBasketTView() {
-    if (bcTView) return;
-    bcTView = createTemporalView(numBC, trialLength/4, numBC, Qt::green, "basket", &apBCVis);
-    connect(bcTView, SIGNAL(destroyed(QObject*)), this, SLOT(destroyBasketTView()));
-}
-void SimThread::displayPurkinjeTView() {
-    if (pcTView) return;
-    pcTView = createTemporalView(numPC, trialLength/4, numPC*8, Qt::red, "purkinje", &apPCVis, &vmPCVis);
-    connect(pcTView, SIGNAL(destroyed(QObject*)), this, SLOT(destroyPurkinjeTView()));
-}
-void SimThread::displayNucleusTView() {
-    if (ncTView) return;
-    ncTView = createTemporalView(numNC, trialLength/2, numNC*16, Qt::green, "nucleus", &apNCVis, &vmNCVis);
-    connect(ncTView, SIGNAL(destroyed(QObject*)), this, SLOT(destroyNucleusTView()));
-}
-void SimThread::displayOliveTView() {
-    if (ioTView) return;
-    ioTView = createTemporalView(numIO, trialLength/4, numIO*32, Qt::white, "inferior olive", &apIOVis, &vmIOVis);
-    connect(ioTView, SIGNAL(destroyed(QObject*)), this, SLOT(destroyOliveTView()));
-}
-
-void SimThread::displayFirings(ActTemporalView *view, const ct_uint8_t* ap, vector<ct_uint8_t>& vis, int simStep,
-                               int numCells, const float *vm, vector<float> *vmVis) {
-    if (!view) return;
-    for (int i=0; i<numCells; i++) {
-        vis[i] = ap[i];
-        if (vmVis)
-            (*vmVis)[i] = vm[i];
-    }
-    if (vmVis)
-        view->drawVmRaster(vis, *vmVis, simStep);
-    else
-        view->drawRaster(vis, simStep);
-    view->show();
-    view->update();
-    if (simStep % trialLength == 0)
-        view->drawBlank(Qt::black);
 }
 
 void SimThread::run()
@@ -161,12 +97,37 @@ void SimThread::run()
         simCore->updateMFInput(apMF);
         simCore->calcActivity();
 
-        // Display activity of the different cellular groups
-        displayFirings(inputNetTView, inNet->exportHistMF(), apMFVis, simStep, numGO);
-        displayFirings(scTView, inNet->exportAPSC(), apSCVis, simStep, numSC);
-        displayFirings(bcTView, mZone->exportAPBC(), apBCVis, simStep, numBC);
-        displayFirings(pcTView, mZone->exportAPPC(), apPCVis, simStep, numPC);
-        displayFirings(ncTView, mZone->exportAPNC(), apNCVis, simStep, numNC);
-        displayFirings(ioTView, mZone->exportAPIO(), apIOVis, simStep, numIO);
+        // Update the visualizations of all the different views
+        vector<ct_uint8_t> apMFVis(apMF, apMF + numGO * sizeof apMF[0]);
+        emit(updateINTW(apMFVis, simStep));
+
+        const ct_uint8_t *apSC = inNet->exportAPSC();
+        vector<ct_uint8_t> apSCVis(apSC, apSC + numSC * sizeof apSC[0]);
+        emit(updateSCTW(apSCVis, simStep));
+
+        const ct_uint8_t *apBC = mZone->exportAPBC();
+        vector<ct_uint8_t> apBCVis(apBC, apBC + numBC * sizeof apBC[0]);
+        emit(updateBCTW(apBCVis, simStep));
+
+        const ct_uint8_t *apPC = mZone->exportAPPC();
+        const float *vmPC = mZone->exportVmPC();
+        vector<ct_uint8_t> apPCVis(apPC, apPC + numPC * sizeof apPC[0]);
+        vector<float> vmPCVis(vmPC, vmPC + numPC * sizeof vmPC[0]);
+        emit(updatePCTW(apPCVis, vmPCVis, simStep));
+
+        const ct_uint8_t *apNC = mZone->exportAPNC();
+        const float *vmNC = mZone->exportVmNC();
+        vector<ct_uint8_t> apNCVis(apNC, apNC + numNC * sizeof apNC[0]);
+        vector<float> vmNCVis(vmNC, vmNC + numNC * sizeof vmNC[0]);
+        emit(updateNCTW(apNCVis, vmNCVis, simStep));
+
+        const ct_uint8_t *apIO = mZone->exportAPIO();
+        const float *vmIO = mZone->exportVmIO();
+        vector<ct_uint8_t> apIOVis(apIO, apIO + numIO * sizeof apIO[0]);
+        vector<float> vmIOVis(vmIO, vmIO + numIO * sizeof vmIO[0]);
+        emit(updateIOTW(apIOVis, vmIOVis, simStep));
+
+        if (simStep % trialLength == 0)
+            emit(blankTW(Qt::black));
     }
 }

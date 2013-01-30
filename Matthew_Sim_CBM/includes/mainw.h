@@ -35,13 +35,20 @@ protected:
 
     SimThread thread;
 
+    ActTemporalView *inputNetTView;
+    ActTemporalView *scTView;
+    ActTemporalView *bcTView;
+    ActTemporalView *pcTView;
+    ActTemporalView *ncTView;
+    ActTemporalView *ioTView;
+
 public slots:
-    void displayInputNetTView() { thread.displayInputNetTView(); };
-    void displayStellateTView() { thread.displayStellateTView(); };
-    void displayBasketTView()   { thread.displayBasketTView(); };
-    void displayPurkinjeTView() { thread.displayPurkinjeTView(); };
-    void displayNucleusTView()  { thread.displayNucleusTView(); };
-    void displayOliveTView()    { thread.displayOliveTView(); };
+    void displayInputNetTView();
+    void displayStellateTView();
+    void displayBasketTView();
+    void displayPurkinjeTView();
+    void displayNucleusTView();
+    void displayOliveTView();
 };
 
 #endif // MAINW_H
