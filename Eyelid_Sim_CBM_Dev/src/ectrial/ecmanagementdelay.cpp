@@ -161,9 +161,31 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 
 	{
 		EyelidOutParams eyelidParams;
+		PSHParams pp;
+		RasterParams rp;
 		map<string, PSHParams> pshParams;
 		map<string, RasterParams> rasterParams;
 
+		eyelidParams.numTimeStepSmooth=4;
+
+		pp.numCells=simState->getConnectivityParams()->getNumGO();
+		pp.numTimeStepsPerBin=10;
+		pshParams["go"]=pp;
+		pp.numCells=simState->getConnectivityParams()->getNumSC();
+		pshParams["sc"]=pp;
+		pp.numCells=simState->getConnectivityParams()->getNumBC();
+		pshParams["bc"]=pp;
+		pp.numCells=simState->getConnectivityParams()->getNumPC();
+		pshParams["pc"]=pp;
+
+		rp.numCells=simState->getConnectivityParams()->getNumGO();
+		rasterParams["go"]=rp;
+		rp.numCells=simState->getConnectivityParams()->getNumSC();
+		rasterParams["sc"]=rp;
+		rp.numCells=simState->getConnectivityParams()->getNumBC();
+		rasterParams["bc"]=rp;
+		rp.numCells=simState->getConnectivityParams()->getNumPC();
+		rasterParams["pc"]=rp;
 
 
 		data=new ECTrialsData(500, csOff-csOn, 500, simState->getActivityParams()->getMSPerTimeStep(),
@@ -181,6 +203,8 @@ ECManagementDelay::~ECManagementDelay()
 	delete[] mfFreqBG;
 	delete[] mfFreqInCSTonic;
 	delete[] mfFreqInCSPhasic;
+
+	delete data;
 }
 
 void ECManagementDelay::calcMFActivity()
@@ -211,6 +235,8 @@ void ECManagementDelay::calcMFActivity()
 
 void ECManagementDelay::calcSimActivity()
 {
+	float eyelidPos;
+
 	if(currentTime==(csOffTime-1) && currentTrial>=csStartTrialN)
 	{
 		simulation->updateErrDrive(0, 1.0);
@@ -223,15 +249,29 @@ void ECManagementDelay::calcSimActivity()
 
 	simulation->calcActivity();
 
+	eyelidPos=eyelidFunc->calcStep(simulation->getMZoneList()[0]->exportAPNC());
+
 	if(currentTime>=csOnTime-500 && currentTime<csOffTime+500
 			&& currentTrial>=dataStartTrialN && currentTrial<dataStartTrialN+numDataTrials)
 	{
 		int ct=currentTime-(csOnTime-500);
-		if(ct%data->getTSPerRasterUpdate()==0 &&ct>0)
+		if(data->getTSPerRasterUpdate()>0)
 		{
-
+			if(ct%data->getTSPerRasterUpdate()==0 &&ct>0)
+			{
+				data->updateRaster("go", simulation->getInputNet()->exportAPBufGO());
+				data->updateRaster("sc", simulation->getInputNet()->exportAPBufSC());
+				data->updateRaster("bc", simulation->getMZoneList()[0]->exportAPBufBC());
+				data->updateRaster("pc", simulation->getMZoneList()[0]->exportAPBufPC());
+			}
 		}
 
+		data->updatePSH("go", simulation->getInputNet()->exportAPGO());
+		data->updatePSH("sc", simulation->getInputNet()->exportAPSC());
+		data->updatePSH("bc", simulation->getMZoneList()[0]->exportAPBC());
+		data->updatePSH("pc", simulation->getMZoneList()[0]->exportAPPC());
+
+		data->updateEyelid(eyelidPos);
 	}
 
 }
@@ -240,7 +280,8 @@ void ECManagementDelay::writeDataToFile()
 {
 	fstream dataOut;
 
-	dataOut.open("rasterOut", ios::out|ios::binary);
+	dataOut.open("dataOut", ios::out|ios::binary);
+	data->writeData(dataOut);
 	dataOut.close();
 
 }
