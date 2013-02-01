@@ -82,7 +82,7 @@ void MainW::displayInputNetTView() {
 }
 void MainW::displayStellateTView() {
     int trialLen = thread.trialLength;
-    scTView=new ActTemporalView(thread.numSC, 1, trialLen, trialLen/4, thread.numSC, Qt::white, "stellate");
+    scTView=new ActTemporalView(thread.numSC, 1, trialLen, trialLen/2, thread.numSC, Qt::white, "stellate");
     connect(&thread, SIGNAL(updateSCTW(std::vector<ct_uint8_t>, int)),
             scTView, SLOT(drawRaster(std::vector<ct_uint8_t>, int)),
             Qt::QueuedConnection);
@@ -92,7 +92,7 @@ void MainW::displayStellateTView() {
 }
 void MainW::displayBasketTView() {
     int trialLen = thread.trialLength;
-    bcTView=new ActTemporalView(thread.numBC, 1, trialLen, trialLen/4, thread.numBC, Qt::green, "basket");
+    bcTView=new ActTemporalView(thread.numBC, 1, trialLen, trialLen/2, thread.numBC, Qt::green, "basket");
     connect(&thread, SIGNAL(updateBCTW(std::vector<ct_uint8_t>, int)),
             bcTView, SLOT(drawRaster(std::vector<ct_uint8_t>, int)),
             Qt::QueuedConnection);
@@ -102,7 +102,7 @@ void MainW::displayBasketTView() {
 }
 void MainW::displayPurkinjeTView() {
     int trialLen = thread.trialLength;
-    pcTView=new ActTemporalView(thread.numPC, 8, trialLen, trialLen/4, thread.numPC*8, Qt::red, "purkinje");
+    pcTView=new ActTemporalView(thread.numPC, 8, trialLen, trialLen/2, thread.numPC*8, Qt::red, "purkinje");
     connect(&thread, SIGNAL(updatePCTW(std::vector<ct_uint8_t>, std::vector<float>, int)),
             pcTView, SLOT(drawVmRaster(std::vector<ct_uint8_t>, std::vector<float>, int)),
             Qt::QueuedConnection);
@@ -122,7 +122,7 @@ void MainW::displayNucleusTView() {
 }
 void MainW::displayOliveTView() {
     int trialLen = thread.trialLength;
-    ioTView=new ActTemporalView(thread.numIO, 32, trialLen, trialLen/4, thread.numIO*32, Qt::white, "inferior olive");
+    ioTView=new ActTemporalView(thread.numIO, 32, trialLen, trialLen/2, thread.numIO*32, Qt::white, "inferior olive");
     connect(&thread, SIGNAL(updateIOTW(std::vector<ct_uint8_t>, std::vector<float>, int)),
             ioTView, SLOT(drawVmRaster(std::vector<ct_uint8_t>, std::vector<float>, int)),
             Qt::QueuedConnection);

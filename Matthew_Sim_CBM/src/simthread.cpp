@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 
 #include "../includes/simthread.h"
 
@@ -37,8 +38,8 @@ SimThread::SimThread(QObject *parent, int numMZ, int randSeed, string conPF, str
     randGen = new CRandomSFMT0(randSeed);
 
     // Load the parameter files
-    ifstream conPStream(conPF.c_str());
-    ifstream actPStream(actPF.c_str());
+    fstream conPStream(conPF.c_str(), fstream::in);
+    fstream actPStream(actPF.c_str(), fstream::in);
 
     // Create the simulation
     simState = new CBMState(actPStream, conPStream, numMZ, randSeed,
@@ -59,11 +60,7 @@ SimThread::SimThread(QObject *parent, int numMZ, int randSeed, string conPF, str
     numNC = simState->getConnectivityParams()->getNumNC();
     numIO = simState->getConnectivityParams()->getNumIO();
 
-    // Setup the Mossy Fibers
-    float threshDecayTau = 4.0f; // Rate of decay = 1-exp(-msPerTS/threshDecayTau)
-    float msPerTimeStep = 1.0f;
-    mfs = new PoissonRegenCells(numMF, randSeed, threshDecayTau, msPerTimeStep);
-    mfFreq.resize(numMF);
+    setupMossyFibers(randSeed);
 
     inNet = simCore->getInputNet();
     mZone = simCore->getMZoneList()[0];
@@ -81,18 +78,40 @@ SimThread::~SimThread()
     delete mfs;
 }
 
+void SimThread::setupMossyFibers(int randSeed)
+{
+    const float threshDecayTau = 4.0f; // Rate of decay = 1-exp(-msPerTS/threshDecayTau)
+    const float msPerTimeStep = 1.0f;
+    mfs = new PoissonRegenCells(numMF, randSeed, threshDecayTau, msPerTimeStep);
+    mfFreq.resize(numMF);
+
+    for(int i=0; i<numMF; i++) {
+        const float backGFreqMin = 1;
+        const float backGFreqMax = 10;
+        mfFreq[i]=randGen->Random()*(backGFreqMax-backGFreqMin)+backGFreqMin;
+    }
+
+    vector<int> mfInds(numMF);
+    for (int i=0; i<numMF; i++)
+        mfInds[i] = i;
+    std::random_shuffle(mfInds.begin(), mfInds.end());
+
+    const int numContextMF = numMF * .03;
+
+    for (int i=0; i<numContextMF; i++) {
+        const float contextFreqMin = 30;
+        const float contextFreqMax = 60;
+        mfFreq[mfInds.back()]=randGen->Random()*(contextFreqMax-contextFreqMin)+contextFreqMin;
+        mfInds.pop_back();
+    } 
+}
+
 void SimThread::run()
 {
     for (int simStep=0; alive; simStep++) {
         if (simStep % 10000 == 0) cout << endl;
         if (simStep % 1000 == 0) cout << "." << flush;
 
-        // Calculate MF Activity
-        for (int i=0; i<numMF; i++) {
-            float contextFreqMin = 30;
-            float contextFreqMax = 60;
-            mfFreq[i] = randGen->Random()*(contextFreqMax-contextFreqMin)+contextFreqMin;    
-        }
         const ct_uint8_t *apMF = mfs->calcActivity(&mfFreq[0]);
         simCore->updateMFInput(apMF);
         simCore->calcActivity();
@@ -113,18 +132,24 @@ void SimThread::run()
         const float *vmPC = mZone->exportVmPC();
         vector<ct_uint8_t> apPCVis(apPC, apPC + numPC * sizeof apPC[0]);
         vector<float> vmPCVis(vmPC, vmPC + numPC * sizeof vmPC[0]);
+        for (int i=0; i<numPC; i++)
+            vmPCVis[i] = (vmPC[i]+80)/80;
         emit(updatePCTW(apPCVis, vmPCVis, simStep));
 
         const ct_uint8_t *apNC = mZone->exportAPNC();
         const float *vmNC = mZone->exportVmNC();
         vector<ct_uint8_t> apNCVis(apNC, apNC + numNC * sizeof apNC[0]);
         vector<float> vmNCVis(vmNC, vmNC + numNC * sizeof vmNC[0]);
+        for (int i=0; i<numNC; i++)
+            vmNCVis[i] = (vmNC[i]+80)/80;
         emit(updateNCTW(apNCVis, vmNCVis, simStep));
 
         const ct_uint8_t *apIO = mZone->exportAPIO();
         const float *vmIO = mZone->exportVmIO();
         vector<ct_uint8_t> apIOVis(apIO, apIO + numIO * sizeof apIO[0]);
         vector<float> vmIOVis(vmIO, vmIO + numIO * sizeof vmIO[0]);
+        for (int i=0; i<numIO; i++)
+            vmIOVis[i] = (vmIO[i]+80)/80;
         emit(updateIOTW(apIOVis, vmIOVis, simStep));
 
         if (simStep % trialLength == 0)

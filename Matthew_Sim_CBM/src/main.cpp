@@ -13,9 +13,9 @@ int main(int argc, char **argv)
     po::options_description desc("Allowed options");
     desc.add_options()
         ("help,h", "produce help message")
-        ("conPF", po::value<string>()->default_value("conParams.txt"),
+        ("conPF", po::value<string>()->default_value("../CBM_Params/conParams.txt"),
          "Connectivity Parameter File")
-        ("actPF", po::value<string>()->default_value("actParams.txt"),
+        ("actPF", po::value<string>()->default_value("../CBM_Params/actParams1.txt"),
          "Activity Parameter File")
         ("seed", po::value<int>(), "Random Seed")
         ("numMZ", po::value<int>()->default_value(1),"Number of Microzones")

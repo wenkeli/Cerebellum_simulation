@@ -53,6 +53,8 @@ protected:
 
     std::vector<float> mfFreq;
 
+    void setupMossyFibers(int randSeed);
+
 private:
     void run();
 };
