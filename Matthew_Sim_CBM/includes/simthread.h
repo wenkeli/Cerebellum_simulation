@@ -20,7 +20,7 @@ public:
     SimThread(QObject *parent, int numMZ, int randSeed, std::string conPF, std::string actPF);
     ~SimThread();
 
-    bool alive, running;
+    bool alive;
 
     int trialLength; // Typically 5000
     int numMZ; // Microzones

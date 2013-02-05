@@ -7,7 +7,7 @@
 using namespace std;
 
 SimThread::SimThread(QObject *parent, int numMZ, int randSeed, string conPF, string actPF)
-    : QThread(parent), alive(true), running(true), trialLength(5000), numMZ(numMZ)
+    : QThread(parent), alive(true), trialLength(5000), numMZ(numMZ)
 {
     if (randSeed >= 0) {
         cout << "Using random seed: " << randSeed << endl;

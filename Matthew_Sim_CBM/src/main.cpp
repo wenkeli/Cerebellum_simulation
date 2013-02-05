@@ -19,6 +19,7 @@ int main(int argc, char **argv)
          "Activity Parameter File")
         ("seed", po::value<int>(), "Random Seed")
         ("numMZ", po::value<int>()->default_value(1),"Number of Microzones")
+        ("nogui", "Run without a gui")
         ;
 
     po::variables_map vm;
@@ -35,13 +36,19 @@ int main(int argc, char **argv)
     string conPF  = vm["conPF"].as<string>();
     string actPF  = vm["actPF"].as<string>();
 
-    QApplication app(argc, argv);
-    MainW *mainW = new MainW(&app, NULL, numMZ, randSeed, conPF, actPF);
-    app.setActiveWindow(mainW);
-    mainW->show();
+    if (vm.count("nogui")) {
+        SimThread t(NULL, numMZ, randSeed, conPF, actPF);
+        t.start();
+        t.wait();
+    } else {
+        QApplication app(argc, argv);
+        MainW *mainW = new MainW(&app, NULL, numMZ, randSeed, conPF, actPF);
+        app.setActiveWindow(mainW);
+        mainW->show();
 
-    app.connect(mainW, SIGNAL(destroyed()), &app, SLOT(quit()));
-    return app.exec();
+        app.connect(mainW, SIGNAL(destroyed()), &app, SLOT(quit()));
+        return app.exec();
+    }
 }
 
 
