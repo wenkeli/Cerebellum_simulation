@@ -57,10 +57,11 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	colors.push_back(temp);
 	colors.push_back(Qt::blue);
 
-	csLineTs.push_back(2000);
-	csLineTs.push_back(2300);
-	csLineColors.push_back(Qt::yellow);
-	csLineColors.push_back(Qt::yellow);
+	for(int i=0; i<5; i++)
+	{
+		csLineTs.push_back(2000+i*250);
+		csLineColors.push_back(Qt::yellow);
+	}
 //
 	inputNetSpatialView=new ActSpatialView(xDims, yDims, sizes, colors, "/mnt/FastData/movie/");
 
