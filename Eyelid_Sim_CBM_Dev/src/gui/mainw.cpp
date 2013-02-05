@@ -65,7 +65,7 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	inputNetSpatialView=new ActSpatialView(xDims, yDims, sizes, colors, "/mnt/FastData/movie/");
 
 	inputNetTView=new ActTemporalView(conParams->getNumGO(), 1, manager->getInterTrialI(),
-			manager->getInterTrialI()/4, conParams->getNumGO(),
+			manager->getInterTrialI()/2, conParams->getNumGO(),
 			csLineTs, csLineColors, Qt::white, "inputNet");
 	scTView=new ActTemporalView(conParams->getNumSC(), 1, manager->getInterTrialI(),
 			manager->getInterTrialI()/2, conParams->getNumSC(),
