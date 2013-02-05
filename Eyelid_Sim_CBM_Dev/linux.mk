@@ -15,6 +15,7 @@ UIC = uic
 
 CUDAIP = '/opt/cuda/include/'
 QTIP = '/usr/include/qt4/'
+
 CXXTOOLSIP = '../CXX_TOOLS_LIB'
 CBMTOOLSIP = '../CBM_TOOLS_LIB'
 CBMSTATEIP = '../CBM_STATE_LIB'
@@ -23,9 +24,6 @@ CBMVISUALIP = '../CBM_VISUAL_LIB'
 CBMDATAIP = '../CBM_DATA_LIB'
 EXTINCPATH = -I $(CUDAIP) -I $(QTIP) -I $(CXXTOOLSIP) -I $(CBMTOOLSIP) -I $(CBMSTATEIP) -I $(CBMCOREIP) \
 -I $(CBMVISUALIP) -I $(CBMDATAIP)
-
-INTELLIBPATH = '/opt/intel/Compiler/11.0/072/lib/intel64'
-INTELLIBS = -lirc -lcxaguard -limf
 
 QTLIBPATH = '/usr/lib/qt4'
 QTLIBS = -lQtGui -lQtCore
@@ -77,7 +75,7 @@ OBJ = $(GUIOBJ) $(ECTRIALOBJ) $(MAINOBJ)
 
 mainapp: main gui ectrial
 	-$(CC) $(CFLAGS) $(OBJ) -o $(OUTPATH)/$(NAME) \
-	-L$(QTLIBPATH) $(QTLIBS) -L$(INTELLIBPATH) $(INTELLIBS) \
+	-L$(QTLIBPATH) $(QTLIBS) \
 	-Xlinker -rpath=$(DEPLIBPATH) -Xlinker --library-path=$(DEPLIBPATH) \
 	$(DEPLIBS)
 	
