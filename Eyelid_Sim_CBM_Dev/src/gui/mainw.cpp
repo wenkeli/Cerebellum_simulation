@@ -57,7 +57,7 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	colors.push_back(temp);
 	colors.push_back(Qt::blue);
 
-	for(int i=0; i<5; i++)
+	for(int i=0; i<7; i++)
 	{
 		csLineTs.push_back(2000+i*250);
 		csLineColors.push_back(Qt::yellow);
