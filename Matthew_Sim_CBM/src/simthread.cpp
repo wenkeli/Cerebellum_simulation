@@ -84,11 +84,13 @@ void SimThread::setupMossyFibers(int randSeed)
     const float msPerTimeStep = 1.0f;
     mfs = new PoissonRegenCells(numMF, randSeed, threshDecayTau, msPerTimeStep);
     mfFreq.resize(numMF);
+    mfFreqRelaxed.resize(numMF);
+    mfFreqExcited.resize(numMF);
 
     for(int i=0; i<numMF; i++) {
         const float backGFreqMin = 1;
         const float backGFreqMax = 10;
-        mfFreq[i]=randGen->Random()*(backGFreqMax-backGFreqMin)+backGFreqMin;
+        mfFreqRelaxed[i]=randGen->Random()*(backGFreqMax-backGFreqMin)+backGFreqMin;
     }
 
     vector<int> mfInds(numMF);
@@ -101,9 +103,16 @@ void SimThread::setupMossyFibers(int randSeed)
     for (int i=0; i<numContextMF; i++) {
         const float contextFreqMin = 30;
         const float contextFreqMax = 60;
-        mfFreq[mfInds.back()]=randGen->Random()*(contextFreqMax-contextFreqMin)+contextFreqMin;
+        mfFreqRelaxed[mfInds.back()]=randGen->Random()*(contextFreqMax-contextFreqMin)+contextFreqMin;
         mfInds.pop_back();
-    } 
+    }
+
+    for (int i=0; i<numMF; i++) {
+        const float excitedFreqMin = 30;
+        const float excitedFreqMax = 60;
+        mfFreqExcited[i]=randGen->Random()*(excitedFreqMax-excitedFreqMax)+excitedFreqMin;
+        mfExcited.push_back(false);
+    }
 }
 
 void SimThread::run()
@@ -111,6 +120,10 @@ void SimThread::run()
     for (int simStep=0; alive; simStep++) {
         if (simStep % 10000 == 0) cout << endl;
         if (simStep % 1000 == 0) cout << "." << flush;
+
+        for (int i=0; i<numMF; i++) {
+            mfFreq[i] = mfExcited[i] ? mfFreqExcited[i] : mfFreqRelaxed[i];
+        }
 
         const ct_uint8_t *apMF = mfs->calcActivity(&mfFreq[0]);
         simCore->updateMFInput(apMF);

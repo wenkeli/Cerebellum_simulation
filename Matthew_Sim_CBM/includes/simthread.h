@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <assert.h>
 
 #include <QtCore/QThread>
 
@@ -33,6 +34,10 @@ public:
     int numNC; // Nucleus Cells
     int numIO; // Inferior Olive Cells
 
+    void activateCF() { simCore->updateErrDrive(0, 1.0); };
+    void activateMF(int mfNum) { assert(mfNum < numMF); mfExcited[mfNum] = true; };
+    void deactivateMF(int mfNum) { assert(mfNum < numMF); mfExcited[mfNum] = false; };
+
 signals:
     void updateINTW(std::vector<ct_uint8_t>, int t);
     void updateSCTW(std::vector<ct_uint8_t>, int t);
@@ -51,7 +56,8 @@ protected:
     
     CRandomSFMT0 *randGen;
 
-    std::vector<float> mfFreq;
+    std::vector<bool> mfExcited;
+    std::vector<float> mfFreq, mfFreqRelaxed, mfFreqExcited;
 
     void setupMossyFibers(int randSeed);
 
