@@ -48,7 +48,7 @@ SimThread::SimThread(QObject *parent, int numMZ, int randSeed, string conPF, str
     numNC = simState->getConnectivityParams()->getNumNC();
     numIO = simState->getConnectivityParams()->getNumIO();
 
-    env->setupMossyFibers(numMF);
+    env->setupMossyFibers(simState);
 
     const float threshDecayTau = 4.0f; // Rate of decay = 1-exp(-msPerTS/threshDecayTau)
     const float msPerTimeStep = 1.0f;
@@ -76,8 +76,8 @@ void SimThread::run()
         if (simStep % 10000 == 0) cout << endl;
         if (simStep % 1000 == 0) cout << "." << flush;
 
-        std::vector<float> *mfFreq = env->getState();
-        const ct_uint8_t *apMF = mfs->calcActivity(&(*mfFreq)[0]);
+        float *mfFreq = env->getState();
+        const ct_uint8_t *apMF = mfs->calcActivity(mfFreq);
         simCore->updateMFInput(apMF);
         simCore->calcActivity();
         env->step(simCore);

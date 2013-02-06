@@ -12,7 +12,8 @@ int Environment::numRequiredMZ() {
     return 1;
 }
 
-void Environment::setupMossyFibers(int numMF) {
+void Environment::setupMossyFibers(CBMState *simState) {
+    int numMF = simState->getConnectivityParams()->getNumMF();
     mfFreq.resize(numMF);
     mfFreqRelaxed.resize(numMF);
     mfFreqExcited.resize(numMF);
@@ -45,11 +46,11 @@ void Environment::setupMossyFibers(int numMF) {
     }
 }
 
-std::vector<float>* Environment::getState() {
+float* Environment::getState() {
     for (uint i=0; i<mfFreq.size(); i++) {
         mfFreq[i] = mfExcited[i] ? mfFreqExcited[i] : mfFreqRelaxed[i];
     }
-    return &mfFreq;
+    return &mfFreq[0];
 }
 
 void Environment::step(CBMSimCore *simCore) {

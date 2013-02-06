@@ -6,6 +6,7 @@
 #include <CXXToolsInclude/stdDefinitions/pstdint.h>
 
 #include <CBMCoreInclude/interface/cbmsimcore.h>
+#include <CBMStateInclude/interfaces/cbmstate.h>
 #include <CBMToolsInclude/poissonregencells.h>
 
 class Environment {
@@ -17,10 +18,10 @@ public:
     virtual int numRequiredMZ();
 
     // Creates the Mossy Fibers. Should be called before getState()
-    virtual void setupMossyFibers(int numMF);
+    virtual void setupMossyFibers(CBMState *simState);
 
     // Get the MF representation of the state
-    virtual std::vector<float>* getState();
+    virtual float* getState();
 
     // Update the environment, possibly applying error to the simulator
     virtual void step(CBMSimCore *simCore);

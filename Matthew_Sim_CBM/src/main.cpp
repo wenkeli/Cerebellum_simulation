@@ -6,6 +6,7 @@
 #include "../includes/mainw.hpp"
 #include "../includes/simthread.hpp"
 #include "../includes/environments/environment.hpp"
+#include "../includes/environments/eyelid.hpp"
 
 using namespace std;
 namespace po = boost::program_options;
@@ -46,7 +47,8 @@ int main(int argc, char **argv)
 
     CRandomSFMT0 randGen(randSeed);
 
-    Environment env(&randGen);
+    //Environment env(&randGen);
+    Eyelid env(&randGen);
 
     int numMZ     = env.numRequiredMZ(); //vm["numMZ"].as<int>();
     string conPF  = vm["conPF"].as<string>();
