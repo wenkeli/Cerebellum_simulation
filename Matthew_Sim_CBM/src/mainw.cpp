@@ -1,4 +1,4 @@
-#include "../includes/mainw.h"
+#include "../includes/mainw.hpp"
 
 #include <QKeyEvent>
 #include <QVBoxLayout>
@@ -7,7 +7,7 @@ using namespace std;
 
 static const int mfActivationWidth = 2048 * .03;
 
-MainW::MainW(QApplication *app, QWidget *parent, int numMZ, int randSeed, string conPF, string actPF,
+MainW::MainW(QWidget *parent, int numMZ, int randSeed, string conPF, string actPF,
              Environment *env)
     : QWidget(parent), thread(this, numMZ, randSeed, conPF, actPF, env)
 {

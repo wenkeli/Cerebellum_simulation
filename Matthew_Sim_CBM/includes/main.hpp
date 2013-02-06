@@ -2,8 +2,6 @@
 #define MAIN_H_
 
 #include <iostream>
-#include "mainw.h"
-#include "simthread.h"
 
 int main(int argc, char **argv);
 

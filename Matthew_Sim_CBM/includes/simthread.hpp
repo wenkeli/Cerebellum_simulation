@@ -12,7 +12,7 @@
 #include <CBMToolsInclude/poissonregencells.h>
 #include <CBMVisualInclude/acttemporalview.h>
 
-#include "environments/environment.h"
+#include "environments/environment.hpp"
 
 class SimThread : public QThread
 {

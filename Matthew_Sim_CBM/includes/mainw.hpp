@@ -19,14 +19,14 @@
 
 #include <CBMStateInclude/interfaces/iconnectivityparams.h>
 
-#include "simthread.h"
+#include "simthread.hpp"
 
 class MainW : public QWidget
 {
     Q_OBJECT
 
 public:
-    MainW(QApplication *app, QWidget *parent, int numMZ, int randSeed, std::string conPF, std::string actPF,
+    MainW(QWidget *parent, int numMZ, int randSeed, std::string conPF, std::string actPF,
           Environment *env);
     ~MainW();
 

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "../includes/simthread.h"
+#include "../includes/simthread.hpp"
 
 using namespace std;
 

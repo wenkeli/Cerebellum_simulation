@@ -2,8 +2,10 @@
 
 #include <boost/program_options.hpp>
 
-#include "../includes/main.h"
-#include "../includes/environments/environment.h"
+#include "../includes/main.hpp"
+#include "../includes/mainw.hpp"
+#include "../includes/simthread.hpp"
+#include "../includes/environments/environment.hpp"
 
 using namespace std;
 namespace po = boost::program_options;
@@ -56,7 +58,7 @@ int main(int argc, char **argv)
         t.wait();
     } else {
         QApplication app(argc, argv);
-        MainW *mainW = new MainW(&app, NULL, numMZ, randSeed, conPF, actPF, &env);
+        MainW *mainW = new MainW(NULL, numMZ, randSeed, conPF, actPF, &env);
         app.setActiveWindow(mainW);
         mainW->show();
 
