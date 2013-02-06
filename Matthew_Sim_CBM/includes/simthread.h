@@ -12,12 +12,14 @@
 #include <CBMToolsInclude/poissonregencells.h>
 #include <CBMVisualInclude/acttemporalview.h>
 
+#include "environments/environment.h"
+
 class SimThread : public QThread
 {
     Q_OBJECT
 
 public:
-    SimThread(QObject *parent, int numMZ, int randSeed, std::string conPF, std::string actPF);
+    SimThread(QObject *parent, int numMZ, int randSeed, std::string conPF, std::string actPF, Environment *env);
     ~SimThread();
 
     bool alive;
@@ -34,9 +36,9 @@ public:
     int numNC; // Nucleus Cells
     int numIO; // Inferior Olive Cells
 
-    void activateCF() { simCore->updateErrDrive(0, 1.0); };
-    void activateMF(int mfNum) { assert(mfNum < numMF); mfExcited[mfNum] = true; };
-    void deactivateMF(int mfNum) { assert(mfNum < numMF); mfExcited[mfNum] = false; };
+    void activateCF(int zoneN=0) { assert(zoneN < numMZ); simCore->updateErrDrive(zoneN, 1.0); };
+    void activateMF(int mfNum) { assert(mfNum < numMF); env->mfExcited[mfNum] = true; };
+    void deactivateMF(int mfNum) { assert(mfNum < numMF); env->mfExcited[mfNum] = false; };
 
 signals:
     void updateINTW(std::vector<ct_uint8_t>, int t);
@@ -48,6 +50,7 @@ signals:
     void blankTW(QColor bc);
 
 protected:
+    Environment *env;
     CBMState *simState;
     CBMSimCore *simCore;
     PoissonRegenCells *mfs;
@@ -56,8 +59,8 @@ protected:
     
     CRandomSFMT0 *randGen;
 
-    std::vector<bool> mfExcited;
-    std::vector<float> mfFreq, mfFreqRelaxed, mfFreqExcited;
+    /* std::vector<bool> mfExcited; */
+    /* std::vector<float> mfFreq, mfFreqRelaxed, mfFreqExcited; */
 
     void setupMossyFibers(int randSeed);
 

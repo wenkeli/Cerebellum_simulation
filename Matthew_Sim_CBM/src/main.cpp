@@ -3,6 +3,7 @@
 #include <boost/program_options.hpp>
 
 #include "../includes/main.h"
+#include "../includes/environments/environment.h"
 
 using namespace std;
 namespace po = boost::program_options;
@@ -31,18 +32,31 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    int numMZ     = vm["numMZ"].as<int>();
     int randSeed  = vm.count("seed") ? vm["seed"].as<int>() : -1;
+    if (randSeed >= 0) {
+        cout << "Using random seed: " << randSeed << endl;
+        srand(randSeed);
+    } else {
+        randSeed = time(NULL);
+        cout << "No seed specified. Seeding to time. Seed: " << randSeed << endl;
+        srand(randSeed);
+    }
+
+    CRandomSFMT0 randGen(randSeed);
+
+    Environment env(&randGen);
+
+    int numMZ     = env.numRequiredMZ(); //vm["numMZ"].as<int>();
     string conPF  = vm["conPF"].as<string>();
     string actPF  = vm["actPF"].as<string>();
 
     if (vm.count("nogui")) {
-        SimThread t(NULL, numMZ, randSeed, conPF, actPF);
+        SimThread t(NULL, numMZ, randSeed, conPF, actPF, &env);
         t.start();
         t.wait();
     } else {
         QApplication app(argc, argv);
-        MainW *mainW = new MainW(&app, NULL, numMZ, randSeed, conPF, actPF);
+        MainW *mainW = new MainW(&app, NULL, numMZ, randSeed, conPF, actPF, &env);
         app.setActiveWindow(mainW);
         mainW->show();
 
