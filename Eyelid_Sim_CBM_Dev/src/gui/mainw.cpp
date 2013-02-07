@@ -36,7 +36,7 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	cout<<"actPF "<<actPF<<endl;
 
 	manager=new ECManagementDelay(conPF, actPF, time(0), 50000, 5000, 2000, 2750, 2040,
-			5, 10000, 1000, 0.01, 0.015, 0.03,
+			5, 10000, 1000, 0.015, 0.02, 0.03,
 			1, 1, 30, 40, 120, 10, 5, 60, 50, 130);
 
 	conParams=manager->getConParams();
@@ -66,22 +66,22 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	inputNetSpatialView=new ActSpatialView(xDims, yDims, sizes, colors, "/mnt/FastData/movie/");
 
 	inputNetTView=new ActTemporalView(conParams->getNumGO(), 1, manager->getInterTrialI(),
-			manager->getInterTrialI()/2, conParams->getNumGO(),
+			manager->getInterTrialI()/2.5, conParams->getNumGO(),
 			csLineTs, csLineColors, Qt::white, "inputNet");
 	scTView=new ActTemporalView(conParams->getNumSC(), 1, manager->getInterTrialI(),
-			manager->getInterTrialI()/2, conParams->getNumSC(),
+			manager->getInterTrialI()/2.5, conParams->getNumSC(),
 			csLineTs, csLineColors, Qt::white, "stellate");
 	bcTView=new ActTemporalView(conParams->getNumBC(), 1, manager->getInterTrialI(),
-			manager->getInterTrialI()/2, conParams->getNumBC(),
+			manager->getInterTrialI()/2.5, conParams->getNumBC(),
 			csLineTs, csLineColors, Qt::green, "basket");
 	pcTView=new ActTemporalView(conParams->getNumPC(), 8, manager->getInterTrialI(),
-			manager->getInterTrialI()/2, conParams->getNumPC()*8,
+			manager->getInterTrialI()/2.5, conParams->getNumPC()*8,
 			csLineTs, csLineColors, Qt::red, "purkinje");
 	ncTView=new ActTemporalView(conParams->getNumNC(), 16, manager->getInterTrialI(),
-			manager->getInterTrialI()/2, conParams->getNumNC()*16,
+			manager->getInterTrialI()/2.5, conParams->getNumNC()*16,
 			csLineTs, csLineColors, Qt::green, "nucleus");
 	ioTView=new ActTemporalView(conParams->getNumIO(), 32, manager->getInterTrialI(),
-			manager->getInterTrialI()/2, conParams->getNumIO()*32,
+			manager->getInterTrialI()/2.5, conParams->getNumIO()*32,
 			csLineTs, csLineColors, Qt::white, "inferior olive");
 //
 	itc=new InterThreadComm();
