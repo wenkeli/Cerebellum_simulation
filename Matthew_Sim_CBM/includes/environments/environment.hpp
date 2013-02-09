@@ -1,6 +1,8 @@
 #ifndef ENVIRONMENT_H
 #define ENVIRONMENT_H
 
+#include <boost/program_options.hpp>
+
 #include <iostream>
 
 #include <CXXToolsInclude/stdDefinitions/pstdint.h>

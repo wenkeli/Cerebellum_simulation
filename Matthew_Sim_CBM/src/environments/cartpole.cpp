@@ -6,15 +6,26 @@
 
 using namespace std;
 
-Cartpole::Cartpole(CRandomSFMT0 *randGen) : Environment(randGen) {
-    for (int i=0; i<0; i++)
-        actionQ.push(0);
+void Cartpole::addOptions(boost::program_options::options_description &desc) {
+    namespace po = boost::program_options;
+    desc.add_options()
+        ("logfile", po::value<string>()->default_value("cartpole.log"),
+         "Cartpole: log file")
+        ("maxNumTrials", po::value<int>()->default_value(20), "Cartpole: Maximum number of trials")
+        ("maxTrialLen", po::value<int>()->default_value(1000000), "Cartpole: Maximum length of any given trial")
+        ;
+}
+
+Cartpole::Cartpole(CRandomSFMT0 *randGen, boost::program_options::variables_map &vm) :
+    Environment(randGen), trialNum(0) {
+    string cp_logfile = vm["logfile"].as<string>();
+    maxTrialLength = vm["maxTrialLen"].as<int>();
+    maxNumTrials = vm["maxNumTrials"].as<int>();
 
     totalMass = cartMass + poleMass;
     polemassLength = poleMass * length;
 
     if (loggingEnabled) {
-        string cp_logfile = "cartpole.log";
         cout << "Writing to logfile: " << cp_logfile << endl;
         myfile.open(cp_logfile.c_str());
         myfile << cycle << " TrackLen " << rightTrackBound-leftTrackBound << " PoleLen "
@@ -39,15 +50,6 @@ Cartpole::~Cartpole() {
         myfile.flush();
         myfile.close();
     }
-
-    delete[] bgFreq;
-    delete[] incFreq;
-    delete[] threshold;
-
-    delete[] highFreqMFs;
-    delete[] poleVelMFs;
-    delete[] poleAngMFs;
-    delete[] cartPosMFs;
 }
 
 void Cartpole::reset() {
@@ -56,11 +58,6 @@ void Cartpole::reset() {
         myfile.flush();
     }
     cout << "Trial " << trialNum << ": Time Aloft: " << timeAloft << endl;
-
-    while (!actionQ.empty())
-        actionQ.pop();
-    for (int i=0; i<actionDelay; i++)
-      actionQ.push(0);
 
     fallen = false;
     timeoutCnt = 0;
@@ -77,144 +74,110 @@ void Cartpole::reset() {
 }
 
 void Cartpole::setupMossyFibers(CBMState *simState) {
+    Environment::setupMossyFibers(simState);
+
     numMF = simState->getConnectivityParams()->getNumMF();
     numNC = simState->getConnectivityParams()->getNumNC();
 
-    threshDecay=1-exp(-(timeStepSize/threshDecayT));
-
-    mfFreq.resize(numMF);
-    bgFreq=new float[numMF];
-    incFreq=new float[numMF];
-
-    threshold=new float[numMF];
-
-    for(int i=0; i<numMF; i++) {
-        bgFreq[i]=randGen->Random()*(bgFreqMax-bgFreqMin)+bgFreqMin;
-        incFreq[i]=0;
-
-        threshold[i]=1;
-
-        bgFreq[i]=bgFreq[i]*(timeStepSize*tsUnitInS);
-        incFreq[i]=incFreq[i]*(timeStepSize*tsUnitInS);
-    }
-
     // Decide how many MFs to assign to each region
-    numHighFreqMF  = highFreqMFProportion  * numMF;
-    numPoleAngMF   = poleAngMFProportion   * numMF;
-    numPoleVelMF   = poleVelMFProportion   * numMF;
-    numCartVelMF   = cartVelMFProportion   * numMF;
-    numCartPosMF   = cartPosMFProportion   * numMF;
+    int numHighFreqMF  = highFreqMFProportion  * numMF;
+    int numPoleAngMF   = poleAngMFProportion   * numMF;
+    int numPoleVelMF   = poleVelMFProportion   * numMF;
+    int numCartVelMF   = cartVelMFProportion   * numMF;
+    int numCartPosMF   = cartPosMFProportion   * numMF;
 
-    // Keep track of which MFs are assigned to each region
-    highFreqMFs  = new int[numHighFreqMF];
-    poleAngMFs   = new int[numPoleAngMF];
-    poleVelMFs   = new int[numPoleVelMF];
-    cartVelMFs   = new int[numCartVelMF];
-    cartPosMFs   = new int[numCartPosMF];
-    
-    // Assign MFS
     if (randomizeMFs) {
         vector<int> unassigned;
         for (int i=0; i<numMF; i++)
             unassigned.push_back(i);
-
         assignRandomMFs(unassigned,numHighFreqMF,highFreqMFs);
         assignRandomMFs(unassigned,numPoleAngMF,poleAngMFs);
         assignRandomMFs(unassigned,numPoleVelMF,poleVelMFs);
         assignRandomMFs(unassigned,numCartVelMF,cartVelMFs);
         assignRandomMFs(unassigned,numCartPosMF,cartPosMFs);
     } else { // Assign in order -- useful for visualization
-        int m = 0;
-        for (uint i = 0; i < numHighFreqMF; i++)
-            highFreqMFs[i] = m++;
-        //m += 100; // Spacer
-        for (uint i = 0; i < numPoleAngMF; i++)
-            poleAngMFs[i] = m++;
-        //m += 100; // Spacer
-        for (uint i = 0; i < numPoleVelMF; i++)
-            poleVelMFs[i] = m++;
-        //m += 100; // Spacer
-        for (uint i = 0; i < numCartVelMF; i++)
-            cartVelMFs[i] = m++;
-        //m += 100; // Spacer
-        for (uint i = 0; i < numCartPosMF; i++)
-            cartPosMFs[i] = m++;
-    }
-
-    // Update high freq mfs
-    for (uint i = 0; i < numHighFreqMF; i++) {
-        bgFreq[highFreqMFs[i]] = (randGen->Random()*30 + 30)*(timeStepSize*tsUnitInS); // (30,60)
-        incFreq[highFreqMFs[i]] = 0;
+        int m = 500;
+        for (int i=0; i < numHighFreqMF; i++) highFreqMFs.push_back(m++);
+        for (int i=0; i < numPoleAngMF; i++) poleAngMFs.push_back(m++);
+        for (int i=0; i < numPoleVelMF; i++) poleVelMFs.push_back(m++);
+        for (int i=0; i < numCartVelMF; i++) cartVelMFs.push_back(m++);
+        for (int i=0; i < numCartPosMF; i++) cartPosMFs.push_back(m++);
     }
 }
 
-void Cartpole::assignRandomMFs(vector<int>& unassignedMFs, int numToAssign, int* mfs) {
+void Cartpole::assignRandomMFs(vector<int>& unassignedMFs, int numToAssign, vector<int>& mfs) {
     for (int i=0; i<numToAssign; ++i) {
         int indx = randGen->IRandom(0,unassignedMFs.size()-1);
-        mfs[i] = unassignedMFs[indx];
+        mfs.push_back(unassignedMFs[indx]);
         unassignedMFs.erase(unassignedMFs.begin()+indx);
     }
 }
 
 
 float* Cartpole::getState() {
-    float minPoleAng = getMinPoleAngle();
-    float maxPoleAng = getMaxPoleAngle();
-    float poleAngle = getPoleAngle();
+    for (int i=0; i<numMF; i++)
+        mfFreq[i] = mfFreqRelaxed[i];
+    for (vector<int>::iterator it=highFreqMFs.begin(); it != highFreqMFs.end(); it++)
+        mfFreq[*it] = mfFreqExcited[*it];
 
-    float minPoleVel = getMinPoleVelocity();
-    float maxPoleVel = getMaxPoleVelocity();
-    float poleVelocity = getPoleVelocity();
+    if (!isInTimeout()) {
+        float minPoleAng = getMinPoleAngle();
+        float maxPoleAng = getMaxPoleAngle();
+        float poleAngle = getPoleAngle();
 
-    float minCartPos = getMinCartPos();
-    float maxCartPos = getMaxCartPos();
-    float cartPos = getCartPosition();
+        float minPoleVel = getMinPoleVelocity();
+        float maxPoleVel = getMaxPoleVelocity();
+        float poleVelocity = getPoleVelocity();
 
-    float minCartVel = getMinCartVel();
-    float maxCartVel = getMaxCartVel();
-    float cartVel = getCartVelocity();
+        float minCartPos = getMinCartPos();
+        float maxCartPos = getMaxCartPos();
+        float cartPos = getCartPosition();
 
-    if (useLogScaling) {
-        maxPoleAng = logScale(maxPoleAng, 100000);
-        minPoleAng = logScale(minPoleAng, 100000);
-        poleAngle  = logScale(poleAngle,  100000);
+        float minCartVel = getMinCartVel();
+        float maxCartVel = getMaxCartVel();
+        float cartVel = getCartVelocity();
 
-        maxPoleVel = logScale(maxPoleVel, 1000);
-        minPoleVel = logScale(minPoleVel, 1000);
-        poleVelocity = logScale(poleVelocity, 1000);
+        if (useLogScaling) {
+            maxPoleAng = logScale(maxPoleAng, 100000);
+            minPoleAng = logScale(minPoleAng, 100000);
+            poleAngle  = logScale(poleAngle,  100000);
 
-        maxCartVel = logScale(maxCartVel, 1000);
-        minCartVel = logScale(minCartVel, 1000);
-        cartVel = logScale(cartVel, 1000);
-   }
+            maxPoleVel = logScale(maxPoleVel, 1000);
+            minPoleVel = logScale(minPoleVel, 1000);
+            poleVelocity = logScale(poleVelocity, 1000);
 
-    updateTypeMFRates(maxPoleAng, minPoleAng, poleAngMFs, numPoleAngMF, poleAngle);
-    updateTypeMFRates(maxPoleVel, minPoleVel, poleVelMFs, numPoleVelMF, poleVelocity);
-    updateTypeMFRates(maxCartPos, minCartPos, cartPosMFs, numCartPosMF, cartPos);
-    updateTypeMFRates(maxCartVel, minCartVel, cartVelMFs, numCartVelMF, cartVel);
+            maxCartVel = logScale(maxCartVel, 1000);
+            minCartVel = logScale(minCartVel, 1000);
+            cartVel = logScale(cartVel, 1000);
+        }
 
-    bool notInTimeout = !isInTimeout();
-    for(int i=0; i<numMF; i++) {
-        mfFreq[i] = bgFreq[i] + notInTimeout * incFreq[i];
+        gaussMFAct(minPoleAng, maxPoleAng, poleAngle, poleAngMFs);
+        gaussMFAct(minPoleVel, maxPoleVel, poleVelocity, poleVelMFs);
+        gaussMFAct(minCartPos, maxCartPos, cartPos, cartPosMFs);
+        gaussMFAct(minCartVel, maxCartVel, cartVel, cartVelMFs);
     }
+
     return &mfFreq[0];
 }
 
-void Cartpole::updateTypeMFRates(float maxVal, float minVal, int *mfInds, unsigned int numTypeMFs, float currentVal)
-{
-    currentVal = max(minVal,min(maxVal, currentVal));
+void Cartpole::gaussMFAct(float minVal, float maxVal, float currentVal, vector<int>& mfInds) {
+    currentVal = max(minVal, min(maxVal, currentVal));
     float range = maxVal - minVal;
-    float interval = range / numTypeMFs;
+    float interval = range / mfInds.size();
     float pos = minVal + interval / 2.0;
-    float variance = gaussWidth*interval;
-    float maxGaussianVal = 1.0 / sqrt(2 * M_PI * (variance*variance));
-    for (uint i = 0; i < numTypeMFs; i++) {
+    float variance = gaussWidth * interval;
+    float maxPossibleValue = 1.0 / sqrt(2 * M_PI * (variance*variance));
+    for (uint i = 0; i < mfInds.size(); i++) {
         float mean = pos;
         float x = currentVal;
         // Formula for normal distribution: http://en.wikipedia.org/wiki/Normal_distribution
         float value = exp(-1 * ((x-mean)*(x-mean))/(2*(variance*variance))) / sqrt(2 * M_PI * (variance*variance));
-        float scaledVal = (value/maxGaussianVal) * (incFreqMax - incFreqMin) + incFreqMin;
-        incFreq[mfInds[i]] = scaledVal*timeStepSize*tsUnitInS;
+        float normalizedValue = value / maxPossibleValue;
+
+        // Firing rate is a linear combination of relaxed and excited rates
+        int mfIndx = mfInds[i];
+        mfFreq[mfIndx] = normalizedValue * mfFreqExcited[mfIndx] + (1 - normalizedValue) * mfFreqRelaxed[mfIndx];
+
         pos += interval;
     }
 }
@@ -237,11 +200,6 @@ void Cartpole::step(CBMSimCore *simCore) {
     // Restart the simulation if the pole has fallen
     if (fallen) reset();
 
-    // Calculate the force exerted on the pole
-    actionQ.push(calcForce(simCore));
-    float force = actionQ.front();
-    actionQ.pop();
-
     // Return early if in timeout
     if (timeoutCnt <= timeoutDuration) {
         return;
@@ -250,7 +208,7 @@ void Cartpole::step(CBMSimCore *simCore) {
     }
 
     // Update the inverted pendulum system
-    computePhysics(force);
+    computePhysics(calcForce(simCore));
 
     // Distribute Error signals to the MZs
     setMZErr(simCore);
@@ -323,15 +281,6 @@ void Cartpole::setMZErr(CBMSimCore *simCore) {
     // if (relative_x_dot > 0 && relative_x < 0 && deliverError)
     //     errorLeft = true;
     // if (relative_x_dot < 0 && relative_x > 0 && deliverError)
-    //     errorRight = true;
-
-    // Error associated with lower cart force
-    // float futureLCForce = getFutureLCForce();
-    // errorProbability = min(maxErrProb * abs(futureLCForce)/getLowerCartMaxForce(), maxErrProb);
-    // deliverError = randGen->Random() < errorProbability;
-    // if (futureLCForce > 0 && theta >= 0.0 && deliverError)
-    //     errorLeft = true;
-    // if (futureLCForce < 0 && theta < 0.0 && deliverError)
     //     errorRight = true;
 
     if (errorRight) simCore->updateErrDrive(0, 1.0);

@@ -5,9 +5,9 @@
 
 using namespace std;
 
-Eyelid::Eyelid(CRandomSFMT0 *randGen) : Environment(randGen) {
 
-}
+Eyelid::Eyelid(CRandomSFMT0 *randGen, boost::program_options::variables_map &vm) :
+    Environment(randGen) {}
 
 Eyelid::~Eyelid() {
     delete[] mfFreqBG;

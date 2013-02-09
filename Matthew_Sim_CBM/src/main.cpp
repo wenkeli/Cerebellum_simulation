@@ -27,6 +27,9 @@ int main(int argc, char **argv)
         ("environment", po::value<string>()->default_value("default"),
          "Experimental Environment. Choices: default, eyelid, cartpole")
         ;
+    // Allow the environments to add command line args
+    Eyelid::addOptions(desc);
+    Cartpole::addOptions(desc);
 
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -54,9 +57,9 @@ int main(int argc, char **argv)
     if (envStr == "default")
         env = new Environment(&randGen);
     else if (envStr == "eyelid")
-        env = new Eyelid(&randGen);
+        env = new Eyelid(&randGen, vm);
     else if (envStr == "cartpole")
-        env = new Cartpole(&randGen);
+        env = new Cartpole(&randGen, vm);
 
     int numMZ     = env->numRequiredMZ();
     string conPF  = vm["conPF"].as<string>();
