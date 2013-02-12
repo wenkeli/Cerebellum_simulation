@@ -58,6 +58,7 @@ public: // Cartpole methods
     static const float maxForce      = 1;     // Maximum force that can be applied to the cart.
     static const float minForce      = -1;    // Max for in opposite direction to cart. 
     static const float forceScale    = 3.0;   // Force gain for the output
+    static const float forceDecay    = .99;   // Rate a which force decays
     static const float tau           = 0.001; // Seconds between state updates 
     static const int   timeoutDuration = 1500;  // Cycles to wait before new episode. 
     static const bool  loggingEnabled = true;  // Writes to logfile if enabled. 
@@ -70,6 +71,8 @@ public: // Cartpole methods
     static const float maxPoleVelocity = 0.5;
     static const float minPoleAccel    = -5.0;
     static const float maxPoleAccel    = 5.0;
+
+
 
 protected:
     long maxTrialLength;

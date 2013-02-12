@@ -299,13 +299,15 @@ float Cartpole::calcForce(CBMSimCore *simCore) {
     float mz0InputSum = 0;
     for (int i=0; i<numNC; i++)
         mz0InputSum += mz0ApNC[i];
-    mz0Force = mz0InputSum / numNC;
+    mz0Force += mz0InputSum / numNC;
+    mz0Force *= forceDecay;
     
     const ct_uint8_t *mz1ApNC = simCore->getMZoneList()[1]->exportAPNC();
     float mz1InputSum = 0;
     for (int i=0; i<numNC; i++)
         mz1InputSum += mz1ApNC[i];
-    mz1Force = mz1InputSum / numNC;
+    mz1Force += mz1InputSum / numNC;
+    mz1Force *= forceDecay;
 
     netForce = (mz0Force-mz1Force) * forceScale; // TODO: This may need to be adjusted
     return netForce;
