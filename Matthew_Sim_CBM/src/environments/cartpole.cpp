@@ -153,8 +153,8 @@ float* Cartpole::getState() {
 
         gaussMFAct(minPoleAng, maxPoleAng, poleAngle, poleAngMFs);
         gaussMFAct(minPoleVel, maxPoleVel, poleVelocity, poleVelMFs);
-        gaussMFAct(minCartPos, maxCartPos, cartPos, cartPosMFs);
         gaussMFAct(minCartVel, maxCartVel, cartVel, cartVelMFs);
+        gaussMFAct(minCartPos, maxCartPos, cartPos, cartPosMFs);
     }
 
     return &mfFreq[0];
@@ -294,22 +294,21 @@ bool Cartpole::inFailure() {
 }
 
 float Cartpole::calcForce(CBMSimCore *simCore) {
-    // TODO: Forces were historically computed differently!
     const ct_uint8_t *mz0ApNC = simCore->getMZoneList()[0]->exportAPNC();
     float mz0InputSum = 0;
     for (int i=0; i<numNC; i++)
         mz0InputSum += mz0ApNC[i];
-    mz0Force += mz0InputSum / numNC;
+    mz0Force += (mz0InputSum / float(numNC)) * forceScale;
     mz0Force *= forceDecay;
     
     const ct_uint8_t *mz1ApNC = simCore->getMZoneList()[1]->exportAPNC();
     float mz1InputSum = 0;
     for (int i=0; i<numNC; i++)
         mz1InputSum += mz1ApNC[i];
-    mz1Force += mz1InputSum / numNC;
+    mz1Force += (mz1InputSum / float(numNC)) * forceScale;
     mz1Force *= forceDecay;
 
-    netForce = (mz0Force-mz1Force) * forceScale; // TODO: This may need to be adjusted
+    netForce = mz0Force-mz1Force; 
     return netForce;
 }
 

@@ -57,22 +57,20 @@ public: // Cartpole methods
     static const float length        = 7.5;   // Half the pole's length 
     static const float maxForce      = 1;     // Maximum force that can be applied to the cart.
     static const float minForce      = -1;    // Max for in opposite direction to cart. 
-    static const float forceScale    = 3.0;   // Force gain for the output
+    static const float forceScale    = .1;    // Force gain for the output
     static const float forceDecay    = .99;   // Rate a which force decays
     static const float tau           = 0.001; // Seconds between state updates 
     static const int   timeoutDuration = 1500;  // Cycles to wait before new episode. 
     static const bool  loggingEnabled = true;  // Writes to logfile if enabled. 
 
-    static const float leftTrackBound  = -20;//-1e37;
-    static const float rightTrackBound = 20;//1e37;
+    static const float leftTrackBound  = -1e37;
+    static const float rightTrackBound = 1e37;
     static const float leftAngleBound  = -.1745; // 10 degrees
     static const float rightAngleBound = .1745;
     static const float minPoleVelocity = -0.5;
     static const float maxPoleVelocity = 0.5;
     static const float minPoleAccel    = -5.0;
     static const float maxPoleAccel    = 5.0;
-
-
 
 protected:
     long maxTrialLength;
@@ -123,8 +121,8 @@ protected: // MF input variables
     int numMF, numNC;
 
     // Should we randomize the assignment of MFs or do them contiguously?
-    static const bool randomizeMFs = false;
-    static const bool useLogScaling = false;
+    static const bool randomizeMFs = true;
+    static const bool useLogScaling = true;
 
     // Controls the width the gaussians
     static const float gaussWidth = 6.0;
@@ -133,7 +131,7 @@ protected: // MF input variables
     static const float highFreqMFProportion  = .03;
     static const float poleAngMFProportion   = .06;
     static const float poleVelMFProportion   = .06;
-    static const float cartPosMFProportion   = .06;        
+    static const float cartPosMFProportion   = 0;        
     static const float cartVelMFProportion   = .06;
 
     // List of mfs indices assigned to each group
