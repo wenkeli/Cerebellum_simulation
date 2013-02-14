@@ -11,9 +11,9 @@ LogReader::LogReader(string filename) :
     cout << "Reading logfile " << filename << "..." << endl;;
     string line;
     ifstream logfile(filename.c_str());
+    int i=0;
     if (logfile.is_open()) {
         // Read full file
-        int i=0;
         while (logfile.good()) {
             getline(logfile, line);
 
@@ -28,16 +28,27 @@ LogReader::LogReader(string filename) :
             i++;
         }
         trialStartIndx.push_back(i);
-        logfile.close();
     }
 
     while (1) {
+        if (getline(logfile, line)) {
+            lines.push_back(line);
+            if (line.find("EndTrial") != string::npos)
+                cout << line << endl;
+            if (line.find("StartingTrial") != string::npos)
+                trialStartIndx.push_back(i);
+            i++;
+        }
+        logfile.clear();
+        
         if (playing && play_pos < lines.size()) {
             display();
         } else {
             usleep(1000);
         }
     }
+
+    logfile.close();
 }
 
 void LogReader::handleMediaEvent(const int event)
@@ -63,11 +74,9 @@ void LogReader::handleMediaEvent(const int event)
             }
         }
     } else if (event == SLOWDOWN) {
-        //playspeed = max(1,playspeed/2);
         sleepTime *= 2;
         playspeed /= 2.0;
     } else if (event == SPEEDUP) {
-        //playspeed *= 2;
         sleepTime = max(1,sleepTime/2);
         playspeed *= 2.0;
     } else {
