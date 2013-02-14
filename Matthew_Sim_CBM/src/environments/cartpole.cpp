@@ -54,10 +54,11 @@ Cartpole::~Cartpole() {
 
 void Cartpole::reset() {
     if (loggingEnabled) {
-        myfile << cycle << " EndTrial " << trialNum << " TimeAloft " << timeAloft << endl;
+        myfile << cycle << " EndTrial " << trialNum << " TimeAloft " << timeAloft
+               << " Failure: " << getFailureMode() << endl;
         myfile.flush();
     }
-    cout << "Trial " << trialNum << ": Time Aloft: " << timeAloft << endl;
+    cout << "Trial " << trialNum << ": Time Aloft: " << timeAloft << " Failure: " << getFailureMode() << endl;
 
     fallen = false;
     timeoutCnt = 0;
@@ -291,6 +292,20 @@ bool Cartpole::inFailure() {
     return (theta <= leftAngleBound || theta >= rightAngleBound ||      // Pole fallen
             x <= leftTrackBound || x >= rightTrackBound ||        // Upper cart left lower
             timeAloft >= maxTrialLength);
+}
+
+string Cartpole::getFailureMode() {
+    if (theta <= leftAngleBound)
+        return "PoleFallLeft";
+    if (theta >= rightAngleBound)
+        return "PoleFallRight";
+    if (x <= leftTrackBound)
+        return "CartFallLeft";
+    if (x >= rightTrackBound)
+        return "CartFallRight";
+    if (timeAloft >= maxTrialLength)
+        return "MaxTrialLength";
+    return "NoFailure";
 }
 
 float Cartpole::calcForce(CBMSimCore *simCore) {

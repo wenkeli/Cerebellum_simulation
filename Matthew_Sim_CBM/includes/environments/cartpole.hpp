@@ -78,15 +78,10 @@ protected:
     
     void reset(); // Re-initializes the pole to begin a new trial
     bool inFailure();  // Detects if the pole has fallen over
+    std::string getFailureMode(); // Return a string describing the type of failure
     float calcForce(CBMSimCore *simCore);  // Calculated the force from each MZ
     void setMZErr(CBMSimCore *simCore);   // Gives error signals to the MZs    
     void computePhysics(float force); // Does the cart physics computations
-
-    // Queues for recording average force. These are used to check for instability
-    // in the simulator.
-    // std::queue<float> activeForceQ;
-    // std::queue<float> inactiveForceQ;
-    // void checkInversion(); // instability check
 
     std::ofstream myfile; // Logfile
     float polemassLength; // = poleMass * length;
