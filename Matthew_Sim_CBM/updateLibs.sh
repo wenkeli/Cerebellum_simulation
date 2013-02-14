@@ -17,9 +17,11 @@ function runupdate ()
     svn up
     if [ -f $makefile ]
     then
-        make -f $makefile
+        make -f $makefile cleanall
+        make -f $makefile 
     else
-        make -f $backup
+        make -f $backup cleanall
+        make -f $backup 
     fi
     cd -
 }
