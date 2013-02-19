@@ -8,6 +8,7 @@
 #include "../includes/environments/environment.hpp"
 #include "../includes/environments/eyelid.hpp"
 #include "../includes/environments/cartpole.hpp"
+#include "../includes/environments/robocup.hpp"
 
 using namespace std;
 namespace po = boost::program_options;
@@ -30,6 +31,7 @@ int main(int argc, char **argv)
     // Allow the environments to add command line args
     Eyelid::addOptions(desc);
     Cartpole::addOptions(desc);
+    Robocup::addOptions(desc);
 
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -60,6 +62,8 @@ int main(int argc, char **argv)
         env = new Eyelid(&randGen, vm);
     else if (envStr == "cartpole")
         env = new Cartpole(&randGen, vm);
+    else if (envStr == "robocup")
+        env = new Robocup(&randGen, vm);
 
     int numMZ     = env->numRequiredMZ();
     string conPF  = vm["conPF"].as<string>();
