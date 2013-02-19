@@ -1,5 +1,5 @@
-#ifndef EYELID_H
-#define EYELID_H
+#ifndef EYELID_HPP
+#define EYELID_HPP
 
 #include "environment.hpp"
 #include <CBMToolsInclude/eyelidintegrator.h>

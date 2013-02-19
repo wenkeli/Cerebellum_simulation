@@ -17,7 +17,7 @@ void Cartpole::addOptions(boost::program_options::options_description &desc) {
 }
 
 Cartpole::Cartpole(CRandomSFMT0 *randGen, boost::program_options::variables_map &vm) :
-    Environment(randGen), trialNum(0) {
+    Environment(randGen), trialNum(-1) {
     string cp_logfile = vm["logfile"].as<string>();
     maxTrialLength = vm["maxTrialLen"].as<int>();
     maxNumTrials = vm["maxNumTrials"].as<int>();
@@ -41,7 +41,7 @@ Cartpole::~Cartpole() {
         // Check to make sure there wasn't any cuda errors during this run
         cudaError_t error;
         error = cudaGetLastError();
-        cout << "Cuda Error Status: "<<cudaGetErrorString(error) << endl;
+        cout << "Cartpole Module - Cuda Error Status: "<<cudaGetErrorString(error) << endl;
         myfile << cycle << " CudaErrorStatus: " << cudaGetErrorString(error)<<endl;
         myfile.flush();
         myfile.close();

@@ -56,6 +56,9 @@ MainW::MainW(QWidget *parent, int numMZ, int randSeed, string conPF, string actP
     displayNucleusTView();
     displayOliveTView();
 
+    // This causes the app to quit as soon as the thread finishes
+    connect(&thread, SIGNAL(finished()), qApp, SLOT(quit()));
+
     thread.start();
 }
 
