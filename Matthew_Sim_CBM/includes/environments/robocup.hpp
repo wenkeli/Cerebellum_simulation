@@ -2,6 +2,8 @@
 #define ROBOCUP_HPP
 
 #include "environment.hpp"
+#include "agentInterface.hpp"
+#include "bodymodel.h"
 
 class Robocup : public Environment {
 public:
@@ -21,6 +23,8 @@ public:
     static void addOptions(boost::program_options::options_description &desc);
     
 protected:
+    AgentInterface robosim;
+    BodyModel *bodyModel;
 };
 
 #endif

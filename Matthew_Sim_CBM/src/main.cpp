@@ -26,7 +26,7 @@ int main(int argc, char **argv)
         ("seed", po::value<int>(), "Random Seed")
         ("nogui", "Run without a gui")
         ("environment", po::value<string>()->default_value("default"),
-         "Experimental Environment. Choices: default, eyelid, cartpole")
+         "Experimental Environment. Choices: default, eyelid, cartpole, robocup")
         ;
     // Allow the environments to add command line args
     Eyelid::addOptions(desc);
