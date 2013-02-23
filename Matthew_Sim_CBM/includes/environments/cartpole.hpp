@@ -63,8 +63,6 @@ public: // Cartpole methods
     static const int   timeoutDuration = 1500;  // Cycles to wait before new episode. 
     static const bool  loggingEnabled = true;  // Writes to logfile if enabled. 
 
-    static const float leftTrackBound  = -1e37;
-    static const float rightTrackBound = 1e37;
     static const float leftAngleBound  = -.1745; // 10 degrees
     static const float rightAngleBound = .1745;
     static const float minPoleVelocity = -0.5;
@@ -84,6 +82,7 @@ protected:
     void computePhysics(float force); // Does the cart physics computations
 
     std::ofstream myfile; // Logfile
+    float trackLen, leftTrackBound, rightTrackBound; // Bounds of the track
     float polemassLength; // = poleMass * length;
     float totalMass;      // = cartMass + poleMass;
     int timeoutCnt;       // How long before episode reset
@@ -126,7 +125,7 @@ protected: // MF input variables
     static const float highFreqMFProportion  = .03;
     static const float poleAngMFProportion   = .06;
     static const float poleVelMFProportion   = .06;
-    static const float cartPosMFProportion   = 0;        
+    static const float cartPosMFProportion   = .06;        
     static const float cartVelMFProportion   = .06;
 
     // List of mfs indices assigned to each group

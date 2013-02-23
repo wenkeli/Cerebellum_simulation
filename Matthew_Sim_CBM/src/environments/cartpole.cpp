@@ -13,11 +13,13 @@ void Cartpole::addOptions(boost::program_options::options_description &desc) {
          "Cartpole: log file")
         ("maxNumTrials", po::value<int>()->default_value(20), "Cartpole: Maximum number of trials")
         ("maxTrialLen", po::value<int>()->default_value(1000000), "Cartpole: Maximum length of any given trial")
+        ("trackLen", po::value<float>()->default_value(1e37), "Cartpole: Length of the track (Infinite by default)")        
         ;
 }
 
 Cartpole::Cartpole(CRandomSFMT0 *randGen, boost::program_options::variables_map &vm) :
-    Environment(randGen), trialNum(-1) {
+    Environment(randGen), trialNum(-1)
+{
     string cp_logfile = vm["logfile"].as<string>();
     maxTrialLength = vm["maxTrialLen"].as<int>();
     maxNumTrials = vm["maxNumTrials"].as<int>();
@@ -25,10 +27,14 @@ Cartpole::Cartpole(CRandomSFMT0 *randGen, boost::program_options::variables_map 
     totalMass = cartMass + poleMass;
     polemassLength = poleMass * length;
 
+    trackLen = vm["trackLen"].as<float>();
+    leftTrackBound = -trackLen / 2.0;
+    rightTrackBound = trackLen / 2.0;
+
     if (loggingEnabled) {
         cout << "Writing to logfile: " << cp_logfile << endl;
         myfile.open(cp_logfile.c_str());
-        myfile << cycle << " TrackLen " << rightTrackBound-leftTrackBound << " PoleLen "
+        myfile << cycle << " TrackLen " << trackLen << " PoleLen "
                << 2*length << " LeftAngleBound " << leftAngleBound << " RightAngleBound "
                << rightAngleBound << endl;
     }
@@ -258,31 +264,28 @@ void Cartpole::setMZErr(CBMSimCore *simCore) {
     bool deliverError;
 
     // Error associated with pole angle
-    float absTheta = fabs(theta);
-    errorProbability = min(absTheta, maxErrProb);
+    errorProbability = min(fabsf(theta), maxErrProb);
     deliverError = randGen->Random() < errorProbability;
     if (theta >= 0.0 && theta_dot >= 0.0 && deliverError)
         errorLeft = true;
     if (theta < 0.0 && theta_dot < 0.0 && deliverError)
         errorRight = true;
 
-    // Modified Cart positional error
-    // float relative_x = getCartRelativePos();
-    // errorProbability = min(.01f * (abs(relative_x)/(lowerCartWidth/2.0f)), maxErrProb);
-    // deliverError = randGen->Random() < errorProbability;
-    // if (relative_x < 0 && deliverError)
-    //     errorLeft = true;
-    // if (relative_x > 0 && deliverError)
-    //     errorRight = true;
+    // Cart positional error
+    errorProbability = min(.01f * fabsf(x) / rightTrackBound, maxErrProb);
+    deliverError = randGen->Random() < errorProbability;
+    if (x < 0 && deliverError)
+        errorLeft = true;
+    if (x > 0 && deliverError)
+        errorRight = true;
 
     // Error to encourage low cart velocity
-    // float relative_x_dot = getCartRelativeVel();
-    // errorProbability = min(.01f * abs(relative_x_dot), maxErrProb);
-    // deliverError = randGen->Random() < errorProbability;
-    // if (relative_x_dot > 0 && relative_x < 0 && deliverError)
-    //     errorLeft = true;
-    // if (relative_x_dot < 0 && relative_x > 0 && deliverError)
-    //     errorRight = true;
+    errorProbability = min(.01f * fabsf(x_dot), maxErrProb);
+    deliverError = randGen->Random() < errorProbability;
+    if (x_dot > 0 && x < 0 && deliverError)
+        errorLeft = true;
+    if (x_dot < 0 && x > 0 && deliverError)
+        errorRight = true;
 
     if (errorRight) simCore->updateErrDrive(0, 1.0);
     if (errorLeft) simCore->updateErrDrive(1, 1.0);
