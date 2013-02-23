@@ -13,7 +13,19 @@ module load cuda/4.2
 
 START=`date`
 
-LOG="limitedTrack.log"
+D=`date +%F`
+LOG_PATH="$WORK/saved_sim_states/$D"
+mkdir -p $LOG_PATH
+
+LOG_NAME="limitedTrack.log"
+LOG="$LOG_PATH/$LOG_NAME"
+
+if [ -f $LOG ]
+then
+    echo "Logfile $LOG already exists! Do not want to over-write." 1>&2
+    exit 1
+fi
+
 EXECUTABLE="Matthew_Sim_CBM"
 EXP="cartpole"
 MAX_TRIALS="50"
