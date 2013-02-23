@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <stdlib.h>
+#include <limits>
 
 using namespace std;
 
@@ -13,7 +14,7 @@ void Cartpole::addOptions(boost::program_options::options_description &desc) {
          "Cartpole: log file")
         ("maxNumTrials", po::value<int>()->default_value(20), "Cartpole: Maximum number of trials")
         ("maxTrialLen", po::value<int>()->default_value(1000000), "Cartpole: Maximum length of any given trial")
-        ("trackLen", po::value<float>()->default_value(1e37), "Cartpole: Length of the track (Infinite by default)")        
+        ("trackLen", po::value<float>()->default_value(0), "Cartpole: Length of the track (Infinite by default)")        
         ;
 }
 
@@ -28,6 +29,7 @@ Cartpole::Cartpole(CRandomSFMT0 *randGen, boost::program_options::variables_map 
     polemassLength = poleMass * length;
 
     trackLen = vm["trackLen"].as<float>();
+    if (trackLen <= 0) trackLen = numeric_limits<float>::max();
     leftTrackBound = -trackLen / 2.0;
     rightTrackBound = trackLen / 2.0;
 
