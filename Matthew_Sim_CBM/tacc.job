@@ -1,0 +1,42 @@
+#!/bin/bash
+#$ -V                             	# Inherit the submission environment
+#$ -cwd                           	# Start job in submission dir
+#$ -N CBM        	               	# Job name
+#$ -j y                           	# Combine stderr and stdout into stdout
+#$ -pe 12way 12 	                # Request 1 node
+#$ -q gpu                               # Queue name
+#$ -l h_rt=24:00:00                	# runtime (hh:mm:ss)
+#$ -M mhauskn@cs.utexas.edu             # Address for email notification
+#$ -m e  	                        # Email at Begin and End of job
+
+module load cuda/4.2
+
+START=`date`
+
+LOG="limitedTrack.log"
+EXECUTABLE="Matthew_Sim_CBM"
+EXP="cartpole"
+MAX_TRIALS="50"
+TRACKLEN="40"
+
+ulimit -s 1000000 -c 0
+
+for i in {0..0}
+do
+    COMMAND="$EXECUTABLE --environment $EXP --nogui --maxNumTrials $MAX_TRIALS --trackLen $TRACKLEN --logfile $LOG"
+    # Run the command
+    $COMMAND
+done
+
+# Print out post job info
+if [ -a .svn ]
+then
+    echo "SVN Revision:" `svnversion .` >> $LOG
+fi
+if [ -a .git ]
+then
+    echo "Git Revision:" `git rev-parse HEAD` >> $LOG
+fi 
+
+echo Job Start: $START >> $LOG
+echo Job End: `date` >> $LOG
