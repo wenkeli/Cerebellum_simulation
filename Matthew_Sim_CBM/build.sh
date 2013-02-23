@@ -1,9 +1,18 @@
 #!/bin/bash
 
+
+
 # Includes for the Robocup associated code
 ROBOCUP_INC="/home/matthew/projects/3Dsim/agents/nao-agent /home/matthew/projects/3Dsim/agents/nao-agent/core_utwalk /usr/local/include/simspark"
 ROBOCUP_LIB_PATH="-L/home/matthew/projects/3Dsim/agents/nao-agent -L/usr/local/lib/simspark/"
 ROBOCUP_LIB="-lnao -lrcssnet3D"
+
+if [[ `hostname` == *tacc* ]]
+then
+    ROBOCUP_INC="$HOME/agents/nao-agent $HOME/agents/nao-agent/core_utwalk $HOME/local/include/simspark"
+    ROBOCUP_LIB_PATH="-L$HOME/agents/nao-agent -L$HOME/local/lib/simspark/"
+    ROBOCUP_LIB="-lnao -lrcssnet3D"
+fi
 
 # Includes for CBM Libraries
 CBM_INC="../CXX_TOOLS_LIB/ ../CBM_TOOLS_LIB ../CBM_STATE_LIB ../CBM_CORE_LIB ../CBM_VISUAL_LIB ../CBM_DATA_LIB"
