@@ -25,6 +25,7 @@ public:
 protected:
     AgentInterface robosim;
     BodyModel *bodyModel;
+
 };
 
 #endif

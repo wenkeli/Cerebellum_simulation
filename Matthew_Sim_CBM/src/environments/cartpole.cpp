@@ -45,19 +45,8 @@ Cartpole::Cartpole(CRandomSFMT0 *randGen, boost::program_options::variables_map 
 }
 
 Cartpole::~Cartpole() {
-    if (loggingEnabled) {
-        // Check to make sure there wasn't any cuda errors during this run
-        cudaError_t error;
-        error = cudaGetLastError();
-        cout << "Cartpole Module - Cuda Error Status: "<<cudaGetErrorString(error) << endl;
-        myfile << cycle << " CudaErrorStatus: " << cudaGetErrorString(error)<<endl;
-        myfile.flush();
+    if (loggingEnabled)
         myfile.close();
-
-        myfile << "Closing File... Trial: " << trialNum << ": Time Aloft: " << timeAloft << endl;
-        myfile.flush();
-        myfile.close();
-    }
 }
 
 void Cartpole::reset() {

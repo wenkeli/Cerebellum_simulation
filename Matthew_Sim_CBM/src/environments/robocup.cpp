@@ -25,7 +25,7 @@ Robocup::Robocup(CRandomSFMT0 *randGen, boost::program_options::variables_map &v
     robosim.rsgdir = "/usr/local/share/rcssserver3d/rsg/agent/nao";
     robosim.outputFile = "/tmp/out.txt";
     assert(robosim.Init() == true);
-    robosim.agentType = "fixedKickAgent";
+    robosim.agentType = "omniWalkAgent";
     robosim.initializeBehavior();
 }
 
