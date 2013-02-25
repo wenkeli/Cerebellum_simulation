@@ -46,9 +46,9 @@ void Robocup::setupMossyFibers(CBMState *simState) {
 
 float* Robocup::getState() {
     VecPosition gyros = bodyModel->getGyroRates();
-    cout << "Gyro: " << gyros.getX() << " " << gyros.getY() << " " << gyros.getZ() << endl;
+    //cout << "Gyro: " << gyros.getX() << " " << gyros.getY() << " " << gyros.getZ() << endl;
     VecPosition accel = bodyModel->getAccelRates();
-    cout << "Accel: " << accel.getX() << " " << accel.getY() << " " << accel.getZ() << endl;
+    //cout << "Accel: " << accel.getX() << " " << accel.getY() << " " << accel.getZ() << endl;
 
     // Get information about the joints
     for (int i=0; i<HJ_NUM; i++) {
@@ -71,7 +71,7 @@ void Robocup::step(CBMSimCore *simCore) {
 }
 
 bool Robocup::terminated() {
-    return false; //robosim.gLoop; 
+    return robosim.behavior->finished(); 
 }
 
 
