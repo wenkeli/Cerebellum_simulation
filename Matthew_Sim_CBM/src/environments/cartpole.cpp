@@ -262,21 +262,24 @@ void Cartpole::setMZErr(CBMSimCore *simCore) {
     if (theta < 0.0 && theta_dot < 0.0 && deliverError)
         errorRight = true;
 
-    // Cart positional error
-    errorProbability = min(.01f * fabsf(x) / rightTrackBound, maxErrProb);
-    deliverError = randGen->Random() < errorProbability;
-    if (x < 0 && deliverError)
-        errorLeft = true;
-    if (x > 0 && deliverError)
-        errorRight = true;
+    // Only use positional and velocity based error on finite tracks
+    if (trackLen < numeric_limits<float>::max()) {
+        // Cart positional error
+        errorProbability = min(.005f * fabsf(x) / rightTrackBound, maxErrProb);
+        deliverError = randGen->Random() < errorProbability;
+        if (x < 0 && deliverError)
+            errorLeft = true;
+        if (x > 0 && deliverError)
+            errorRight = true;
 
-    // Error to encourage low cart velocity
-    errorProbability = min(.01f * fabsf(x_dot), maxErrProb);
-    deliverError = randGen->Random() < errorProbability;
-    if (x_dot > 0 && x < 0 && deliverError)
-        errorLeft = true;
-    if (x_dot < 0 && x > 0 && deliverError)
-        errorRight = true;
+        // Error to encourage low cart velocity
+        errorProbability = min(.005f * fabsf(x_dot), maxErrProb);
+        deliverError = randGen->Random() < errorProbability;
+        if (x_dot > 0 && x < 0 && deliverError)
+            errorLeft = true;
+        if (x_dot < 0 && x > 0 && deliverError)
+            errorRight = true;
+    }
 
     if (errorRight) simCore->updateErrDrive(0, 1.0);
     if (errorLeft) simCore->updateErrDrive(1, 1.0);
