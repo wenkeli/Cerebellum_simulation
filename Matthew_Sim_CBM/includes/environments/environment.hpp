@@ -40,6 +40,16 @@ protected:
     CRandomSFMT0 *randGen;
 
     int timestep;
+
+    int numMF, numNC;
+
+protected:
+    // Assigns random MFs from the list of unassignedMFs
+    void assignRandomMFs(std::vector<int>& unassignedMFs, int numToAssign, std::vector<int> &mfs);
+
+    // Computes the firing rate of a given MF based on how far the current state
+    // variable's value is from the MF's position in state space. 
+    void gaussMFAct(float minVal, float maxVal, float currentVal, std::vector<int> &mfInds, float gaussWidth=6.0);
 };
 
 #endif // ENVIRONMENT_H

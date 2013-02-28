@@ -106,13 +106,9 @@ protected:
     long cycle;         // How long has the sim been running?
 
 protected: // MF input variables
-    void assignRandomMFs(std::vector<int>& unassignedMFs, int numToAssign, std::vector<int> &mfs);
-    /* Computes the firing rate of a given MF based on how far the current state
-       variable's value is from the MF's position in state space. */
-    void gaussMFAct(float minVal, float maxVal, float currentVal, std::vector<int> &mfInds);
     float logScale(float value, float gain);
     
-    int numMF, numNC;
+    int numNC;
 
     // Should we randomize the assignment of MFs or do them contiguously?
     static const bool randomizeMFs = true;

@@ -14,7 +14,9 @@ int Environment::numRequiredMZ() {
 }
 
 void Environment::setupMossyFibers(CBMState *simState) {
-    int numMF = simState->getConnectivityParams()->getNumMF();
+    numMF = simState->getConnectivityParams()->getNumMF();
+    numNC = simState->getConnectivityParams()->getNumNC();
+
     mfFreq.resize(numMF);
     mfFreqRelaxed.resize(numMF);
     mfFreqExcited.resize(numMF);
@@ -61,3 +63,35 @@ void Environment::step(CBMSimCore *simCore) {
 bool Environment::terminated() {
     return false;
 }
+
+void Environment::gaussMFAct(float minVal, float maxVal, float currentVal, vector<int>& mfInds, float gaussWidth) {
+    currentVal = max(minVal, min(maxVal, currentVal));
+    float range = maxVal - minVal;
+    float interval = range / mfInds.size();
+    float pos = minVal + interval / 2.0;
+    float variance = gaussWidth * interval;
+    float maxPossibleValue = 1.0 / sqrt(2 * M_PI * (variance*variance));
+    for (uint i = 0; i < mfInds.size(); i++) {
+        float mean = pos;
+        float x = currentVal;
+        // Formula for normal distribution: http://en.wikipedia.org/wiki/Normal_distribution
+        float value = exp(-1 * ((x-mean)*(x-mean))/(2*(variance*variance))) / sqrt(2 * M_PI * (variance*variance));
+        float normalizedValue = value / maxPossibleValue;
+
+        // Firing rate is a linear combination of relaxed and excited rates
+        int mfIndx = mfInds[i];
+        mfFreq[mfIndx] = normalizedValue * mfFreqExcited[mfIndx] + (1 - normalizedValue) * mfFreqRelaxed[mfIndx];
+
+        pos += interval;
+    }
+}
+
+void Environment::assignRandomMFs(vector<int>& unassignedMFs, int numToAssign, vector<int>& mfs) {
+    for (int i=0; i<numToAssign; ++i) {
+        int indx = randGen->IRandom(0,unassignedMFs.size()-1);
+        mfs.push_back(unassignedMFs[indx]);
+        unassignedMFs.erase(unassignedMFs.begin()+indx);
+    }
+}
+
+

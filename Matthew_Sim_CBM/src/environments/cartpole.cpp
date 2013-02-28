@@ -103,15 +103,6 @@ void Cartpole::setupMossyFibers(CBMState *simState) {
     }
 }
 
-void Cartpole::assignRandomMFs(vector<int>& unassignedMFs, int numToAssign, vector<int>& mfs) {
-    for (int i=0; i<numToAssign; ++i) {
-        int indx = randGen->IRandom(0,unassignedMFs.size()-1);
-        mfs.push_back(unassignedMFs[indx]);
-        unassignedMFs.erase(unassignedMFs.begin()+indx);
-    }
-}
-
-
 float* Cartpole::getState() {
     for (int i=0; i<numMF; i++)
         mfFreq[i] = mfFreqRelaxed[i];
@@ -156,28 +147,6 @@ float* Cartpole::getState() {
     }
 
     return &mfFreq[0];
-}
-
-void Cartpole::gaussMFAct(float minVal, float maxVal, float currentVal, vector<int>& mfInds) {
-    currentVal = max(minVal, min(maxVal, currentVal));
-    float range = maxVal - minVal;
-    float interval = range / mfInds.size();
-    float pos = minVal + interval / 2.0;
-    float variance = gaussWidth * interval;
-    float maxPossibleValue = 1.0 / sqrt(2 * M_PI * (variance*variance));
-    for (uint i = 0; i < mfInds.size(); i++) {
-        float mean = pos;
-        float x = currentVal;
-        // Formula for normal distribution: http://en.wikipedia.org/wiki/Normal_distribution
-        float value = exp(-1 * ((x-mean)*(x-mean))/(2*(variance*variance))) / sqrt(2 * M_PI * (variance*variance));
-        float normalizedValue = value / maxPossibleValue;
-
-        // Firing rate is a linear combination of relaxed and excited rates
-        int mfIndx = mfInds[i];
-        mfFreq[mfIndx] = normalizedValue * mfFreqExcited[mfIndx] + (1 - normalizedValue) * mfFreqRelaxed[mfIndx];
-
-        pos += interval;
-    }
 }
 
 float Cartpole::logScale(float value, float gain) {
