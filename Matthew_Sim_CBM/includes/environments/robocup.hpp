@@ -3,6 +3,7 @@
 
 #include "environment.hpp"
 #include "agentInterface.hpp"
+#include "optimizationbehaviors.h"
 #include "bodymodel.h"
 #include "worldmodel.h"
 #include "core_utwalk/motion/UTWalkEngine.h"
@@ -100,6 +101,8 @@ protected:
     static const float forceScale = 5;   // Force gain for the output
     static const float forcePow = 4;     // Force power for the output
     static const float forceDecay = .99; // Rate a which force decays
+
+    static const int cbm_steps_to_robosim_steps = 1; // Number of cerebellar steps for each robosim step
 };
 
 #endif

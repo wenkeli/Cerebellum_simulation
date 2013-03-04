@@ -13,9 +13,11 @@ void Robocup::addOptions(boost::program_options::options_description &desc) {
         ("mPort", po::value<int>()->default_value(3200), "Robocup: Monitor port")
         ("uNum", po::value<int>()->default_value(2), "Robocup: Uniform number of the player")
         ("paramFile", po::value<string>()->default_value("/home/matthew/projects/3Dsim/agents/nao-agent/paramfiles/defaultParams.txt"), "Robocup: Path to the parameter files for the agent.")
-        ("rsg", po::value<string>()->default_value("/usr/local/share/rcssserver3d/rsg/agent/nao"),
+        ("rsg", po::value<string>()->default_value("rsg/agent/nao"),//"/usr/local/share/rcssserver3d/rsg/agent/nao"),
          "Robocup: Folder for the nao model")
         ("behavior", po::value<string>()->default_value("omniWalkAgent"), "Robocup: Agent behavior")
+        ("runs", po::value<int>()->default_value(1),
+         "Robocup: Number of times the obstacle course should be navigated.")
         ;
 }
 
@@ -26,14 +28,28 @@ Robocup::Robocup(CRandomSFMT0 *randGen, boost::program_options::variables_map &v
     robosim.mPort      = vm["mPort"].as<int>(); // server-port: The port for monitor
     robosim.uNum       = vm["uNum"].as<int>();
     robosim.rsgdir     = vm["rsg"].as<string>();
-    robosim.outputFile = "/dev/null"; // File where robot fitness is written
+    robosim.outputFile = "/tmp/cbm.txt"; // File where robot fitness is written
     robosim.agentType  = vm["behavior"].as<string>();
     robosim.LoadParams(vm["paramFile"].as<string>());
     assert(robosim.Init() == true);
     robosim.initializeBehavior();
+    if (robosim.agentType == "omniWalkAgent") {
+        OptimizationBehaviorOmniWalk *omni = (OptimizationBehaviorOmniWalk *) robosim.behavior;
+        omni->setNumRuns(vm["runs"].as<int>());
+    }
+
+    while (!robosim.behavior->finished())
+        robosim.runStep();
 }
 
 Robocup::~Robocup() {
+    if (robosim.agentType == "omniWalkAgent") {
+        OptimizationBehaviorOmniWalk *omni = (OptimizationBehaviorOmniWalk *) robosim.behavior;
+        double cumFitness = omni->getCumFitness();
+        double numRuns = omni->getRunNumber();
+        double avgFitness = cumFitness / numRuns;
+        cout << "TotalFitness: " << cumFitness << " NumRuns: " << numRuns << " AvgFitness: " << avgFitness << endl;
+    }
     robosim.Done();
 }
 
@@ -90,6 +106,16 @@ float* Robocup::getState() {
     gaussMFAct(minAY, maxAY, accel.getY(), accelYMFs);
     gaussMFAct(minAZ, maxAZ, accel.getZ(), accelZMFs);    
 
+    // if (accel.getX() < -6.5) {
+    //     cout << "Fallen Back" << endl;
+    // } else if (accel.getX() > 6.5) {
+    //     cout << "Fallen Forward" << endl;
+    // } else if (accel.getY() < -6.5) {
+    //     cout << "Fallen Right" << endl;
+    // } else if (accel.getY() > 6.5) {
+    //     cout << "Fallen Left" << endl;
+    // }
+
     // // Get information about the joints
     // for (int i=0; i<HJ_NUM; i++) {
     //     bodyModel->getJointAngle(i);
@@ -105,13 +131,17 @@ float* Robocup::getState() {
 }
 
 void Robocup::step(CBMSimCore *simCore) {
+    Environment::step(simCore);
+
     // Setup the MZs 
     if (!shoulderPitchForward.initialized()) {
         shoulderPitchForward = Microzone(0, numNC, forceScale, forcePow, forceDecay, simCore);
         shoulderPitchBack = Microzone(1, numNC, forceScale, forcePow, forceDecay, simCore);
     }
 
-    robosim.runStep();
+//    if (timestep % cbm_steps_to_robosim_steps == 0)
+    while (!robosim.behavior->finished())
+        robosim.runStep();
     calcForce(simCore);
     deliverErrors(simCore);
 }
@@ -120,23 +150,29 @@ void Robocup::deliverErrors(CBMSimCore *simCore) {
     // Standing angle = ~.5; Fallen front or back = ~.06
     float uprightAngle = float(worldModel->getMyPositionGroundTruth().getZ());
     float maxErrProb = .01;
+
+    // TODO: Consider error based on accelerometers or gyros rather than Z position
     // Error associated with falling
+    VecPosition accel = bodyModel->getAccelRates();
     float errorProbability = min(.05f * fabsf(uprightAngle - .5f), maxErrProb);
-    if (randGen->Random() < errorProbability) {
+    // TODO: Figure out which MZ should get error
+    if (accel.getX() < 0 && randGen->Random() < errorProbability)
         shoulderPitchForward.deliverError();
+    if (accel.getX() > 0 && randGen->Random() < errorProbability)
         shoulderPitchBack.deliverError();
-    }
 }
 
 void Robocup::calcForce(CBMSimCore *simCore) {
-    float netShoulderPitchForce = shoulderPitchForward.getForce() - shoulderPitchBack.getForce();
+    // TODO: Change back
+    float netShoulderPitchForce = 0;//shoulderPitchForward.getForce() - shoulderPitchBack.getForce();
     // Pitch brings the arms up/down in front of the robot (rotator cuff). [-120,120]; 0 = arms straight out in front
     float lShoulderPitch = netShoulderPitchForce - 80;
     float rShoulderPitch = netShoulderPitchForce - 80;
     // Roll brings the arms up/down to the sides of the robot (deltoids). [-1,95]; 95 = full lateral raise.
-    float lShoulderRoll = 0;
-    float rShoulderRoll = 0;
-    walkEngine->setArms(lShoulderPitch, rShoulderPitch, lShoulderRoll, rShoulderRoll);
+    float lShoulderRoll = 15;
+    float rShoulderRoll = 15;
+    // TODO: See if scores change when this method is commented in/out
+    //walkEngine->setArms(lShoulderPitch, rShoulderPitch, lShoulderRoll, rShoulderRoll);
 }
 
 bool Robocup::terminated() {

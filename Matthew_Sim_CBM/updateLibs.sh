@@ -14,15 +14,22 @@ function runupdate ()
 {
     echo "Building $1"
     cd $1
-    svn up
-    if [ -f $makefile ]
+    SVN=`svn up`
+    if [[ $SVN == Updated* ]]
     then
-        make -f $makefile cleanall
-        make -f $makefile 
+        echo "Pulled an update"
     else
-        make -f $backup cleanall
-        make -f $backup 
+        echo "Already up to date"
     fi
+
+    # if [ -f $makefile ]
+    # then
+    #     make -f $makefile cleanall
+    #     make -f $makefile 
+    # else
+    #     make -f $backup cleanall
+    #     make -f $backup 
+    # fi
     cd -
 }
 
