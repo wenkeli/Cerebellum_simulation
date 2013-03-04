@@ -21,10 +21,10 @@ function runupdate ()
         if [ -f $makefile ]
         then
             make -f $makefile cleanall
-            make -f $makefile
+            make -j2 -f $makefile
         else
             make -f $backup cleanall
-            make -f $backup 
+            make -j2 -f $backup 
         fi
         ls lib/*.so
     fi
