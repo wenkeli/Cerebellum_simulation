@@ -15,29 +15,35 @@ function runupdate ()
     echo "Building $1"
     cd $1
     SVN=`svn up`
-    if [[ $SVN == Updated* ]]
+    if [[ $SVN == Updated* ]] || [[ $2 == "f" ]]
     then
-        echo "Pulled an update"
+        echo "Pulled an update or forced. Running Make."
+        if [ -f $makefile ]
+        then
+            make -f $makefile cleanall
+            make -f $makefile
+        else
+            make -f $backup cleanall
+            make -f $backup 
+        fi
     else
         echo "Already up to date"
     fi
 
-    # if [ -f $makefile ]
-    # then
-    #     make -f $makefile cleanall
-    #     make -f $makefile 
-    # else
-    #     make -f $backup cleanall
-    #     make -f $backup 
-    # fi
     cd -
 }
 
-rm -f ../libs/*
-runupdate ../CXX_TOOLS_LIB/
-runupdate ../CBM_TOOLS_LIB/
-runupdate ../CBM_CORE_LIB/
-runupdate ../CBM_DATA_LIB/
-runupdate ../CBM_VISUAL_LIB/
-runupdate ../CBM_STATE_LIB/
+echo "Usage: $0 [f (force)]: Updates and builds. \"f\" flag will build regardless of update."
+
+if [[ $1 == "f" ]]
+then
+    rm -f ../libs/*
+fi
+
+runupdate ../CXX_TOOLS_LIB/ $1
+runupdate ../CBM_TOOLS_LIB/ $1
+runupdate ../CBM_CORE_LIB/ $1
+runupdate ../CBM_DATA_LIB/ $1
+runupdate ../CBM_VISUAL_LIB/ $1
+runupdate ../CBM_STATE_LIB/ $1
 cd ../CBM_Params/ && svn up && cd -
