@@ -12,12 +12,12 @@ fi
 
 function runupdate ()
 {
-    echo "Building $1"
+    echo "Updating $1"
     cd $1
     SVN=`svn up`
+    echo $SVN
     if [[ $SVN == Updated* ]] || [[ $2 == "f" ]]
     then
-        echo "Pulled an update or forced. Running Make."
         if [ -f $makefile ]
         then
             make -f $makefile cleanall
@@ -26,11 +26,10 @@ function runupdate ()
             make -f $backup cleanall
             make -f $backup 
         fi
-    else
-        echo "Already up to date"
+        ls lib/*.so
     fi
 
-    cd -
+    cd - > /dev/null
 }
 
 echo "Usage: $0 [f (force)]: Updates and builds. \"f\" flag will build regardless of update."
@@ -46,4 +45,5 @@ runupdate ../CBM_CORE_LIB/ $1
 runupdate ../CBM_DATA_LIB/ $1
 runupdate ../CBM_VISUAL_LIB/ $1
 runupdate ../CBM_STATE_LIB/ $1
+echo "Updating ../CBM_Params/"
 cd ../CBM_Params/ && svn up && cd -
