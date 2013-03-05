@@ -1,6 +1,5 @@
 #!/bin/bash
-
-
+set -e
 
 # Includes for the Robocup associated code
 ROBOCUP_INC="/home/matthew/projects/3Dsim/agents/nao-agent /home/matthew/projects/3Dsim/agents/nao-agent/core_utwalk /usr/local/include/simspark"
@@ -28,6 +27,6 @@ INC_PATH="/usr/local/cuda/include/ $CBM_INC $ROBOCUP_INC"
 LIB_PATH="$BOOST_LIB_PATH $CBM_LIB_PATH $ROBOCUP_LIB_PATH"
 LIBS="$ROBOCUP_LIB $CBM_LIB $BOOST_LIB"
 
-qmake -project
-qmake INCLUDEPATH+="$INC_PATH" LIBS+="$LIB_PATH $LIBS"
+qmake -project INCLUDEPATH+="$INC_PATH" LIBS+="$LIB_PATH $LIBS"
+qmake 
 make 
