@@ -38,7 +38,7 @@ protected:
 
 class Robocup : public Environment {
 public:
-    Robocup(CRandomSFMT0 *randGen, boost::program_options::variables_map &vm);
+    Robocup(CRandomSFMT0 *randGen, int argc, char **argv);
     ~Robocup();
 
     int numRequiredMZ() { return 2; }
@@ -51,7 +51,7 @@ public:
 
     bool terminated();
 
-    static void addOptions(boost::program_options::options_description &desc);
+    static boost::program_options::options_description getOptions();
     
 protected:
     void deliverErrors(CBMSimCore *simCore);
@@ -102,7 +102,7 @@ protected:
     static const float forcePow = 4;     // Force power for the output
     static const float forceDecay = .99; // Rate a which force decays
 
-    static const int cbm_steps_to_robosim_steps = 1; // Number of cerebellar steps for each robosim step
+    static const int cbm_steps_to_robosim_steps = 5; // Number of cerebellar steps for each robosim step
 };
 
 #endif

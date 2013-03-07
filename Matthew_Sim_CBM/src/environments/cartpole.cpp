@@ -6,21 +6,27 @@
 #include <limits>
 
 using namespace std;
+namespace po = boost::program_options;
 
-void Cartpole::addOptions(boost::program_options::options_description &desc) {
-    namespace po = boost::program_options;
+po::options_description Cartpole::getOptions() {
+    po::options_description desc("Cartpole Options");    
     desc.add_options()
-        ("logfile", po::value<string>()->default_value("cartpole.log"),
-         "Cartpole: log file")
-        ("maxNumTrials", po::value<int>()->default_value(20), "Cartpole: Maximum number of trials")
-        ("maxTrialLen", po::value<int>()->default_value(1000000), "Cartpole: Maximum length of any given trial")
-        ("trackLen", po::value<float>()->default_value(0), "Cartpole: Length of the track (Infinite by default)")        
+        ("logfile", po::value<string>()->default_value("cartpole.log"),"log file")
+        ("maxNumTrials", po::value<int>()->default_value(20), "Maximum number of trials")
+        ("maxTrialLen", po::value<int>()->default_value(1000000), "Maximum length of any given trial")
+        ("trackLen", po::value<float>()->default_value(0), "Length of the track (Infinite by default)")   
         ;
+    return desc;
 }
 
-Cartpole::Cartpole(CRandomSFMT0 *randGen, boost::program_options::variables_map &vm) :
+Cartpole::Cartpole(CRandomSFMT0 *randGen, int argc, char **argv) :
     Environment(randGen), trialNum(-1)
 {
+    po::options_description desc = getOptions();
+    po::variables_map vm;
+    po::store(po::command_line_parser(argc, argv).options(desc).allow_unregistered().run(), vm);
+    po::notify(vm);
+
     string cp_logfile = vm["logfile"].as<string>();
     maxTrialLength = vm["maxTrialLen"].as<int>();
     maxNumTrials = vm["maxNumTrials"].as<int>();
@@ -161,9 +167,27 @@ float Cartpole::logScale(float value, float gain) {
 }
 
 void Cartpole::step(CBMSimCore *simCore) {
+    static bool gotMillionStepTrial = false;
     cycle++;
     timeoutCnt++;
     
+    if (fallen && getFailureMode() == "MaxTrialLength") {
+        std::fstream filestr ("millionTrialState.out", fstream::out);
+        simCore->writeToState(filestr);
+        filestr.close();
+        gotMillionStepTrial = true;
+    } else if (fallen && gotMillionStepTrial && getFailureMode() != "MaxTrialLength") {
+        std::fstream filestr ("failureState.out", fstream::out);
+        simCore->writeToState(filestr);
+        filestr.close();
+        // Terminate the code after this
+        maxNumTrials = trialNum;
+    } else if (cycle % 100000 == 0) {
+        std::fstream filestr ("checkupState.out", fstream::out);
+        simCore->writeToState(filestr);
+        filestr.close();
+    }
+            
     // Restart the simulation if the pole has fallen
     if (fallen) reset();
 

@@ -9,7 +9,7 @@
 
 class Cartpole : public Environment {
 public:
-    Cartpole(CRandomSFMT0 *randGen, boost::program_options::variables_map &vm);
+    Cartpole(CRandomSFMT0 *randGen, int argc, char **argv);
     ~Cartpole();
 
     int numRequiredMZ() { return 2; }
@@ -22,7 +22,7 @@ public:
 
     bool terminated();
 
-    static void addOptions(boost::program_options::options_description &desc);
+    static boost::program_options::options_description getOptions();
 
 public: // Cartpole methods
     float deg2rad(float deg) { return (M_PI*deg)/180.0; };

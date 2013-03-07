@@ -10,17 +10,19 @@
 #include "../includes/environments/cartpole.hpp"
 #include "../includes/environments/robocup.hpp"
 
+#include "../includes/analyze.hpp"
+
 using namespace std;
 namespace po = boost::program_options;
 
 int main(int argc, char **argv)
 {
     // Declare the supported options.
-    po::options_description desc("Program Usage");
+    po::options_description desc("Usage: " + string(argv[0]) + " -e[environment] <OPTIONS>");
     desc.add_options()
         ("help,h", "produce help message")
         ("environment,e", po::value<string>()->required(),
-         "Experimental Environment. Choices: default, eyelid, cartpole, robocup")
+         "Experimental Environment. Choices: default, eyelid, cartpole, robocup, analysis")
         ("conPF", po::value<string>()->default_value("../CBM_Params/conParams.txt"),
          "Connectivity Parameter File")
         ("actPF", po::value<string>()->default_value("../CBM_Params/actParams1.txt"),
@@ -28,18 +30,16 @@ int main(int argc, char **argv)
         ("seed", po::value<int>(), "Random Seed")
         ("nogui", "Run without a gui")
         ;
-    // Allow the environments to add command line args
-    // TODO: Consider allowing each different environment to have its own options set
-    Eyelid::addOptions(desc);
-    Cartpole::addOptions(desc);
-    Robocup::addOptions(desc);
 
     po::variables_map vm;
-    po::store(po::parse_command_line(argc, argv, desc), vm);
+    po::store(po::command_line_parser(argc, argv).options(desc).allow_unregistered().run(), vm);
 
-    if (vm.count("help") || !vm.count("environment")) {
-        cout << desc << "\n";
-        return 1;
+    if (vm.count("help") || argc == 1 || !vm.count("environment")) {
+        cout << desc << endl;
+        cout << WeightAnalyzer::getOptions() << endl;
+        cout << Cartpole::getOptions() << endl;
+        cout << Robocup::getOptions() << endl;
+        return 0;
     }
 
     po::notify(vm);
@@ -61,11 +61,15 @@ int main(int argc, char **argv)
     if (envStr == "default")
         env = new Environment(&randGen);
     else if (envStr == "eyelid")
-        env = new Eyelid(&randGen, vm);
+        env = new Eyelid(&randGen);
     else if (envStr == "cartpole")
-        env = new Cartpole(&randGen, vm);
+        env = new Cartpole(&randGen, argc, argv);
     else if (envStr == "robocup")
-        env = new Robocup(&randGen, vm);
+        env = new Robocup(&randGen, argc, argv);
+    else if (envStr == "analysis") {
+        WeightAnalyzer a(argc, argv);
+        return 1;
+    }
 
     int numMZ     = env->numRequiredMZ();
     string conPF  = vm["conPF"].as<string>();

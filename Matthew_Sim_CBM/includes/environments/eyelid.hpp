@@ -7,7 +7,7 @@
 
 class Eyelid : public Environment {
 public:
-    Eyelid(CRandomSFMT0 *randGen, boost::program_options::variables_map &vm);
+    Eyelid(CRandomSFMT0 *randGen);
     ~Eyelid();
 
     int numRequiredMZ() { return 1; }
@@ -19,8 +19,6 @@ public:
     void step(CBMSimCore *simCore);
 
     bool terminated();
-
-    static void addOptions(boost::program_options::options_description &desc) {};
 
 protected:
     int numTrials;

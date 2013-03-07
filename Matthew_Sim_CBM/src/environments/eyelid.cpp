@@ -6,7 +6,7 @@
 using namespace std;
 
 
-Eyelid::Eyelid(CRandomSFMT0 *randGen, boost::program_options::variables_map &vm) :
+Eyelid::Eyelid(CRandomSFMT0 *randGen) :
     Environment(randGen) {}
 
 Eyelid::~Eyelid() {
@@ -229,6 +229,14 @@ float* Eyelid::getState() {
 
 void Eyelid::step(CBMSimCore *simCore) {
     currentTime++;
+
+    if (currentTime == 5000) {
+        cout << "Writing sim state" << endl;
+        std::fstream filestr ("simState.out", fstream::out);
+        simCore->writeToState(filestr);
+        filestr.close();
+        cout << "Done" << endl;        
+    }
 
     if(currentTime>=interTrialI)
     {

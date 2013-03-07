@@ -3,25 +3,31 @@
 #include "headers.h"
 
 using namespace std;
+namespace po = boost::program_options;
 
-
-void Robocup::addOptions(boost::program_options::options_description &desc) {
-    namespace po = boost::program_options;
+po::options_description Robocup::getOptions() {
+    po::options_description desc("Robocup Options");
     desc.add_options()
-        ("host", po::value<string>()->default_value("127.0.0.1"), "Robocup: IP of the server")
-        ("gPort", po::value<int>()->default_value(3100), "Robocup: Server port")
-        ("mPort", po::value<int>()->default_value(3200), "Robocup: Monitor port")
-        ("uNum", po::value<int>()->default_value(2), "Robocup: Uniform number of the player")
-        ("paramFile", po::value<string>()->default_value("/home/matthew/projects/3Dsim/agents/nao-agent/paramfiles/defaultParams.txt"), "Robocup: Path to the parameter files for the agent.")
+        ("host", po::value<string>()->default_value("127.0.0.1"), "IP of the server")
+        ("gPort", po::value<int>()->default_value(3100), "Server port")
+        ("mPort", po::value<int>()->default_value(3200), "Monitor port")
+        ("uNum", po::value<int>()->default_value(2), "Uniform number of the player")
+        ("paramFile", po::value<string>()->default_value("/home/matthew/projects/3Dsim/agents/nao-agent/paramfiles/defaultParams.txt"), "Parameter file for the agent")
         ("rsg", po::value<string>()->default_value("rsg/agent/nao"),//"/usr/local/share/rcssserver3d/rsg/agent/nao"),
-         "Robocup: Folder for the nao model")
-        ("behavior", po::value<string>()->default_value("omniWalkAgent"), "Robocup: Agent behavior")
-        ("runs", po::value<int>()->default_value(1),
-         "Robocup: Number of times the obstacle course should be navigated.")
+         "Folder for the nao model")
+        ("behavior", po::value<string>()->default_value("omniWalkAgent"), "Agent behavior")
+        // ("runs", po::value<int>()->default_value(1),
+        //  "Robocup: Number of times the obstacle course should be navigated.")
         ;
+    return desc;
 }
 
-Robocup::Robocup(CRandomSFMT0 *randGen, boost::program_options::variables_map &vm) : Environment(randGen) {
+Robocup::Robocup(CRandomSFMT0 *randGen, int argc, char **argv) : Environment(randGen) {
+    po::options_description desc = getOptions();
+    po::variables_map vm;
+    po::store(po::command_line_parser(argc, argv).options(desc).allow_unregistered().run(), vm);
+    po::notify(vm);
+
     robosim.PrintGreeting();
     robosim.mHost      = vm["host"].as<string>();
     robosim.gPort      = vm["gPort"].as<int>(); // agent-port: The port for the server
@@ -31,15 +37,6 @@ Robocup::Robocup(CRandomSFMT0 *randGen, boost::program_options::variables_map &v
     robosim.outputFile = "/tmp/cbm.txt"; // File where robot fitness is written
     robosim.agentType  = vm["behavior"].as<string>();
     robosim.LoadParams(vm["paramFile"].as<string>());
-    assert(robosim.Init() == true);
-    robosim.initializeBehavior();
-    if (robosim.agentType == "omniWalkAgent") {
-        OptimizationBehaviorOmniWalk *omni = (OptimizationBehaviorOmniWalk *) robosim.behavior;
-        omni->setNumRuns(vm["runs"].as<int>());
-    }
-
-    while (!robosim.behavior->finished())
-        robosim.runStep();
 }
 
 Robocup::~Robocup() {
@@ -55,6 +52,16 @@ Robocup::~Robocup() {
 
 void Robocup::setupMossyFibers(CBMState *simState) {
     Environment::setupMossyFibers(simState);
+
+    // Connect to the server and initialize the behavior.
+    // Odd things happen if this is done in the constructor,
+    // so we do it here to appease the whimsical computer gods.
+    assert(robosim.Init() == true);
+    robosim.initializeBehavior();
+    if (robosim.agentType == "omniWalkAgent") {
+        OptimizationBehaviorOmniWalk *omni = (OptimizationBehaviorOmniWalk *) robosim.behavior;
+    }
+
     bodyModel = robosim.behavior->getBodyModel();
     worldModel = robosim.behavior->getWorldModel();
     walkEngine = robosim.behavior->getWalkEngine();
@@ -139,8 +146,7 @@ void Robocup::step(CBMSimCore *simCore) {
         shoulderPitchBack = Microzone(1, numNC, forceScale, forcePow, forceDecay, simCore);
     }
 
-//    if (timestep % cbm_steps_to_robosim_steps == 0)
-    while (!robosim.behavior->finished())
+    if (timestep % cbm_steps_to_robosim_steps == 0)
         robosim.runStep();
     calcForce(simCore);
     deliverErrors(simCore);
@@ -163,8 +169,7 @@ void Robocup::deliverErrors(CBMSimCore *simCore) {
 }
 
 void Robocup::calcForce(CBMSimCore *simCore) {
-    // TODO: Change back
-    float netShoulderPitchForce = 0;//shoulderPitchForward.getForce() - shoulderPitchBack.getForce();
+    float netShoulderPitchForce = shoulderPitchForward.getForce() - shoulderPitchBack.getForce();
     // Pitch brings the arms up/down in front of the robot (rotator cuff). [-120,120]; 0 = arms straight out in front
     float lShoulderPitch = netShoulderPitchForce - 80;
     float rShoulderPitch = netShoulderPitchForce - 80;
