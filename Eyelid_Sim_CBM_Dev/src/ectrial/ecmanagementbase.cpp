@@ -21,6 +21,8 @@ ECManagementBase::ECManagementBase
 	simState=new CBMState(actPF, conPF, 1, randSeed, &randSeed, &randSeed);
 	simulation=new CBMSimCore(simState, &randSeed);
 
+	simulation->writeToState();
+
 	conPF.close();
 	actPF.close();
 
