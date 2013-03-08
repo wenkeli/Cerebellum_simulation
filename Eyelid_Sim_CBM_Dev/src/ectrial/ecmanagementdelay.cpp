@@ -171,24 +171,24 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 		pp.numCells=simState->getConnectivityParams()->getNumGO();
 		pp.numTimeStepsPerBin=10;
 		pshParams["go"]=pp;
-		pp.numCells=simState->getConnectivityParams()->getNumGR();
-		pshParams["gr"]=pp;
-//		pp.numCells=simState->getConnectivityParams()->getNumSC();
-//		pshParams["sc"]=pp;
-//		pp.numCells=simState->getConnectivityParams()->getNumBC();
-//		pshParams["bc"]=pp;
-//		pp.numCells=simState->getConnectivityParams()->getNumPC();
-//		pshParams["pc"]=pp;
+//		pp.numCells=simState->getConnectivityParams()->getNumGR();
+//		pshParams["gr"]=pp;
+		pp.numCells=simState->getConnectivityParams()->getNumSC();
+		pshParams["sc"]=pp;
+		pp.numCells=simState->getConnectivityParams()->getNumBC();
+		pshParams["bc"]=pp;
+		pp.numCells=simState->getConnectivityParams()->getNumPC();
+		pshParams["pc"]=pp;
 
 		rasterParams.clear();
-//		rp.numCells=simState->getConnectivityParams()->getNumGO();
-//		rasterParams["go"]=rp;
-//		rp.numCells=simState->getConnectivityParams()->getNumSC();
-//		rasterParams["sc"]=rp;
-//		rp.numCells=simState->getConnectivityParams()->getNumBC();
-//		rasterParams["bc"]=rp;
-//		rp.numCells=simState->getConnectivityParams()->getNumPC();
-//		rasterParams["pc"]=rp;
+		rp.numCells=simState->getConnectivityParams()->getNumGO();
+		rasterParams["go"]=rp;
+		rp.numCells=simState->getConnectivityParams()->getNumSC();
+		rasterParams["sc"]=rp;
+		rp.numCells=simState->getConnectivityParams()->getNumBC();
+		rasterParams["bc"]=rp;
+		rp.numCells=simState->getConnectivityParams()->getNumPC();
+		rasterParams["pc"]=rp;
 
 
 		data=new ECTrialsData(500, csOff-csOn, 500, simState->getActivityParams()->getMSPerTimeStep(),
