@@ -262,18 +262,18 @@ void ECManagementDelay::calcSimActivity()
 		{
 			if(ct%data->getTSPerRasterUpdate()==0 &&ct>0)
 			{
-//				data->updateRaster("go", simulation->getInputNet()->exportAPBufGO());
-//				data->updateRaster("sc", simulation->getInputNet()->exportAPBufSC());
-//				data->updateRaster("bc", simulation->getMZoneList()[0]->exportAPBufBC());
-//				data->updateRaster("pc", simulation->getMZoneList()[0]->exportAPBufPC());
+				data->updateRaster("go", simulation->getInputNet()->exportAPBufGO());
+				data->updateRaster("sc", simulation->getInputNet()->exportAPBufSC());
+				data->updateRaster("bc", simulation->getMZoneList()[0]->exportAPBufBC());
+				data->updateRaster("pc", simulation->getMZoneList()[0]->exportAPBufPC());
 			}
 		}
 
 		data->updatePSH("go", simulation->getInputNet()->exportAPGO());
-		data->updatePSH("gr", simulation->getInputNet()->exportAPGR());
-//		data->updatePSH("sc", simulation->getInputNet()->exportAPSC());
-//		data->updatePSH("bc", simulation->getMZoneList()[0]->exportAPBC());
-//		data->updatePSH("pc", simulation->getMZoneList()[0]->exportAPPC());
+//		data->updatePSH("gr", simulation->getInputNet()->exportAPGR());
+		data->updatePSH("sc", simulation->getInputNet()->exportAPSC());
+		data->updatePSH("bc", simulation->getMZoneList()[0]->exportAPBC());
+		data->updatePSH("pc", simulation->getMZoneList()[0]->exportAPPC());
 
 		data->updateEyelid(eyelidPos);
 	}
