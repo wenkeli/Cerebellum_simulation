@@ -232,10 +232,11 @@ void Eyelid::step(CBMSimCore *simCore) {
 
     if (currentTime == 5000) {
         cout << "Writing sim state" << endl;
-        std::fstream filestr ("simState.out", fstream::out);
+        std::fstream filestr ("test.out", fstream::out);
         simCore->writeToState(filestr);
         filestr.close();
-        cout << "Done" << endl;        
+        cout << "Done" << endl;
+        currentTrial = numTrials;
     }
 
     if(currentTime>=interTrialI)

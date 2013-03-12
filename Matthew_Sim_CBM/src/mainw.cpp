@@ -1,7 +1,7 @@
 #include "../includes/mainw.hpp"
 
-#include <QKeyEvent>
-#include <QVBoxLayout>
+#include <QtGui/QKeyEvent>
+#include <QtGui/QVBoxLayout>
 
 using namespace std;
 

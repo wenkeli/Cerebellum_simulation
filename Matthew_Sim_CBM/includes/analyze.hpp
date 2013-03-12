@@ -16,6 +16,8 @@
 
 #include <boost/program_options.hpp>
 
+#include <RInside.h>
+
 
 class WeightAnalyzer
 {
@@ -24,6 +26,20 @@ public:
     ~WeightAnalyzer() {};
 
     static boost::program_options::options_description getOptions();
+
+    // Analyzes the weights in a single file
+    void analyzeFile(std::string fname);
+
+    // Looks for differences in the weights between the two files
+    void analyzeFiles(std::string fname1, std::string fname2);
+
+    // Creates a histogram of the GR-PC weights for each microzone
+    void grPCWeightHist(std::string fname);
+
+protected:
+    RInside R;
+
+    std::string plot_dir; // directory to store the plots
 };
 
 #endif /* ANALYZE_HPP_ */

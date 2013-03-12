@@ -23,10 +23,23 @@ BOOST_INC=""
 BOOST_LIB_PATH="-L/opt/apps/boost/1.45.0/lib"
 BOOST_LIB="-lboost_program_options"
 
-INC_PATH="/usr/local/cuda/include/ $CBM_INC $ROBOCUP_INC"
-LIB_PATH="$BOOST_LIB_PATH $CBM_LIB_PATH $ROBOCUP_LIB_PATH"
-LIBS="$ROBOCUP_LIB $CBM_LIB $BOOST_LIB"
+# Includes for QT
+QT_INC="/opt/apps/qt/4.7.0/include /usr/local/Trolltech/Qt-4.7.2/include /usr/include/qt4"
+QT_LIB_PATH="-L/opt/apps/qt/4.7.0/lib -L/usr/local/Trolltech/Qt-4.7.2/lib -L/usr/lib/qt4"
+QT_LIB="-lQtGui -lQtCore"
 
-qmake -project INCLUDEPATH+="$INC_PATH" LIBS+="$LIB_PATH $LIBS"
+# Includes for R
+R_INC=`R CMD config --cppflags | cut -c3-`
+R_LIB=`R CMD config --ldflags`
+RCPP_INC=`echo 'Rcpp:::CxxFlags()' | R --vanilla --slave | cut -c3-`
+RCPP_LIB=`echo 'Rcpp:::LdFlags()'  | R --vanilla --slave`
+RINSIDE_INC=`echo 'RInside:::CxxFlags()' | R --vanilla --slave | cut -c3-`
+RINSIDE_LIB=`echo 'RInside:::LdFlags()'  | R --vanilla --slave`
+
+INC_PATH="/usr/local/cuda/include/ $CBM_INC $ROBOCUP_INC $QT_INC $R_INC $RCPP_INC $RINSIDE_INC"
+LIB_PATH="$BOOST_LIB_PATH $CBM_LIB_PATH $ROBOCUP_LIB_PATH $QT_LIB_PATH $R_LIB $RCPP_LIB $RINSIDE_LIB"
+LIBS="$ROBOCUP_LIB $CBM_LIB $BOOST_LIB $QT_LIB"
+
+qmake -project -t app INCLUDEPATH+="$INC_PATH" LIBS+="$LIB_PATH $LIBS" OBJECTS_DIR="objs" MOC_DIR="moc" #QMAKE_CXXFLAGS+="-O1 -g"
 qmake 
-make 
+make -j2

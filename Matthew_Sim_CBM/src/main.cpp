@@ -68,6 +68,9 @@ int main(int argc, char **argv)
         env = new Robocup(&randGen, argc, argv);
     else if (envStr == "analysis") {
         WeightAnalyzer a(argc, argv);
+        return 0;
+    } else {
+        cout << "Unrecognized Environment " << envStr << endl;
         return 1;
     }
 

@@ -12,7 +12,7 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
-#include <QPushButton>
+#include <QtGui/QPushButton>
 
 #include <CBMVisualInclude/actspatialview.h>
 #include <CBMVisualInclude/acttemporalview.h>
