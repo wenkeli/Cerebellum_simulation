@@ -12,5 +12,10 @@ InterThreadComm::InterThreadComm()
 {
 	accessDispParamLock.unlock();
 	inNetDispCellT=0;
+
+	for(int i=0; i<7; i++)
+	{
+		showActPanels[i]=false;
+	}
 }
 

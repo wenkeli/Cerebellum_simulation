@@ -17,6 +17,8 @@ public:
 
 	QMutex accessDispParamLock;
 	int inNetDispCellT;
+
+	bool showActPanels[7];
 };
 
 

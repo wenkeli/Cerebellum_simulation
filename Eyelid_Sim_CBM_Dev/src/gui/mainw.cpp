@@ -35,8 +35,8 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	cout<<"conPF "<<conPF<<endl;
 	cout<<"actPF "<<actPF<<endl;
 
-	manager=new ECManagementDelay(conPF, actPF, time(0), 36950, 7500, 2000, 2750, 2040,
-			5, 35945, 1000, 0.025, 0.0, 0.03,
+	manager=new ECManagementDelay(conPF, actPF, time(0), 1050, 5000, 2000, 2750, 2040,
+			5, 45, 1000, 0.025, 0.03, 0.03,
 			1, 1, 30, 40, 120, 10, 5, 60, 50, 130);
 
 	conParams=manager->getConParams();
@@ -96,11 +96,27 @@ MainW::MainW(QApplication *app, QWidget *parent)
 			ioTView,
 			itc);
 
+	inputNetTView->hide();
+	inputNetSpatialView->hide();
+	scTView->hide();
+	pcTView->hide();
+	bcTView->hide();
+	ncTView->hide();
+	ioTView->hide();
+
 
 //	inputNetSpatialView->hide();
 
 //	pcTView->drawBlank(Qt::blue);
 //	pcTView->drawVertLine(500, Qt::white);
+
+	ui.showINetBox->setChecked(false);
+	ui.showINetSpatialBox->setChecked(false);
+	ui.showBCBox->setChecked(false);
+	ui.showSCBox->setChecked(false);
+	ui.showPCBox->setChecked(false);
+	ui.showIOBox->setChecked(false);
+	ui.showNCBox->setChecked(false);
 }
 
 MainW::~MainW()
@@ -119,26 +135,26 @@ MainW::~MainW()
 
 void MainW::run()
 {
-	inputNetSpatialView->show();
-	inputNetSpatialView->update();
-
-	bcTView->show();
-	bcTView->update();
-
-	scTView->show();
-	scTView->update();
-
-	pcTView->show();
-	pcTView->update();
-
-	ncTView->show();
-	ncTView->update();
-
-	ioTView->show();
-	ioTView->update();
+//	inputNetSpatialView->show();
+//	inputNetSpatialView->update();
 //
-	inputNetTView->show();
-	inputNetTView->update();
+//	bcTView->show();
+//	bcTView->update();
+//
+//	scTView->show();
+//	scTView->update();
+//
+//	pcTView->show();
+//	pcTView->update();
+//
+//	ncTView->show();
+//	ncTView->update();
+//
+//	ioTView->show();
+//	ioTView->update();
+////
+//	inputNetTView->show();
+//	inputNetTView->update();
 
 	compThread->start(QThread::TimeCriticalPriority);
 }
@@ -149,3 +165,59 @@ void MainW::updateInNetCellT(int cellT)
 	itc->inNetDispCellT=cellT;
 	itc->accessDispParamLock.unlock();
 }
+
+void MainW::showINetAct(int checked)
+{
+	showActCommon(checked, 0, inputNetTView);
+}
+
+void MainW::showINetSpatial(int checked)
+{
+	showActCommon(checked, 1, inputNetSpatialView);
+}
+
+void MainW::showBCAct(int checked)
+{
+	showActCommon(checked, 2, bcTView);
+}
+
+void MainW::showSCAct(int checked)
+{
+	showActCommon(checked, 3, scTView);
+}
+
+void MainW::showPCAct(int checked)
+{
+	showActCommon(checked, 4, pcTView);
+}
+
+void MainW::showIOAct(int checked)
+{
+	showActCommon(checked, 5, ioTView);
+}
+
+void MainW::showNCAct(int checked)
+{
+	showActCommon(checked, 6, ncTView);
+}
+
+void MainW::showActCommon(int checked, int checkedIndex, QWidget *view)
+{
+	if(checked==Qt::Unchecked)
+	{
+		view->hide();
+
+		itc->accessDispParamLock.lock();
+		itc->showActPanels[checkedIndex]=false;
+		itc->accessDispParamLock.unlock();
+	}
+	else
+	{
+		view->show();
+
+		itc->accessDispParamLock.lock();
+		itc->showActPanels[checkedIndex]=true;
+		itc->accessDispParamLock.unlock();
+	}
+}
+

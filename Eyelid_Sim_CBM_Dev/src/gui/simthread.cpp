@@ -141,6 +141,8 @@ void SimThread::simLoop()
 	const ct_uint8_t *apIO;
 	const float *vmIO;
 
+	bool showPanel;
+
 	int numGR;
 	int numGO;
 	int numGL;
@@ -217,108 +219,143 @@ void SimThread::simLoop()
 //			}
 //		}
 
-//		apGR=inputNet->exportAPGR();
-//		for(int i=0; i<numGR; i++)
-//		{
-//			apGRVis[i]=apGR[i];
-//		}
-//		emit(updateSpatialW(apGRVis, 0, true));
-//
-//
-//		apGO=inputNet->exportAPGO();
-//		for(int i=0; i<numGO; i++)
-//		{
-//			apGOVis[i]=apGO[i];
-//		}
-//		emit(updateSpatialW(apGOVis, 1, false));
+		itc->accessDispParamLock.lock();
+		showPanel=itc->showActPanels[0];
+		itc->accessDispParamLock.unlock();
+		if(showPanel)
+		{
+			itc->accessDispParamLock.lock();
+			inNetDispCellT=itc->inNetDispCellT;
+			itc->accessDispParamLock.unlock();
+			if(inNetDispCellT==0)
+			{
+				apGO=management->exportAPMF();
+			}
+			else if(inNetDispCellT==1)
+			{
+				apGO=inputNet->exportAPGO();
+			}
+			else
+			{
+				apGO=inputNet->exportAPGR();
+			}
+	//		apGO=management->exportAPMF();
+	//		gESumGR=inputNet->exportGESumGR();
+	//		cout<<"gESumGR "<<gESumGR[0]<<" "<<gESumGR[100]<<" "<<gESumGR[200]<<gESumGR[1048575]<<endl;
+	//		vmGR=inputNet->exportVmGR();
+	//		cout<<"vmGR "<<vmGR[0]<<" "<<vmGR[100]<<" "<<vmGR[200]<<" "<<vmGR[1048575]<<endl;
+	//		int numBadGRs=0;
+	//		for(int i=0; i<numGR; i++)
+	//		{
+	////			if(vmGR[i]==numeric_limits<float>::infinity() || vmGR[i]==-numeric_limits<float>::infinity() ||
+	////					vmGR[i]==numeric_limits<float>::quiet_NaN())
+	//			if(isnanf(vmGR[i]) || isinff(vmGR[i]))
+	//			{
+	//				numBadGRs++;
+	//			}
+	//		}
 
-//		apGL=management->exportAPGL();
-//		for(int i=0; i<numGL; i++)
-//		{
-//			apGLVis[i]=apGL[i];
-//		}
-//		emit(updateSpatialW(apGLVis, 2, false));
+	//		cout<<"numBadGRs "<<numBadGRs<<endl;
+	//		apGO=inputNet->exportAPGR();
+	//		}
+			for(int i=0; i<numGO; i++)
+			{
+				apGOVis[i]=apGO[i];
+			}
+			emit(updateINTW(apGOVis, currentTime));
+		}
 
 		itc->accessDispParamLock.lock();
-		inNetDispCellT=itc->inNetDispCellT;
+		showPanel=itc->showActPanels[1];
 		itc->accessDispParamLock.unlock();
-		if(inNetDispCellT==0)
+		if(showPanel)
 		{
-			apGO=management->exportAPMF();
-		}
-		else if(inNetDispCellT==1)
-		{
+			apGR=inputNet->exportAPGR();
+			for(int i=0; i<numGR; i++)
+			{
+				apGRVis[i]=apGR[i];
+			}
+			emit(updateSpatialW(apGRVis, 0, true));
+
+
 			apGO=inputNet->exportAPGO();
+			for(int i=0; i<numGO; i++)
+			{
+				apGOVis[i]=apGO[i];
+			}
+			emit(updateSpatialW(apGOVis, 1, false));
 		}
-		else
-		{
-			apGO=inputNet->exportAPGR();
-		}
-//		apGO=management->exportAPMF();
-//		gESumGR=inputNet->exportGESumGR();
-//		cout<<"gESumGR "<<gESumGR[0]<<" "<<gESumGR[100]<<" "<<gESumGR[200]<<gESumGR[1048575]<<endl;
-//		vmGR=inputNet->exportVmGR();
-//		cout<<"vmGR "<<vmGR[0]<<" "<<vmGR[100]<<" "<<vmGR[200]<<" "<<vmGR[1048575]<<endl;
-//		int numBadGRs=0;
-//		for(int i=0; i<numGR; i++)
-//		{
-////			if(vmGR[i]==numeric_limits<float>::infinity() || vmGR[i]==-numeric_limits<float>::infinity() ||
-////					vmGR[i]==numeric_limits<float>::quiet_NaN())
-//			if(isnanf(vmGR[i]) || isinff(vmGR[i]))
-//			{
-//				numBadGRs++;
-//			}
-//		}
 
-//		cout<<"numBadGRs "<<numBadGRs<<endl;
-//		apGO=inputNet->exportAPGR();
-//		}
-		for(int i=0; i<numGO; i++)
+		itc->accessDispParamLock.lock();
+		showPanel=itc->showActPanels[2];
+		itc->accessDispParamLock.unlock();
+		if(showPanel)
 		{
-			apGOVis[i]=apGO[i];
+			apBC=mZone->exportAPBC();
+			for(int i=0; i<numBC; i++)
+			{
+				apBCVis[i]=apBC[i];
+			}
+			emit(updateBCTW(apBCVis, currentTime));
 		}
-		emit(updateINTW(apGOVis, currentTime));
 
-		apSC=inputNet->exportAPSC();
-		for(int i=0; i<numSC; i++)
+		itc->accessDispParamLock.lock();
+		showPanel=itc->showActPanels[3];
+		itc->accessDispParamLock.unlock();
+		if(showPanel)
 		{
-			apSCVis[i]=apSC[i];
+			apSC=inputNet->exportAPSC();
+			for(int i=0; i<numSC; i++)
+			{
+				apSCVis[i]=apSC[i];
+			}
+			emit(updateSCTW(apSCVis, currentTime));
 		}
-		emit(updateSCTW(apSCVis, currentTime));
 
-		apBC=mZone->exportAPBC();
-		for(int i=0; i<numBC; i++)
+		itc->accessDispParamLock.lock();
+		showPanel=itc->showActPanels[4];
+		itc->accessDispParamLock.unlock();
+		if(showPanel)
 		{
-			apBCVis[i]=apBC[i];
+			apPC=mZone->exportAPPC();
+			vmPC=mZone->exportVmPC();
+			for(int i=0; i<numPC; i++)
+			{
+				apPCVis[i]=apPC[i];
+				vmPCVis[i]=(vmPC[i]+80)/80;
+			}
+			emit(updatePCTW(apPCVis, vmPCVis, currentTime));
 		}
-		emit(updateBCTW(apBCVis, currentTime));
 
-		apPC=mZone->exportAPPC();
-		vmPC=mZone->exportVmPC();
-		for(int i=0; i<numPC; i++)
+		itc->accessDispParamLock.lock();
+		showPanel=itc->showActPanels[5];
+		itc->accessDispParamLock.unlock();
+		if(showPanel)
 		{
-			apPCVis[i]=apPC[i];
-			vmPCVis[i]=(vmPC[i]+80)/80;
+			apIO=mZone->exportAPIO();
+			vmIO=mZone->exportVmIO();
+			for(int i=0; i<numIO; i++)
+			{
+				apIOVis[i]=apIO[i];
+				vmIOVis[i]=(vmIO[i]+80)/80;
+			}
+			emit(updateIOTW(apIOVis, vmIOVis, currentTime));
 		}
-		emit(updatePCTW(apPCVis, vmPCVis, currentTime));
 
-		apNC=mZone->exportAPNC();
-		vmNC=mZone->exportVmNC();
-		for(int i=0; i<numNC; i++)
+		itc->accessDispParamLock.lock();
+		showPanel=itc->showActPanels[6];
+		itc->accessDispParamLock.unlock();
+		if(showPanel)
 		{
-			apNCVis[i]=apNC[i];
-			vmNCVis[i]=(vmNC[i]+80)/80;
+			apNC=mZone->exportAPNC();
+			vmNC=mZone->exportVmNC();
+			for(int i=0; i<numNC; i++)
+			{
+				apNCVis[i]=apNC[i];
+				vmNCVis[i]=(vmNC[i]+80)/80;
+			}
+			emit(updateNCTW(apNCVis, vmNCVis, currentTime));
 		}
-		emit(updateNCTW(apNCVis, vmNCVis, currentTime));
-
-		apIO=mZone->exportAPIO();
-		vmIO=mZone->exportVmIO();
-		for(int i=0; i<numIO; i++)
-		{
-			apIOVis[i]=apIO[i];
-			vmIOVis[i]=(vmIO[i]+80)/80;
-		}
-		emit(updateIOTW(apIOVis, vmIOVis, currentTime));
 
 		unlockAccessData();
 	}

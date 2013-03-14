@@ -40,6 +40,14 @@ public slots:
 
 	void updateInNetCellT(int cellT);
 
+	void showINetAct(int checked);
+	void showINetSpatial(int checked);
+	void showBCAct(int checked);
+	void showSCAct(int checked);
+	void showPCAct(int checked);
+	void showIOAct(int checked);
+	void showNCAct(int checked);
+
 private:
     Ui::MainWClass ui;
 
@@ -58,6 +66,8 @@ private:
     ActTemporalView *ioTView;
 
     InterThreadComm *itc;
+
+    void showActCommon(int checked, int checkedIndex, QWidget *view);
 };
 
 #endif // MAINW_H
