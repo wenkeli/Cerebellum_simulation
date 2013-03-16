@@ -157,7 +157,7 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 	simState->getConnectivityParams()->showParams(cout);
 
 	eyelidFunc=new EyelidIntegrator(simState->getConnectivityParams()->getNumNC(),
-			simState->getActivityParams()->getMSPerTimeStep(), 10, 0.012, -0.12, 0.11, 100);
+			simState->getActivityParams()->getMSPerTimeStep(), 11, 0.012, -0.1, 0.1, 100);
 
 	{
 		EyelidOutParams eyelidParams;
