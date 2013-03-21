@@ -189,6 +189,8 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 		rasterParams["bc"]=rp;
 		rp.numCells=simState->getConnectivityParams()->getNumPC();
 		rasterParams["pc"]=rp;
+		rp.numCells=simState->getConnectivityParams()->getNumNC();
+		rasterParams["nc"]=rp;
 
 
 		data=new ECTrialsData(500, csOff-csOn, 500, simState->getActivityParams()->getMSPerTimeStep(),
@@ -266,6 +268,7 @@ void ECManagementDelay::calcSimActivity()
 				data->updateRaster("sc", simulation->getInputNet()->exportAPBufSC());
 				data->updateRaster("bc", simulation->getMZoneList()[0]->exportAPBufBC());
 				data->updateRaster("pc", simulation->getMZoneList()[0]->exportAPBufPC());
+				data->updateRaster("nc", simulation->getMZoneList()[0]->exportAPBufNC());
 			}
 		}
 
