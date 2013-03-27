@@ -7,6 +7,8 @@
 #include <iostream>
 #include <queue>
 
+#include <boost/filesystem.hpp>
+
 class Cartpole : public Environment {
 public:
     Cartpole(CRandomSFMT0 *randGen, int argc, char **argv);
@@ -81,6 +83,7 @@ protected:
     void setMZErr(CBMSimCore *simCore);   // Gives error signals to the MZs    
     void computePhysics(float force); // Does the cart physics computations
 
+    boost::filesystem::path saveStateDir; // Directory to save sim state files
     std::ofstream myfile; // Logfile
     float trackLen, leftTrackBound, rightTrackBound; // Bounds of the track
     float polemassLength; // = poleMass * length;

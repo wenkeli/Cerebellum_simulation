@@ -25,7 +25,7 @@ CBM_LIB="-lcbm_tools -lcbm_state -lcbm_core -lcbm_visual -lcbm_data -lcxx_tools"
 # Includes for Boost Libraries
 BOOST_INC=""
 BOOST_LIB_PATH="-L/opt/apps/boost/1.45.0/lib"
-BOOST_LIB="-lboost_program_options"
+BOOST_LIB="-lboost_program_options -lboost_system -lboost_filesystem"
 
 # Includes for QT
 QT_INC="/opt/apps/qt/4.7.0/include /usr/local/Trolltech/Qt-4.7.2/include /usr/include/qt4"

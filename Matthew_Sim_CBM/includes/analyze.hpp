@@ -15,6 +15,7 @@
 
 #include "environments/environment.hpp"
 
+#include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
 
 #include <RInside.h>
@@ -46,7 +47,7 @@ public:
 protected:
     RInside R;
 
-    std::string plot_dir; // directory to store the plots
+    boost::filesystem::path plot_dir; // directory to store the plots
 };
 #endif /* ANALYZE_HPP_ */
 #endif /* BUILD_ANALYSIS */

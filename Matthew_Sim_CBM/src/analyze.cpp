@@ -3,10 +3,9 @@
 #include <fstream>
 #include <map>
 #include <iterator>
-#include <sys/stat.h>
-#include <sys/types.h>
 
 using namespace std;
+using namespace boost::filesystem;
 namespace po = boost::program_options;
 
 po::options_description WeightAnalyzer::getOptions() {
@@ -18,7 +17,7 @@ po::options_description WeightAnalyzer::getOptions() {
     return desc;
 }
 
-WeightAnalyzer::WeightAnalyzer(int argc, char **argv) : R(argc, argv), plot_dir("plots/") {
+WeightAnalyzer::WeightAnalyzer(int argc, char **argv) : R(argc, argv), plot_dir("./") {
     po::options_description desc = getOptions();
     po::variables_map vm;
     po::store(po::command_line_parser(argc, argv).options(desc).allow_unregistered().run(), vm);
@@ -30,8 +29,8 @@ WeightAnalyzer::WeightAnalyzer(int argc, char **argv) : R(argc, argv), plot_dir(
         analyzeFile(simFiles[0]);
 
     // Analyze all pairs of files
-    for (int i=0; i<simFiles.size(); i++) {
-        for (int j=i; j<simFiles.size(); j++) {
+    for (uint i=0; i<simFiles.size(); i++) {
+        for (uint j=i; j<simFiles.size(); j++) {
             if (i==j) continue;
             analyzeFiles(simFiles[i], simFiles[j]);
         }
@@ -41,8 +40,8 @@ WeightAnalyzer::WeightAnalyzer(int argc, char **argv) : R(argc, argv), plot_dir(
 
 void WeightAnalyzer::analyzeFiles(string fname1, string fname2) {
     cout << "Analzying files: " << fname1 << ", " << fname2 << endl;
-    plot_dir = "plots_" + fname1 + "-" + fname2 + "/";
-    mkdir(plot_dir.c_str(),S_IRWXU|S_IRGRP|S_IXGRP);
+    plot_dir /= "plots_" + fname1 + "-" + fname2;
+    create_directory(plot_dir);
 
     fstream savedSimFile1(fname1.c_str(), fstream::in);
     CBMState state1(savedSimFile1);
@@ -78,15 +77,16 @@ void WeightAnalyzer::analyzeFiles(string fname1, string fname2) {
     for (int mz=0; mz<numMZ; mz++) {
         stringstream ss;
         ss << mz;
-        string filename = plot_dir + "MZ" + ss.str() + "_gr_weight_diff_hist.pdf";
+        plot_dir /= "MZ" + ss.str() + "_gr_weight_diff_hist.pdf";
         const vector<float> w(weightDiff[mz]);
         R["weightsvec"] = w;
         string txt =
             "library(ggplot2); "
             "data=data.frame(x=weightsvec); "
             "plot=qplot(x, data=data, geom=\"histogram\", binwidth=.01, xlab=\"Granule PC Weight Diff\") + labs(title = expression(\"MZ"+ss.str()+" " + fname1+" -> "+fname2+" GR-PC Weight Diff Hist\")); " 
-            "ggsave(plot,file=\""+filename+"\"); ";
+            "ggsave(plot,file=\""+plot_dir.c_str()+"\"); ";
         R.parseEvalQ(txt);
+        plot_dir.remove_leaf();
     }    
 
     // Trace these differences back to the MFs who generated them
@@ -105,7 +105,7 @@ void WeightAnalyzer::analyzeFiles(string fname1, string fname2) {
                    state2.getInnetConState()->getpMFfromMFtoGRCon(mf));
             // Get the vector of granule cells connected to the mf in question
             vector<ct_uint32_t> connectedGRs = state1.getInnetConState()->getpMFfromMFtoGRCon(mf);
-            for (int j=0; j<connectedGRs.size(); j++) {
+            for (uint j=0; j<connectedGRs.size(); j++) {
                 weightSum += origWeights[mz][connectedGRs[j]];
                 weightDiffSum += weightDiff[mz][connectedGRs[j]];
             }
@@ -122,33 +122,17 @@ void WeightAnalyzer::analyzeFiles(string fname1, string fname2) {
     for (int mz=0; mz<numMZ; mz++) {
         stringstream ss;
         ss << mz;
-        string filename = plot_dir + "MZ" + ss.str() + "_weight_diff_percent.pdf";
+        plot_dir /= "MZ" + ss.str() + "_weight_diff_percent.pdf";
         const vector<float> w(mfWeightDiffPercents[mz]);
         R["weightsvec"] = w;
         string txt =
             "library(ggplot2); "
             "data=data.frame(w=weightsvec); "
             "plot=ggplot(data=data, aes(x=1:nrow(data), y=w)) + geom_bar(stat=\"identity\") + xlab(\"MF Number\") + ylab(\"Connected Granule Percentage Weight Changes\") + labs(title = expression(\"MZ"+ss.str()+" " + fname1+" -> "+fname2+" MF Weight Changes\"));"
-            "ggsave(plot,file=\""+filename+"\"); ";
+            "ggsave(plot,file=\""+plot_dir.c_str()+"\"); ";
         R.parseEvalQ(txt);
+        plot_dir.remove_leaf();
     }
-
-    // Plot original gr-pc weights colored by weight change
-    // for (int mz=0; mz<numMZ; mz++) {
-    //     stringstream ss;
-    //     ss << mz;
-    //     string filename = plot_dir + fname1 +"-"+ fname2 + "_MZ" + ss.str() + "_weight.pdf";
-    //     const vector<float> w(mfWeightSums[mz]);
-    //     const vector<float> x(mfWeightDiffSums[mz]);
-    //     R["weightsvec"] = w;
-    //     R["diffvec"] = x;
-    //     string txt =
-    //         "library(ggplot2); "
-    //         "data=data.frame(w=weightsvec,WeightChange=diffvec); "
-    //         "plot=ggplot(data=data, aes(x=1:nrow(data), y=w, fill=WeightChange)) + geom_bar(stat=\"identity\") + scale_fill_gradient(low=\"darkred\",high=\"darkblue\") + xlab(\"MF Number\") + ylab(\"Sum of Connected Granule Weight Changes\") + labs(title = expression(\"MZ"+ss.str()+" " + fname1+" -> "+fname2+" MF Weights\"));"
-    //         "ggsave(plot,file=\""+filename+"\"); ";
-    //     R.parseEvalQ(txt);
-    // }
 
     // Plot the MZ weight changes associated with each state variable
     int highFreqMFInds[] = { 992, 845, 925, 1667, 270, 1753, 933, 1803, 1112, 585, 271, 1657, 1341, 1143, 30, 1623, 702, 1025, 1860, 795, 1477, 130, 1118, 1757, 21, 898, 1501, 1271, 120, 570, 1394, 885, 760, 1045, 708, 1244, 1337, 1761, 745, 438, 1448, 283, 616, 1586, 1331, 1961, 98, 23, 1194, 174, 1102, 958, 1409, 906, 1705, 1853, 1869, 1521, 296, 596, 1800 };
@@ -191,22 +175,23 @@ void WeightAnalyzer::plotMFChange(string vName, int *mfInds, int numMFInds, vect
             // Plot this re-ordered weight diff
             stringstream ss;
             ss << mz;
-            string filename = plot_dir + vName + "_MZ" + ss.str() + "_ordered_weight_diff_percent.pdf";
+            plot_dir /= vName + "_MZ" + ss.str() + "_ordered_weight_diff_percent.pdf";
             const vector<float> w(wDiffPerc);
             R["weightsvec"] = w;
             string txt =
                 "library(ggplot2); "
                 "data=data.frame(w=weightsvec); "
                 "plot=ggplot(data=data, aes(x=1:nrow(data), y=w)) + geom_bar(stat=\"identity\") + xlab(\"MF Number\") + ylab(\"Connected Granule Percent Weight Change\") + labs(title = expression(\"MZ"+ss.str()+" " + vName + " Ordered MF Percent Weight Changes\"));"
-                "ggsave(plot,file=\""+filename+"\"); ";
+                "ggsave(plot,file=\""+plot_dir.c_str()+"\"); ";
             R.parseEvalQ(txt);
+            plot_dir.remove_leaf();
         }
 
         {
             // Plot this re-ordered weights colored by diff
             stringstream ss;
             ss << mz;
-            string filename = plot_dir + vName + "_MZ" + ss.str() + "ordered_weights.pdf";
+            plot_dir /= vName + "_MZ" + ss.str() + "ordered_weights.pdf";
             const vector<float> d(wDiff);
             const vector<float> w(weights);
             R["weightsvec"] = w;
@@ -215,16 +200,18 @@ void WeightAnalyzer::plotMFChange(string vName, int *mfInds, int numMFInds, vect
                 "library(ggplot2); "
                 "data=data.frame(w=weightsvec,WeightDiff=diffvec); "
                 "plot=ggplot(data=data, aes(x=1:nrow(data), y=w, fill=WeightDiff)) + geom_bar(stat=\"identity\") + scale_fill_gradient2(low=\"darkred\",high=\"darkblue\", mid=\"white\", midpoint=0) + xlab(\"MF Number\") + ylab(\"Sum of Connected Granule Weights\") + labs(title = expression(\"MZ"+ss.str()+" " + vName + " Ordered MF Weights\"));"
-                "ggsave(plot,file=\""+filename+"\"); ";
+                "ggsave(plot,file=\""+plot_dir.c_str()+"\"); ";
             R.parseEvalQ(txt);
+            plot_dir.remove_leaf();
         }
     }
 }
 
 void WeightAnalyzer::analyzeFile(string fname) {
     cout << "Analyzing file " << fname << endl;
-    plot_dir = "plots_" + fname + "/";
+    plot_dir /= "plots_" + fname + "/";
     grPCWeightHist(fname);
+    plot_dir.remove_leaf();
 }
 
 void WeightAnalyzer::grPCWeightHist(string fname) {
@@ -246,16 +233,16 @@ void WeightAnalyzer::grPCWeightHist(string fname) {
     for (int i=0; i<numMZ; i++) {
         stringstream ss;
         ss << i;
-        string filename = plot_dir + "MZ" + ss.str() + "_GRPC_weight_hist.pdf";
-        cout << "Saving weight histogram to file " << filename << endl;
+        plot_dir /= "MZ" + ss.str() + "_GRPC_weight_hist.pdf";
         const vector<float> w(grPCWeights[i]);
         R["weightsvec"] = w;
         string txt =
             "library(ggplot2); "
             "data=data.frame(x=weightsvec); "
             "plot=qplot(x, data=data, geom=\"histogram\", binwidth=.01, xlab=\"Granule PC Weight\"); " 
-            "ggsave(plot,file=\""+filename+"\"); ";
+            "ggsave(plot,file=\""+plot_dir.native()+"\"); ";
         R.parseEvalQ(txt);
+        plot_dir.remove_leaf();
     }
 }
 #endif /* BUILD_ANALYSIS */

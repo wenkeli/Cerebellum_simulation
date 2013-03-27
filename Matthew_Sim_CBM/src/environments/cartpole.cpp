@@ -6,6 +6,7 @@
 #include <limits>
 
 using namespace std;
+using namespace boost::filesystem;
 namespace po = boost::program_options;
 
 po::options_description Cartpole::getOptions() {
@@ -14,7 +15,8 @@ po::options_description Cartpole::getOptions() {
         ("logfile", po::value<string>()->default_value("cartpole.log"),"log file")
         ("maxNumTrials", po::value<int>()->default_value(20), "Maximum number of trials")
         ("maxTrialLen", po::value<int>()->default_value(1000000), "Maximum length of any given trial")
-        ("trackLen", po::value<float>()->default_value(0), "Length of the track (Infinite by default)")   
+        ("trackLen", po::value<float>()->default_value(0), "Length of the track (Infinite by default)")
+        ("simStateDir", po::value<string>()->default_value("./"), "Directory to save sim state files.")
         ;
     return desc;
 }
@@ -26,6 +28,9 @@ Cartpole::Cartpole(CRandomSFMT0 *randGen, int argc, char **argv) :
     po::variables_map vm;
     po::store(po::command_line_parser(argc, argv).options(desc).allow_unregistered().run(), vm);
     po::notify(vm);
+
+    saveStateDir = path(vm["simStateDir"].as<string>());
+    assert(exists(saveStateDir) && is_directory(saveStateDir));
 
     string cp_logfile = vm["logfile"].as<string>();
     maxTrialLength = vm["maxTrialLen"].as<int>();
@@ -197,19 +202,25 @@ void Cartpole::step(CBMSimCore *simCore) {
     timeoutCnt++;
     
     if (fallen && getFailureMode() == "MaxTrialLength") {
-        std::fstream filestr ("millionTrialState.out", fstream::out);
+        path p(saveStateDir);
+        p /= "millionTrialState.out";
+        std::fstream filestr (p.c_str(), fstream::out);
         simCore->writeToState(filestr);
         filestr.close();
         gotMillionStepTrial = true;
         numMillionStepTrials++;
     } else if (fallen && gotMillionStepTrial && numMillionStepTrials >= 5 && getFailureMode() != "MaxTrialLength") {
-        std::fstream filestr ("failureState.out", fstream::out);
+        path p(saveStateDir);
+        p /= "failureState.out";
+        std::fstream filestr (p.c_str(), fstream::out);
         simCore->writeToState(filestr);
         filestr.close();
         // Terminate the code after this
         maxNumTrials = trialNum;
     } else if (cycle % 100000 == 0) {
-        std::fstream filestr ("checkupState.out", fstream::out);
+        path p(saveStateDir);
+        p /= "checkupState.out";
+        std::fstream filestr (p.c_str(), fstream::out);
         simCore->writeToState(filestr);
         filestr.close();
     }
