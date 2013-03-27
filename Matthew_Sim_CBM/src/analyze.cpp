@@ -1,3 +1,4 @@
+#ifdef BUILD_ANALYSIS
 #include "../includes/analyze.hpp"
 #include <fstream>
 #include <map>
@@ -257,3 +258,4 @@ void WeightAnalyzer::grPCWeightHist(string fname) {
         R.parseEvalQ(txt);
     }
 }
+#endif /* BUILD_ANALYSIS */

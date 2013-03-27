@@ -1,3 +1,4 @@
+#ifdef BUILD_ANALYSIS
 #ifndef ANALYZE_HPP_
 #define ANALYZE_HPP_
 
@@ -47,5 +48,5 @@ protected:
 
     std::string plot_dir; // directory to store the plots
 };
-
 #endif /* ANALYZE_HPP_ */
+#endif /* BUILD_ANALYSIS */

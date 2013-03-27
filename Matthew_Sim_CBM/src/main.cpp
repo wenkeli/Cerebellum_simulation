@@ -10,7 +10,9 @@
 #include "../includes/environments/cartpole.hpp"
 #include "../includes/environments/robocup.hpp"
 
+#ifdef BUILD_ANALYSIS
 #include "../includes/analyze.hpp"
+#endif
 
 using namespace std;
 namespace po = boost::program_options;
@@ -36,7 +38,9 @@ int main(int argc, char **argv)
 
     if (vm.count("help") || argc == 1 || !vm.count("environment")) {
         cout << desc << endl;
+#ifdef BUILD_ANALYSIS
         cout << WeightAnalyzer::getOptions() << endl;
+#endif
         cout << Cartpole::getOptions() << endl;
         cout << Robocup::getOptions() << endl;
         return 0;
@@ -66,10 +70,13 @@ int main(int argc, char **argv)
         env = new Cartpole(&randGen, argc, argv);
     else if (envStr == "robocup")
         env = new Robocup(&randGen, argc, argv);
+#ifdef BUILD_ANALYSIS
     else if (envStr == "analysis") {
         WeightAnalyzer a(argc, argv);
         return 0;
-    } else {
+    }
+#endif
+    else {
         cout << "Unrecognized Environment " << envStr << endl;
         return 1;
     }
