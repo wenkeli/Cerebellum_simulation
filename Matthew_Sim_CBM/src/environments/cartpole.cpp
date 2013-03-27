@@ -99,6 +99,30 @@ void Cartpole::setupMossyFibers(CBMState *simState) {
         assignRandomMFs(unassigned,numPoleVelMF,poleVelMFs);
         assignRandomMFs(unassigned,numCartVelMF,cartVelMFs);
         assignRandomMFs(unassigned,numCartPosMF,cartPosMFs);
+
+        // Log the mfs assigned to each group
+        if (loggingEnabled) {
+            myfile << cycle << " highFreqMFs: ";
+            for (int i=0; i<highFreqMFs.size(); i++)
+                myfile << highFreqMFs[i] << ", ";
+            myfile << endl;
+            myfile << cycle << " poleVelMFs: ";
+            for (int i=0; i<poleVelMFs.size(); i++)
+                myfile << poleVelMFs[i] << ", ";
+            myfile << endl;
+            myfile << cycle << " poleAngMFs: ";
+            for (int i=0; i<poleAngMFs.size(); i++)
+                myfile << poleAngMFs[i] << ", ";
+            myfile << endl;
+            myfile << cycle << " cartVelMFs: ";
+            for (int i=0; i<cartVelMFs.size(); i++)
+                myfile << cartVelMFs[i] << ", ";
+            myfile << endl;
+            myfile << cycle << " cartPosMFs: ";
+            for (int i=0; i<cartPosMFs.size(); i++)
+                myfile << cartPosMFs[i] << ", ";
+            myfile << endl;
+        }
     } else { // Assign in order -- useful for visualization
         int m = 500;
         for (int i=0; i < numHighFreqMF; i++) highFreqMFs.push_back(m++);
@@ -168,6 +192,7 @@ float Cartpole::logScale(float value, float gain) {
 
 void Cartpole::step(CBMSimCore *simCore) {
     static bool gotMillionStepTrial = false;
+    static int numMillionStepTrials = 0;
     cycle++;
     timeoutCnt++;
     
@@ -176,7 +201,8 @@ void Cartpole::step(CBMSimCore *simCore) {
         simCore->writeToState(filestr);
         filestr.close();
         gotMillionStepTrial = true;
-    } else if (fallen && gotMillionStepTrial && getFailureMode() != "MaxTrialLength") {
+        numMillionStepTrials++;
+    } else if (fallen && gotMillionStepTrial && numMillionStepTrials >= 5 && getFailureMode() != "MaxTrialLength") {
         std::fstream filestr ("failureState.out", fstream::out);
         simCore->writeToState(filestr);
         filestr.close();
@@ -240,6 +266,7 @@ void Cartpole::computePhysics(float force) {
 }
 
 void Cartpole::setMZErr(CBMSimCore *simCore) {
+    // TODO: Error Left & Right seem to be mixed up given the failure dialogues. Fix this.
     errorLeft = false;  // Left pushing MZ
     errorRight = false; // Right pushing MZ
 
@@ -286,9 +313,9 @@ bool Cartpole::inFailure() {
 
 string Cartpole::getFailureMode() {
     if (theta <= leftAngleBound)
-        return "PoleFallLeft";
-    if (theta >= rightAngleBound)
         return "PoleFallRight";
+    if (theta >= rightAngleBound)
+        return "PoleFallLeft";
     if (x <= leftTrackBound)
         return "CartFallLeft";
     if (x >= rightTrackBound)

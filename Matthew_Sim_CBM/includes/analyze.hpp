@@ -36,6 +36,12 @@ public:
     // Creates a histogram of the GR-PC weights for each microzone
     void grPCWeightHist(std::string fname);
 
+    void plotMFChange(std::string vName, int *mfInds, int numMFInds,
+                      std::vector<std::vector<float> >&mfWeightDiffSums,
+                      std::vector<std::vector<float> >&mfWeightDiffPercents,
+                      std::vector<std::vector<float> >&mfWeightSums,                      
+                      int numMZ);
+
 protected:
     RInside R;
 
