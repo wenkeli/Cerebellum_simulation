@@ -23,8 +23,8 @@ CBM_LIB_PATH="-L../libs"
 CBM_LIB="-lcbm_tools -lcbm_state -lcbm_core -lcbm_visual -lcbm_data -lcxx_tools"
 
 # Includes for Boost Libraries
-BOOST_INC=""
-BOOST_LIB_PATH="-L/opt/apps/boost/1.45.0/lib"
+BOOST_INC="$TACC_BOOST_INC"
+BOOST_LIB_PATH="-L$TACC_BOOST_LIB"
 BOOST_LIB="-lboost_program_options -lboost_system -lboost_filesystem"
 
 # Includes for QT
@@ -44,7 +44,7 @@ then
     DEFINES+="BUILD_ANALYSIS"
 fi
 
-INC_PATH="/usr/local/cuda/include/ $CBM_INC $ROBOCUP_INC $QT_INC $R_INC $RCPP_INC $RINSIDE_INC"
+INC_PATH="/usr/local/cuda/include/ $BOOST_INC $CBM_INC $ROBOCUP_INC $QT_INC $R_INC $RCPP_INC $RINSIDE_INC"
 LIB_PATH="$BOOST_LIB_PATH $CBM_LIB_PATH $ROBOCUP_LIB_PATH $QT_LIB_PATH $R_LIB $RCPP_LIB $RINSIDE_LIB"
 LIBS="$ROBOCUP_LIB $CBM_LIB $BOOST_LIB $QT_LIB"
 
