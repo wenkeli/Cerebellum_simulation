@@ -201,8 +201,9 @@ void WeightAnalyzer::plotMFChange(string vName, int *mfInds, int numMFInds, vect
             string txt =
                 "library(ggplot2); "
                 "data=data.frame(w=weightsvec,WeightDiff=diffvec); "
-                "plot=ggplot(data=data, aes(x=1:nrow(data), y=w, fill=WeightDiff)) + geom_bar(stat=\"identity\") + scale_fill_gradient2(low=\"darkred\",high=\"darkblue\", mid=\"white\", midpoint=0) + xlab(\"MF Number\") + ylab(\"Sum of Connected Granule Weights\") + labs(title = expression(\"MZ"+ss.str()+" " + vName + " Ordered MF Weights\"));"
+                "plot=ggplot(data=data, aes(x=1:nrow(data), y=w, fill=WeightDiff)) + geom_bar(stat=\"identity\") + scale_fill_gradient2(low=\"darkred\",high=\"darkblue\", mid=\"white\", midpoint=0) + theme(panel.background = element_rect(fill='gray')) + xlab(\"MF Number\") + ylab(\"Sum of Connected Granule Weights\") + labs(title = expression(\"MZ"+ss.str()+" " + vName + " Ordered MF Weights\"));"
                 "ggsave(plot,file=\""+plot_dir.c_str()+"\"); ";
+            // theme(panel.background = element_rect(fill='black'), panel.grid.major = element_line(colour = 'green')) + 
             R.parseEvalQ(txt);
             plot_dir.remove_leaf();
         }

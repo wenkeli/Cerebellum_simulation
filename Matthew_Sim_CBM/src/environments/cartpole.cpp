@@ -166,9 +166,9 @@ float* Cartpole::getState() {
             minPoleAng = logScale(minPoleAng, 100000);
             poleAngle  = logScale(poleAngle,  100000);
 
-            maxPoleVel = logScale(maxPoleVel, 1000);
-            minPoleVel = logScale(minPoleVel, 1000);
-            poleVelocity = logScale(poleVelocity, 1000);
+            maxPoleVel = logScale(maxPoleVel, 10000);
+            minPoleVel = logScale(minPoleVel, 10000);
+            poleVelocity = logScale(poleVelocity, 10000);
 
             maxCartVel = logScale(maxCartVel, 1000);
             minCartVel = logScale(minCartVel, 1000);
