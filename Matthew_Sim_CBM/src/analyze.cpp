@@ -155,6 +155,8 @@ void WeightAnalyzer::analyzeFiles(string fname1, string fname2) {
                  mfWeightDiffPercents, mfWeightSums, numMZ);
     plotMFChange("CartPosMFs", cartPosMFInds, numCartPosMFs, mfWeightDiffSums,
                  mfWeightDiffPercents, mfWeightSums, numMZ);
+
+    plot_dir.remove_leaf();
 }
 
 void WeightAnalyzer::plotMFChange(string vName, int *mfInds, int numMFInds, vector<vector<float> >&mfWeightDiffSums,

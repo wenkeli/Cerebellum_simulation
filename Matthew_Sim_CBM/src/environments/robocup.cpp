@@ -15,7 +15,7 @@ po::options_description Robocup::getOptions() {
         ("paramFile", po::value<string>()->default_value("/home/matthew/projects/3Dsim/agents/nao-agent/paramfiles/defaultParams.txt"), "Parameter file for the agent")
         ("rsg", po::value<string>()->default_value("rsg/agent/nao"),//"/usr/local/share/rcssserver3d/rsg/agent/nao"),
          "Folder for the nao model")
-        ("behavior", po::value<string>()->default_value("omniWalkAgent"), "Agent behavior")
+        ("behavior", po::value<string>()->default_value("cerebellumAgent"), "Agent behavior")
         // ("runs", po::value<int>()->default_value(1),
         //  "Robocup: Number of times the obstacle course should be navigated.")
         ;

@@ -202,8 +202,10 @@ void Cartpole::step(CBMSimCore *simCore) {
     timeoutCnt++;
     
     if (fallen && getFailureMode() == "MaxTrialLength") {
+        stringstream ss;
+        ss << trialNum;
         path p(saveStateDir);
-        p /= "millionTrialState.out";
+        p /= "millionStepStateTrial" + ss.str() + ".out";
         std::fstream filestr (p.c_str(), fstream::out);
         simCore->writeToState(filestr);
         filestr.close();
@@ -217,13 +219,7 @@ void Cartpole::step(CBMSimCore *simCore) {
         filestr.close();
         // Terminate the code after this
         maxNumTrials = trialNum;
-    } else if (cycle % 100000 == 0) {
-        path p(saveStateDir);
-        p /= "checkupState.out";
-        std::fstream filestr (p.c_str(), fstream::out);
-        simCore->writeToState(filestr);
-        filestr.close();
-    }
+    } 
             
     // Restart the simulation if the pole has fallen
     if (fallen) reset();
