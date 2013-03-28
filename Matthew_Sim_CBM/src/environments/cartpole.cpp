@@ -196,11 +196,11 @@ float Cartpole::logScale(float value, float gain) {
 }
 
 void Cartpole::step(CBMSimCore *simCore) {
-    static bool gotMillionStepTrial = false;
     static int numMillionStepTrials = 0;
     cycle++;
     timeoutCnt++;
     
+    // Code to save sim state at selected points
     if (fallen && getFailureMode() == "MaxTrialLength") {
         stringstream ss;
         ss << trialNum;
@@ -209,17 +209,17 @@ void Cartpole::step(CBMSimCore *simCore) {
         std::fstream filestr (p.c_str(), fstream::out);
         simCore->writeToState(filestr);
         filestr.close();
-        gotMillionStepTrial = true;
         numMillionStepTrials++;
-    } else if (fallen && gotMillionStepTrial && numMillionStepTrials >= 5 && getFailureMode() != "MaxTrialLength") {
-        path p(saveStateDir);
-        p /= "failureState.out";
-        std::fstream filestr (p.c_str(), fstream::out);
-        simCore->writeToState(filestr);
-        filestr.close();
-        // Terminate the code after this
-        maxNumTrials = trialNum;
-    } 
+    }
+    // } else if (fallen && numMillionStepTrials >= 5 && getFailureMode() != "MaxTrialLength") {
+    //     path p(saveStateDir);
+    //     p /= "failureState.out";
+    //     std::fstream filestr (p.c_str(), fstream::out);
+    //     simCore->writeToState(filestr);
+    //     filestr.close();
+    //     // Terminate the code after this
+    //     maxNumTrials = trialNum;
+    // } 
             
     // Restart the simulation if the pole has fallen
     if (fallen) reset();
