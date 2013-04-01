@@ -1,5 +1,6 @@
 #ifdef BUILD_ANALYSIS
 #include "../includes/analyze.hpp"
+#include "../includes/environments/cartpole.hpp"
 #include <fstream>
 #include <map>
 #include <iterator>
@@ -25,28 +26,38 @@ WeightAnalyzer::WeightAnalyzer(int argc, char **argv) : R(argc, argv), plot_dir(
 
     // Read the granule-PC weights off into a vector
     vector<string> simFiles = vm["file"].as<vector<string> >();
-    if (simFiles.size() == 1)
-        analyzeFile(simFiles[0]);
 
-    // Analyze all pairs of files
+    // Convert the file names into boost paths
+    vector<path> simPaths;
     for (uint i=0; i<simFiles.size(); i++) {
-        for (uint j=i; j<simFiles.size(); j++) {
-            if (i==j) continue;
-            analyzeFiles(simFiles[i], simFiles[j]);
-        }
+        path p(simFiles[i]);
+        assert(exists(p) && is_regular_file(p));
+        simPaths.push_back(p);
     }
 
+    if (simPaths.size() == 1)
+        analyzeFile(simPaths[0]);
+
+    // Analyze all pairs of files
+    for (uint i=0; i<simPaths.size(); i++) {
+        for (uint j=i; j<simPaths.size(); j++) {
+            if (i==j) continue;
+            analyzeFiles(simPaths[i], simPaths[j]);
+        }
+    }
 }
 
-void WeightAnalyzer::analyzeFiles(string fname1, string fname2) {
+void WeightAnalyzer::analyzeFiles(path p1, path p2) {
+    string fname1 = p1.leaf().native();
+    string fname2 = p2.leaf().native();
     cout << "Analzying files: " << fname1 << ", " << fname2 << endl;
     plot_dir /= "plots_" + fname1 + "-" + fname2;
     create_directory(plot_dir);
 
-    fstream savedSimFile1(fname1.c_str(), fstream::in);
+    fstream savedSimFile1(p1.c_str(), fstream::in);
     CBMState state1(savedSimFile1);
     savedSimFile1.close();
-    fstream savedSimFile2(fname2.c_str(), fstream::in);
+    fstream savedSimFile2(p2.c_str(), fstream::in);
     CBMState state2(savedSimFile2);
     savedSimFile2.close();
     
@@ -66,65 +77,68 @@ void WeightAnalyzer::analyzeFiles(string fname1, string fname2) {
         MZoneActivityState *mzActState2 = state2.getMZoneActStateInternal(i);
         vector<float> w2 = mzActState2->getGRPCSynWeightLinear();
         vector<float> diff;
+        origWeights.push_back(w1);
         for (int j=0; j<numGR; j++) {
-            diff.push_back(w1[j] - w2[j]);
+            diff.push_back(w2[j] - w1[j]);
         }
         weightDiff.push_back(diff);
-        origWeights.push_back(w1);
     }
 
     // Plot the granule weight diffs
-    for (int mz=0; mz<numMZ; mz++) {
-        stringstream ss;
-        ss << mz;
-        plot_dir /= "MZ" + ss.str() + "_gr_weight_diff_hist.pdf";
-        const vector<float> w(weightDiff[mz]);
-        R["weightsvec"] = w;
-        string txt =
-            "library(ggplot2); "
-            "data=data.frame(x=weightsvec); "
-            "plot=qplot(x, data=data, geom=\"histogram\", binwidth=.01, xlab=\"Granule PC Weight Diff\") + labs(title = expression(\"MZ"+ss.str()+" " + fname1+" -> "+fname2+" GR-PC Weight Diff Hist\")); " 
-            "ggsave(plot,file=\""+plot_dir.c_str()+"\"); ";
-        R.parseEvalQ(txt);
-        plot_dir.remove_leaf();
-    }    
+    // for (int mz=0; mz<numMZ; mz++) {
+    //     stringstream ss;
+    //     ss << mz;
+    //     plot_dir /= "MZ" + ss.str() + "_gr_weight_diff_hist.pdf";
+    //     const vector<float> w(weightDiff[mz]);
+    //     R["weightsvec"] = w;
+    //     string txt =
+    //         "library(ggplot2); "
+    //         "data=data.frame(x=weightsvec); "
+    //         "plot=qplot(x, data=data, geom=\"histogram\", binwidth=.01, xlab=\"Granule PC Weight Diff\") + labs(title = expression(\"MZ"+ss.str()+" " + fname1+" -> "+fname2+" GR-PC Weight Diff Hist\")); " 
+    //         "ggsave(plot,file=\""+plot_dir.c_str()+"\"); ";
+    //     R.parseEvalQ(txt);
+    //     plot_dir.remove_leaf();
+    // }    
 
     // Trace these differences back to the MFs who generated them
-    vector<vector<float> > mfWeightSums; // [mz][mfNum]
-    vector<vector<float> > mfWeightDiffSums; // [mz][mfNum]
-    vector<vector<float> > mfWeightDiffPercents; // [mz][mfNum]    
+    vector<vector<int> > numConnectedGRs; // [mz][mfNum] - How many granule cells are connected to each mf
+    vector<vector<float> > mfWeightSums; // [mz][mfNum] - Sum of granule weights connected to each mf
+    vector<vector<float> > mfWeightDiffSums; // [mz][mfNum] - Diff of connected granule weights
+    vector<vector<float> > mfWeightDiffPercents; // [mz][mfNum] - Percentage weight change of connected granule weights
     for (int mz=0; mz<numMZ; mz++) {
+        vector<int> numConnectedGR;
         vector<float> mfWeight;
         vector<float> mfWeightDiff;
         vector<float> mfWeightDiffPercent;
         for (int mf=0; mf<numMF; mf++) {
-            float weightSum = 0;
-            float weightDiffSum = 0;
             // Make sure connectivity is the same
             assert(state1.getInnetConState()->getpMFfromMFtoGRCon(mf) ==
                    state2.getInnetConState()->getpMFfromMFtoGRCon(mf));
+            float weightSum = 0;
+            float weightDiffSum = 0;
             // Get the vector of granule cells connected to the mf in question
             vector<ct_uint32_t> connectedGRs = state1.getInnetConState()->getpMFfromMFtoGRCon(mf);
             for (uint j=0; j<connectedGRs.size(); j++) {
                 weightSum += origWeights[mz][connectedGRs[j]];
                 weightDiffSum += weightDiff[mz][connectedGRs[j]];
             }
+            numConnectedGR.push_back(connectedGRs.size());
             mfWeight.push_back(weightSum);
             mfWeightDiff.push_back(weightDiffSum);
             mfWeightDiffPercent.push_back(100.0 * weightDiffSum / weightSum);
         }
+        numConnectedGRs.push_back(numConnectedGR);
         mfWeightSums.push_back(mfWeight);
         mfWeightDiffSums.push_back(mfWeightDiff);
         mfWeightDiffPercents.push_back(mfWeightDiffPercent);
     }
 
-    // Plots the MZ weight changes
+    // Plot the MZ Percentage weight changes over all MFs
     for (int mz=0; mz<numMZ; mz++) {
         stringstream ss;
         ss << mz;
         plot_dir /= "MZ" + ss.str() + "_weight_diff_percent.pdf";
-        const vector<float> w(mfWeightDiffPercents[mz]);
-        R["weightsvec"] = w;
+        R["weightsvec"] = mfWeightDiffPercents[mz];
         string txt =
             "library(ggplot2); "
             "data=data.frame(w=weightsvec); "
@@ -140,11 +154,13 @@ void WeightAnalyzer::analyzeFiles(string fname1, string fname2) {
     int poleAngMFInds[] = { 361, 49, 1763, 1639, 1652, 1509, 1390, 621, 28, 666, 399, 1254, 275, 1040, 1531, 1017, 493, 962, 577, 1927, 211, 1949, 1121, 1532, 1842, 1710, 595, 749, 869, 1704, 1706, 1013, 1377, 946, 326, 1062, 1721, 246, 2011, 1413, 713, 1646, 634, 1103, 1081, 1199, 1739, 1179, 1201, 1426, 1701, 715, 1335, 1001, 1686, 89, 766, 1065, 854, 1455, 1880, 783, 1602, 1058, 1787, 1947, 781, 80, 281, 1712, 1583, 1095, 591, 305, 164, 691, 431, 737, 1579, 1044, 1366, 129, 167, 542, 776, 529, 178, 966, 1844, 452, 1794, 1115, 1035, 323, 1120, 1052, 656, 19, 1333, 977, 34, 1898, 465, 2003, 553, 1708, 1220, 39, 644, 688, 1773, 677, 555, 1323, 1368, 385, 1232, 945, 1881, 1791, 226, 615 };
     int cartVelMFInds[] = { 880, 604, 1870, 1055, 51, 469, 1180, 453, 411, 964, 1172, 1124, 1215, 315, 785, 1906, 1825, 747, 1887, 522, 563, 1542, 397, 1152, 247, 770, 928, 46, 1994, 1666, 1161, 264, 975, 813, 24, 510, 1857, 1277, 904, 1827, 1310, 1799, 731, 1270, 1917, 286, 1330, 892, 61, 48, 712, 1156, 978, 10, 239, 1309, 405, 1682, 483, 76, 1338, 763, 877, 244, 1454, 1407, 233, 752, 1552, 1233, 1673, 528, 1905, 1119, 126, 502, 1087, 514, 812, 1806, 1007, 997, 1281, 1922, 1889, 86, 821, 698, 2038, 1463, 181, 1581, 414, 741, 170, 1929, 1804, 1313, 890, 1176, 232, 1877, 1216, 1482, 539, 210, 1584, 1874, 771, 358, 1399, 1855, 1715, 554, 157, 963, 786, 1457, 292, 1474, 217, 1424 };
     int cartPosMFInds[] = { 1771, 1479, 772, 1502, 1846, 1031, 183, 1641, 1785, 1175, 423, 135, 842, 1876, 1727, 1146, 511, 97, 1471, 79, 1976, 1863, 240, 1832, 627, 1724, 807, 1519, 1230, 494, 1014, 800, 1108, 1535, 1878, 365, 436, 844, 1327, 269, 601, 921, 134, 291, 951, 1895, 1450, 1364, 1319, 1817, 256, 263, 1556, 1243, 190, 721, 1352, 1498, 1720, 957, 1151, 1707, 969, 574, 1346, 561, 1978, 909, 301, 630, 1445, 1266, 1933, 457, 2017, 1099, 1645, 1387, 2027, 927, 1775, 1192, 859, 681, 50, 757, 1302, 1361, 903, 608, 91, 1548, 29, 1680, 1221, 930, 1088, 1142, 1316, 1283, 1320, 1401, 1395, 340, 500, 1730, 1188, 242, 376, 613, 1508, 1615, 1217, 617, 1643, 1769, 1369, 2025, 979, 467, 8, 1608 };
+
     int numHighFreqMFs = sizeof(highFreqMFInds) / sizeof(highFreqMFInds[0]);
     int numPoleVelMFs = sizeof(poleVelMFInds) / sizeof(poleVelMFInds[0]);
     int numPoleAngMFs = sizeof(poleAngMFInds) / sizeof(poleAngMFInds[0]);
     int numCartVelMFs = sizeof(cartVelMFInds) / sizeof(cartVelMFInds[0]);    
     int numCartPosMFs = sizeof(cartPosMFInds) / sizeof(cartPosMFInds[0]);    
+
     plotMFChange("HighFreqMFs", highFreqMFInds, numHighFreqMFs, mfWeightDiffSums,
                  mfWeightDiffPercents, mfWeightSums, numMZ);
     plotMFChange("PoleVelMFs", poleVelMFInds, numPoleVelMFs, mfWeightDiffSums,
@@ -173,13 +189,37 @@ void WeightAnalyzer::plotMFChange(string vName, int *mfInds, int numMFInds, vect
         }
 
         {
-            // TODO: Consider putting all these weight diffs into a single plot colored by state variable
+            vector<float> logScaledVals;
+            float scaledMin = Cartpole::logScale(Cartpole::leftAngleBound, 100000);
+            float scaledMax = Cartpole::logScale(Cartpole::rightAngleBound, 100000);
+            float interval = (scaledMax - scaledMin) / numMFInds;
+            float scaledVal = scaledMin + interval / 2.0; 
+            cout << "Vname: " << vName << endl;
+            for (int i=0; i<numMFInds; i++) {
+                cout << Cartpole::inverseLogScale(scaledVal, 100000) << endl;
+                logScaledVals.push_back(Cartpole::inverseLogScale(scaledVal, 100000));
+                scaledVal += interval;
+            }
+
+            stringstream ss;
+            ss << mz;
+            plot_dir /= vName + "_MZ" + ss.str() + "_scaled_state_vals.pdf";
+            R["scaledVal"] = logScaledVals;
+            string txt =
+                "library(ggplot2); "
+                "data=data.frame(w=scaledVal); "
+                "plot=ggplot(data=data, aes(x=1:nrow(data), y=w)) + geom_line() + xlab(\"MF Number\") + ylab(\"Connected Granule Percent Weight Change\") + labs(title = expression(\"MZ"+ss.str()+" " + vName + " Ordered MF Percent Weight Changes\"));"
+                "ggsave(plot,file=\""+plot_dir.c_str()+"\"); ";
+            R.parseEvalQ(txt);
+            plot_dir.remove_leaf();
+        }
+
+        {
             // Plot this re-ordered weight diff
             stringstream ss;
             ss << mz;
             plot_dir /= vName + "_MZ" + ss.str() + "_ordered_weight_diff_percent.pdf";
-            const vector<float> w(wDiffPerc);
-            R["weightsvec"] = w;
+            R["weightsvec"] = wDiffPerc;
             string txt =
                 "library(ggplot2); "
                 "data=data.frame(w=weightsvec); "
@@ -193,11 +233,9 @@ void WeightAnalyzer::plotMFChange(string vName, int *mfInds, int numMFInds, vect
             // Plot this re-ordered weights colored by diff
             stringstream ss;
             ss << mz;
-            plot_dir /= vName + "_MZ" + ss.str() + "ordered_weights.pdf";
-            const vector<float> d(wDiff);
-            const vector<float> w(weights);
-            R["weightsvec"] = w;
-            R["diffvec"] = d;
+            plot_dir /= vName + "_MZ" + ss.str() + "_ordered_weights.pdf";
+            R["weightsvec"] = weights;
+            R["diffvec"] = wDiff;
             string txt =
                 "library(ggplot2); "
                 "data=data.frame(w=weightsvec,WeightDiff=diffvec); "
@@ -210,16 +248,17 @@ void WeightAnalyzer::plotMFChange(string vName, int *mfInds, int numMFInds, vect
     }
 }
 
-void WeightAnalyzer::analyzeFile(string fname) {
-    cout << "Analyzing file " << fname << endl;
-    plot_dir /= "plots_" + fname + "/";
-    grPCWeightHist(fname);
+void WeightAnalyzer::analyzeFile(path p) {
+    cout << "Analyzing file " << p.c_str() << endl;
+    plot_dir /= "plots_" + p.leaf().native() + "/";
+    create_directory(plot_dir);
+    grPCWeightHist(p);
     plot_dir.remove_leaf();
 }
 
-void WeightAnalyzer::grPCWeightHist(string fname) {
-    cout << "Creating GR-PC weight histogram for file " << fname << endl;
-    fstream savedSimFile(fname.c_str(), fstream::in);
+void WeightAnalyzer::grPCWeightHist(path p) {
+    cout << "Creating GR-PC weight histogram for file " << p.c_str() << endl;
+    fstream savedSimFile(p.c_str(), fstream::in);
     CBMState state(savedSimFile);
     savedSimFile.close();
 
@@ -237,8 +276,7 @@ void WeightAnalyzer::grPCWeightHist(string fname) {
         stringstream ss;
         ss << i;
         plot_dir /= "MZ" + ss.str() + "_GRPC_weight_hist.pdf";
-        const vector<float> w(grPCWeights[i]);
-        R["weightsvec"] = w;
+        R["weightsvec"] = grPCWeights[i];
         string txt =
             "library(ggplot2); "
             "data=data.frame(x=weightsvec); "

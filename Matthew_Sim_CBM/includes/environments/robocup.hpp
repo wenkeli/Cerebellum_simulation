@@ -59,6 +59,7 @@ protected:
 
 protected:
     AgentInterface robosim;
+    OptimizationBehaviorBalance *behavior;
     BodyModel *bodyModel;
     WorldModel *worldModel;
     UTWalkEngine *walkEngine;
@@ -85,6 +86,7 @@ protected:
 
     // Proportions of total mossy fibers that belong to each sensor
     static const float highFreqMFProportion  = .03;
+    static const float impactMFProportion = .06;
     static const float gyroXMFProportion  = .06;
     static const float gyroYMFProportion  = .06;
     static const float gyroZMFProportion  = .06;    
@@ -92,7 +94,7 @@ protected:
     static const float accelYMFProportion = .06;
     static const float accelZMFProportion = .06;
 
-    std::vector<int> highFreqMFs, gyroXMFs, gyroYMFs, gyroZMFs, accelXMFs, accelYMFs, accelZMFs;
+    std::vector<int> highFreqMFs, impactMFs, gyroXMFs, gyroYMFs, gyroZMFs, accelXMFs, accelYMFs, accelZMFs;
 
     // Should we randomize the assignment of MFs or do them contiguously?
     static const bool randomizeMFs = false;

@@ -30,13 +30,13 @@ public:
     static boost::program_options::options_description getOptions();
 
     // Analyzes the weights in a single file
-    void analyzeFile(std::string fname);
+    void analyzeFile(boost::filesystem::path p);
 
     // Looks for differences in the weights between the two files
-    void analyzeFiles(std::string fname1, std::string fname2);
+    void analyzeFiles(boost::filesystem::path p1, boost::filesystem::path p2);
 
     // Creates a histogram of the GR-PC weights for each microzone
-    void grPCWeightHist(std::string fname);
+    void grPCWeightHist(boost::filesystem::path p);
 
     void plotMFChange(std::string vName, int *mfInds, int numMFInds,
                       std::vector<std::vector<float> >&mfWeightDiffSums,

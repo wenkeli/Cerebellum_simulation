@@ -72,6 +72,10 @@ public: // Cartpole methods
     static const float minPoleAccel    = -5.0;
     static const float maxPoleAccel    = 5.0;
 
+    static float logScale(float value, float gain);
+    static float inverseLogScale(float scaledVal, float gain);
+    
+
 protected:
     long maxTrialLength;
     int maxNumTrials;
@@ -109,8 +113,6 @@ protected:
     long cycle;         // How long has the sim been running?
 
 protected: // MF input variables
-    float logScale(float value, float gain);
-    
     int numNC;
 
     // Should we randomize the assignment of MFs or do them contiguously?

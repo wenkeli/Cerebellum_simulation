@@ -108,23 +108,23 @@ void Cartpole::setupMossyFibers(CBMState *simState) {
         // Log the mfs assigned to each group
         if (loggingEnabled) {
             myfile << cycle << " highFreqMFs: ";
-            for (int i=0; i<highFreqMFs.size(); i++)
+            for (uint i=0; i<highFreqMFs.size(); i++)
                 myfile << highFreqMFs[i] << ", ";
             myfile << endl;
             myfile << cycle << " poleVelMFs: ";
-            for (int i=0; i<poleVelMFs.size(); i++)
+            for (uint i=0; i<poleVelMFs.size(); i++)
                 myfile << poleVelMFs[i] << ", ";
             myfile << endl;
             myfile << cycle << " poleAngMFs: ";
-            for (int i=0; i<poleAngMFs.size(); i++)
+            for (uint i=0; i<poleAngMFs.size(); i++)
                 myfile << poleAngMFs[i] << ", ";
             myfile << endl;
             myfile << cycle << " cartVelMFs: ";
-            for (int i=0; i<cartVelMFs.size(); i++)
+            for (uint i=0; i<cartVelMFs.size(); i++)
                 myfile << cartVelMFs[i] << ", ";
             myfile << endl;
             myfile << cycle << " cartPosMFs: ";
-            for (int i=0; i<cartPosMFs.size(); i++)
+            for (uint i=0; i<cartPosMFs.size(); i++)
                 myfile << cartPosMFs[i] << ", ";
             myfile << endl;
         }
@@ -184,6 +184,7 @@ float* Cartpole::getState() {
     return &mfFreq[0];
 }
 
+// TODO: Consider using a sigmoid rather than this scaling!
 float Cartpole::logScale(float value, float gain) {
     value *= gain;
     if (value >= 0) {
@@ -195,22 +196,38 @@ float Cartpole::logScale(float value, float gain) {
     }
 }
 
+float Cartpole::inverseLogScale(float scaledVal, float gain) {
+    if (scaledVal >= 0) {
+        return exp(scaledVal) / gain;
+    } else {
+        return -exp(-scaledVal) / gain;
+    }
+}
+
 void Cartpole::step(CBMSimCore *simCore) {
     static int numMillionStepTrials = 0;
     cycle++;
     timeoutCnt++;
     
     // Code to save sim state at selected points
-    if (fallen && getFailureMode() == "MaxTrialLength") {
-        stringstream ss;
-        ss << trialNum;
+    if (cycle == 100000) {
         path p(saveStateDir);
-        p /= "millionStepStateTrial" + ss.str() + ".out";
+        p /= "blankState.out";
         std::fstream filestr (p.c_str(), fstream::out);
         simCore->writeToState(filestr);
         filestr.close();
-        numMillionStepTrials++;
+        maxNumTrials = trialNum;
     }
+    // if (fallen && getFailureMode() == "MaxTrialLength") {
+    //     stringstream ss;
+    //     ss << trialNum;
+    //     path p(saveStateDir);
+    //     p /= "millionStepStateTrial" + ss.str() + ".out";
+    //     std::fstream filestr (p.c_str(), fstream::out);
+    //     simCore->writeToState(filestr);
+    //     filestr.close();
+    //     numMillionStepTrials++;
+    // }
     // } else if (fallen && numMillionStepTrials >= 5 && getFailureMode() != "MaxTrialLength") {
     //     path p(saveStateDir);
     //     p /= "failureState.out";
@@ -273,7 +290,6 @@ void Cartpole::computePhysics(float force) {
 }
 
 void Cartpole::setMZErr(CBMSimCore *simCore) {
-    // TODO: Error Left & Right seem to be mixed up given the failure dialogues. Fix this.
     errorLeft = false;  // Left pushing MZ
     errorRight = false; // Right pushing MZ
 

@@ -58,8 +58,8 @@ void Robocup::setupMossyFibers(CBMState *simState) {
     // so we do it here to appease the whimsical computer gods.
     assert(robosim.Init() == true);
     robosim.initializeBehavior();
-    if (robosim.agentType == "omniWalkAgent") {
-        OptimizationBehaviorOmniWalk *omni = (OptimizationBehaviorOmniWalk *) robosim.behavior;
+    if (robosim.agentType == "cerebellumAgent") {
+        behavior = (OptimizationBehaviorBalance *) robosim.behavior;
     }
 
     bodyModel = robosim.behavior->getBodyModel();
@@ -67,6 +67,7 @@ void Robocup::setupMossyFibers(CBMState *simState) {
     walkEngine = robosim.behavior->getWalkEngine();
 
     int numHighFreqMF = highFreqMFProportion * numMF;
+    int numImpactMF   = impactMFProportion * numMF;
     int numGyroXMF    = gyroXMFProportion * numMF;
     int numGyroYMF    = gyroYMFProportion * numMF;
     int numGyroZMF    = gyroZMFProportion * numMF;    
@@ -79,6 +80,7 @@ void Robocup::setupMossyFibers(CBMState *simState) {
         for (int i=0; i<numMF; i++)
             unassigned.push_back(i);
         assignRandomMFs(unassigned, numHighFreqMF, highFreqMFs);
+        assignRandomMFs(unassigned, numImpactMF, impactMFs);
         assignRandomMFs(unassigned, numGyroXMF, gyroXMFs);
         assignRandomMFs(unassigned, numGyroYMF, gyroYMFs);
         assignRandomMFs(unassigned, numGyroZMF, gyroZMFs);    
@@ -88,6 +90,7 @@ void Robocup::setupMossyFibers(CBMState *simState) {
     } else {
         int m = 100;
         for (int i=0; i < numHighFreqMF; i++) highFreqMFs.push_back(m++);
+        for (int i=0; i < numImpactMF; i++) impactMFs.push_back(m++);
         for (int i=0; i < numGyroXMF; i++) gyroXMFs.push_back(m++);
         for (int i=0; i < numGyroYMF; i++) gyroYMFs.push_back(m++);
         for (int i=0; i < numGyroZMF; i++) gyroZMFs.push_back(m++);        
@@ -106,6 +109,7 @@ float* Robocup::getState() {
     VecPosition gyros = bodyModel->getGyroRates();
     VecPosition accel = bodyModel->getAccelRates();
 
+    gaussMFAct(0, behavior->SHOT_PREP_TIME, behavior->getTimeToShot(), impactMFs);
     gaussMFAct(minGX, maxGX, gyros.getX(), gyroXMFs);
     gaussMFAct(minGY, maxGY, gyros.getY(), gyroYMFs);
     gaussMFAct(minGZ, maxGZ, gyros.getZ(), gyroZMFs);    
