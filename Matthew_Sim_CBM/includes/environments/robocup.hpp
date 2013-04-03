@@ -58,13 +58,15 @@ protected:
     void calcForce(CBMSimCore *simCore);
 
 protected:
+    std::ofstream logfile;
+    
     AgentInterface robosim;
     OptimizationBehaviorBalance *behavior;
     BodyModel *bodyModel;
     WorldModel *worldModel;
     UTWalkEngine *walkEngine;
 
-    Microzone shoulderPitchForward, shoulderPitchBack;
+    Microzone hipPitchForwards, hipPitchBack; // Single MZ to control the pitch of the hips
 
     // Min & Max observed gyro (x,y,z) values
     // Current angular velocities along the three axes of freedom of the corresponding body in degrees per second
@@ -100,11 +102,14 @@ protected:
     static const bool randomizeMFs = false;
     static const bool useLogScaling = true;
 
-    static const float forceScale = 5;   // Force gain for the output
-    static const float forcePow = 4;     // Force power for the output
+    static const float forceScale = 4;   // Force gain for the output
+    static const float forcePow = 2;     // Force power for the output
     static const float forceDecay = .99; // Rate a which force decays
 
+    std::vector<float> forces; // Keeps track of the forces generated
+
     static const int cbm_steps_to_robosim_steps = 5; // Number of cerebellar steps for each robosim step
+    int maxNumTrials;
 };
 
 #endif

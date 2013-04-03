@@ -188,6 +188,7 @@ void WeightAnalyzer::plotMFChange(string vName, int *mfInds, int numMFInds, vect
             wDiffPerc.push_back(mfWeightDiffPercents[mz][mfInds[i]]);
         }
 
+        // Plot log scaled vals
         {
             vector<float> logScaledVals;
             float scaledMin = Cartpole::logScale(Cartpole::leftAngleBound, 100000);
@@ -196,7 +197,7 @@ void WeightAnalyzer::plotMFChange(string vName, int *mfInds, int numMFInds, vect
             float scaledVal = scaledMin + interval / 2.0; 
             cout << "Vname: " << vName << endl;
             for (int i=0; i<numMFInds; i++) {
-                cout << Cartpole::inverseLogScale(scaledVal, 100000) << endl;
+                cout << i << " " << Cartpole::inverseLogScale(scaledVal, 100000) << endl;
                 logScaledVals.push_back(Cartpole::inverseLogScale(scaledVal, 100000));
                 scaledVal += interval;
             }

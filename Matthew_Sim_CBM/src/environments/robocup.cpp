@@ -8,6 +8,7 @@ namespace po = boost::program_options;
 po::options_description Robocup::getOptions() {
     po::options_description desc("Robocup Options");
     desc.add_options()
+        ("logfile", po::value<string>()->default_value("robocup.log"),"log file")
         ("host", po::value<string>()->default_value("127.0.0.1"), "IP of the server")
         ("gPort", po::value<int>()->default_value(3100), "Server port")
         ("mPort", po::value<int>()->default_value(3200), "Monitor port")
@@ -16,8 +17,8 @@ po::options_description Robocup::getOptions() {
         ("rsg", po::value<string>()->default_value("rsg/agent/nao"),//"/usr/local/share/rcssserver3d/rsg/agent/nao"),
          "Folder for the nao model")
         ("behavior", po::value<string>()->default_value("cerebellumAgent"), "Agent behavior")
-        // ("runs", po::value<int>()->default_value(1),
-        //  "Robocup: Number of times the obstacle course should be navigated.")
+        ("maxNumTrials", po::value<int>()->default_value(25),
+         "Maximum number of trials.")
         ;
     return desc;
 }
@@ -37,6 +38,9 @@ Robocup::Robocup(CRandomSFMT0 *randGen, int argc, char **argv) : Environment(ran
     robosim.outputFile = "/tmp/cbm.txt"; // File where robot fitness is written
     robosim.agentType  = vm["behavior"].as<string>();
     robosim.LoadParams(vm["paramFile"].as<string>());
+    maxNumTrials = vm["maxNumTrials"].as<int>();
+
+    logfile.open(vm["logfile"].as<string>().c_str());
 }
 
 Robocup::~Robocup() {
@@ -48,6 +52,7 @@ Robocup::~Robocup() {
         cout << "TotalFitness: " << cumFitness << " NumRuns: " << numRuns << " AvgFitness: " << avgFitness << endl;
     }
     robosim.Done();
+    logfile.close();
 }
 
 void Robocup::setupMossyFibers(CBMState *simState) {
@@ -60,6 +65,7 @@ void Robocup::setupMossyFibers(CBMState *simState) {
     robosim.initializeBehavior();
     if (robosim.agentType == "cerebellumAgent") {
         behavior = (OptimizationBehaviorBalance *) robosim.behavior;
+        behavior->setMaxNumShots(maxNumTrials);
     }
 
     bodyModel = robosim.behavior->getBodyModel();
@@ -121,37 +127,39 @@ float* Robocup::getState() {
     //     cout << "Fallen Back" << endl;
     // } else if (accel.getX() > 6.5) {
     //     cout << "Fallen Forward" << endl;
-    // } else if (accel.getY() < -6.5) {
-    //     cout << "Fallen Right" << endl;
-    // } else if (accel.getY() > 6.5) {
-    //     cout << "Fallen Left" << endl;
     // }
-
-    // // Get information about the joints
-    // for (int i=0; i<HJ_NUM; i++) {
-    //     bodyModel->getJointAngle(i);
-    // }
-
-    // // Get information about the effectors
-    // for (int i=0; i<EFF_NUM; i++) {
-    //     bodyModel->getCurrentAngle(i);
-    //     bodyModel->getTargetAngle(i);
-    // }
-
+    
     return &mfFreq[0];
 }
 
 void Robocup::step(CBMSimCore *simCore) {
     Environment::step(simCore);
 
-    // Setup the MZs 
-    if (!shoulderPitchForward.initialized()) {
-        shoulderPitchForward = Microzone(0, numNC, forceScale, forcePow, forceDecay, simCore);
-        shoulderPitchBack = Microzone(1, numNC, forceScale, forcePow, forceDecay, simCore);
+    // Setup the MZs
+    if (!hipPitchForwards.initialized())
+        hipPitchForwards = Microzone(0, numNC, forceScale, forcePow, forceDecay, simCore);
+    if (!hipPitchBack.initialized())
+        hipPitchBack = Microzone(1, numNC, forceScale, forcePow, forceDecay, simCore);
+
+    if (timestep % cbm_steps_to_robosim_steps == 0) {
+        float avgHipPitchForce = 0;
+        for (uint i=0; i<forces.size(); i++)
+            avgHipPitchForce += forces[i];
+        avgHipPitchForce /= forces.size();
+        forces.clear();
+        walkEngine->changeHips(-avgHipPitchForce, -avgHipPitchForce);
+
+        robosim.runStep();
+
+        vector<string>* messages = behavior->getMessages();
+        for (uint i=0; i<messages->size(); i++) {
+            string message = (*messages)[i];
+            cout << message << endl;
+            logfile << timestep << " " << message << endl;
+        }
+        messages->clear();
     }
 
-    if (timestep % cbm_steps_to_robosim_steps == 0)
-        robosim.runStep();
     calcForce(simCore);
     deliverErrors(simCore);
 }
@@ -165,23 +173,17 @@ void Robocup::deliverErrors(CBMSimCore *simCore) {
     // Error associated with falling
     VecPosition accel = bodyModel->getAccelRates();
     float errorProbability = min(.05f * fabsf(uprightAngle - .5f), maxErrProb);
-    // TODO: Figure out which MZ should get error
+    // Accel X < 0 Indicates a backwards lean
     if (accel.getX() < 0 && randGen->Random() < errorProbability)
-        shoulderPitchForward.deliverError();
+        hipPitchForwards.deliverError();
+    // Accel X > 0 Indicates a forwards lean
     if (accel.getX() > 0 && randGen->Random() < errorProbability)
-        shoulderPitchBack.deliverError();
+        hipPitchBack.deliverError();
 }
 
 void Robocup::calcForce(CBMSimCore *simCore) {
-    float netShoulderPitchForce = shoulderPitchForward.getForce() - shoulderPitchBack.getForce();
-    // Pitch brings the arms up/down in front of the robot (rotator cuff). [-120,120]; 0 = arms straight out in front
-    float lShoulderPitch = netShoulderPitchForce - 80;
-    float rShoulderPitch = netShoulderPitchForce - 80;
-    // Roll brings the arms up/down to the sides of the robot (deltoids). [-1,95]; 95 = full lateral raise.
-    float lShoulderRoll = 15;
-    float rShoulderRoll = 15;
-    // TODO: See if scores change when this method is commented in/out
-    //walkEngine->setArms(lShoulderPitch, rShoulderPitch, lShoulderRoll, rShoulderRoll);
+    float netHipPitchForce = hipPitchForwards.getForce() - hipPitchBack.getForce();
+    forces.push_back(netHipPitchForce);
 }
 
 bool Robocup::terminated() {
