@@ -8,34 +8,6 @@
 #include "worldmodel.h"
 #include "core_utwalk/motion/UTWalkEngine.h"
 
-class Microzone {
-public:
-    Microzone() : simCore(NULL) {}
-    Microzone(int mzNum, int numNC, float forceScale, float forcePow, float forceDecay, CBMSimCore *simCore):
-        mzNum(mzNum), numNC(numNC), forceScale(forceScale), forcePow(forcePow), forceDecay(forceDecay),
-        simCore(simCore)
-        {}
-
-    inline bool initialized() { return simCore != NULL; }
-
-    inline void deliverError() { simCore->updateErrDrive(mzNum,1.0); }
-
-    inline float getForce() {
-        const ct_uint8_t *mz0ApNC = simCore->getMZoneList()[mzNum]->exportAPNC();
-        float mzInputSum = 0;
-        for (int i=0; i<numNC; i++)
-            mzInputSum += mz0ApNC[i];
-        force += pow((mzInputSum / float(numNC)) * forceScale, forcePow);
-        force *= forceDecay;
-        return force;
-    }
-
-protected:
-    int mzNum, numNC;
-    float force, forceScale, forcePow, forceDecay;
-    CBMSimCore *simCore;
-};
-
 class Robocup : public Environment {
 public:
     Robocup(CRandomSFMT0 *randGen, int argc, char **argv);

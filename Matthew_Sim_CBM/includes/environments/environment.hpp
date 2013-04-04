@@ -11,6 +11,62 @@
 #include <CBMStateInclude/interfaces/cbmstate.h>
 #include <CBMToolsInclude/poissonregencells.h>
 
+/** This class is a wrapper for a Microzone **/
+class Microzone {
+public:
+    Microzone() : simCore(NULL) {}
+    Microzone(int mzNum, int numNC, float forceScale, float forcePow, float forceDecay, CBMSimCore *simCore):
+        mzNum(mzNum), numNC(numNC), forceScale(forceScale), forcePow(forcePow), forceDecay(forceDecay),
+        simCore(simCore)
+        {}
+
+    inline bool initialized() { return simCore != NULL; }
+
+    inline void deliverError() { simCore->updateErrDrive(mzNum,1.0); }
+
+    inline float getForce() {
+        const ct_uint8_t *mz0ApNC = simCore->getMZoneList()[mzNum]->exportAPNC();
+        float mzInputSum = 0;
+        for (int i=0; i<numNC; i++)
+            mzInputSum += mz0ApNC[i];
+        force += pow((mzInputSum / float(numNC)) * forceScale, forcePow);
+        force *= forceDecay;
+        return force;
+    }
+
+protected:
+    int mzNum, numNC;
+    float force, forceScale, forcePow, forceDecay;
+    CBMSimCore *simCore;
+};
+
+class StateVariable {
+public:
+    StateVariable() : numMFs(-1) {}
+    StateVariable(std::string name, int numMFs) : name(name), numMFs(numMFs) {}
+
+    // Takes Mossy fibers from the unassigned list and assigns them.
+    void assignMFs(std::vector<int>& unassignedMFs);
+
+    // Assigns the max and minimum firing rates for each mf
+    void setMinMaxMFFreq(std::vector<float>& minMFFreq, std::vector<float>& maxMFFreq);
+
+    // Computes the firing rate of a given MF based on how far the current state
+    // variable's value is from the MF's position in state space. 
+    void gaussMFAct(float currentVal, std::vector<float>& mfFreq, float gaussWidth=6.0);
+
+    // Given a desired frequency of the same size as mfFreq, sets the associated
+    // mfs with this state variable to the desired frequency.
+    void setMFAct(std::vector<float>& desiredFreq, std::vector<float>& mfFreq);
+
+    std::string name;
+    int numMFs;
+    std::vector<int> mfInds; 
+    std::vector<float> minFreq, maxFreq; // Minimum and maximum firing frequency for each mf
+    float minVal, maxVal; // Minimum and maximum values of this state variable
+};
+
+
 class Environment {
 public:
     Environment(CRandomSFMT0 *randGen);

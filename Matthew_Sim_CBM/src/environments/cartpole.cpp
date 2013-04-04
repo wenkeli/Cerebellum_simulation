@@ -104,30 +104,6 @@ void Cartpole::setupMossyFibers(CBMState *simState) {
         assignRandomMFs(unassigned,numPoleVelMF,poleVelMFs);
         assignRandomMFs(unassigned,numCartVelMF,cartVelMFs);
         assignRandomMFs(unassigned,numCartPosMF,cartPosMFs);
-
-        // Log the mfs assigned to each group
-        if (loggingEnabled) {
-            myfile << cycle << " highFreqMFs: ";
-            for (uint i=0; i<highFreqMFs.size(); i++)
-                myfile << highFreqMFs[i] << ", ";
-            myfile << endl;
-            myfile << cycle << " poleVelMFs: ";
-            for (uint i=0; i<poleVelMFs.size(); i++)
-                myfile << poleVelMFs[i] << ", ";
-            myfile << endl;
-            myfile << cycle << " poleAngMFs: ";
-            for (uint i=0; i<poleAngMFs.size(); i++)
-                myfile << poleAngMFs[i] << ", ";
-            myfile << endl;
-            myfile << cycle << " cartVelMFs: ";
-            for (uint i=0; i<cartVelMFs.size(); i++)
-                myfile << cartVelMFs[i] << ", ";
-            myfile << endl;
-            myfile << cycle << " cartPosMFs: ";
-            for (uint i=0; i<cartPosMFs.size(); i++)
-                myfile << cartPosMFs[i] << ", ";
-            myfile << endl;
-        }
     } else { // Assign in order -- useful for visualization
         int m = 500;
         for (int i=0; i < numHighFreqMF; i++) highFreqMFs.push_back(m++);
@@ -135,6 +111,31 @@ void Cartpole::setupMossyFibers(CBMState *simState) {
         for (int i=0; i < numPoleVelMF; i++) poleVelMFs.push_back(m++);
         for (int i=0; i < numCartVelMF; i++) cartVelMFs.push_back(m++);
         for (int i=0; i < numCartPosMF; i++) cartPosMFs.push_back(m++);
+    }
+
+
+    // Log the mfs assigned to each group
+    if (loggingEnabled) {
+        myfile << cycle << " highFreqMFs: ";
+        for (uint i=0; i<highFreqMFs.size(); i++)
+            myfile << highFreqMFs[i] << ", ";
+        myfile << endl;
+        myfile << cycle << " poleVelMFs: ";
+        for (uint i=0; i<poleVelMFs.size(); i++)
+            myfile << poleVelMFs[i] << ", ";
+        myfile << endl;
+        myfile << cycle << " poleAngMFs: ";
+        for (uint i=0; i<poleAngMFs.size(); i++)
+            myfile << poleAngMFs[i] << ", ";
+        myfile << endl;
+        myfile << cycle << " cartVelMFs: ";
+        for (uint i=0; i<cartVelMFs.size(); i++)
+            myfile << cartVelMFs[i] << ", ";
+        myfile << endl;
+        myfile << cycle << " cartPosMFs: ";
+        for (uint i=0; i<cartPosMFs.size(); i++)
+            myfile << cartPosMFs[i] << ", ";
+        myfile << endl;
     }
 }
 
