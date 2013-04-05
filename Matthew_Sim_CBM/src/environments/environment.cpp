@@ -2,6 +2,9 @@
 #include <algorithm>
 
 #include "../includes/environments/environment.hpp"
+#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/lexical_cast.hpp>
 
 using namespace std;
 
@@ -78,6 +81,30 @@ void Environment::assignRandomMFs(vector<int>& unassignedMFs, int numToAssign, v
         mfs.push_back(unassignedMFs[indx]);
         unassignedMFs.erase(unassignedMFs.begin()+indx);
     }
+}
+
+void Environment::writeMFInds(ofstream& logfile, string stateVariable, const vector<int>& mfInds) {
+    logfile << "MFInds " << stateVariable << " ";
+    for (uint i=0; i<mfInds.size(); i++)
+        logfile << mfInds[i] << " ";
+    logfile << endl;
+}
+
+void Environment::readMFInds(ifstream& logfile, vector<string>& variables, vector<vector<int> >& mfInds) {
+    string line;
+    while (std::getline(logfile, line)) {
+        if (boost::starts_with(line,"MFInds")) {
+            vector<int> inds;
+            vector<string> toks;
+            boost::split(toks, line, boost::is_any_of(" "));
+            variables.push_back(toks[1]);
+            for (uint i=2; i<toks.size(); i++)
+                if (!toks[i].empty())
+                    inds.push_back(boost::lexical_cast<int>(toks[i]));
+            mfInds.push_back(inds);
+        }
+    }
+    logfile.close();
 }
 
 

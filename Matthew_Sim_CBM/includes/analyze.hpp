@@ -38,7 +38,7 @@ public:
     // Creates a histogram of the GR-PC weights for each microzone
     void grPCWeightHist(boost::filesystem::path p);
 
-    void plotMFChange(std::string vName, int *mfInds, int numMFInds,
+    void plotMFChange(std::string vName, std::vector<int> &mfInds,
                       std::vector<std::vector<float> >&mfWeightDiffSums,
                       std::vector<std::vector<float> >&mfWeightDiffPercents,
                       std::vector<std::vector<float> >&mfWeightSums,                      
@@ -48,6 +48,7 @@ protected:
     RInside R;
 
     boost::filesystem::path plot_dir; // directory to store the plots
+    boost::filesystem::path logfile; // logfile to read from (optional)
 };
 #endif /* ANALYZE_HPP_ */
 #endif /* BUILD_ANALYSIS */

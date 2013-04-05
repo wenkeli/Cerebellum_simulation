@@ -104,6 +104,15 @@ void Robocup::setupMossyFibers(CBMState *simState) {
         for (int i=0; i < numAccelYMF; i++) accelYMFs.push_back(m++);
         for (int i=0; i < numAccelZMF; i++) accelZMFs.push_back(m++);        
     }
+
+    writeMFInds(logfile, "highFreqMFs", highFreqMFs);
+    writeMFInds(logfile, "impactMFs", impactMFs);
+    writeMFInds(logfile, "gyroXMFs", gyroXMFs);
+    writeMFInds(logfile, "gyroYMFs", gyroYMFs);
+    writeMFInds(logfile, "gyroZMFs", gyroZMFs);
+    writeMFInds(logfile, "accelXMFs", accelXMFs);    
+    writeMFInds(logfile, "accelYMFs", accelYMFs);
+    writeMFInds(logfile, "accelZMFs", accelZMFs);        
 }
 
 float* Robocup::getState() {
