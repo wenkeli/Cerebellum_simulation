@@ -5,54 +5,6 @@
 
 using namespace std;
 
-void StateVariable::assignMFs(vector<int>& unassignedMFs) {
-    assert(numMFs > 0);
-    for (int i=0; i<numMFs; i++) {
-        assert(!unassignedMFs.empty());
-        mfInds.push_back(unassignedMFs.back());
-        unassignedMFs.pop_back();
-    }
-}
-
-void StateVariable::setMinMaxMFFreq(vector<float>& minMFFreq, vector<float>& maxMFFreq) {
-    assert(mfInds.size() == numMFs);
-    for (int i=0; i<numMFs; i++) {
-        int indx = mfInds[i];
-        assert(indx < minMFFreq.size());
-        assert(indx < maxMFFreq.size());
-        minFreq.push_back(minMFFreq[indx]);
-        maxFreq.push_back(maxMFFreq[indx]);
-    }
-}
-
-void StateVariable::gaussMFAct(float currentVal, vector<float>& mfFreq, float gaussWidth) {
-    currentVal = max(minVal, min(maxVal, currentVal));
-    float range = maxVal - minVal;
-    float interval = range / mfInds.size();
-    float pos = minVal + interval / 2.0;
-    float variance = gaussWidth * interval;
-    float maxPossibleValue = 1.0 / sqrt(2 * M_PI * (variance*variance));
-    for (uint i = 0; i < mfInds.size(); i++) {
-        float mean = pos;
-        float x = currentVal;
-        // Formula for normal distribution: http://en.wikipedia.org/wiki/Normal_distribution
-        float value = exp(-1 * ((x-mean)*(x-mean))/(2*(variance*variance))) / sqrt(2 * M_PI * (variance*variance));
-        float normalizedValue = value / maxPossibleValue;
-
-        // Firing rate is a linear combination of relaxed and excited rates
-        int mfIndx = mfInds[i];
-        mfFreq[mfIndx] = normalizedValue * maxFreq[i] + (1 - normalizedValue) * minFreq[i];
-
-        pos += interval;
-    }
-}
-
-void StateVariable::setMFAct(vector<float>& desiredFreq, vector<float>& mfFreq) {
-    assert(desiredFreq.size() == mfFreq.size());
-    for (vector<int>::iterator it=mfInds.begin(); it != mfInds.end(); it++)
-        mfFreq[*it] = desiredFreq[*it];
-}
-
 Environment::Environment(CRandomSFMT0 *randGen) :
     randGen(randGen), timestep(0) {}
 Environment::~Environment() {}

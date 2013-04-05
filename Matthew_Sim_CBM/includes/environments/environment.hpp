@@ -40,33 +40,6 @@ protected:
     CBMSimCore *simCore;
 };
 
-class StateVariable {
-public:
-    StateVariable() : numMFs(-1) {}
-    StateVariable(std::string name, int numMFs) : name(name), numMFs(numMFs) {}
-
-    // Takes Mossy fibers from the unassigned list and assigns them.
-    void assignMFs(std::vector<int>& unassignedMFs);
-
-    // Assigns the max and minimum firing rates for each mf
-    void setMinMaxMFFreq(std::vector<float>& minMFFreq, std::vector<float>& maxMFFreq);
-
-    // Computes the firing rate of a given MF based on how far the current state
-    // variable's value is from the MF's position in state space. 
-    void gaussMFAct(float currentVal, std::vector<float>& mfFreq, float gaussWidth=6.0);
-
-    // Given a desired frequency of the same size as mfFreq, sets the associated
-    // mfs with this state variable to the desired frequency.
-    void setMFAct(std::vector<float>& desiredFreq, std::vector<float>& mfFreq);
-
-    std::string name;
-    int numMFs;
-    std::vector<int> mfInds; 
-    std::vector<float> minFreq, maxFreq; // Minimum and maximum firing frequency for each mf
-    float minVal, maxVal; // Minimum and maximum values of this state variable
-};
-
-
 class Environment {
 public:
     Environment(CRandomSFMT0 *randGen);
