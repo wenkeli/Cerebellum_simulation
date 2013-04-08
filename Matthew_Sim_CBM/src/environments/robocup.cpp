@@ -115,7 +115,15 @@ void Robocup::setupMossyFibers(CBMState *simState) {
     writeMFInds(logfile, "gyroZMFs", gyroZMFs);
     writeMFInds(logfile, "accelXMFs", accelXMFs);    
     writeMFInds(logfile, "accelYMFs", accelYMFs);
-    writeMFInds(logfile, "accelZMFs", accelZMFs);        
+    writeMFInds(logfile, "accelZMFs", accelZMFs);
+
+    writeMFResponses(logfile, "impactMFs", getMaximalGaussianResponse(0, behavior->SHOT_PREP_TIME, numImpactMF));
+    writeMFResponses(logfile, "gyroXMFs", getMaximalGaussianResponse(minGX, maxGX, numGyroXMF));
+    writeMFResponses(logfile, "gyroYMFs", getMaximalGaussianResponse(minGY, maxGY, numGyroYMF));                     
+    writeMFResponses(logfile, "gyroZMFs", getMaximalGaussianResponse(minGZ, maxGZ, numGyroZMF));    
+    writeMFResponses(logfile, "accelXMFs", getMaximalGaussianResponse(minAX, maxAX, numAccelXMF));
+    writeMFResponses(logfile, "accelYMFs", getMaximalGaussianResponse(minAY, maxAY, numAccelYMF));
+    writeMFResponses(logfile, "accelZMFs", getMaximalGaussianResponse(minAZ, maxAZ, numAccelZMF));        
 }
 
 float* Robocup::getState() {

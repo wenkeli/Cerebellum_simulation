@@ -280,18 +280,43 @@ void WeightAnalyzer::plotMFWeights(path p) {
         mfWeightSums.push_back(mfWeight);
     }
 
-    // Parse log file for the mf indexes associated with each state variable
-    ifstream ifs(logfile.c_str(), ifstream::in);
-    if (ifs.good()) {
-        cout << "Doing log specific analysis on logfile " << logfile.c_str() << endl;
-        CRandomSFMT0 randGen(rand());
-        Environment env(&randGen);
-        vector<string> variableNames;
-        vector<vector<int> > mfInds;
-        env.readMFInds(ifs, variableNames, mfInds);
+    {
+        // Parse log file for the mf indexes associated with each state variable
+        ifstream ifs(logfile.c_str(), ifstream::in);
+        if (ifs.good()) {
+            CRandomSFMT0 randGen(rand());
+            Environment env(&randGen);
+            vector<string> variableNames;
+            vector<vector<int> > mfInds;
+            env.readMFInds(ifs, variableNames, mfInds);
 
-        for (uint i=0; i<variableNames.size(); i++) {
-            plotMFWeights(variableNames[i], mfInds[i], mfWeightSums, numMZ);
+            for (uint i=0; i<variableNames.size(); i++) {
+                plotMFWeights(variableNames[i], mfInds[i], mfWeightSums, numMZ);
+            }
+        }
+    }
+
+    {
+        // Plot the maximally responsive state variable values for each MF
+        ifstream ifs(logfile.c_str(), ifstream::in);
+        if (ifs.good()) {
+            CRandomSFMT0 randGen(rand());
+            Environment env(&randGen);
+            vector<string> variableNames;
+            vector<vector<float> > mfResp;
+            env.readMFResponses(ifs, variableNames, mfResp);
+
+            for (uint i=0; i<variableNames.size(); i++) {
+                plot_dir /= variableNames[i] + "_maximal_responses.pdf";
+                R["weightsvec"] = mfResp[i];
+                string txt =
+                    "library(ggplot2); "
+                    "data=data.frame(w=weightsvec); "
+                    "plot=ggplot(data=data, aes(x=1:nrow(data), y=w)) + geom_line() + xlab(\"MF Number\") + ylab(\"Maximal Responsive Value\") + labs(title = expression(\"" + variableNames[i] + " Maximal Responses\"));"
+                    "ggsave(plot,file=\""+plot_dir.c_str()+"\"); ";
+                R.parseEvalQ(txt);
+                plot_dir.remove_leaf();
+            }
         }
     }
 }

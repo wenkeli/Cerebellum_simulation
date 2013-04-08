@@ -75,6 +75,18 @@ void Environment::gaussMFAct(float minVal, float maxVal, float currentVal, vecto
     }
 }
 
+vector<float> Environment::getMaximalGaussianResponse(float minVal, float maxVal, int numMF) {
+    vector<float> maximalResponses;
+    float range = maxVal - minVal;
+    float interval = range / numMF;
+    float pos = minVal + interval / 2.0;
+    for (uint i = 0; i < numMF; i++) {
+        maximalResponses.push_back(pos);
+        pos += interval;
+    }
+    return maximalResponses;
+}
+
 void Environment::assignRandomMFs(vector<int>& unassignedMFs, int numToAssign, vector<int>& mfs) {
     for (int i=0; i<numToAssign; ++i) {
         int indx = randGen->IRandom(0,unassignedMFs.size()-1);
@@ -102,6 +114,30 @@ void Environment::readMFInds(ifstream& logfile, vector<string>& variables, vecto
                 if (!toks[i].empty())
                     inds.push_back(boost::lexical_cast<int>(toks[i]));
             mfInds.push_back(inds);
+        }
+    }
+    logfile.close();
+}
+
+void Environment::writeMFResponses(ofstream& logfile, string stateVariable, const vector<float>& mfResp) {
+    logfile << "MFMaximalResponses " << stateVariable << " ";
+    for (uint i=0; i<mfResp.size(); i++)
+        logfile << mfResp[i] << " ";
+    logfile << endl;
+}
+
+void Environment::readMFResponses(ifstream& logfile, vector<string>& variables, vector<vector<float> >& mfResp) {
+    string line;
+    while (std::getline(logfile, line)) {
+        if (boost::starts_with(line,"MFMaximalResponses")) {
+            vector<float> resp;
+            vector<string> toks;
+            boost::split(toks, line, boost::is_any_of(" "));
+            variables.push_back(toks[1]);
+            for (uint i=2; i<toks.size(); i++)
+                if (!toks[i].empty())
+                    resp.push_back(boost::lexical_cast<float>(toks[i]));
+            mfResp.push_back(resp);
         }
     }
     logfile.close();

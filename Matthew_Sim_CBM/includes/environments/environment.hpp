@@ -81,11 +81,19 @@ protected:
     // variable's value is from the MF's position in state space. 
     void gaussMFAct(float minVal, float maxVal, float currentVal, std::vector<int> &mfInds, float gaussWidth=6.0);
 
+    // Computes the state variable value at which each mf maximally responds
+    std::vector<float> getMaximalGaussianResponse(float minVal, float maxVal, int numMF);
+
     // Writes the list of MF indexes to log. This is the standard amongst environments.
     void writeMFInds(std::ofstream& logfile, std::string stateVariable, const std::vector<int>& mfInds);
 
     // Reads the list of MF indexes in a given logfile
     void readMFInds(std::ifstream& logfile, std::vector<std::string>& variables, std::vector<std::vector<int> >& mfInds);
+
+    void writeMFResponses(std::ofstream& logfile, std::string stateVariable, const std::vector<float>& mfResp);
+
+    void readMFResponses(std::ifstream& logfile, std::vector<std::string>& variables,
+                         std::vector<std::vector<float> >& mfResp);    
 };
 
 #endif // ENVIRONMENT_H
