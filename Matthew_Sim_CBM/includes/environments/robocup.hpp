@@ -8,6 +8,8 @@
 #include "worldmodel.h"
 #include "core_utwalk/motion/UTWalkEngine.h"
 
+#include <boost/filesystem.hpp>
+
 class Robocup : public Environment {
 public:
     Robocup(CRandomSFMT0 *randGen, int argc, char **argv);
@@ -31,7 +33,8 @@ protected:
 
 protected:
     std::ofstream logfile;
-    
+    boost::filesystem::path saveStateDir; // Directory to save sim state files
+
     AgentInterface robosim;
     OptimizationBehaviorBalance *behavior;
     BodyModel *bodyModel;

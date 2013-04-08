@@ -90,22 +90,6 @@ void WeightAnalyzer::analyzeFiles(path p1, path p2) {
         weightDiff.push_back(diff);
     }
 
-    // Plot the granule weight diffs
-    // for (int mz=0; mz<numMZ; mz++) {
-    //     stringstream ss;
-    //     ss << mz;
-    //     plot_dir /= "MZ" + ss.str() + "_gr_weight_diff_hist.pdf";
-    //     const vector<float> w(weightDiff[mz]);
-    //     R["weightsvec"] = w;
-    //     string txt =
-    //         "library(ggplot2); "
-    //         "data=data.frame(x=weightsvec); "
-    //         "plot=qplot(x, data=data, geom=\"histogram\", binwidth=.01, xlab=\"Granule PC Weight Diff\") + labs(title = expression(\"MZ"+ss.str()+" " + fname1+" -> "+fname2+" GR-PC Weight Diff Hist\")); " 
-    //         "ggsave(plot,file=\""+plot_dir.c_str()+"\"); ";
-    //     R.parseEvalQ(txt);
-    //     plot_dir.remove_leaf();
-    // }    
-
     // Trace these differences back to the MFs who generated them
     vector<vector<int> > numConnectedGRs; // [mz][mfNum] - How many granule cells are connected to each mf
     vector<vector<float> > mfWeightSums; // [mz][mfNum] - Sum of granule weights connected to each mf
@@ -224,6 +208,7 @@ void WeightAnalyzer::analyzeFile(path p) {
     plot_dir /= "plots_" + p.leaf().native() + "/";
     create_directory(plot_dir);
     grPCWeightHist(p);
+    plotMFWeights(p);
     plot_dir.remove_leaf();
 }
 
@@ -255,6 +240,83 @@ void WeightAnalyzer::grPCWeightHist(path p) {
             "ggsave(plot,file=\""+plot_dir.native()+"\"); ";
         R.parseEvalQ(txt);
         plot_dir.remove_leaf();
+    }
+}
+
+void WeightAnalyzer::plotMFWeights(path p) {
+    fstream savedSimFile(p.c_str(), fstream::in);
+    CBMState state(savedSimFile);
+    savedSimFile.close();
+    
+    int numMZ = state.getNumZones();
+    int numGR = state.getConnectivityParams()->getNumGR();
+    int numMF = state.getConnectivityParams()->getNumMF();
+
+    vector<vector<float> > origWeights; // Original gr->pc Weights [mz][weight]
+    for (int i=0; i<numMZ; i++) {
+        MZoneActivityState *mzActState = state.getMZoneActStateInternal(i);
+        vector<float> w = mzActState->getGRPCSynWeightLinear();
+        origWeights.push_back(w);
+    }
+
+    // Trace these differences back to the MFs who generated them
+    vector<vector<int> > numConnectedGRs; // [mz][mfNum] - How many granule cells are connected to each mf
+    vector<vector<float> > mfWeightSums; // [mz][mfNum] - Sum of granule weights connected to each mf
+
+    for (int mz=0; mz<numMZ; mz++) {
+        vector<int> numConnectedGR;
+        vector<float> mfWeight;
+        for (int mf=0; mf<numMF; mf++) {
+            float weightSum = 0;
+            // Get the vector of granule cells connected to the mf in question
+            vector<ct_uint32_t> connectedGRs = state.getInnetConState()->getpMFfromMFtoGRCon(mf);
+            for (uint j=0; j<connectedGRs.size(); j++) {
+                weightSum += origWeights[mz][connectedGRs[j]];
+            }
+            numConnectedGR.push_back(connectedGRs.size());
+            mfWeight.push_back(weightSum);
+        }
+        numConnectedGRs.push_back(numConnectedGR);
+        mfWeightSums.push_back(mfWeight);
+    }
+
+    // Parse log file for the mf indexes associated with each state variable
+    ifstream ifs(logfile.c_str(), ifstream::in);
+    if (ifs.good()) {
+        cout << "Doing log specific analysis on logfile " << logfile.c_str() << endl;
+        CRandomSFMT0 randGen(rand());
+        Environment env(&randGen);
+        vector<string> variableNames;
+        vector<vector<int> > mfInds;
+        env.readMFInds(ifs, variableNames, mfInds);
+
+        for (uint i=0; i<variableNames.size(); i++) {
+            plotMFWeights(variableNames[i], mfInds[i], mfWeightSums, numMZ);
+        }
+    }
+}
+
+void WeightAnalyzer::plotMFWeights(string vName, vector<int>& mfInds, vector<vector<float> >& mfWeightSums, int numMZ) {
+    for (int mz=0; mz<numMZ; mz++) {
+        vector<float> weights;
+        for (uint i=0; i<mfInds.size(); i++) {
+            weights.push_back(mfWeightSums[mz][mfInds[i]]);
+        }
+
+        {
+            // Plot this re-ordered weights
+            stringstream ss;
+            ss << mz;
+            plot_dir /= vName + "_MZ" + ss.str() + "_ordered_weights.pdf";
+            R["weightsvec"] = weights;
+            string txt =
+                "library(ggplot2); "
+                "data=data.frame(w=weightsvec); "
+                "plot=ggplot(data=data, aes(x=1:nrow(data), y=w)) + geom_bar(stat=\"identity\") + xlab(\"MF Number\") + ylab(\"Sum of Connected Granule Weights\") + labs(title = expression(\"MZ"+ss.str()+" " + vName + " Ordered MF Weights\"));"
+                "ggsave(plot,file=\""+plot_dir.c_str()+"\"); ";
+            R.parseEvalQ(txt);
+            plot_dir.remove_leaf();
+        }
     }
 }
 #endif /* BUILD_ANALYSIS */

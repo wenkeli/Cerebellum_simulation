@@ -19,6 +19,7 @@ po::options_description Robocup::getOptions() {
         ("behavior", po::value<string>()->default_value("cerebellumAgent"), "Agent behavior")
         ("maxNumTrials", po::value<int>()->default_value(25),
          "Maximum number of trials.")
+        ("simStateDir", po::value<string>()->default_value("./"), "Directory to save sim state files.")        
         ;
     return desc;
 }
@@ -41,6 +42,8 @@ Robocup::Robocup(CRandomSFMT0 *randGen, int argc, char **argv) : Environment(ran
     maxNumTrials = vm["maxNumTrials"].as<int>();
 
     logfile.open(vm["logfile"].as<string>().c_str());
+    saveStateDir = boost::filesystem::path(vm["simStateDir"].as<string>());
+    assert(exists(saveStateDir) && is_directory(saveStateDir));
 }
 
 Robocup::~Robocup() {
@@ -149,6 +152,15 @@ void Robocup::step(CBMSimCore *simCore) {
         hipPitchForwards = Microzone(0, numNC, forceScale, forcePow, forceDecay, simCore);
     if (!hipPitchBack.initialized())
         hipPitchBack = Microzone(1, numNC, forceScale, forcePow, forceDecay, simCore);
+
+    // Save the simulator periodically
+    if (timestep % 100000 == 0) {
+        boost::filesystem::path p(saveStateDir);
+        p /= "ts" + boost::lexical_cast<string>(timestep) + ".out";
+        std::fstream filestr (p.c_str(), fstream::out);
+        simCore->writeToState(filestr);
+        filestr.close();
+    }
 
     if (timestep % cbm_steps_to_robosim_steps == 0) {
         float avgHipPitchForce = 0;

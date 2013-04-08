@@ -38,6 +38,12 @@ public:
     // Creates a histogram of the GR-PC weights for each microzone
     void grPCWeightHist(boost::filesystem::path p);
 
+    // Plots the MF weights for each state variable
+    void plotMFWeights(boost::filesystem::path p);
+
+    void plotMFWeights(std::string vName, std::vector<int>& mfInds,
+                       std::vector<std::vector<float> >& mfWeightSums, int numMZ);
+
     void plotMFChange(std::string vName, std::vector<int> &mfInds,
                       std::vector<std::vector<float> >&mfWeightDiffSums,
                       std::vector<std::vector<float> >&mfWeightDiffPercents,
