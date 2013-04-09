@@ -280,28 +280,41 @@ void WeightAnalyzer::plotMFWeights(path p) {
         mfWeightSums.push_back(mfWeight);
     }
 
-    {
-        // Parse log file for the mf indexes associated with each state variable
+    CRandomSFMT0 randGen(rand());
+    Environment env(&randGen);
+    
+    vector<string> mzNames;
+    for (int i=0; i<numMZ; i++)
+        mzNames.push_back("MZ" + boost::lexical_cast<string>(i));
+
+    { // Read the better MZ names if present
         ifstream ifs(logfile.c_str(), ifstream::in);
         if (ifs.good()) {
-            CRandomSFMT0 randGen(rand());
-            Environment env(&randGen);
+            vector<int> mzNums;
+            vector<string> names;
+            env.readMZ(ifs, mzNums, names);
+            for (uint i=0; i<mzNums.size(); i++) {
+                mzNames[mzNums[i]] = names[i];
+            }
+        }
+    }
+
+    { // Plot the MF weights associated with each state variable
+        ifstream ifs(logfile.c_str(), ifstream::in);
+        if (ifs.good()) {
             vector<string> variableNames;
             vector<vector<int> > mfInds;
             env.readMFInds(ifs, variableNames, mfInds);
 
             for (uint i=0; i<variableNames.size(); i++) {
-                plotMFWeights(variableNames[i], mfInds[i], mfWeightSums, numMZ);
+                plotMFWeights(variableNames[i], mfInds[i], mfWeightSums, numMZ, mzNames);
             }
         }
     }
 
-    {
-        // Plot the maximally responsive state variable values for each MF
+    { // Plot the maximally responsive state variable values for each MF
         ifstream ifs(logfile.c_str(), ifstream::in);
         if (ifs.good()) {
-            CRandomSFMT0 randGen(rand());
-            Environment env(&randGen);
             vector<string> variableNames;
             vector<vector<float> > mfResp;
             env.readMFResponses(ifs, variableNames, mfResp);
@@ -321,27 +334,26 @@ void WeightAnalyzer::plotMFWeights(path p) {
     }
 }
 
-void WeightAnalyzer::plotMFWeights(string vName, vector<int>& mfInds, vector<vector<float> >& mfWeightSums, int numMZ) {
+void WeightAnalyzer::plotMFWeights(string vName, vector<int>& mfInds, vector<vector<float> >& mfWeightSums,
+                                   int numMZ, vector<string>& mzNames) {
     for (int mz=0; mz<numMZ; mz++) {
         vector<float> weights;
         for (uint i=0; i<mfInds.size(); i++) {
             weights.push_back(mfWeightSums[mz][mfInds[i]]);
         }
 
-        {
-            // Plot this re-ordered weights
-            stringstream ss;
-            ss << mz;
-            plot_dir /= vName + "_MZ" + ss.str() + "_ordered_weights.pdf";
-            R["weightsvec"] = weights;
-            string txt =
-                "library(ggplot2); "
-                "data=data.frame(w=weightsvec); "
-                "plot=ggplot(data=data, aes(x=1:nrow(data), y=w)) + geom_bar(stat=\"identity\") + xlab(\"MF Number\") + ylab(\"Sum of Connected Granule Weights\") + labs(title = expression(\"MZ"+ss.str()+" " + vName + " Ordered MF Weights\"));"
-                "ggsave(plot,file=\""+plot_dir.c_str()+"\"); ";
-            R.parseEvalQ(txt);
-            plot_dir.remove_leaf();
-        }
+        // Plot this re-ordered weights
+        stringstream ss;
+        ss << mz;
+        plot_dir /= vName + "_" + mzNames[mz] + "_ordered_weights.pdf";
+        R["weightsvec"] = weights;
+        string txt =
+            "library(ggplot2); "
+            "data=data.frame(w=weightsvec); "
+            "plot=ggplot(data=data, aes(x=1:nrow(data), y=w)) + geom_bar(stat=\"identity\") + xlab(\"MF Number\") + ylab(\"Sum of Connected Granule Weights\") + labs(title = expression(\"" + mzNames[mz] + " " + vName + " Ordered MF Weights\"));"
+            "ggsave(plot,file=\""+plot_dir.c_str()+"\"); ";
+        R.parseEvalQ(txt);
+        plot_dir.remove_leaf();
     }
 }
 #endif /* BUILD_ANALYSIS */

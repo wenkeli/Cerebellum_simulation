@@ -143,4 +143,22 @@ void Environment::readMFResponses(ifstream& logfile, vector<string>& variables, 
     logfile.close();
 }
 
+void Environment::writeMZ(ofstream& logfile, Microzone& mz) {
+    logfile << "Microzone " << mz.mzNum << " " << mz.name << endl;
+}
+
+void Environment::readMZ(ifstream& logfile, vector<int>& mzNums, vector<string>& mzNames) {
+    string line;
+    while (std::getline(logfile, line)) {
+        if (boost::starts_with(line,"Microzone")) {
+            vector<string> toks;
+            boost::split(toks, line, boost::is_any_of(" "));
+            assert(toks.size() >= 3);
+            mzNums.push_back(boost::lexical_cast<int>(toks[1]));
+            mzNames.push_back(toks[2]);
+        }
+    }
+    logfile.close();
+}
+
 

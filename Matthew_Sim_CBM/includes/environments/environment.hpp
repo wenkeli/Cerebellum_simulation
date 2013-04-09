@@ -15,8 +15,9 @@
 class Microzone {
 public:
     Microzone() : simCore(NULL) {}
-    Microzone(int mzNum, int numNC, float forceScale, float forcePow, float forceDecay, CBMSimCore *simCore):
-        mzNum(mzNum), numNC(numNC), forceScale(forceScale), forcePow(forcePow), forceDecay(forceDecay),
+    Microzone(std::string name, int mzNum, int numNC,
+              float forceScale, float forcePow, float forceDecay, CBMSimCore *simCore):
+        name(name), mzNum(mzNum), numNC(numNC), forceScale(forceScale), forcePow(forcePow), forceDecay(forceDecay),
         simCore(simCore)
         {}
 
@@ -34,7 +35,8 @@ public:
         return force;
     }
 
-protected:
+public:
+    std::string name;
     int mzNum, numNC;
     float force, forceScale, forcePow, forceDecay;
     CBMSimCore *simCore;
@@ -93,7 +95,11 @@ protected:
     void writeMFResponses(std::ofstream& logfile, std::string stateVariable, const std::vector<float>& mfResp);
 
     void readMFResponses(std::ifstream& logfile, std::vector<std::string>& variables,
-                         std::vector<std::vector<float> >& mfResp);    
+                         std::vector<std::vector<float> >& mfResp);
+
+    void writeMZ(std::ofstream& logfile, Microzone& mz);
+
+    void readMZ(std::ifstream& logfile, std::vector<int>& mzNums, std::vector<std::string>& mzNames);
 };
 
 #endif // ENVIRONMENT_H

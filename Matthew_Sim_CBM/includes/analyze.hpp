@@ -42,7 +42,8 @@ public:
     void plotMFWeights(boost::filesystem::path p);
 
     void plotMFWeights(std::string vName, std::vector<int>& mfInds,
-                       std::vector<std::vector<float> >& mfWeightSums, int numMZ);
+                       std::vector<std::vector<float> >& mfWeightSums,
+                       int numMZ, std::vector<std::string>& mzNames);
 
     void plotMFChange(std::string vName, std::vector<int> &mfInds,
                       std::vector<std::vector<float> >&mfWeightDiffSums,

@@ -156,10 +156,14 @@ void Robocup::step(CBMSimCore *simCore) {
     Environment::step(simCore);
 
     // Setup the MZs
-    if (!hipPitchForwards.initialized())
-        hipPitchForwards = Microzone(0, numNC, forceScale, forcePow, forceDecay, simCore);
-    if (!hipPitchBack.initialized())
-        hipPitchBack = Microzone(1, numNC, forceScale, forcePow, forceDecay, simCore);
+    if (!hipPitchForwards.initialized()) {
+        hipPitchForwards = Microzone("HipPitchForwards", 0, numNC, forceScale, forcePow, forceDecay, simCore);
+        writeMZ(logfile, hipPitchForwards);
+    }
+    if (!hipPitchBack.initialized()) {
+        hipPitchBack = Microzone("HipPitchBack", 1, numNC, forceScale, forcePow, forceDecay, simCore);
+        writeMZ(logfile, hipPitchBack);
+    }
 
     // Save the simulator periodically
     if (timestep % 100000 == 0) {
