@@ -99,6 +99,7 @@ void Robocup::setupMossyFibers(CBMState *simState) {
     } else {
         int m = 100;
         for (int i=0; i < numHighFreqMF; i++) highFreqMFs.push_back(m++);
+        m+=25;
         for (int i=0; i < numImpactMF; i++) impactMFs.push_back(m++);
         for (int i=0; i < numGyroXMF; i++) gyroXMFs.push_back(m++);
         for (int i=0; i < numGyroYMF; i++) gyroYMFs.push_back(m++);
@@ -132,23 +133,21 @@ float* Robocup::getState() {
     for (vector<int>::iterator it=highFreqMFs.begin(); it != highFreqMFs.end(); it++)
         mfFreq[*it] = mfFreqExcited[*it];
 
-    VecPosition gyros = bodyModel->getGyroRates();
-    VecPosition accel = bodyModel->getAccelRates();
+    // Don't display state variables in-between trials
+    if (behavior->getShotPhase() != OptimizationBehaviorBalance::reset) {
+        VecPosition gyros = bodyModel->getGyroRates();
+        VecPosition accel = bodyModel->getAccelRates();
 
-    gaussMFAct(0, behavior->SHOT_PREP_TIME, behavior->getTimeToShot(), impactMFs);
-    gaussMFAct(minGX, maxGX, gyros.getX(), gyroXMFs);
-    gaussMFAct(minGY, maxGY, gyros.getY(), gyroYMFs);
-    gaussMFAct(minGZ, maxGZ, gyros.getZ(), gyroZMFs);    
-    gaussMFAct(minAX, maxAX, accel.getX(), accelXMFs);
-    gaussMFAct(minAY, maxAY, accel.getY(), accelYMFs);
-    gaussMFAct(minAZ, maxAZ, accel.getZ(), accelZMFs);    
+        // Actual min impact time is 0 but -.5 allows the gaussian to be more fully expressed
+        gaussMFAct(-.5, behavior->SHOT_PREP_TIME, behavior->getTimeToShot(), impactMFs);
+        gaussMFAct(minGX, maxGX, gyros.getX(), gyroXMFs);
+        gaussMFAct(minGY, maxGY, gyros.getY(), gyroYMFs);
+        gaussMFAct(minGZ, maxGZ, gyros.getZ(), gyroZMFs);    
+        gaussMFAct(minAX, maxAX, accel.getX(), accelXMFs);
+        gaussMFAct(minAY, maxAY, accel.getY(), accelYMFs);
+        gaussMFAct(minAZ, maxAZ, accel.getZ(), accelZMFs);    
+    }
 
-    // if (accel.getX() < -6.5) {
-    //     cout << "Fallen Back" << endl;
-    // } else if (accel.getX() > 6.5) {
-    //     cout << "Fallen Forward" << endl;
-    // }
-    
     return &mfFreq[0];
 }
 
@@ -176,11 +175,17 @@ void Robocup::step(CBMSimCore *simCore) {
 
     if (timestep % cbm_steps_to_robosim_steps == 0) {
         float avgHipPitchForce = 0;
-        for (uint i=0; i<forces.size(); i++)
-            avgHipPitchForce += forces[i];
-        avgHipPitchForce /= forces.size();
-        forces.clear();
-        walkEngine->changeHips(-avgHipPitchForce, -avgHipPitchForce);
+        if (!forces.empty()) {
+            for (uint i=0; i<forces.size(); i++)
+                avgHipPitchForce += forces[i];
+            avgHipPitchForce /= forces.size();
+            forces.clear();
+        }
+
+        // Don't take actions in-between trials
+        if (behavior->getShotPhase() != OptimizationBehaviorBalance::reset) {
+            walkEngine->changeHips(-avgHipPitchForce, -avgHipPitchForce);
+        }
 
         robosim.runStep();
 
@@ -194,22 +199,30 @@ void Robocup::step(CBMSimCore *simCore) {
     }
 
     calcForce(simCore);
-    deliverErrors(simCore);
+
+    if (behavior->getShotPhase() == OptimizationBehaviorBalance::recovery)
+        deliverErrors(simCore);
 }
 
 void Robocup::deliverErrors(CBMSimCore *simCore) {
-    // Standing angle = ~.5; Fallen front or back = ~.06
-    float uprightAngle = float(worldModel->getMyPositionGroundTruth().getZ());
     float maxErrProb = .01;
 
-    // TODO: Consider error based on accelerometers or gyros rather than Z position
-    // Error associated with falling
+    // Error based on acceleration
     VecPosition accel = bodyModel->getAccelRates();
-    float errorProbability = min(.05f * fabsf(uprightAngle - .5f), maxErrProb);
+    float errorProbability = min(.05f * fabsf(accel.getX()), maxErrProb);
     // Accel X < 0 Indicates a backwards lean
     if (accel.getX() < 0 && randGen->Random() < errorProbability)
         hipPitchForwards.deliverError();
     // Accel X > 0 Indicates a forwards lean
+    if (accel.getX() > 0 && randGen->Random() < errorProbability)
+        hipPitchBack.deliverError();
+
+    // Error based on deviation from upright
+    // Standing angle = ~.5; Fallen front or back = ~.06
+    float uprightAngle = float(worldModel->getMyPositionGroundTruth().getZ());
+    errorProbability = min(.05f * fabsf(uprightAngle - .5f), maxErrProb);
+    if (accel.getX() < 0 && randGen->Random() < errorProbability)
+        hipPitchForwards.deliverError();
     if (accel.getX() > 0 && randGen->Random() < errorProbability)
         hipPitchBack.deliverError();
 }

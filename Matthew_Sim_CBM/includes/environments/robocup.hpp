@@ -77,7 +77,7 @@ protected:
     static const bool randomizeMFs = false;
     static const bool useLogScaling = true;
 
-    static const float forceScale = 4;   // Force gain for the output
+    static const float forceScale = 8;   // Force gain for the output
     static const float forcePow = 2;     // Force power for the output
     static const float forceDecay = .99; // Rate a which force decays
 
