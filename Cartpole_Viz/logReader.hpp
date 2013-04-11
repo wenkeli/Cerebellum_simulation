@@ -36,7 +36,7 @@ class LogReader : public MediaEventHandler
 
     int cycle, trialNum, trialStart, timeAloft;
     float cartPos, cartVel, lowerCartPos, lowerCartVel, lowerCartTarget, lowerCartForce;
-    float poleAng, poleVel, mz0Force, mz1Force;
+    float poleAng, poleVel, forceLeft, forceRight;
     bool errorLeft, errorRight;
 };
 

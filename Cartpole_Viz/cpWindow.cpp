@@ -151,7 +151,7 @@ CPWindow::CPWindow(float _tracklen, float _polelen, float _leftAngBound, float _
     tracklen(_tracklen), polelen(_polelen), leftAngBound(_leftAngBound), rightAngBound(_rightAngBound),
     lower_cartWidth(_lower_cartWidth),
     cartpos(0), cartvel(0), poleang(0), polevel(0), lower_cartpos(0), lower_cartvel(0),
-    lower_force(0), lower_target(0), mz0Force(0), mz1Force(0), errorLeft(0), errorRight(0),
+    lower_force(0), lower_target(0), forceLeft(0), forceRight(0), errorLeft(0), errorRight(0),
     timeAloft(0), trialNum(0), cycle(0), playspeed(1),
     bleedLeft(0), bleedRight(0), 
     screenWidth(640), screenHeight(400), screenBPP(32),
@@ -235,7 +235,7 @@ SDL_Surface* CPWindow::load_image( std::string filename )
 
 void CPWindow::drawCartpole(float cartpos, float cartvel, float poleang, float polevel,
                             float lower_cartpos, float lower_cartvel, float lower_force, float lower_target,
-                            float mz0Force, float mz1Force, bool errorLeft, bool errorRight,
+                            float forceLeft, float forceRight, bool errorLeft, bool errorRight,
                             int timeAloft, int trialNum, int cycle, float playspeed) {
     this->cartpos = cartpos;
     this->cartvel = cartvel;
@@ -245,8 +245,8 @@ void CPWindow::drawCartpole(float cartpos, float cartvel, float poleang, float p
     this->lower_cartvel = lower_cartvel;
     this->lower_force = lower_force;
     this->lower_target = lower_target;
-    this->mz0Force = mz0Force;
-    this->mz1Force = mz1Force;
+    this->forceLeft = forceLeft;
+    this->forceRight = forceRight;
     this->errorLeft = errorLeft;
     this->errorRight = errorRight;
     this->timeAloft = timeAloft;
@@ -346,19 +346,19 @@ void CPWindow::renderScreen() {
              249, 249, 207, 255); // Color and alpha
 
     // Draw Upper Cart forces
-    if (mz0Force > 0)
+    if (forceLeft > 0)
         boxRGBA(screen,
-                cartpos_pix+(trackLenPix/2)*mz0Force+1,upperCartUpperDeckHeight+2,// top Right (x1,y1)
+                cartpos_pix,upperCartUpperDeckHeight+2,// top Right (x1,y1)
+                cartpos_pix-(trackLenPix/2)*forceLeft, upperCartLowerDeckHeight-2, // bottom left (x2,y2)
+                72, 217, 225, 128);
+
+    if (forceRight > 0)
+        boxRGBA(screen,
+                cartpos_pix+(trackLenPix/2)*forceRight+1,upperCartUpperDeckHeight+2,// top Right (x1,y1)
                 cartpos_pix+1, upperCartLowerDeckHeight-2, // bottom left (x2,y2)
                 72, 141, 225, 128);
 
-    if (mz1Force > 0)
-        boxRGBA(screen,
-                cartpos_pix,upperCartUpperDeckHeight+2,// top Right (x1,y1)
-                cartpos_pix-(trackLenPix/2)*mz1Force, upperCartLowerDeckHeight-2, // bottom left (x2,y2)
-                72, 217, 225, 128);
-
-    float netforce = mz0Force - mz1Force;
+    float netforce = forceRight - forceLeft;
 
     if (netforce > 0) {
         boxRGBA(screen,

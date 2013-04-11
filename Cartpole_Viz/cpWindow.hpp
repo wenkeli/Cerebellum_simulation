@@ -59,7 +59,7 @@ public:
     //void drawCartpole(CartPole* cp);
     void drawCartpole(float cartpos, float cartvel, float poleang, float polevel,
                       float lower_cartpos, float lower_cartvel, float lower_force, float lower_target,
-                      float mz0Force, float mz1Force, bool errorLeft, bool errorRight,
+                      float forceLeft, float forceRight, bool errorLeft, bool errorRight,
                       int timeAloft, int trialNum, int cycle, float playspeed=1);
 
     void registerHandler(MediaEventHandler* handler) {
@@ -84,7 +84,7 @@ protected:
     float lower_cartWidth;
 
     // Variables necessary for the drawing the cartpole image
-    float cartpos, cartvel, poleang, polevel, mz0Force, mz1Force;
+    float cartpos, cartvel, poleang, polevel, forceLeft, forceRight;
     float lower_cartpos, lower_cartvel, lower_force, lower_target;
     bool errorLeft, errorRight;
     uint bleedLeft, bleedRight; // These bleed the alpha channel of errors left/right

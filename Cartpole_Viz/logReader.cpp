@@ -1,11 +1,15 @@
 #include "logReader.hpp"
 #include "cpWindow.hpp"
+#include <limits>
 
 using namespace std;
 
 LogReader::LogReader(string filename) :
-    viz(NULL), playspeed(1), play_pos(1), playing(true), sleepTime(50000), trialNum(1),
-    cartPos(0), cartVel(0), lowerCartPos(0), lowerCartVel(0), lowerCartTarget(0),
+    viz(NULL), playspeed(1), play_pos(1), playing(true), sleepTime(50000),
+    trackLen(numeric_limits<float>::max()), poleLen(0), leftAngleBound(0), rightAngleBound(0),
+    lowerCartWidth(numeric_limits<float>::max()),    
+    cycle(0),trialNum(1), trialStart(0),
+    timeAloft(0), cartPos(0), cartVel(0), lowerCartPos(0), lowerCartVel(0), lowerCartTarget(0),
     lowerCartForce(0), errorLeft(0), errorRight(0)
 {
     cout << "Reading logfile " << filename << "..." << endl;;
@@ -31,6 +35,7 @@ LogReader::LogReader(string filename) :
     }
 
     while (1) {
+        // This will display logfiles that are continually being updated
         if (getline(logfile, line)) {
             lines.push_back(line);
             if (line.find("EndTrial") != string::npos)
@@ -62,7 +67,7 @@ void LogReader::handleMediaEvent(const int event)
     } else if (event == NEXT) {
         for (int i=0; i<trialStartIndx.size(); i++) {
             if (trialStartIndx[i] >= play_pos) {
-                play_pos = trialStartIndx[min((int)trialStartIndx.size()-2,i)];
+                play_pos = trialStartIndx[min((int)trialStartIndx.size()-1,i)];
                 break;
             }
         }
@@ -77,8 +82,10 @@ void LogReader::handleMediaEvent(const int event)
         sleepTime *= 2;
         playspeed /= 2.0;
     } else if (event == SPEEDUP) {
-        sleepTime = max(1,sleepTime/2);
-        playspeed *= 2.0;
+        if (sleepTime > 5000) {
+            sleepTime = max(5000,sleepTime/2);
+            playspeed *= 2.0;
+        }
     } else {
         cout << "Unrecognized event id: " << event << endl;
     }
@@ -98,7 +105,12 @@ void LogReader::parseLine(string line)
         return;
     boost::char_separator<char> sep(" ");
     boost::tokenizer<boost::char_separator<char> > tok(line,sep);
-    cycle = boost::lexical_cast<int>(*tok.begin());
+    // Ignore lines that don't start with a cycle number
+    try {
+        cycle = boost::lexical_cast<int>(*tok.begin());
+    } catch (...) {
+        return;
+    }
     for(boost::tokenizer<boost::char_separator<char> >::iterator it=tok.begin(); it!=tok.end(); it++) {
         if (it == tok.begin()) it++;
         string s = *it;
@@ -129,10 +141,10 @@ void LogReader::parseLine(string line)
             lowerCartTarget = boost::lexical_cast<float>(*it);
         else if (s.compare("LowerCartForce")==0)
             lowerCartForce = boost::lexical_cast<float>(*it);
-        else if (s.compare("MZ0Force")==0)
-            mz0Force = boost::lexical_cast<float>(*it);
-        else if (s.compare("MZ1Force")==0)
-            mz1Force = boost::lexical_cast<float>(*it);
+        else if (s.compare("ForceLeft")==0)
+            forceLeft = boost::lexical_cast<float>(*it);
+        else if (s.compare("ForceRight")==0)
+            forceRight = boost::lexical_cast<float>(*it);
         else if (s.compare("ErrorLeft")==0)
             errorLeft = boost::lexical_cast<bool>(*it);
         else if (s.compare("ErrorRight")==0)
@@ -149,7 +161,7 @@ void LogReader::parseLine(string line)
             trialNum = boost::lexical_cast<int>(*it);
             trialStart = cycle;
         } else {
-            cout << "Unrecognized Key: " << s << " on line: \"" << line << "\"" << endl;
+            //cout << "Unrecognized Key: " << s << " on line: \"" << line << "\"" << endl;
             break;
         }
     }
@@ -163,7 +175,7 @@ void LogReader::vizLine()
     }
 
     viz->drawCartpole(cartPos, cartVel, poleAng, poleVel, lowerCartPos, lowerCartVel, lowerCartForce,
-                      lowerCartTarget, mz0Force,mz1Force,errorLeft,errorRight,
+                      lowerCartTarget, forceLeft, forceRight, errorLeft,errorRight,
                       timeAloft, trialNum, cycle, playspeed);
     usleep(sleepTime);
 }
