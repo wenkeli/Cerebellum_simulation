@@ -9,10 +9,10 @@
 #include <QtGui/QWidget>
 #include <QtGui/QApplication>
 #include <QtGui/QColor>
+#include <QtGui/QVBoxLayout>
+#include <QtGui/QPushButton>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
-
-#include <QtGui/QPushButton>
 
 #include <CBMVisualInclude/actspatialview.h>
 #include <CBMVisualInclude/acttemporalview.h>
@@ -36,20 +36,22 @@ protected:
 
     SimThread thread;
 
-    ActTemporalView *inputNetTView;
-    ActTemporalView *scTView;
-    ActTemporalView *bcTView;
-    ActTemporalView *pcTView;
-    ActTemporalView *ncTView;
-    ActTemporalView *ioTView;
+    ActTemporalView inputNetTView;
+    ActTemporalView scTView;
+    std::vector<ActTemporalView*> bcTViews;
+    std::vector<ActTemporalView*> pcTViews;
+    std::vector<ActTemporalView*> ncTViews;
+    std::vector<ActTemporalView*> ioTViews;
+
+    QVBoxLayout vbox;
+    QPushButton inputNetTButton, stellateTButton, basketTButton,
+        purkinjeTButton, nucleusTButton, oliveTButton;
 
 public slots:
-    void displayInputNetTView();
-    void displayStellateTView();
-    void displayBasketTView();
-    void displayPurkinjeTView();
-    void displayNucleusTView();
-    void displayOliveTView();
+    void drawBCRaster(std::vector<ct_uint8_t> aps, int t, int mz);
+    void drawPCVmRaster(std::vector<ct_uint8_t> aps, std::vector<float> vm, int t, int mz);
+    void drawNCVmRaster(std::vector<ct_uint8_t> aps, std::vector<float> vm, int t, int mz);
+    void drawIOVmRaster(std::vector<ct_uint8_t> aps, std::vector<float> vm, int t, int mz);    
 };
 
 #endif // MAINW_H

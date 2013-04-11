@@ -43,10 +43,10 @@ public:
 signals:
     void updateINTW(std::vector<ct_uint8_t>, int t);
     void updateSCTW(std::vector<ct_uint8_t>, int t);
-    void updateBCTW(std::vector<ct_uint8_t>, int t);
-    void updatePCTW(std::vector<ct_uint8_t>, std::vector<float>, int t);
-    void updateNCTW(std::vector<ct_uint8_t>, std::vector<float>, int t);
-    void updateIOTW(std::vector<ct_uint8_t>, std::vector<float>, int t);
+    void updateBCTW(std::vector<ct_uint8_t>, int t, int mz);
+    void updatePCTW(std::vector<ct_uint8_t>, std::vector<float>, int t, int mz);
+    void updateNCTW(std::vector<ct_uint8_t>, std::vector<float>, int t, int mz);
+    void updateIOTW(std::vector<ct_uint8_t>, std::vector<float>, int t, int mz);
     void blankTW(QColor bc);
 
 protected:
@@ -55,7 +55,7 @@ protected:
     CBMSimCore *simCore;
     PoissonRegenCells *mfs;
     InNetInterface *inNet;
-    MZoneInterface *mZone;
+    std::vector<MZoneInterface*> mZones;
     
     CRandomSFMT0 *randGen;
 

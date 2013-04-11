@@ -55,7 +55,9 @@ SimThread::SimThread(QObject *parent, int numMZ, int randSeed, string conPF, str
     mfs = new PoissonRegenCells(numMF, randSeed, threshDecayTau, msPerTimeStep);
 
     inNet = simCore->getInputNet();
-    mZone = simCore->getMZoneList()[0];
+    MZoneInterface **mzList = simCore->getMZoneList();
+    for (int i=0; i<numMZ; i++)
+        mZones.push_back(mzList[i]);
 
     // Register the data types to be used
     qRegisterMetaType<std::vector<ct_uint8_t> >("std::vector<ct_uint8_t>");
@@ -90,33 +92,35 @@ void SimThread::run()
         vector<ct_uint8_t> apSCVis(apSC, apSC + numSC * sizeof apSC[0]);
         emit(updateSCTW(apSCVis, simStep));
 
-        const ct_uint8_t *apBC = mZone->exportAPBC();
-        vector<ct_uint8_t> apBCVis(apBC, apBC + numBC * sizeof apBC[0]);
-        emit(updateBCTW(apBCVis, simStep));
+        for (int mz=0; mz<numMZ; mz++) {
+            const ct_uint8_t *apBC = mZones[mz]->exportAPBC();
+            vector<ct_uint8_t> apBCVis(apBC, apBC + numBC * sizeof apBC[0]);
+            emit(updateBCTW(apBCVis, simStep, mz));
 
-        const ct_uint8_t *apPC = mZone->exportAPPC();
-        const float *vmPC = mZone->exportVmPC();
-        vector<ct_uint8_t> apPCVis(apPC, apPC + numPC * sizeof apPC[0]);
-        vector<float> vmPCVis(vmPC, vmPC + numPC * sizeof vmPC[0]);
-        for (int i=0; i<numPC; i++)
-            vmPCVis[i] = (vmPC[i]+80)/80;
-        emit(updatePCTW(apPCVis, vmPCVis, simStep));
+            const ct_uint8_t *apPC = mZones[mz]->exportAPPC();
+            const float *vmPC = mZones[mz]->exportVmPC();
+            vector<ct_uint8_t> apPCVis(apPC, apPC + numPC * sizeof apPC[0]);
+            vector<float> vmPCVis(vmPC, vmPC + numPC * sizeof vmPC[0]);
+            for (int i=0; i<numPC; i++)
+                vmPCVis[i] = (vmPC[i]+80)/80;
+            emit(updatePCTW(apPCVis, vmPCVis, simStep, mz));
 
-        const ct_uint8_t *apNC = mZone->exportAPNC();
-        const float *vmNC = mZone->exportVmNC();
-        vector<ct_uint8_t> apNCVis(apNC, apNC + numNC * sizeof apNC[0]);
-        vector<float> vmNCVis(vmNC, vmNC + numNC * sizeof vmNC[0]);
-        for (int i=0; i<numNC; i++)
-            vmNCVis[i] = (vmNC[i]+80)/80;
-        emit(updateNCTW(apNCVis, vmNCVis, simStep));
+            const ct_uint8_t *apNC = mZones[mz]->exportAPNC();
+            const float *vmNC = mZones[mz]->exportVmNC();
+            vector<ct_uint8_t> apNCVis(apNC, apNC + numNC * sizeof apNC[0]);
+            vector<float> vmNCVis(vmNC, vmNC + numNC * sizeof vmNC[0]);
+            for (int i=0; i<numNC; i++)
+                vmNCVis[i] = (vmNC[i]+80)/80;
+            emit(updateNCTW(apNCVis, vmNCVis, simStep, mz));
 
-        const ct_uint8_t *apIO = mZone->exportAPIO();
-        const float *vmIO = mZone->exportVmIO();
-        vector<ct_uint8_t> apIOVis(apIO, apIO + numIO * sizeof apIO[0]);
-        vector<float> vmIOVis(vmIO, vmIO + numIO * sizeof vmIO[0]);
-        for (int i=0; i<numIO; i++)
-            vmIOVis[i] = (vmIO[i]+80)/80;
-        emit(updateIOTW(apIOVis, vmIOVis, simStep));
+            const ct_uint8_t *apIO = mZones[mz]->exportAPIO();
+            const float *vmIO = mZones[mz]->exportVmIO();
+            vector<ct_uint8_t> apIOVis(apIO, apIO + numIO * sizeof apIO[0]);
+            vector<float> vmIOVis(vmIO, vmIO + numIO * sizeof vmIO[0]);
+            for (int i=0; i<numIO; i++)
+                vmIOVis[i] = (vmIO[i]+80)/80;
+            emit(updateIOTW(apIOVis, vmIOVis, simStep, mz));
+        }
 
         if (simStep % trialLength == 0)
             emit(blankTW(Qt::black));

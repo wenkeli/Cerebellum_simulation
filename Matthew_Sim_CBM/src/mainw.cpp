@@ -1,7 +1,6 @@
 #include "../includes/mainw.hpp"
 
 #include <QtGui/QKeyEvent>
-#include <QtGui/QVBoxLayout>
 
 using namespace std;
 
@@ -9,52 +8,98 @@ static const int mfActivationWidth = 2048 * .03;
 
 MainW::MainW(QWidget *parent, int numMZ, int randSeed, string conPF, string actPF,
              Environment *env)
-    : QWidget(parent), thread(this, numMZ, randSeed, conPF, actPF, env)
+    : QWidget(parent), thread(this, numMZ, randSeed, conPF, actPF, env),
+      inputNetTView(thread.numGO, 1, thread.trialLength, thread.trialLength/4,
+                    thread.numGO, Qt::white, "InputNet (Mossy Fiber) Temporal View"),
+      scTView(thread.numSC, 1, thread.trialLength, thread.trialLength/4,
+              thread.numSC, Qt::white, "Stellate Temporal View"),
+      vbox(this),
+      inputNetTButton("InputNet Temporal View", this),
+      stellateTButton("Stellate Temporal View", this),
+      basketTButton  ("Basket Temporal View", this),
+      purkinjeTButton("Purkinje Temporal View", this),
+      nucleusTButton ("Nucleus Temporal View", this),
+      oliveTButton   ("Inf Olive Temporal View", this)
 {
-    QVBoxLayout *vbox = new QVBoxLayout(this);
-    vbox->setSpacing(1);
+    connect(&thread, SIGNAL(updateINTW(std::vector<ct_uint8_t>, int)),
+            &inputNetTView, SLOT(drawRaster(std::vector<ct_uint8_t>, int)),
+            Qt::QueuedConnection);
+    connect(&thread, SIGNAL(blankTW(QColor)), &inputNetTView, SLOT(drawBlank(QColor)),
+            Qt::QueuedConnection);
 
-    QPushButton *inputNetTButton = new QPushButton("InputNet Temporal View", this);
-    inputNetTButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    connect(inputNetTButton, SIGNAL(clicked()), this, SLOT(displayInputNetTView()));
+    connect(&thread, SIGNAL(updateSCTW(std::vector<ct_uint8_t>, int)),
+            &scTView, SLOT(drawRaster(std::vector<ct_uint8_t>, int)),
+            Qt::QueuedConnection);
+    connect(&thread, SIGNAL(blankTW(QColor)), &scTView, SLOT(drawBlank(QColor)), Qt::QueuedConnection);
 
-    QPushButton *stellateTButton = new QPushButton("Stellate Temporal View", this);
-    stellateTButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    connect(stellateTButton, SIGNAL(clicked()), this, SLOT(displayStellateTView()));
+    // Create the basket/purkinje/nucleus/io temporal views for each MZ
+    int tl = thread.trialLength;
+    for (int i=0; i<numMZ; i++) {
+        string windowName = string(" MZ") + boost::lexical_cast<string>(i) + " Basket Temporal View";
+        ActTemporalView* bcTView = new ActTemporalView(thread.numBC, 1, tl, tl/4, thread.numBC, Qt::green,
+                                                       windowName.c_str());
+        connect(&thread, SIGNAL(updateBCTW(std::vector<ct_uint8_t>, int, int)),
+                this, SLOT(drawBCRaster(std::vector<ct_uint8_t>, int, int)), Qt::QueuedConnection);
+        connect(&thread, SIGNAL(blankTW(QColor)), bcTView, SLOT(drawBlank(QColor)), Qt::QueuedConnection);
+        bcTViews.push_back(bcTView);
 
-    QPushButton *basketTButton = new QPushButton("Basket Temporal View", this);
-    basketTButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    connect(basketTButton, SIGNAL(clicked()), this, SLOT(displayBasketTView()));
+        windowName = string(" MZ") + boost::lexical_cast<string>(i) + " Purkinje Temporal View";
+        ActTemporalView* pcTView = new ActTemporalView(thread.numPC, 8, tl, tl/4, thread.numPC*8,
+                                                       Qt::red, windowName.c_str());
+        connect(&thread, SIGNAL(updatePCTW(std::vector<ct_uint8_t>, std::vector<float>, int, int)),
+                this, SLOT(drawPCVmRaster(std::vector<ct_uint8_t>, std::vector<float>, int, int)),
+                Qt::QueuedConnection);
+        connect(&thread, SIGNAL(blankTW(QColor)), pcTView, SLOT(drawBlank(QColor)), Qt::QueuedConnection);
+        pcTViews.push_back(pcTView);
 
-    QPushButton *purkinjeTButton = new QPushButton("Purkinje Temporal View", this);
-    purkinjeTButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    connect(purkinjeTButton, SIGNAL(clicked()), this, SLOT(displayPurkinjeTView()));
+        windowName = string(" MZ") + boost::lexical_cast<string>(i) + " Nucleus Temporal View";
+        ActTemporalView* ncTView = new ActTemporalView(thread.numNC, 16, tl, tl/4, thread.numNC*16,
+                                                      Qt::green, windowName.c_str());
+        connect(&thread, SIGNAL(updateNCTW(std::vector<ct_uint8_t>, std::vector<float>, int, int)),
+                this, SLOT(drawNCVmRaster(std::vector<ct_uint8_t>, std::vector<float>, int, int)),
+                Qt::QueuedConnection);
+        connect(&thread, SIGNAL(blankTW(QColor)), ncTView, SLOT(drawBlank(QColor)), Qt::QueuedConnection);
+        ncTViews.push_back(ncTView);
 
-    QPushButton *nucleusTButton = new QPushButton("Nucleus Temporal View", this);
-    nucleusTButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    connect(nucleusTButton, SIGNAL(clicked()), this, SLOT(displayNucleusTView()));
+        windowName = string(" MZ") + boost::lexical_cast<string>(i) + " Inferior Olive Temporal View";
+        ActTemporalView* ioTView = new ActTemporalView(thread.numIO, 32, tl, tl/4, thread.numIO*32, Qt::white,
+                                                       windowName.c_str());
+        connect(&thread, SIGNAL(updateIOTW(std::vector<ct_uint8_t>, std::vector<float>, int, int)),
+                this, SLOT(drawIOVmRaster(std::vector<ct_uint8_t>, std::vector<float>, int, int)),
+                Qt::QueuedConnection);
+        connect(&thread, SIGNAL(blankTW(QColor)), ioTView, SLOT(drawBlank(QColor)), Qt::QueuedConnection);
+        ioTViews.push_back(ioTView);
+    }
 
-    QPushButton *oliveTButton = new QPushButton("Inf Olive Temporal View", this);
-    oliveTButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    connect(oliveTButton, SIGNAL(clicked()), this, SLOT(displayOliveTView()));
+    // Connect the buttons to the toggle visible methods
+    connect(&inputNetTButton, SIGNAL(clicked()), &inputNetTView, SLOT(toggleVisible()));
+    connect(&stellateTButton, SIGNAL(clicked()), &scTView, SLOT(toggleVisible()));
+    for (int i=0; i<numMZ; i++) {
+        connect(&basketTButton, SIGNAL(clicked()), bcTViews[i], SLOT(toggleVisible()));
+        connect(&purkinjeTButton, SIGNAL(clicked()), pcTViews[i], SLOT(toggleVisible()));
+        connect(&nucleusTButton, SIGNAL(clicked()), ncTViews[i], SLOT(toggleVisible()));
+        connect(&oliveTButton, SIGNAL(clicked()), ioTViews[i], SLOT(toggleVisible()));
+    }
 
-    vbox->addWidget(inputNetTButton);
-    vbox->addWidget(stellateTButton);
-    vbox->addWidget(basketTButton);
-    vbox->addWidget(purkinjeTButton);
-    vbox->addWidget(nucleusTButton);
-    vbox->addWidget(oliveTButton);    
+    // Make the buttons expanable
+    inputNetTButton.setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    stellateTButton.setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    basketTButton.setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    purkinjeTButton.setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    nucleusTButton.setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    oliveTButton.setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    // Add the buttons to vbox
+    vbox.setSpacing(1);
+    vbox.addWidget(&inputNetTButton);
+    vbox.addWidget(&stellateTButton);
+    vbox.addWidget(&basketTButton);
+    vbox.addWidget(&purkinjeTButton);
+    vbox.addWidget(&nucleusTButton);
+    vbox.addWidget(&oliveTButton);    
     
     setWindowTitle("Display Suite");
     setAttribute(Qt::WA_DeleteOnClose);
-
-    // Initialize the views
-    displayInputNetTView();
-    displayStellateTView();
-    displayBasketTView();
-    displayPurkinjeTView();
-    displayNucleusTView();
-    displayOliveTView();
 
     // This causes the app to quit as soon as the thread finishes
     connect(&thread, SIGNAL(finished()), qApp, SLOT(quit()));
@@ -67,74 +112,31 @@ MainW::~MainW()
     thread.alive = false;
     thread.wait();
 
-    if (inputNetTView) delete inputNetTView;
-    if (scTView) delete scTView;
-    if (bcTView) delete bcTView;
-    if (pcTView) delete pcTView;
-    if (ncTView) delete ncTView;
-    if (ioTView) delete ioTView;        
+    for (uint i=0; i<bcTViews.size(); i++)
+        delete bcTViews[i];
+    for (uint i=0; i<pcTViews.size(); i++)
+        delete pcTViews[i];
+    for (uint i=0; i<ncTViews.size(); i++)
+        delete ncTViews[i];
+    for (uint i=0; i<ioTViews.size(); i++)
+        delete ioTViews[i];
 }
 
-//-------------------- Methods to Create Various Display Windows --------------------//
-void MainW::displayInputNetTView() {
-    int trialLen = thread.trialLength;
-    inputNetTView = new ActTemporalView(thread.numGO, 1, trialLen, trialLen/4, thread.numGO, Qt::white, "inputNet");
-    connect(&thread, SIGNAL(updateINTW(std::vector<ct_uint8_t>, int)),
-            inputNetTView, SLOT(drawRaster(std::vector<ct_uint8_t>, int)),
-            Qt::QueuedConnection);
-    connect(&thread, SIGNAL(blankTW(QColor)), inputNetTView, SLOT(drawBlank(QColor)), Qt::QueuedConnection);
-    inputNetTView->show();
-    inputNetTView->update();
+void MainW::drawBCRaster(vector<ct_uint8_t> aps, int t, int mz) {
+    assert(uint(mz) < bcTViews.size());
+    bcTViews[mz]->drawRaster(aps, t);
 }
-void MainW::displayStellateTView() {
-    int trialLen = thread.trialLength;
-    scTView=new ActTemporalView(thread.numSC, 1, trialLen, trialLen/4, thread.numSC, Qt::white, "stellate");
-    connect(&thread, SIGNAL(updateSCTW(std::vector<ct_uint8_t>, int)),
-            scTView, SLOT(drawRaster(std::vector<ct_uint8_t>, int)),
-            Qt::QueuedConnection);
-    connect(&thread, SIGNAL(blankTW(QColor)), scTView, SLOT(drawBlank(QColor)), Qt::QueuedConnection);
-    scTView->show();
-    scTView->update();
+void MainW::drawPCVmRaster(vector<ct_uint8_t> aps, vector<float> vm, int t, int mz) {
+    assert(uint(mz) < pcTViews.size());
+    pcTViews[mz]->drawVmRaster(aps, vm, t);
 }
-void MainW::displayBasketTView() {
-    int trialLen = thread.trialLength;
-    bcTView=new ActTemporalView(thread.numBC, 1, trialLen, trialLen/4, thread.numBC, Qt::green, "basket");
-    connect(&thread, SIGNAL(updateBCTW(std::vector<ct_uint8_t>, int)),
-            bcTView, SLOT(drawRaster(std::vector<ct_uint8_t>, int)),
-            Qt::QueuedConnection);
-    connect(&thread, SIGNAL(blankTW(QColor)), bcTView, SLOT(drawBlank(QColor)), Qt::QueuedConnection);
-    bcTView->show();
-    bcTView->update();
+void MainW::drawNCVmRaster(vector<ct_uint8_t> aps, vector<float> vm, int t, int mz) {
+    assert(uint(mz) < ncTViews.size());
+    ncTViews[mz]->drawVmRaster(aps, vm, t);
 }
-void MainW::displayPurkinjeTView() {
-    int trialLen = thread.trialLength;
-    pcTView=new ActTemporalView(thread.numPC, 8, trialLen, trialLen/4, thread.numPC*8, Qt::red, "purkinje");
-    connect(&thread, SIGNAL(updatePCTW(std::vector<ct_uint8_t>, std::vector<float>, int)),
-            pcTView, SLOT(drawVmRaster(std::vector<ct_uint8_t>, std::vector<float>, int)),
-            Qt::QueuedConnection);
-    connect(&thread, SIGNAL(blankTW(QColor)), pcTView, SLOT(drawBlank(QColor)), Qt::QueuedConnection);
-    pcTView->show();
-    pcTView->update();
-}
-void MainW::displayNucleusTView() {
-    int trialLen = thread.trialLength;
-    ncTView=new ActTemporalView(thread.numNC, 16, trialLen, trialLen/4, thread.numNC*16, Qt::green, "nucleus");
-    connect(&thread, SIGNAL(updateNCTW(std::vector<ct_uint8_t>, std::vector<float>, int)),
-            ncTView, SLOT(drawVmRaster(std::vector<ct_uint8_t>, std::vector<float>, int)),
-            Qt::QueuedConnection);
-    connect(&thread, SIGNAL(blankTW(QColor)), ncTView, SLOT(drawBlank(QColor)), Qt::QueuedConnection);
-    ncTView->show();
-    ncTView->update();
-}
-void MainW::displayOliveTView() {
-    int trialLen = thread.trialLength;
-    ioTView=new ActTemporalView(thread.numIO, 32, trialLen, trialLen/4, thread.numIO*32, Qt::white, "inferior olive");
-    connect(&thread, SIGNAL(updateIOTW(std::vector<ct_uint8_t>, std::vector<float>, int)),
-            ioTView, SLOT(drawVmRaster(std::vector<ct_uint8_t>, std::vector<float>, int)),
-            Qt::QueuedConnection);
-    connect(&thread, SIGNAL(blankTW(QColor)), ioTView, SLOT(drawBlank(QColor)), Qt::QueuedConnection);
-    ioTView->show();
-    ioTView->update();
+void MainW::drawIOVmRaster(vector<ct_uint8_t> aps, vector<float> vm, int t, int mz) {
+    assert(uint(mz) < ioTViews.size());
+    ioTViews[mz]->drawVmRaster(aps, vm, t);
 }
 
 void MainW::keyPressEvent(QKeyEvent *event)
