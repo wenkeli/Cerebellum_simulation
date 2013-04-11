@@ -24,7 +24,9 @@ public:
     void step(CBMSimCore *simCore);
 
     bool terminated();
-
+    
+    std::vector<std::string> getMZNames();
+    
     static boost::program_options::options_description getOptions();
     
 protected:

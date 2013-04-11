@@ -53,6 +53,13 @@ bool Environment::terminated() {
     return false;
 }
 
+vector<string> Environment::getMZNames() {
+    vector<string> names;
+    for (int i=0; i<numRequiredMZ(); i++)
+        names.push_back("MZ" + boost::lexical_cast<string>(i));
+    return names;
+}
+
 void Environment::gaussMFAct(float minVal, float maxVal, float currentVal, vector<int>& mfInds, float gaussWidth) {
     currentVal = max(minVal, min(maxVal, currentVal));
     float range = maxVal - minVal;

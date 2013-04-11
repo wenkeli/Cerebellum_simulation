@@ -32,10 +32,11 @@ MainW::MainW(QWidget *parent, int numMZ, int randSeed, string conPF, string actP
             Qt::QueuedConnection);
     connect(&thread, SIGNAL(blankTW(QColor)), &scTView, SLOT(drawBlank(QColor)), Qt::QueuedConnection);
 
+    vector<string> mzNames = env->getMZNames();
     // Create the basket/purkinje/nucleus/io temporal views for each MZ
     int tl = thread.trialLength;
     for (int i=0; i<numMZ; i++) {
-        string windowName = string(" MZ") + boost::lexical_cast<string>(i) + " Basket Temporal View";
+        string windowName = string(" MZ") + boost::lexical_cast<string>(i) + " " + mzNames[i] + " Basket Temporal View";
         ActTemporalView* bcTView = new ActTemporalView(thread.numBC, 1, tl, tl/4, thread.numBC, Qt::green,
                                                        windowName.c_str());
         connect(&thread, SIGNAL(updateBCTW(std::vector<ct_uint8_t>, int, int)),
@@ -43,7 +44,7 @@ MainW::MainW(QWidget *parent, int numMZ, int randSeed, string conPF, string actP
         connect(&thread, SIGNAL(blankTW(QColor)), bcTView, SLOT(drawBlank(QColor)), Qt::QueuedConnection);
         bcTViews.push_back(bcTView);
 
-        windowName = string(" MZ") + boost::lexical_cast<string>(i) + " Purkinje Temporal View";
+        windowName = string(" MZ") + boost::lexical_cast<string>(i) + " " + mzNames[i] + " Purkinje Temporal View";
         ActTemporalView* pcTView = new ActTemporalView(thread.numPC, 8, tl, tl/4, thread.numPC*8,
                                                        Qt::red, windowName.c_str());
         connect(&thread, SIGNAL(updatePCTW(std::vector<ct_uint8_t>, std::vector<float>, int, int)),
@@ -52,7 +53,7 @@ MainW::MainW(QWidget *parent, int numMZ, int randSeed, string conPF, string actP
         connect(&thread, SIGNAL(blankTW(QColor)), pcTView, SLOT(drawBlank(QColor)), Qt::QueuedConnection);
         pcTViews.push_back(pcTView);
 
-        windowName = string(" MZ") + boost::lexical_cast<string>(i) + " Nucleus Temporal View";
+        windowName = string(" MZ") + boost::lexical_cast<string>(i) + " " + mzNames[i] + " Nucleus Temporal View";
         ActTemporalView* ncTView = new ActTemporalView(thread.numNC, 16, tl, tl/4, thread.numNC*16,
                                                       Qt::green, windowName.c_str());
         connect(&thread, SIGNAL(updateNCTW(std::vector<ct_uint8_t>, std::vector<float>, int, int)),
@@ -61,7 +62,7 @@ MainW::MainW(QWidget *parent, int numMZ, int randSeed, string conPF, string actP
         connect(&thread, SIGNAL(blankTW(QColor)), ncTView, SLOT(drawBlank(QColor)), Qt::QueuedConnection);
         ncTViews.push_back(ncTView);
 
-        windowName = string(" MZ") + boost::lexical_cast<string>(i) + " Inferior Olive Temporal View";
+        windowName = string(" MZ") + boost::lexical_cast<string>(i) + " " + mzNames[i] + " Inferior Olive Temporal View";
         ActTemporalView* ioTView = new ActTemporalView(thread.numIO, 32, tl, tl/4, thread.numIO*32, Qt::white,
                                                        windowName.c_str());
         connect(&thread, SIGNAL(updateIOTW(std::vector<ct_uint8_t>, std::vector<float>, int, int)),

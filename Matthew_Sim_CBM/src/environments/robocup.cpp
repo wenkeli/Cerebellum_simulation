@@ -253,4 +253,11 @@ bool Robocup::terminated() {
     return robosim.behavior->finished(); 
 }
 
+vector<string> Robocup::getMZNames() {
+    vector<string> names;
+    names.push_back("HipPitchForwards");
+    names.push_back("HipPitchBack");
+    return names;
+}
+
 

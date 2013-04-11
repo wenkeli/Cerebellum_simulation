@@ -63,6 +63,9 @@ public:
     // Indicates if the environment has terminated
     virtual bool terminated();
 
+    // Returns the human-readable names for each microzone
+    virtual std::vector<std::string> getMZNames();
+
 public:
     std::vector<bool> mfExcited;
 
