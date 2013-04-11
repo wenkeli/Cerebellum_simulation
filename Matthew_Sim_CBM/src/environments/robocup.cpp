@@ -175,12 +175,27 @@ void Robocup::step(CBMSimCore *simCore) {
 
     if (timestep % cbm_steps_to_robosim_steps == 0) {
         float avgHipPitchForce = 0;
+        float avgHipPitchForwardForce = 0;
+        float avgHipPitchBackForce = 0;
         if (!forces.empty()) {
             for (uint i=0; i<forces.size(); i++)
                 avgHipPitchForce += forces[i];
             avgHipPitchForce /= forces.size();
             forces.clear();
         }
+        if (!hipPitchForwardsForces.empty()) {
+            for (uint i=0; i<hipPitchForwardsForces.size(); i++)
+                avgHipPitchForwardForce += hipPitchForwardsForces[i];
+            avgHipPitchForwardForce /= hipPitchForwardsForces.size();
+            hipPitchForwardsForces.clear();
+        }
+        if (!hipPitchBackForces.empty()) {
+            for (uint i=0; i<hipPitchBackForces.size(); i++)
+                avgHipPitchBackForce += hipPitchBackForces[i];
+            avgHipPitchBackForce /= hipPitchBackForces.size();
+            hipPitchBackForces.clear();
+        }
+        robosim.drawHipForces(avgHipPitchForwardForce, avgHipPitchBackForce);
 
         // Don't take actions in-between trials
         if (behavior->getShotPhase() != OptimizationBehaviorBalance::reset) {
@@ -229,6 +244,8 @@ void Robocup::deliverErrors(CBMSimCore *simCore) {
 
 void Robocup::calcForce(CBMSimCore *simCore) {
     float netHipPitchForce = hipPitchForwards.getForce() - hipPitchBack.getForce();
+    hipPitchForwardsForces.push_back(hipPitchForwards.getForce());
+    hipPitchBackForces.push_back(hipPitchBack.getForce());
     forces.push_back(netHipPitchForce);
 }
 
