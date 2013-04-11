@@ -197,38 +197,33 @@ void Cartpole::step(CBMSimCore *simCore) {
     if (!forceLeftMZ.initialized())  forceLeftMZ.initialize(simCore, numNC);
     if (!forceRightMZ.initialized()) forceRightMZ.initialize(simCore, numNC); 
 
-    //static int numMillionStepTrials = 0;
+    static int numMillionStepTrials = 0;
     cycle++;
     timeoutCnt++;
     
     // Code to save sim state at selected points
-    if (cycle == 100000) {
+    if (fallen && getFailureMode() == "MaxTrialLength") {
         path p(saveStateDir);
-        p /= "blankState.out";
+        if (numMillionStepTrials == 0)
+            p /= "milStepStart.st";
+        else
+            p /= "milStepEnd.st";
         std::fstream filestr (p.c_str(), fstream::out);
         simCore->writeToState(filestr);
         filestr.close();
-        maxNumTrials = trialNum;
-    }
-    // if (fallen && getFailureMode() == "MaxTrialLength") {
-    //     stringstream ss;
-    //     ss << trialNum;
-    //     path p(saveStateDir);
-    //     p /= "millionStepStateTrial" + ss.str() + ".out";
-    //     std::fstream filestr (p.c_str(), fstream::out);
-    //     simCore->writeToState(filestr);
-    //     filestr.close();
-    //     numMillionStepTrials++;
-    // }
-    // } else if (fallen && numMillionStepTrials >= 5 && getFailureMode() != "MaxTrialLength") {
-    //     path p(saveStateDir);
-    //     p /= "failureState.out";
-    //     std::fstream filestr (p.c_str(), fstream::out);
-    //     simCore->writeToState(filestr);
-    //     filestr.close();
-    //     // Terminate the code after this
-    //     maxNumTrials = trialNum;
-    // } 
+        numMillionStepTrials++;
+    } else if (fallen && getFailureMode() != "MaxTrialLength") {
+        if (numMillionStepTrials >= 5) {
+            path p(saveStateDir);
+            p /= "failureState.st";
+            std::fstream filestr (p.c_str(), fstream::out);
+            simCore->writeToState(filestr);
+            filestr.close();
+            // Terminate the code after this
+            maxNumTrials = trialNum;
+        }
+        numMillionStepTrials = 0;
+    } 
             
     // Restart the simulation if the pole has fallen
     if (fallen) reset();
