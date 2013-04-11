@@ -24,6 +24,8 @@ public:
 
     bool terminated();
 
+    std::vector<std::string> getMZNames();
+
     static boost::program_options::options_description getOptions();
 
 public: // Cartpole methods
@@ -105,16 +107,16 @@ protected:
     float oldTheta_dot; // Pole velocity from last iteration
     float theta_dd;     // Pole angular acceleration
 
+    Microzone forceLeftMZ, forceRightMZ; // MZs for pushing cart
+
     float netForce;              // Aggregate force applied to the cart
-    float mz0Force, mz1Force;    // Force exerted by each microzone
+    float forceLeft, forceRight;    // Force exerted by each microzone
     bool errorLeft, errorRight;  // Do we have an error occuring on this timestep?
 
     bool fallen;        // Has the pole fallen over?
     long cycle;         // How long has the sim been running?
 
 protected: // MF input variables
-    int numNC;
-
     // Should we randomize the assignment of MFs or do them contiguously?
     static const bool randomizeMFs = true;
     static const bool useLogScaling = true;

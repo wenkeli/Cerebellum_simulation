@@ -15,13 +15,14 @@
 class Microzone {
 public:
     Microzone() : simCore(NULL) {}
-    Microzone(std::string name, int mzNum, int numNC,
-              float forceScale, float forcePow, float forceDecay, CBMSimCore *simCore):
+    Microzone(std::string name, int mzNum, float forceScale, float forcePow, float forceDecay,
+              int numNC=0, CBMSimCore *simCore=NULL):
         name(name), mzNum(mzNum), numNC(numNC), forceScale(forceScale), forcePow(forcePow), forceDecay(forceDecay),
         simCore(simCore)
         {}
 
     inline bool initialized() { return simCore != NULL; }
+    inline void initialize(CBMSimCore *core, int numNC_) { simCore = core; numNC = numNC_; }
 
     inline void deliverError() { simCore->updateErrDrive(mzNum,1.0); }
 

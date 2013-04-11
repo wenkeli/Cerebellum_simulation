@@ -22,7 +22,9 @@ po::options_description Cartpole::getOptions() {
 }
 
 Cartpole::Cartpole(CRandomSFMT0 *randGen, int argc, char **argv) :
-    Environment(randGen), trialNum(-1)
+    Environment(randGen), trialNum(-1),
+    forceLeftMZ("ForceLeft", 0, forceScale, 1, forceDecay),
+    forceRightMZ("ForceRight", 1, forceScale, 1, forceDecay)
 {
     po::options_description desc = getOptions();
     po::variables_map vm;
@@ -85,9 +87,6 @@ void Cartpole::reset() {
 void Cartpole::setupMossyFibers(CBMState *simState) {
     Environment::setupMossyFibers(simState);
 
-    numMF = simState->getConnectivityParams()->getNumMF();
-    numNC = simState->getConnectivityParams()->getNumNC();
-
     // Decide how many MFs to assign to each region
     int numHighFreqMF  = highFreqMFProportion  * numMF;
     int numPoleAngMF   = poleAngMFProportion   * numMF;
@@ -120,6 +119,9 @@ void Cartpole::setupMossyFibers(CBMState *simState) {
         writeMFInds(myfile, "poleAngMFs", poleAngMFs);
         writeMFInds(myfile, "cartVelMFs", cartVelMFs);
         writeMFInds(myfile, "cartPosMFs", cartPosMFs);
+
+        writeMZ(myfile, forceLeftMZ);
+        writeMZ(myfile, forceRightMZ);
     }
 
 }
@@ -191,7 +193,11 @@ float Cartpole::inverseLogScale(float scaledVal, float gain) {
 }
 
 void Cartpole::step(CBMSimCore *simCore) {
-    static int numMillionStepTrials = 0;
+    // Setup the MZs
+    if (!forceLeftMZ.initialized())  forceLeftMZ.initialize(simCore, numNC);
+    if (!forceRightMZ.initialized()) forceRightMZ.initialize(simCore, numNC); 
+
+    //static int numMillionStepTrials = 0;
     cycle++;
     timeoutCnt++;
     
@@ -245,8 +251,8 @@ void Cartpole::step(CBMSimCore *simCore) {
 
     if (loggingEnabled && cycle % 50 == 0) {
         myfile << cycle << " Theta " << theta << " ThetaDot " << theta_dot
-               << " CartPos " << x << " CartVel " << x_dot << " MZ0Force " << mz0Force
-               << " MZ1Force " << mz1Force
+               << " CartPos " << x << " CartVel " << x_dot << " ForceLeft " << forceLeft
+               << " ForceRight " << forceRight
                << " ErrorLeft " << errorLeft << " ErrorRight " << errorRight
                << " TimeAloft " << timeAloft << endl;
     }
@@ -276,9 +282,6 @@ void Cartpole::computePhysics(float force) {
 }
 
 void Cartpole::setMZErr(CBMSimCore *simCore) {
-    errorLeft = false;  // Left pushing MZ
-    errorRight = false; // Right pushing MZ
-
     float maxErrProb = .01;
     float errorProbability;
     bool deliverError;
@@ -287,9 +290,9 @@ void Cartpole::setMZErr(CBMSimCore *simCore) {
     errorProbability = min(fabsf(theta), maxErrProb);
     deliverError = randGen->Random() < errorProbability;
     if (theta >= 0.0 && theta_dot >= 0.0 && deliverError)
-        errorLeft = true;
+        forceLeftMZ.deliverError();
     if (theta < 0.0 && theta_dot < 0.0 && deliverError)
-        errorRight = true;
+        forceRightMZ.deliverError();
 
     // Only use positional and velocity based error on finite tracks
     if (trackLen < numeric_limits<float>::max()) {
@@ -297,21 +300,18 @@ void Cartpole::setMZErr(CBMSimCore *simCore) {
         errorProbability = min(.005f * fabsf(x) / rightTrackBound, maxErrProb);
         deliverError = randGen->Random() < errorProbability;
         if (x < 0 && deliverError)
-            errorLeft = true;
+            forceLeftMZ.deliverError();
         if (x > 0 && deliverError)
-            errorRight = true;
+            forceRightMZ.deliverError();
 
         // Error to encourage low cart velocity
         errorProbability = min(.005f * fabsf(x_dot), maxErrProb);
         deliverError = randGen->Random() < errorProbability;
         if (x_dot > 0 && x < 0 && deliverError)
-            errorLeft = true;
+            forceLeftMZ.deliverError();
         if (x_dot < 0 && x > 0 && deliverError)
-            errorRight = true;
+            forceLeftMZ.deliverError();
     }
-
-    if (errorRight) simCore->updateErrDrive(0, 1.0);
-    if (errorLeft) simCore->updateErrDrive(1, 1.0);
 }
 
 bool Cartpole::inFailure() {
@@ -335,25 +335,20 @@ string Cartpole::getFailureMode() {
 }
 
 float Cartpole::calcForce(CBMSimCore *simCore) {
-    const ct_uint8_t *mz0ApNC = simCore->getMZoneList()[0]->exportAPNC();
-    float mz0InputSum = 0;
-    for (int i=0; i<numNC; i++)
-        mz0InputSum += mz0ApNC[i];
-    mz0Force += (mz0InputSum / float(numNC)) * forceScale;
-    mz0Force *= forceDecay;
-    
-    const ct_uint8_t *mz1ApNC = simCore->getMZoneList()[1]->exportAPNC();
-    float mz1InputSum = 0;
-    for (int i=0; i<numNC; i++)
-        mz1InputSum += mz1ApNC[i];
-    mz1Force += (mz1InputSum / float(numNC)) * forceScale;
-    mz1Force *= forceDecay;
-
-    netForce = mz0Force-mz1Force; 
+    forceRight = forceRightMZ.getForce();
+    forceLeft = forceLeftMZ.getForce();
+    netForce = forceRight - forceLeft;
     return netForce;
 }
 
 bool Cartpole::terminated() {
     return trialNum >= maxNumTrials;
+}
+
+vector<string> Cartpole::getMZNames() {
+    vector<string> names;
+    names.push_back(forceLeftMZ.name);
+    names.push_back(forceRightMZ.name);
+    return names;
 }
 

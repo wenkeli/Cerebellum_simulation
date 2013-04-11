@@ -24,7 +24,11 @@ po::options_description Robocup::getOptions() {
     return desc;
 }
 
-Robocup::Robocup(CRandomSFMT0 *randGen, int argc, char **argv) : Environment(randGen) {
+Robocup::Robocup(CRandomSFMT0 *randGen, int argc, char **argv)
+    : Environment(randGen),
+      hipPitchForwards("HipPitchForwards", 0, forceScale, forcePow, forceDecay), 
+      hipPitchBack("HipPitchBack", 1, forceScale, forcePow, forceDecay)
+{
     po::options_description desc = getOptions();
     po::variables_map vm;
     po::store(po::command_line_parser(argc, argv).options(desc).allow_unregistered().run(), vm);
@@ -125,6 +129,9 @@ void Robocup::setupMossyFibers(CBMState *simState) {
     writeMFResponses(logfile, "accelXMFs", getMaximalGaussianResponse(minAX, maxAX, numAccelXMF));
     writeMFResponses(logfile, "accelYMFs", getMaximalGaussianResponse(minAY, maxAY, numAccelYMF));
     writeMFResponses(logfile, "accelZMFs", getMaximalGaussianResponse(minAZ, maxAZ, numAccelZMF));        
+
+    writeMZ(logfile, hipPitchForwards);
+    writeMZ(logfile, hipPitchBack);
 }
 
 float* Robocup::getState() {
@@ -155,14 +162,8 @@ void Robocup::step(CBMSimCore *simCore) {
     Environment::step(simCore);
 
     // Setup the MZs
-    if (!hipPitchForwards.initialized()) {
-        hipPitchForwards = Microzone("HipPitchForwards", 0, numNC, forceScale, forcePow, forceDecay, simCore);
-        writeMZ(logfile, hipPitchForwards);
-    }
-    if (!hipPitchBack.initialized()) {
-        hipPitchBack = Microzone("HipPitchBack", 1, numNC, forceScale, forcePow, forceDecay, simCore);
-        writeMZ(logfile, hipPitchBack);
-    }
+    if (!hipPitchForwards.initialized()) hipPitchForwards.initialize(simCore, numNC);
+    if (!hipPitchBack.initialized())     hipPitchBack.initialize(simCore, numNC); 
 
     // Save the simulator periodically
     if (timestep % 100000 == 0) {
@@ -255,8 +256,8 @@ bool Robocup::terminated() {
 
 vector<string> Robocup::getMZNames() {
     vector<string> names;
-    names.push_back("HipPitchForwards");
-    names.push_back("HipPitchBack");
+    names.push_back(hipPitchForwards.name);
+    names.push_back(hipPitchBack.name);
     return names;
 }
 
