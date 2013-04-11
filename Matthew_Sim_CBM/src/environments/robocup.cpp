@@ -168,7 +168,7 @@ void Robocup::step(CBMSimCore *simCore) {
     // Save the simulator periodically
     if (timestep % 100000 == 0) {
         boost::filesystem::path p(saveStateDir);
-        p /= "ts" + boost::lexical_cast<string>(timestep) + ".out";
+        p /= "ts" + boost::lexical_cast<string>(timestep) + ".st";
         std::fstream filestr (p.c_str(), fstream::out);
         simCore->writeToState(filestr);
         filestr.close();
@@ -230,8 +230,8 @@ void Robocup::deliverErrors(CBMSimCore *simCore) {
     if (accel.getX() < 0 && randGen->Random() < errorProbability)
         hipPitchForwards.deliverError();
     // Accel X > 0 Indicates a forwards lean
-    if (accel.getX() > 0 && randGen->Random() < errorProbability)
-        hipPitchBack.deliverError();
+    // if (accel.getX() > 0 && randGen->Random() < errorProbability)
+    //     hipPitchBack.deliverError();
 
     // Error based on deviation from upright
     // Standing angle = ~.5; Fallen front or back = ~.06
