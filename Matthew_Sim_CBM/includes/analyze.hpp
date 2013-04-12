@@ -45,7 +45,8 @@ public:
                        std::vector<std::vector<float> >& mfWeightSums,
                        int numMZ, std::vector<std::string>& mzNames);
 
-    void plotMFChange(std::string vName, std::vector<int> &mfInds,
+    void plotMFChange(std::string vName, std::vector<std::string> mzNames,
+                      std::vector<int> &mfInds,
                       std::vector<std::vector<float> >&mfWeightDiffSums,
                       std::vector<std::vector<float> >&mfWeightDiffPercents,
                       std::vector<std::vector<float> >&mfWeightSums,                      

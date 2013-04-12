@@ -75,6 +75,25 @@ void WeightAnalyzer::analyzeFiles(path p1, path p2) {
     int numGR = state1.getConnectivityParams()->getNumGR();
     int numMF = state1.getConnectivityParams()->getNumMF();
 
+    vector<string> mzNames;
+    for (int i=0; i<numMZ; i++)
+        mzNames.push_back("MZ" + boost::lexical_cast<string>(i));
+
+    CRandomSFMT0 randGen(rand());
+    Environment env(&randGen);
+
+    { // Read the better MZ names if present
+        ifstream ifs(logfile.c_str(), ifstream::in);
+        if (ifs.good()) {
+            vector<int> mzNums;
+            vector<string> names;
+            env.readMZ(ifs, mzNums, names);
+            for (uint i=0; i<mzNums.size(); i++) {
+                mzNames[mzNums[i]] = names[i];
+            }
+        }
+    }
+
     vector<vector<float> > origWeights; // Original gr->pc Weights [mz][weight]
     vector<vector<float> > weightDiff; // [mz][weight]
     for (int i=0; i<numMZ; i++) {
@@ -127,12 +146,12 @@ void WeightAnalyzer::analyzeFiles(path p1, path p2) {
     for (int mz=0; mz<numMZ; mz++) {
         stringstream ss;
         ss << mz;
-        plot_dir /= "MZ" + ss.str() + "_weight_diff_percent.pdf";
+        plot_dir /= mzNames[mz] + "_weight_diff_percent.pdf";
         R["weightsvec"] = mfWeightDiffPercents[mz];
         string txt =
             "library(ggplot2); "
             "data=data.frame(w=weightsvec); "
-            "plot=ggplot(data=data, aes(x=1:nrow(data), y=w)) + geom_bar(stat=\"identity\") + xlab(\"MF Number\") + ylab(\"Connected Granule Percentage Weight Changes\") + labs(title = expression(\"MZ"+ss.str()+" " + fname1+" -> "+fname2+" MF Weight Changes\"));"
+            "plot=ggplot(data=data, aes(x=1:nrow(data), y=w)) + geom_bar(stat=\"identity\") + xlab(\"MF Number\") + ylab(\"Connected Granule Percentage Weight Changes\") + labs(title = expression(\""+mzNames[mz]+" " + fname1+" -> "+fname2+" MF Weight Changes\"));"
             "ggsave(plot,file=\""+plot_dir.c_str()+"\"); ";
         R.parseEvalQ(txt);
         plot_dir.remove_leaf();
@@ -149,15 +168,17 @@ void WeightAnalyzer::analyzeFiles(path p1, path p2) {
         env.readMFInds(ifs, variableNames, mfInds);
 
         for (uint i=0; i<variableNames.size(); i++) {
-            plotMFChange(variableNames[i], mfInds[i], mfWeightDiffSums, mfWeightDiffPercents, mfWeightSums, numMZ);
+            plotMFChange(variableNames[i], mzNames, mfInds[i], mfWeightDiffSums, mfWeightDiffPercents, mfWeightSums, numMZ);
         }
     }
 
     plot_dir.remove_leaf();
 }
 
-void WeightAnalyzer::plotMFChange(string vName, vector<int>& mfInds, vector<vector<float> >&mfWeightDiffSums,
-                                  vector<vector<float> >&mfWeightDiffPercents, vector<vector<float> >&mfWeightSums,
+void WeightAnalyzer::plotMFChange(string vName, vector<string> mzNames, vector<int>& mfInds,
+                                  vector<vector<float> >&mfWeightDiffSums,
+                                  vector<vector<float> >&mfWeightDiffPercents,
+                                  vector<vector<float> >&mfWeightSums,
                                   int numMZ) {
     for (int mz=0; mz<numMZ; mz++) {
         vector<float> weights;
@@ -173,12 +194,12 @@ void WeightAnalyzer::plotMFChange(string vName, vector<int>& mfInds, vector<vect
             // Plot this re-ordered weight diff
             stringstream ss;
             ss << mz;
-            plot_dir /= vName + "_MZ" + ss.str() + "_ordered_weight_diff_percent.pdf";
+            plot_dir /= vName + "_" + mzNames[mz] + "_ordered_weight_diff_percent.pdf";
             R["weightsvec"] = wDiffPerc;
             string txt =
                 "library(ggplot2); "
                 "data=data.frame(w=weightsvec); "
-                "plot=ggplot(data=data, aes(x=1:nrow(data), y=w)) + geom_bar(stat=\"identity\") + xlab(\"MF Number\") + ylab(\"Connected Granule Percent Weight Change\") + labs(title = expression(\"MZ"+ss.str()+" " + vName + " Ordered MF Percent Weight Changes\"));"
+                "plot=ggplot(data=data, aes(x=1:nrow(data), y=w)) + geom_bar(stat=\"identity\") + xlab(\"MF Number\") + ylab(\"Connected Granule Percent Weight Change\") + labs(title = expression(\""+mzNames[mz]+" " + vName + " Ordered MF Percent Weight Changes\"));"
                 "ggsave(plot,file=\""+plot_dir.c_str()+"\"); ";
             R.parseEvalQ(txt);
             plot_dir.remove_leaf();
@@ -188,13 +209,13 @@ void WeightAnalyzer::plotMFChange(string vName, vector<int>& mfInds, vector<vect
             // Plot this re-ordered weights colored by diff
             stringstream ss;
             ss << mz;
-            plot_dir /= vName + "_MZ" + ss.str() + "_ordered_weights.pdf";
+            plot_dir /= vName + "_" + mzNames[mz] + "_ordered_weights.pdf";
             R["weightsvec"] = weights;
             R["diffvec"] = wDiff;
             string txt =
                 "library(ggplot2); "
                 "data=data.frame(w=weightsvec,WeightDiff=diffvec); "
-                "plot=ggplot(data=data, aes(x=1:nrow(data), y=w, fill=WeightDiff)) + geom_bar(stat=\"identity\") + scale_fill_gradient2(low=\"darkred\",high=\"darkblue\", mid=\"white\", midpoint=0) + theme(panel.background = element_rect(fill='gray')) + xlab(\"MF Number\") + ylab(\"Sum of Connected Granule Weights\") + labs(title = expression(\"MZ"+ss.str()+" " + vName + " Ordered MF Weights\"));"
+                "plot=ggplot(data=data, aes(x=1:nrow(data), y=w, fill=WeightDiff)) + geom_bar(stat=\"identity\") + scale_fill_gradient2(low=\"darkred\",high=\"darkblue\", mid=\"white\", midpoint=0) + theme(panel.background = element_rect(fill='gray')) + xlab(\"MF Number\") + ylab(\"Sum of Connected Granule Weights\") + labs(title = expression(\""+mzNames[mz]+" " + vName + " Ordered MF Weights\"));"
                 "ggsave(plot,file=\""+plot_dir.c_str()+"\"); ";
             // theme(panel.background = element_rect(fill='black'), panel.grid.major = element_line(colour = 'green')) + 
             R.parseEvalQ(txt);
