@@ -26,15 +26,14 @@ class MainW : public QWidget
     Q_OBJECT
 
 public:
-    MainW(QWidget *parent, int numMZ, int randSeed, std::string conPF, std::string actPF,
-          Environment *env);
+    MainW(QWidget *parent, SimThread *thread, Environment *env);
     ~MainW();
 
 protected:
     void keyPressEvent(QKeyEvent *);
     void keyReleaseEvent(QKeyEvent *);
 
-    SimThread thread;
+    SimThread *thread;
 
     ActTemporalView inputNetTView;
     ActTemporalView scTView;

@@ -20,6 +20,7 @@ class SimThread : public QThread
 
 public:
     SimThread(QObject *parent, int numMZ, int randSeed, std::string conPF, std::string actPF, Environment *env);
+    SimThread(QObject *parent, int numMZ, int randSeed, std::string savedSimFile, Environment *env);
     ~SimThread();
 
     bool alive;
@@ -36,6 +37,7 @@ public:
     int numNC; // Nucleus Cells
     int numIO; // Inferior Olive Cells
 
+    void setupMFs(int randSeed);
     void activateCF(int zoneN=0) { assert(zoneN < numMZ); simCore->updateErrDrive(zoneN, 1.0); };
     void activateMF(int mfNum) { assert(mfNum < numMF); env->mfExcited[mfNum] = true; };
     void deactivateMF(int mfNum) { assert(mfNum < numMF); env->mfExcited[mfNum] = false; };

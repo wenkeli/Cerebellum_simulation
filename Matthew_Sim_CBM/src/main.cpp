@@ -31,6 +31,7 @@ int main(int argc, char **argv)
          "Activity Parameter File")
         ("seed", po::value<int>(), "Random Seed")
         ("nogui", "Run without a gui")
+        ("load", po::value<string>(), "Load saved simulator state file")
         ;
 
     po::variables_map vm;
@@ -60,16 +61,16 @@ int main(int argc, char **argv)
 
     CRandomSFMT0 randGen(randSeed);
 
-    Environment *env = NULL;
+    auto_ptr<Environment> env;
     string envStr = vm["environment"].as<string>();
     if (envStr == "default")
-        env = new Environment(&randGen);
+        env.reset(new Environment(&randGen));
     else if (envStr == "eyelid")
-        env = new Eyelid(&randGen);
+        env.reset(new Eyelid(&randGen));
     else if (envStr == "cartpole")
-        env = new Cartpole(&randGen, argc, argv);
+        env.reset(new Cartpole(&randGen, argc, argv));
     else if (envStr == "robocup")
-        env = new Robocup(&randGen, argc, argv);
+        env.reset(new Robocup(&randGen, argc, argv));
 #ifdef BUILD_ANALYSIS
     else if (envStr == "analysis") {
         WeightAnalyzer a(argc, argv);
@@ -85,21 +86,25 @@ int main(int argc, char **argv)
     string conPF  = vm["conPF"].as<string>();
     string actPF  = vm["actPF"].as<string>();
 
+    // Create the simulation thread
+    auto_ptr<SimThread> t;
+    if (vm.count("load"))
+        t.reset(new SimThread(NULL, numMZ, randSeed, vm["load"].as<string>(), env.get()));
+    else
+        t.reset(new SimThread(NULL, numMZ, randSeed, conPF, actPF, env.get()));
+
+    // Create the main window if needed
     if (vm.count("nogui")) {
-        SimThread t(NULL, numMZ, randSeed, conPF, actPF, env);
-        t.start();
-        t.wait();
+        t->start();
+        t->wait();
     } else {
         QApplication app(argc, argv);
-        MainW *mainW = new MainW(NULL, numMZ, randSeed, conPF, actPF, env);
+        MainW *mainW = new MainW(NULL, t.get(), env.get());        
         app.setActiveWindow(mainW);
         mainW->show();
-
         app.connect(mainW, SIGNAL(destroyed()), &app, SLOT(quit()));
         return app.exec();
     }
-
-    delete env;
 }
 
 

@@ -37,6 +37,30 @@ SimThread::SimThread(QObject *parent, int numMZ, int randSeed, string conPF, str
     conPStream.close();
     actPStream.close();
 
+    setupMFs(randSeed);
+}
+
+SimThread::SimThread(QObject *parent, int numMZ, int randSeed, std::string savedSimFile, Environment *env)
+    : QThread(parent), alive(true), trialLength(5000), numMZ(numMZ), env(env)
+{
+    fstream stateStream(savedSimFile.c_str(), fstream::in);
+
+    // Create the simulation
+    simState = new CBMState(stateStream);
+    simCore = new CBMSimCore(simState, &randSeed);
+    stateStream.close();
+
+    setupMFs(randSeed);
+}
+
+SimThread::~SimThread()
+{
+    delete simState;
+    delete simCore;
+    delete mfs;
+}
+
+void SimThread::setupMFs(int randSeed) {
     // Get the number of cells of each type
     numGR = simState->getConnectivityParams()->getNumGR();
     numGO = simState->getConnectivityParams()->getNumGO();
@@ -63,13 +87,6 @@ SimThread::SimThread(QObject *parent, int numMZ, int randSeed, string conPF, str
     qRegisterMetaType<std::vector<ct_uint8_t> >("std::vector<ct_uint8_t>");
     qRegisterMetaType<std::vector<float> >("std::vector<float>");
     qRegisterMetaType<QColor>("QColor");
-}
-
-SimThread::~SimThread()
-{
-    delete simState;
-    delete simCore;
-    delete mfs;
 }
 
 void SimThread::run()
