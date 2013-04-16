@@ -79,13 +79,13 @@ protected:
     static const bool randomizeMFs = false;
     static const bool useLogScaling = true;
 
-    static const float forceScale = 8;   // Force gain for the output
+    static const float forceScale = 12;   // Force gain for the output
     static const float forcePow = 2;     // Force power for the output
     static const float forceDecay = .99; // Rate a which force decays
 
     std::vector<float> forces, hipPitchForwardsForces, hipPitchBackForces; // Keeps track of the forces generated
 
-    static const int cbm_steps_to_robosim_steps = 5; // Number of cerebellar steps for each robosim step
+    static const int cbm_steps_to_robosim_steps = 10; // Number of cerebellar steps for each robosim step
     int maxNumTrials;
 };
 

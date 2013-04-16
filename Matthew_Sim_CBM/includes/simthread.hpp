@@ -38,6 +38,7 @@ public:
     int numIO; // Inferior Olive Cells
 
     void setupMFs(int randSeed);
+    void disablePlasticity();
     void activateCF(int zoneN=0) { assert(zoneN < numMZ); simCore->updateErrDrive(zoneN, 1.0); };
     void activateMF(int mfNum) { assert(mfNum < numMF); env->mfExcited[mfNum] = true; };
     void deactivateMF(int mfNum) { assert(mfNum < numMF); env->mfExcited[mfNum] = false; };

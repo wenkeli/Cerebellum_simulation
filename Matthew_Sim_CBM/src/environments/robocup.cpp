@@ -146,7 +146,12 @@ float* Robocup::getState() {
         VecPosition accel = bodyModel->getAccelRates();
 
         // Actual min impact time is 0 but -.5 allows the gaussian to be more fully expressed
-        gaussMFAct(-.5, behavior->SHOT_PREP_TIME, behavior->getTimeToShot(), impactMFs);
+        //gaussMFAct(-.5, behavior->SHOT_PREP_TIME, behavior->getTimeToShot(), impactMFs);
+        double timeToShot = behavior->getTimeToShot();
+        if (timeToShot <= 1 && timeToShot >= -.5)
+            for (uint i=0; i<impactMFs.size(); i++)
+                mfFreq[impactMFs[i]] = mfFreqExcited[i];
+
         gaussMFAct(minGX, maxGX, gyros.getX(), gyroXMFs);
         gaussMFAct(minGY, maxGY, gyros.getY(), gyroYMFs);
         gaussMFAct(minGZ, maxGZ, gyros.getZ(), gyroZMFs);    

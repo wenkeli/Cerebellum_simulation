@@ -143,3 +143,11 @@ void SimThread::run()
             emit(blankTW(Qt::black));
     }
 }
+
+void SimThread::disablePlasticity() {
+    ActivityParams *actParams = simState->getActParamsInternal();
+    actParams->synLTPStepSizeGRtoPC = 0;
+    actParams->synLTDStepSizeGRtoPC = 0;
+    actParams->synLTDStepSizeMFtoNC = 0;
+    actParams->synLTPStepSizeMFtoNC = 0;
+}

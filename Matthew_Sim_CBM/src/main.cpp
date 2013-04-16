@@ -32,6 +32,7 @@ int main(int argc, char **argv)
         ("seed", po::value<int>(), "Random Seed")
         ("nogui", "Run without a gui")
         ("load", po::value<string>(), "Load saved simulator state file")
+        ("freeze", "Freeze the current policy by disabling synaptic plasticity")
         ;
 
     po::variables_map vm;
@@ -92,6 +93,9 @@ int main(int argc, char **argv)
         t.reset(new SimThread(NULL, numMZ, randSeed, vm["load"].as<string>(), env.get()));
     else
         t.reset(new SimThread(NULL, numMZ, randSeed, conPF, actPF, env.get()));
+
+    if (vm.count("freeze"))
+        t->disablePlasticity();
 
     // Create the main window if needed
     if (vm.count("nogui")) {
