@@ -76,6 +76,9 @@ protected:
 	float *mfFreqInCSTonic;
 	float *mfFreqInCSPhasic;
 
+	bool grPCPlastSet;
+	bool grPCPlastReset;
+
 	EyelidIntegrator *eyelidFunc;
 
 	ECTrialsData *data;

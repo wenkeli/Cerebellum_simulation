@@ -201,6 +201,9 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 				numDataTrials, pshParams, rasterParams, eyelidParams);
 	}
 
+	grPCPlastSet=false;
+	grPCPlastReset=true;
+
 	delete[] isCSTonic;
 	delete[] isCSPhasic;
 	delete[] isContext;
@@ -254,9 +257,26 @@ void ECManagementDelay::calcSimActivity()
 	{
 //		simulation->updateErrDrive(0, 0);
 	}
+
+	if(currentTime>=csOnTime+200 && !grPCPlastSet
+			&& currentTrial>=csStartTrialN && currentTime<csOffTime+200)
+	{
+		grPCPlastSet=true;
+		grPCPlastReset=false;
+		simulation->getMZoneList()[0]->setGRPCPlastSteps(0.0001f*((float)(csOffTime-csOnTime)-200)/100.0f, 0.0001f);
+	}
+
+	if(!grPCPlastReset && currentTime>=csOffTime+200 && currentTrial>=csStartTrialN)
+	{
+		grPCPlastSet=false;
+		grPCPlastReset=true;
+		simulation->getMZoneList()[0]->resetGRPCPlastSteps();
+	}
+
 	simulation->updateMFInput(apMF);
 
 	simulation->calcActivity();
+
 
 	eyelidPos=eyelidFunc->calcStep(simulation->getMZoneList()[0]->exportAPNC());
 
