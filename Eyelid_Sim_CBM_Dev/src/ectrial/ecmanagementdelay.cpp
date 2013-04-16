@@ -179,6 +179,8 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 		pshParams["bc"]=pp;
 		pp.numCells=simState->getConnectivityParams()->getNumPC();
 		pshParams["pc"]=pp;
+		pp.numCells=simState->getConnectivityParams()->getNumIO();
+		pshParams["io"]=pp;
 
 		rasterParams.clear();
 		rp.numCells=simState->getConnectivityParams()->getNumGO();
@@ -191,6 +193,8 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 		rasterParams["pc"]=rp;
 		rp.numCells=simState->getConnectivityParams()->getNumNC();
 		rasterParams["nc"]=rp;
+		rp.numCells=simState->getConnectivityParams()->getNumIO();
+		rasterParams["io"]=rp;
 
 
 		data=new ECTrialsData(500, csOff-csOn, 500, simState->getActivityParams()->getMSPerTimeStep(),
@@ -269,6 +273,7 @@ void ECManagementDelay::calcSimActivity()
 				data->updateRaster("bc", simulation->getMZoneList()[0]->exportAPBufBC());
 				data->updateRaster("pc", simulation->getMZoneList()[0]->exportAPBufPC());
 				data->updateRaster("nc", simulation->getMZoneList()[0]->exportAPBufNC());
+				data->updateRaster("io", simulation->getMZoneList()[0]->exportAPBufIO());
 			}
 		}
 
@@ -277,6 +282,7 @@ void ECManagementDelay::calcSimActivity()
 		data->updatePSH("sc", simulation->getInputNet()->exportAPSC());
 		data->updatePSH("bc", simulation->getMZoneList()[0]->exportAPBC());
 		data->updatePSH("pc", simulation->getMZoneList()[0]->exportAPPC());
+		data->updatePSH("io", simulation->getMZoneList()[0]->exportAPIO());
 
 		data->updateEyelid(eyelidPos);
 	}
