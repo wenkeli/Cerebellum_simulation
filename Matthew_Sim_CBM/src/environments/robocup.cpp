@@ -2,6 +2,9 @@
 
 #include "headers.h"
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 using namespace std;
 namespace po = boost::program_options;
 
@@ -43,7 +46,6 @@ Robocup::Robocup(CRandomSFMT0 *randGen, int argc, char **argv)
     robosim.mPort      = vm["mPort"].as<int>(); // server-port: The port for monitor
     robosim.uNum       = vm["uNum"].as<int>();
     robosim.rsgdir     = vm["rsg"].as<string>();
-    robosim.outputFile = "/tmp/cbm.txt"; // File where robot fitness is written
     robosim.agentType  = vm["behavior"].as<string>();
     robosim.LoadParams(vm["paramFile"].as<string>());
     maxNumTrials = vm["maxNumTrials"].as<int>();

@@ -10,9 +10,20 @@
 #include <CBMCoreInclude/interface/cbmsimcore.h>
 #include <CBMStateInclude/interfaces/cbmstate.h>
 #include <CBMToolsInclude/poissonregencells.h>
-
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 
 class Environment {
+private:
+    friend class boost::serialization::access;
+    template <class Archive>
+    void serialize(Archive &ar, const unsigned int version) {
+        for (uint i=0; i<microzones.size(); i++)
+            ar & (*microzones[i]);
+        for (uint i=0; i<stateVariables.size(); i++)
+            ar & (*stateVariables[i]);
+    }
+
     friend class WeightAnalyzer;
 public:
     Environment(CRandomSFMT0 *randGen);

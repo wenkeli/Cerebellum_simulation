@@ -10,6 +10,9 @@
 #include "../includes/environments/cartpole.hpp"
 #include "../includes/environments/robocup.hpp"
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 #ifdef BUILD_ANALYSIS
 #include "../includes/analyze.hpp"
 #endif
@@ -89,9 +92,13 @@ int main(int argc, char **argv)
 
     // Create the simulation thread
     auto_ptr<SimThread> t;
-    if (vm.count("load"))
+    if (vm.count("load")) {
+        std::ifstream ifs(vm["load"].as<string>().c_str());
+        boost::archive::text_iarchive ia(ifs);
+        ia >> (*env);
+        cout << "Loaded boost archive of environment." << endl;
         t.reset(new SimThread(NULL, numMZ, randSeed, vm["load"].as<string>(), env.get()));
-    else
+    } else
         t.reset(new SimThread(NULL, numMZ, randSeed, conPF, actPF, env.get()));
 
     if (vm.count("freeze"))

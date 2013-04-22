@@ -45,6 +45,10 @@ SimThread::SimThread(QObject *parent, int numMZ, int randSeed, std::string saved
 {
     fstream stateStream(savedSimFile.c_str(), fstream::in);
 
+    // Hack: Ignore the first line of the file because it contains boost serialization stuff
+    string line;
+    std::getline(stateStream, line);
+
     // Create the simulation
     simState = new CBMState(stateStream);
     simCore = new CBMSimCore(simState, &randSeed);
@@ -162,7 +166,13 @@ void SimThread::disablePlasticity() {
 }
 
 void SimThread::saveSimState(string saveFile) {
-    std::fstream filestr (saveFile.c_str(), fstream::out);
+    ofstream ofs(saveFile.c_str());
+    {
+        boost::archive::text_oarchive oa(ofs);
+        oa << (*env);
+    }
+    
+    std::fstream filestr(saveFile.c_str(), fstream::out | fstream::app);
     simCore->writeToState(filestr);
     filestr.close();
 }

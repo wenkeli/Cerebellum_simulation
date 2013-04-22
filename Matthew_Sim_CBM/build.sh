@@ -12,7 +12,7 @@ ROBOCUP_LIB="-lnao -lrcssnet3D"
 # Includes for Boost Libraries
 BOOST_INC=""
 BOOST_LIB_PATH=""
-BOOST_LIB="-lboost_program_options -lboost_system -lboost_filesystem"
+BOOST_LIB="-lboost_program_options -lboost_system -lboost_filesystem -lboost_serialization"
 
 if [[ `hostname` == *tacc* ]]
 then

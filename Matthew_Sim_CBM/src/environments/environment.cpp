@@ -58,11 +58,12 @@ void Environment::setupStateVariables(bool randomizeMFs, std::ofstream &logfile)
     }
 
     // Write the state variable to log
+    boost::archive::text_oarchive oa(logfile);
     for (uint i=0; i<stateVariables.size(); i++)
-        stateVariables[i]->write(logfile);
+        oa << (*stateVariables[i]);
 
     for (uint i=0; i<microzones.size(); i++)
-        microzones[i]->write(logfile);
+        oa << (*microzones[i]);
 }
 
 float* Environment::getState() {
@@ -84,7 +85,7 @@ vector<string> Environment::getMZNames() {
     vector<string> names;
     if (!microzones.empty())
         for (uint i=0; i<microzones.size(); i++)
-            names.push_back(microzones[i]->name);
+            names.push_back(microzones[i]->getName());
     else 
         for (int i=0; i<numRequiredMZ(); i++)
             names.push_back("MZ" + boost::lexical_cast<string>(i));

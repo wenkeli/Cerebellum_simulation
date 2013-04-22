@@ -4,12 +4,23 @@
 #include <fstream>
 #include <cmath>
 #include <CXXToolsInclude/randGenerators/sfmt.h>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/vector.hpp>
 
 enum UpdateType { GAUSSIAN, HIGH_FREQ };    
 
-//TODO: subclass this into gaussian state variables and others
 // This class wraps a state variable
 template <class env> class StateVariable {
+private:
+    friend class boost::serialization::access;
+    template <class Archive>
+    void serialize(Archive &ar, const unsigned int version) {
+        ar & name;
+        ar & mfInds;
+        ar & type;
+    }
+
 public:
     StateVariable(std::string name, UpdateType type, float mfProportion) :
         name(name), numMF(0), mfProportion(mfProportion), mfFreq(NULL), mfFreqRelaxed(NULL),
@@ -18,12 +29,18 @@ public:
 
     // Assign MF indexes in an ordered or random fashion
     void assignOrderedMFInds(std::vector<int> &unassignedMFs) {
+        if (!mfInds.empty())
+            return;
+        
         for (int i=0; i<numMF; i++) {
             mfInds.push_back(unassignedMFs.back());
             unassignedMFs.pop_back();
         }
     }
     void assignRandomMFInds(std::vector<int> &unassignedMFs, CRandomSFMT0 *randGen) {
+        if (!mfInds.empty())
+            return;
+
         for (int i=0; i<numMF; ++i) {
             int indx = randGen->IRandom(0,unassignedMFs.size()-1);
             mfInds.push_back(unassignedMFs[indx]);
@@ -31,27 +48,18 @@ public:
         }
     }
 
-    void write(std::ofstream &logfile) {
-        // Write the MF indices
-        if (mfInds.empty()) return;
-        logfile << "MFInds " << name << " ";
-        for (uint i=0; i<mfInds.size(); i++)
-            logfile << mfInds[i] << " ";
-        logfile << std::endl;
-
-        // Write the maximal repsonses for gaussians
-        if (type == GAUSSIAN) {
-            logfile << "MFMaximalResponses " << name << " ";
-            float range = maxSVVal - minSVVal;
-            float interval = range / numMF;
-            float pos = minSVVal + interval / 2.0;
-            for (int i = 0; i < numMF; i++) {
-                logfile << pos << " ";
-                pos += interval;
-            }
-            logfile << std::endl;
-        }
-    }
+    // // Write the maximal repsonses for gaussians
+    // if (type == GAUSSIAN) {
+    //     logfile << "MFMaximalResponses " << name << " ";
+    //     float range = maxSVVal - minSVVal;
+    //     float interval = range / numMF;
+    //     float pos = minSVVal + interval / 2.0;
+    //     for (int i = 0; i < numMF; i++) {
+    //         logfile << pos << " ";
+    //         pos += interval;
+    //     }
+    //     logfile << std::endl;
+    // }
 
     void initialize(int totalMF, std::vector<float> *mfFreq, std::vector<float> *mfFreqRelaxed,
                     std::vector<float> *mfFreqExcited) {
