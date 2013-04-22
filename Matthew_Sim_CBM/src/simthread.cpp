@@ -6,7 +6,7 @@
 using namespace std;
 
 SimThread::SimThread(QObject *parent, int numMZ, int randSeed, string conPF, string actPF, Environment *env)
-    : QThread(parent), alive(true), trialLength(5000), numMZ(numMZ), env(env)
+    : QThread(parent), alive(true), paused(false), trialLength(5000), numMZ(numMZ), env(env)
 {
     vector<int> mzoneCRSeeds; // Seed for each MZ's connectivity
     vector<int> mzoneARSeeds; // Seed for each MZ's activity
@@ -41,7 +41,7 @@ SimThread::SimThread(QObject *parent, int numMZ, int randSeed, string conPF, str
 }
 
 SimThread::SimThread(QObject *parent, int numMZ, int randSeed, std::string savedSimFile, Environment *env)
-    : QThread(parent), alive(true), trialLength(5000), numMZ(numMZ), env(env)
+    : QThread(parent), alive(true), paused(false), trialLength(5000), numMZ(numMZ), env(env)
 {
     fstream stateStream(savedSimFile.c_str(), fstream::in);
 
@@ -91,7 +91,13 @@ void SimThread::setupMFs(int randSeed) {
 
 void SimThread::run()
 {
-    for (int simStep=0; alive && !env->terminated(); simStep++) {
+    int simStep = 0;
+    while (alive && !env->terminated()) {
+        if (paused) {
+            usleep(1000);
+            continue;
+        }
+
         if (simStep % 10000 == 0) cout << endl;
         if (simStep % 1000 == 0) cout << "." << flush;
 
@@ -141,13 +147,22 @@ void SimThread::run()
 
         if (simStep % trialLength == 0)
             emit(blankTW(Qt::black));
+
+        simStep++;
     }
 }
 
 void SimThread::disablePlasticity() {
+    cout << "Freezing Plasticity." << endl;
     ActivityParams *actParams = simState->getActParamsInternal();
     actParams->synLTPStepSizeGRtoPC = 0;
     actParams->synLTDStepSizeGRtoPC = 0;
     actParams->synLTDStepSizeMFtoNC = 0;
     actParams->synLTPStepSizeMFtoNC = 0;
+}
+
+void SimThread::saveSimState(string saveFile) {
+    std::fstream filestr (saveFile.c_str(), fstream::out);
+    simCore->writeToState(filestr);
+    filestr.close();
 }

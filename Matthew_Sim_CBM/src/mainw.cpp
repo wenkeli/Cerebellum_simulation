@@ -214,6 +214,14 @@ void MainW::keyReleaseEvent(QKeyEvent *event)
         break;
     case Qt::Key_Backspace:
         break;
+    case Qt::Key_S:
+        cout << "Saving simulator" << endl;
+        thread->saveSimState();
+        break;
+    case Qt::Key_P:
+        thread->paused = !thread->paused;
+        cout << (thread->paused ? "Paused" : "Unpaused") << endl;
+        break;
     case Qt::Key_1:
         indx=1;
         for (int i=indx*mfActivationWidth; i<(indx+1)*mfActivationWidth; i++)

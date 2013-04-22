@@ -38,6 +38,33 @@ void Environment::setupMossyFibers(CBMState *simState) {
     }
 }
 
+void Environment::setupStateVariables(bool randomizeMFs, std::ofstream &logfile) {
+    assert(!mfFreq.empty());
+
+    // Initialize the State Variables
+    for (uint i=0; i<stateVariables.size(); i++) 
+        stateVariables[i]->initialize(numMF, &mfFreq, &mfFreqRelaxed, &mfFreqExcited);
+
+    // Assign Mossy Fibers to each State Variable
+    std::vector<int> unassignedMFs;
+    for (int i=numMF-1; i>=0; i--) 
+        unassignedMFs.push_back(i);
+    if (randomizeMFs) {
+        for (uint i=0; i<stateVariables.size(); i++)
+            stateVariables[i]->assignRandomMFInds(unassignedMFs, randGen);
+    } else {
+        for (uint i=0; i<stateVariables.size(); i++)
+            stateVariables[i]->assignOrderedMFInds(unassignedMFs);
+    }
+
+    // Write the state variable to log
+    for (uint i=0; i<stateVariables.size(); i++)
+        stateVariables[i]->write(logfile);
+
+    for (uint i=0; i<microzones.size(); i++)
+        microzones[i]->write(logfile);
+}
+
 float* Environment::getState() {
     for (uint i=0; i<mfFreq.size(); i++) {
         mfFreq[i] = mfExcited[i] ? mfFreqExcited[i] : mfFreqRelaxed[i];
@@ -55,58 +82,13 @@ bool Environment::terminated() {
 
 vector<string> Environment::getMZNames() {
     vector<string> names;
-    for (int i=0; i<numRequiredMZ(); i++)
-        names.push_back("MZ" + boost::lexical_cast<string>(i));
+    if (!microzones.empty())
+        for (uint i=0; i<microzones.size(); i++)
+            names.push_back(microzones[i]->name);
+    else 
+        for (int i=0; i<numRequiredMZ(); i++)
+            names.push_back("MZ" + boost::lexical_cast<string>(i));
     return names;
-}
-
-void Environment::gaussMFAct(float minVal, float maxVal, float currentVal, vector<int>& mfInds, float gaussWidth) {
-    currentVal = max(minVal, min(maxVal, currentVal));
-    float range = maxVal - minVal;
-    float interval = range / mfInds.size();
-    float pos = minVal + interval / 2.0;
-    float variance = gaussWidth * interval;
-    float maxPossibleValue = 1.0 / sqrt(2 * M_PI * (variance*variance));
-    for (uint i = 0; i < mfInds.size(); i++) {
-        float mean = pos;
-        float x = currentVal;
-        // Formula for normal distribution: http://en.wikipedia.org/wiki/Normal_distribution
-        float value = exp(-1 * ((x-mean)*(x-mean))/(2*(variance*variance))) / sqrt(2 * M_PI * (variance*variance));
-        float normalizedValue = value / maxPossibleValue;
-
-        // Firing rate is a linear combination of relaxed and excited rates
-        int mfIndx = mfInds[i];
-        mfFreq[mfIndx] = normalizedValue * mfFreqExcited[mfIndx] + (1 - normalizedValue) * mfFreqRelaxed[mfIndx];
-
-        pos += interval;
-    }
-}
-
-vector<float> Environment::getMaximalGaussianResponse(float minVal, float maxVal, int numMF) {
-    vector<float> maximalResponses;
-    float range = maxVal - minVal;
-    float interval = range / numMF;
-    float pos = minVal + interval / 2.0;
-    for (uint i = 0; i < numMF; i++) {
-        maximalResponses.push_back(pos);
-        pos += interval;
-    }
-    return maximalResponses;
-}
-
-void Environment::assignRandomMFs(vector<int>& unassignedMFs, int numToAssign, vector<int>& mfs) {
-    for (int i=0; i<numToAssign; ++i) {
-        int indx = randGen->IRandom(0,unassignedMFs.size()-1);
-        mfs.push_back(unassignedMFs[indx]);
-        unassignedMFs.erase(unassignedMFs.begin()+indx);
-    }
-}
-
-void Environment::writeMFInds(ofstream& logfile, string stateVariable, const vector<int>& mfInds) {
-    logfile << "MFInds " << stateVariable << " ";
-    for (uint i=0; i<mfInds.size(); i++)
-        logfile << mfInds[i] << " ";
-    logfile << endl;
 }
 
 void Environment::readMFInds(ifstream& logfile, vector<string>& variables, vector<vector<int> >& mfInds) {
@@ -126,13 +108,6 @@ void Environment::readMFInds(ifstream& logfile, vector<string>& variables, vecto
     logfile.close();
 }
 
-void Environment::writeMFResponses(ofstream& logfile, string stateVariable, const vector<float>& mfResp) {
-    logfile << "MFMaximalResponses " << stateVariable << " ";
-    for (uint i=0; i<mfResp.size(); i++)
-        logfile << mfResp[i] << " ";
-    logfile << endl;
-}
-
 void Environment::readMFResponses(ifstream& logfile, vector<string>& variables, vector<vector<float> >& mfResp) {
     string line;
     while (std::getline(logfile, line)) {
@@ -148,10 +123,6 @@ void Environment::readMFResponses(ifstream& logfile, vector<string>& variables, 
         }
     }
     logfile.close();
-}
-
-void Environment::writeMZ(ofstream& logfile, Microzone& mz) {
-    logfile << "Microzone " << mz.mzNum << " " << mz.name << endl;
 }
 
 void Environment::readMZ(ifstream& logfile, vector<int>& mzNums, vector<string>& mzNames) {

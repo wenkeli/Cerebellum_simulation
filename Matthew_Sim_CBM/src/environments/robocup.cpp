@@ -17,17 +17,20 @@ po::options_description Robocup::getOptions() {
         ("rsg", po::value<string>()->default_value("rsg/agent/nao"),//"/usr/local/share/rcssserver3d/rsg/agent/nao"),
          "Folder for the nao model")
         ("behavior", po::value<string>()->default_value("cerebellumAgent"), "Agent behavior")
-        ("maxNumTrials", po::value<int>()->default_value(25),
+        ("maxNumTrials", po::value<int>()->default_value(100),
          "Maximum number of trials.")
-        ("simStateDir", po::value<string>()->default_value("./"), "Directory to save sim state files.")        
+        ("simStateDir", po::value<string>()->default_value("./"), "Directory to save sim state files.")
         ;
     return desc;
 }
 
 Robocup::Robocup(CRandomSFMT0 *randGen, int argc, char **argv)
     : Environment(randGen),
-      hipPitchForwards("HipPitchForwards", 0, forceScale, forcePow, forceDecay), 
-      hipPitchBack("HipPitchBack", 1, forceScale, forcePow, forceDecay)
+      mz_hipPitchForwards("HipPitchForwards", 0, forceScale, forcePow, forceDecay), 
+      mz_hipPitchBack("HipPitchBack", 1, forceScale, forcePow, forceDecay),
+      sv_highFreq("highFreqMFs", HIGH_FREQ, highFreqMFProportion),
+      sv_impactTimer("impactMFs", GAUSSIAN, impactMFProportion),
+      hpFF(0), hpBF(0), avgHipPitchForce(0)
 {
     po::options_description desc = getOptions();
     po::variables_map vm;
@@ -48,22 +51,22 @@ Robocup::Robocup(CRandomSFMT0 *randGen, int argc, char **argv)
     logfile.open(vm["logfile"].as<string>().c_str());
     saveStateDir = boost::filesystem::path(vm["simStateDir"].as<string>());
     assert(exists(saveStateDir) && is_directory(saveStateDir));
+
+    // Hack: I'm not sure this cast is kosher
+    stateVariables.push_back((StateVariable<Environment>*) (&sv_highFreq));
+    stateVariables.push_back((StateVariable<Environment>*) (&sv_impactTimer));
+    microzones.push_back(&mz_hipPitchForwards);
+    microzones.push_back(&mz_hipPitchBack);
 }
 
 Robocup::~Robocup() {
-    if (robosim.agentType == "omniWalkAgent") {
-        OptimizationBehaviorOmniWalk *omni = (OptimizationBehaviorOmniWalk *) robosim.behavior;
-        double cumFitness = omni->getCumFitness();
-        double numRuns = omni->getRunNumber();
-        double avgFitness = cumFitness / numRuns;
-        cout << "TotalFitness: " << cumFitness << " NumRuns: " << numRuns << " AvgFitness: " << avgFitness << endl;
-    }
     robosim.Done();
     logfile.close();
 }
 
 void Robocup::setupMossyFibers(CBMState *simState) {
     Environment::setupMossyFibers(simState);
+    Environment::setupStateVariables(randomizeMFs, logfile);
 
     // Connect to the server and initialize the behavior.
     // Odd things happen if this is done in the constructor,
@@ -79,86 +82,17 @@ void Robocup::setupMossyFibers(CBMState *simState) {
     worldModel = robosim.behavior->getWorldModel();
     walkEngine = robosim.behavior->getWalkEngine();
 
-    int numHighFreqMF = highFreqMFProportion * numMF;
-    int numImpactMF   = impactMFProportion * numMF;
-    int numGyroXMF    = gyroXMFProportion * numMF;
-    int numGyroYMF    = gyroYMFProportion * numMF;
-    int numGyroZMF    = gyroZMFProportion * numMF;    
-    int numAccelXMF   = accelXMFProportion * numMF;
-    int numAccelYMF   = accelYMFProportion * numMF;
-    int numAccelZMF   = accelZMFProportion * numMF;
-
-    if (randomizeMFs) {
-        vector<int> unassigned;
-        for (int i=0; i<numMF; i++)
-            unassigned.push_back(i);
-        assignRandomMFs(unassigned, numHighFreqMF, highFreqMFs);
-        assignRandomMFs(unassigned, numImpactMF, impactMFs);
-        assignRandomMFs(unassigned, numGyroXMF, gyroXMFs);
-        assignRandomMFs(unassigned, numGyroYMF, gyroYMFs);
-        assignRandomMFs(unassigned, numGyroZMF, gyroZMFs);    
-        assignRandomMFs(unassigned, numAccelXMF, accelXMFs);
-        assignRandomMFs(unassigned, numAccelYMF, accelYMFs);
-        assignRandomMFs(unassigned, numAccelZMF, accelZMFs);
-    } else {
-        int m = 100;
-        for (int i=0; i < numHighFreqMF; i++) highFreqMFs.push_back(m++);
-        m+=25;
-        for (int i=0; i < numImpactMF; i++) impactMFs.push_back(m++);
-        for (int i=0; i < numGyroXMF; i++) gyroXMFs.push_back(m++);
-        for (int i=0; i < numGyroYMF; i++) gyroYMFs.push_back(m++);
-        for (int i=0; i < numGyroZMF; i++) gyroZMFs.push_back(m++);        
-        for (int i=0; i < numAccelXMF; i++) accelXMFs.push_back(m++);
-        for (int i=0; i < numAccelYMF; i++) accelYMFs.push_back(m++);
-        for (int i=0; i < numAccelZMF; i++) accelZMFs.push_back(m++);        
-    }
-
-    writeMFInds(logfile, "highFreqMFs", highFreqMFs);
-    writeMFInds(logfile, "impactMFs", impactMFs);
-    writeMFInds(logfile, "gyroXMFs", gyroXMFs);
-    writeMFInds(logfile, "gyroYMFs", gyroYMFs);
-    writeMFInds(logfile, "gyroZMFs", gyroZMFs);
-    writeMFInds(logfile, "accelXMFs", accelXMFs);    
-    writeMFInds(logfile, "accelYMFs", accelYMFs);
-    writeMFInds(logfile, "accelZMFs", accelZMFs);
-
-    writeMFResponses(logfile, "impactMFs", getMaximalGaussianResponse(0, behavior->SHOT_PREP_TIME, numImpactMF));
-    writeMFResponses(logfile, "gyroXMFs", getMaximalGaussianResponse(minGX, maxGX, numGyroXMF));
-    writeMFResponses(logfile, "gyroYMFs", getMaximalGaussianResponse(minGY, maxGY, numGyroYMF));                     
-    writeMFResponses(logfile, "gyroZMFs", getMaximalGaussianResponse(minGZ, maxGZ, numGyroZMF));    
-    writeMFResponses(logfile, "accelXMFs", getMaximalGaussianResponse(minAX, maxAX, numAccelXMF));
-    writeMFResponses(logfile, "accelYMFs", getMaximalGaussianResponse(minAY, maxAY, numAccelYMF));
-    writeMFResponses(logfile, "accelZMFs", getMaximalGaussianResponse(minAZ, maxAZ, numAccelZMF));        
-
-    writeMZ(logfile, hipPitchForwards);
-    writeMZ(logfile, hipPitchBack);
+    sv_impactTimer.initializeGaussian(minImpactTimerVal, maxImpactTimerVal, this, &Robocup::getTimeToImpact, 12);
 }
 
 float* Robocup::getState() {
     for (int i=0; i<numMF; i++)
         mfFreq[i] = mfFreqRelaxed[i];
-    for (vector<int>::iterator it=highFreqMFs.begin(); it != highFreqMFs.end(); it++)
-        mfFreq[*it] = mfFreqExcited[*it];
 
-    // Don't display state variables in-between trials
-    if (behavior->getShotPhase() != OptimizationBehaviorBalance::reset) {
-        VecPosition gyros = bodyModel->getGyroRates();
-        VecPosition accel = bodyModel->getAccelRates();
-
-        // Actual min impact time is 0 but -.5 allows the gaussian to be more fully expressed
-        //gaussMFAct(-.5, behavior->SHOT_PREP_TIME, behavior->getTimeToShot(), impactMFs);
-        double timeToShot = behavior->getTimeToShot();
-        if (timeToShot <= 1 && timeToShot >= -.5)
-            for (uint i=0; i<impactMFs.size(); i++)
-                mfFreq[impactMFs[i]] = mfFreqExcited[i];
-
-        gaussMFAct(minGX, maxGX, gyros.getX(), gyroXMFs);
-        gaussMFAct(minGY, maxGY, gyros.getY(), gyroYMFs);
-        gaussMFAct(minGZ, maxGZ, gyros.getZ(), gyroZMFs);    
-        gaussMFAct(minAX, maxAX, accel.getX(), accelXMFs);
-        gaussMFAct(minAY, maxAY, accel.getY(), accelYMFs);
-        gaussMFAct(minAZ, maxAZ, accel.getZ(), accelZMFs);    
-    }
+    // Update high freq state variables at all times. Others only when not in reset.
+    for (uint i=0; i<stateVariables.size(); i++)
+        if (stateVariables[i]->type == HIGH_FREQ || behavior->getShotPhase() != OptimizationBehaviorBalance::reset)
+            stateVariables[i]->update();
 
     return &mfFreq[0];
 }
@@ -167,49 +101,38 @@ void Robocup::step(CBMSimCore *simCore) {
     Environment::step(simCore);
 
     // Setup the MZs
-    if (!hipPitchForwards.initialized()) hipPitchForwards.initialize(simCore, numNC);
-    if (!hipPitchBack.initialized())     hipPitchBack.initialize(simCore, numNC); 
+    if (!mz_hipPitchForwards.initialized()) mz_hipPitchForwards.initialize(simCore, numNC);
+    if (!mz_hipPitchBack.initialized())     mz_hipPitchBack.initialize(simCore, numNC); 
 
-    // Save the simulator periodically
-    if (timestep % 100000 == 0) {
+    // Save the simulator before the run ends
+    static bool saved=false;
+    if (!saved && behavior->getNumberShots() >= maxNumTrials - 1) {
         boost::filesystem::path p(saveStateDir);
-        p /= "ts" + boost::lexical_cast<string>(timestep) + ".st";
+        p /= "trial" + boost::lexical_cast<string>(behavior->getNumberShots()) + ".st";
         std::fstream filestr (p.c_str(), fstream::out);
         simCore->writeToState(filestr);
         filestr.close();
+        saved = true;
     }
 
-    if (timestep % cbm_steps_to_robosim_steps == 0) {
-        float avgHipPitchForce = 0;
-        float avgHipPitchForwardForce = 0;
-        float avgHipPitchBackForce = 0;
-        if (!forces.empty()) {
-            for (uint i=0; i<forces.size(); i++)
-                avgHipPitchForce += forces[i];
-            avgHipPitchForce /= forces.size();
-            forces.clear();
-        }
-        if (!hipPitchForwardsForces.empty()) {
-            for (uint i=0; i<hipPitchForwardsForces.size(); i++)
-                avgHipPitchForwardForce += hipPitchForwardsForces[i];
-            avgHipPitchForwardForce /= hipPitchForwardsForces.size();
-            hipPitchForwardsForces.clear();
-        }
-        if (!hipPitchBackForces.empty()) {
-            for (uint i=0; i<hipPitchBackForces.size(); i++)
-                avgHipPitchBackForce += hipPitchBackForces[i];
-            avgHipPitchBackForce /= hipPitchBackForces.size();
-            hipPitchBackForces.clear();
-        }
-        robosim.drawHipForces(avgHipPitchForwardForce, avgHipPitchBackForce);
+    calcForce(simCore);
 
-        // Don't take actions in-between trials
+    if (timestep % cbm_steps_to_robosim_steps == 0) {
+        float avgHipPitchForwardForce = hpFF / float(cbm_steps_to_robosim_steps);
+        float avgHipPitchBackForce = hpBF / float(cbm_steps_to_robosim_steps);
+        avgHipPitchForce = avgHipPitchForwardForce - avgHipPitchBackForce;
+        hpFF = 0; hpBF = 0;
+
+        // Only take actions when not in reset phase
         if (behavior->getShotPhase() != OptimizationBehaviorBalance::reset) {
+            robosim.drawHipForces(avgHipPitchForwardForce, avgHipPitchBackForce);
             walkEngine->changeHips(-avgHipPitchForce, -avgHipPitchForce);
         }
 
+        // Let the robosim do its thing
         robosim.runStep();
 
+        // Grab any messages from the behavior
         vector<string>* messages = behavior->getMessages();
         for (uint i=0; i<messages->size(); i++) {
             string message = (*messages)[i];
@@ -219,51 +142,59 @@ void Robocup::step(CBMSimCore *simCore) {
         messages->clear();
     }
 
-    calcForce(simCore);
-
-    if (behavior->getShotPhase() == OptimizationBehaviorBalance::recovery)
+    if (behavior->getShotPhase() == OptimizationBehaviorBalance::prep ||
+        behavior->getShotPhase() == OptimizationBehaviorBalance::recovery) {
         deliverErrors(simCore);
+    }
 }
 
 void Robocup::deliverErrors(CBMSimCore *simCore) {
     float maxErrProb = .01;
 
+    // Error based on solution
+    double tts = behavior->getTimeToShot();
+    if (tts < .5 && tts > -.5) {
+        float hfTarget = 20;
+        float errProb = min(.001f*fabsf(hfTarget-avgHipPitchForce), maxErrProb);
+        if (hfTarget - avgHipPitchForce > 0 && randGen->Random() < errProb)
+            mz_hipPitchForwards.deliverError();
+    } else if (tts < -.5) {
+        float hfTarget = 0;
+        float errProb = min(.0001f*fabsf(hfTarget-avgHipPitchForce), maxErrProb);
+        if (hfTarget - avgHipPitchForce < 0 && randGen->Random() < errProb)
+            mz_hipPitchBack.deliverError();
+    }
+
     // Error based on acceleration
-    VecPosition accel = bodyModel->getAccelRates();
-    float errorProbability = min(.05f * fabsf(accel.getX()), maxErrProb);
-    // Accel X < 0 Indicates a backwards lean
-    if (accel.getX() < 0 && randGen->Random() < errorProbability)
-        hipPitchForwards.deliverError();
-    // Accel X > 0 Indicates a forwards lean
+    // VecPosition accel = bodyModel->getAccelRates();
+    // cout << accel.getX() << endl;
+    // float errorProbability = min(.002f * fabsf(accel.getX()), maxErrProb);
+    // // Accel X < 0 Indicates a backwards lean
+    // if (accel.getX() < 0 && randGen->Random() < errorProbability)
+    //     mz_hipPitchForwards.deliverError();
+    // // Accel X > 0 Indicates a forwards lean
     // if (accel.getX() > 0 && randGen->Random() < errorProbability)
-    //     hipPitchBack.deliverError();
+    //     mz_hipPitchBack.deliverError();
 
     // Error based on deviation from upright
     // Standing angle = ~.5; Fallen front or back = ~.06
-    float uprightAngle = float(worldModel->getMyPositionGroundTruth().getZ());
-    errorProbability = min(.05f * fabsf(uprightAngle - .5f), maxErrProb);
-    if (accel.getX() < 0 && randGen->Random() < errorProbability)
-        hipPitchForwards.deliverError();
-    if (accel.getX() > 0 && randGen->Random() < errorProbability)
-        hipPitchBack.deliverError();
+    // float uprightAngle = float(worldModel->getMyPositionGroundTruth().getZ());
+    // errorProbability = min(.05f * fabsf(uprightAngle - .5f), maxErrProb);
+    // if (accel.getX() < 0 && randGen->Random() < errorProbability)
+    //     mz_hipPitchForwards.deliverError();
+    // if (accel.getX() > 0 && randGen->Random() < errorProbability)
+    //     mz_hipPitchBack.deliverError();
 }
 
 void Robocup::calcForce(CBMSimCore *simCore) {
-    float netHipPitchForce = hipPitchForwards.getForce() - hipPitchBack.getForce();
-    hipPitchForwardsForces.push_back(hipPitchForwards.getForce());
-    hipPitchBackForces.push_back(hipPitchBack.getForce());
-    forces.push_back(netHipPitchForce);
+    float hipPitchForwardsForce = mz_hipPitchForwards.getForce();
+    float hipPitchBackForce = mz_hipPitchBack.getForce();
+    float netHipPitchForce = hipPitchForwardsForce - hipPitchBackForce;
+    hpFF += hipPitchForwardsForce;
+    hpBF += hipPitchBackForce;
 }
 
 bool Robocup::terminated() {
     return robosim.behavior->finished(); 
 }
-
-vector<string> Robocup::getMZNames() {
-    vector<string> names;
-    names.push_back(hipPitchForwards.name);
-    names.push_back(hipPitchBack.name);
-    return names;
-}
-
 

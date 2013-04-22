@@ -2,6 +2,8 @@
 #define CARTPOLE_HPP
 
 #include "environment.hpp"
+#include "microzone.hpp"
+//#include "statevariable.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -23,8 +25,6 @@ public:
     void step(CBMSimCore *simCore);
 
     bool terminated();
-
-    std::vector<std::string> getMZNames();
 
     static boost::program_options::options_description getOptions();
 
@@ -65,7 +65,6 @@ public: // Cartpole methods
     static const float forceDecay    = .99;   // Rate a which force decays
     static const float tau           = 0.001; // Seconds between state updates 
     static const int   timeoutDuration = 1500;  // Cycles to wait before new episode. 
-    static const bool  loggingEnabled = true;  // Writes to logfile if enabled. 
 
     static const float leftAngleBound  = -.1745; // 10 degrees
     static const float rightAngleBound = .1745;
@@ -108,6 +107,10 @@ protected:
     float theta_dd;     // Pole angular acceleration
 
     Microzone forceLeftMZ, forceRightMZ; // MZs for pushing cart
+    StateVariable<Cartpole> sv_highFreq, sv_poleVel, sv_poleAng, sv_cartVel, sv_cartPos;
+
+    // std::vector<Microzone*> microzones;
+    // std::vector<StateVariable<Cartpole>*> stateVariables;
 
     float netForce;              // Aggregate force applied to the cart
     float forceLeft, forceRight;    // Force exerted by each microzone

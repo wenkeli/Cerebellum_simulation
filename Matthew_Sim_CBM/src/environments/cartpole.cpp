@@ -24,7 +24,12 @@ po::options_description Cartpole::getOptions() {
 Cartpole::Cartpole(CRandomSFMT0 *randGen, int argc, char **argv) :
     Environment(randGen), trialNum(-1),
     forceLeftMZ("ForceLeft", 0, forceScale, 1, forceDecay),
-    forceRightMZ("ForceRight", 1, forceScale, 1, forceDecay)
+    forceRightMZ("ForceRight", 1, forceScale, 1, forceDecay),
+    sv_highFreq("highFreqMFs", HIGH_FREQ, highFreqMFProportion),
+    sv_poleVel("poleVelMFs", GAUSSIAN, poleVelMFProportion),
+    sv_poleAng("poleAngMFs", GAUSSIAN, poleAngMFProportion),
+    sv_cartVel("cartVelMFs", GAUSSIAN, cartVelMFProportion),
+    sv_cartPos("cartPosMFs", GAUSSIAN, cartPosMFProportion)
 {
     po::options_description desc = getOptions();
     po::variables_map vm;
@@ -46,28 +51,31 @@ Cartpole::Cartpole(CRandomSFMT0 *randGen, int argc, char **argv) :
     leftTrackBound = -trackLen / 2.0;
     rightTrackBound = trackLen / 2.0;
 
-    if (loggingEnabled) {
-        cout << "Writing to logfile: " << cp_logfile << endl;
-        myfile.open(cp_logfile.c_str());
-        myfile << cycle << " TrackLen " << trackLen << " PoleLen "
-               << 2*length << " LeftAngleBound " << leftAngleBound << " RightAngleBound "
-               << rightAngleBound << endl;
-    }
+    cout << "Writing to logfile: " << cp_logfile << endl;
+    myfile.open(cp_logfile.c_str());
+    myfile << cycle << " TrackLen " << trackLen << " PoleLen "
+           << 2*length << " LeftAngleBound " << leftAngleBound << " RightAngleBound "
+           << rightAngleBound << endl;
 
     reset();
+
+    stateVariables.push_back((StateVariable<Environment>*)&sv_highFreq);
+    stateVariables.push_back((StateVariable<Environment>*)&sv_poleVel);
+    stateVariables.push_back((StateVariable<Environment>*)&sv_poleAng);
+    stateVariables.push_back((StateVariable<Environment>*)&sv_cartVel);
+    stateVariables.push_back((StateVariable<Environment>*)&sv_cartPos);
+    microzones.push_back(&forceLeftMZ);
+    microzones.push_back(&forceRightMZ);
 }
 
 Cartpole::~Cartpole() {
-    if (loggingEnabled)
-        myfile.close();
+    myfile.close();
 }
 
 void Cartpole::reset() {
-    if (loggingEnabled) {
-        myfile << cycle << " EndTrial " << trialNum << " TimeAloft " << timeAloft
-               << " Failure: " << getFailureMode() << endl;
-        myfile.flush();
-    }
+    myfile << cycle << " EndTrial " << trialNum << " TimeAloft " << timeAloft
+           << " Failure: " << getFailureMode() << endl;
+    myfile.flush();
     cout << "Trial " << trialNum << ": Time Aloft: " << timeAloft << " Failure: " << getFailureMode() << endl;
 
     fallen = false;
@@ -86,88 +94,24 @@ void Cartpole::reset() {
 
 void Cartpole::setupMossyFibers(CBMState *simState) {
     Environment::setupMossyFibers(simState);
+    Environment::setupStateVariables(randomizeMFs, myfile);
 
-    // Decide how many MFs to assign to each region
-    int numHighFreqMF  = highFreqMFProportion  * numMF;
-    int numPoleAngMF   = poleAngMFProportion   * numMF;
-    int numPoleVelMF   = poleVelMFProportion   * numMF;
-    int numCartVelMF   = cartVelMFProportion   * numMF;
-    int numCartPosMF   = cartPosMFProportion   * numMF;
-
-    if (randomizeMFs) {
-        vector<int> unassigned;
-        for (int i=0; i<numMF; i++)
-            unassigned.push_back(i);
-        assignRandomMFs(unassigned,numHighFreqMF,highFreqMFs);
-        assignRandomMFs(unassigned,numPoleAngMF,poleAngMFs);
-        assignRandomMFs(unassigned,numPoleVelMF,poleVelMFs);
-        assignRandomMFs(unassigned,numCartVelMF,cartVelMFs);
-        assignRandomMFs(unassigned,numCartPosMF,cartPosMFs);
-    } else { // Assign in order -- useful for visualization
-        int m = 500;
-        for (int i=0; i < numHighFreqMF; i++) highFreqMFs.push_back(m++);
-        for (int i=0; i < numPoleAngMF; i++) poleAngMFs.push_back(m++);
-        for (int i=0; i < numPoleVelMF; i++) poleVelMFs.push_back(m++);
-        for (int i=0; i < numCartVelMF; i++) cartVelMFs.push_back(m++);
-        for (int i=0; i < numCartPosMF; i++) cartPosMFs.push_back(m++);
-    }
-
-    // Log the mfs assigned to each group
-    if (loggingEnabled) {
-        writeMFInds(myfile, "highFreqMFs", highFreqMFs);
-        writeMFInds(myfile, "poleVelMFs", poleVelMFs);
-        writeMFInds(myfile, "poleAngMFs", poleAngMFs);
-        writeMFInds(myfile, "cartVelMFs", cartVelMFs);
-        writeMFInds(myfile, "cartPosMFs", cartPosMFs);
-
-        writeMZ(myfile, forceLeftMZ);
-        writeMZ(myfile, forceRightMZ);
-    }
-
+    sv_poleVel.initializeGaussian(minPoleVelocity, maxPoleVelocity, this, &Cartpole::getPoleVelocity);
+    sv_poleAng.initializeGaussian(leftAngleBound, rightAngleBound, this, &Cartpole::getPoleAngle);
+    sv_cartVel.initializeGaussian(getMinCartVel(), getMaxCartVel(), this, &Cartpole::getCartVelocity);
+    sv_cartPos.initializeGaussian(getMinCartPos(), getMaxCartPos(), this, &Cartpole::getCartPosition);
 }
 
 float* Cartpole::getState() {
     for (int i=0; i<numMF; i++)
         mfFreq[i] = mfFreqRelaxed[i];
-    for (vector<int>::iterator it=highFreqMFs.begin(); it != highFreqMFs.end(); it++)
-        mfFreq[*it] = mfFreqExcited[*it];
 
-    if (!isInTimeout()) {
-        float minPoleAng = getMinPoleAngle();
-        float maxPoleAng = getMaxPoleAngle();
-        float poleAngle = getPoleAngle();
+    // Update high freq state variables at all times. Others only when not in reset.
+    for (uint i=0; i<stateVariables.size(); i++)
+        if (stateVariables[i]->type == HIGH_FREQ || !isInTimeout())
+            stateVariables[i]->update();
 
-        float minPoleVel = getMinPoleVelocity();
-        float maxPoleVel = getMaxPoleVelocity();
-        float poleVelocity = getPoleVelocity();
-
-        float minCartPos = getMinCartPos();
-        float maxCartPos = getMaxCartPos();
-        float cartPos = getCartPosition();
-
-        float minCartVel = getMinCartVel();
-        float maxCartVel = getMaxCartVel();
-        float cartVel = getCartVelocity();
-
-        if (useLogScaling) {
-            maxPoleAng = logScale(maxPoleAng, 100000);
-            minPoleAng = logScale(minPoleAng, 100000);
-            poleAngle  = logScale(poleAngle,  100000);
-
-            maxPoleVel = logScale(maxPoleVel, 10000);
-            minPoleVel = logScale(minPoleVel, 10000);
-            poleVelocity = logScale(poleVelocity, 10000);
-
-            maxCartVel = logScale(maxCartVel, 1000);
-            minCartVel = logScale(minCartVel, 1000);
-            cartVel = logScale(cartVel, 1000);
-        }
-
-        gaussMFAct(minPoleAng, maxPoleAng, poleAngle, poleAngMFs);
-        gaussMFAct(minPoleVel, maxPoleVel, poleVelocity, poleVelMFs);
-        gaussMFAct(minCartVel, maxCartVel, cartVel, cartVelMFs);
-        gaussMFAct(minCartPos, maxCartPos, cartPos, cartPosMFs);
-    }
+    // TODO: Re-implement log-scaling if we ever go back to Cartpole
 
     return &mfFreq[0];
 }
@@ -244,13 +188,11 @@ void Cartpole::step(CBMSimCore *simCore) {
     fallen = inFailure();
     timeAloft++;
 
-    if (loggingEnabled && cycle % 50 == 0) {
-        myfile << cycle << " Theta " << theta << " ThetaDot " << theta_dot
-               << " CartPos " << x << " CartVel " << x_dot << " ForceLeft " << forceLeft
-               << " ForceRight " << forceRight
-               << " ErrorLeft " << errorLeft << " ErrorRight " << errorRight
-               << " TimeAloft " << timeAloft << endl;
-    }
+    myfile << cycle << " Theta " << theta << " ThetaDot " << theta_dot
+           << " CartPos " << x << " CartVel " << x_dot << " ForceLeft " << forceLeft
+           << " ForceRight " << forceRight
+           << " ErrorLeft " << errorLeft << " ErrorRight " << errorRight
+           << " TimeAloft " << timeAloft << endl;
 }
 
 void Cartpole::computePhysics(float force) {
@@ -340,10 +282,4 @@ bool Cartpole::terminated() {
     return trialNum >= maxNumTrials;
 }
 
-vector<string> Cartpole::getMZNames() {
-    vector<string> names;
-    names.push_back(forceLeftMZ.name);
-    names.push_back(forceRightMZ.name);
-    return names;
-}
 

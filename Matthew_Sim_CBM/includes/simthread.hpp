@@ -23,7 +23,7 @@ public:
     SimThread(QObject *parent, int numMZ, int randSeed, std::string savedSimFile, Environment *env);
     ~SimThread();
 
-    bool alive;
+    bool alive, paused;
 
     int trialLength; // Typically 5000
     int numMZ; // Microzones
@@ -39,6 +39,7 @@ public:
 
     void setupMFs(int randSeed);
     void disablePlasticity();
+    void saveSimState(std::string saveFile="cbm.st");
     void activateCF(int zoneN=0) { assert(zoneN < numMZ); simCore->updateErrDrive(zoneN, 1.0); };
     void activateMF(int mfNum) { assert(mfNum < numMF); env->mfExcited[mfNum] = true; };
     void deactivateMF(int mfNum) { assert(mfNum < numMF); env->mfExcited[mfNum] = false; };
