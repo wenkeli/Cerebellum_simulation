@@ -144,7 +144,6 @@ void MainW::keyPressEvent(QKeyEvent *event)
     int indx;
     switch (event->key()) {
     case Qt::Key_Escape:
-        cout << "Escape Pressed" << endl;
         break;
     case Qt::Key_Backspace:
         thread->activateCF();
@@ -216,7 +215,7 @@ void MainW::keyReleaseEvent(QKeyEvent *event)
         break;
     case Qt::Key_S:
         cout << "Saving simulator" << endl;
-        thread->saveSimState();
+        thread->save();
         break;
     case Qt::Key_P:
         thread->paused = !thread->paused;

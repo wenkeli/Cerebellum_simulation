@@ -81,11 +81,11 @@ protected:
     long maxTrialLength;
     int maxNumTrials;
     
-    void reset(); // Re-initializes the pole to begin a new trial
-    bool inFailure();  // Detects if the pole has fallen over
+    void reset();                 // Re-initializes the pole to begin a new trial
+    bool inFailure();             // Detects if the pole has fallen over
     std::string getFailureMode(); // Return a string describing the type of failure
-    float calcForce(CBMSimCore *simCore);  // Calculated the force from each MZ
-    void setMZErr(CBMSimCore *simCore);   // Gives error signals to the MZs    
+    float calcForce();            // Calculated the force from each MZ
+    void setMZErr();              // Gives error signals to the MZs    
     void computePhysics(float force); // Does the cart physics computations
 
     boost::filesystem::path saveStateDir; // Directory to save sim state files

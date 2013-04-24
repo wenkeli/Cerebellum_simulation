@@ -180,10 +180,10 @@ void Cartpole::step(CBMSimCore *simCore) {
     }
 
     // Update the inverted pendulum system
-    computePhysics(calcForce(simCore));
+    computePhysics(calcForce());
 
     // Distribute Error signals to the MZs
-    setMZErr(simCore);
+    setMZErr();
     
     fallen = inFailure();
     timeAloft++;
@@ -218,7 +218,7 @@ void Cartpole::computePhysics(float force) {
     }
 }
 
-void Cartpole::setMZErr(CBMSimCore *simCore) {
+void Cartpole::setMZErr() {
     float maxErrProb = .01;
     float errorProbability;
     bool deliverError;
@@ -271,7 +271,7 @@ string Cartpole::getFailureMode() {
     return "NoFailure";
 }
 
-float Cartpole::calcForce(CBMSimCore *simCore) {
+float Cartpole::calcForce() {
     forceRight = forceRightMZ.getForce();
     forceLeft = forceLeftMZ.getForce();
     netForce = forceRight - forceLeft;

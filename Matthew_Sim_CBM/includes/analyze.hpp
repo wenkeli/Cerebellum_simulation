@@ -24,7 +24,7 @@
 class WeightAnalyzer
 {
 public:
-    WeightAnalyzer(int argc, char **argv);
+    WeightAnalyzer(Environment *env, int argc, char **argv);
     ~WeightAnalyzer() {};
 
     static boost::program_options::options_description getOptions();
@@ -53,6 +53,8 @@ public:
                       int numMZ);
 
 protected:
+    Environment *env;
+
     RInside R;
 
     boost::filesystem::path plot_dir; // directory to store the plots

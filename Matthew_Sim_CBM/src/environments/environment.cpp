@@ -74,6 +74,7 @@ float* Environment::getState() {
 }
 
 void Environment::step(CBMSimCore *simCore) {
+    (void)simCore;
     timestep++;
 }
 
@@ -92,52 +93,13 @@ vector<string> Environment::getMZNames() {
     return names;
 }
 
-void Environment::readMFInds(ifstream& logfile, vector<string>& variables, vector<vector<int> >& mfInds) {
-    string line;
-    while (std::getline(logfile, line)) {
-        if (boost::starts_with(line,"MFInds")) {
-            vector<int> inds;
-            vector<string> toks;
-            boost::split(toks, line, boost::is_any_of(" "));
-            variables.push_back(toks[1]);
-            for (uint i=2; i<toks.size(); i++)
-                if (!toks[i].empty())
-                    inds.push_back(boost::lexical_cast<int>(toks[i]));
-            mfInds.push_back(inds);
-        }
-    }
-    logfile.close();
+vector<string> Environment::getStateVariableNames() {
+    vector<string> names;
+    if (!stateVariables.empty())
+        for (uint i=0; i<stateVariables.size(); i++)
+            names.push_back(stateVariables[i]->getName());
+    return names;
 }
 
-void Environment::readMFResponses(ifstream& logfile, vector<string>& variables, vector<vector<float> >& mfResp) {
-    string line;
-    while (std::getline(logfile, line)) {
-        if (boost::starts_with(line,"MFMaximalResponses")) {
-            vector<float> resp;
-            vector<string> toks;
-            boost::split(toks, line, boost::is_any_of(" "));
-            variables.push_back(toks[1]);
-            for (uint i=2; i<toks.size(); i++)
-                if (!toks[i].empty())
-                    resp.push_back(boost::lexical_cast<float>(toks[i]));
-            mfResp.push_back(resp);
-        }
-    }
-    logfile.close();
-}
-
-void Environment::readMZ(ifstream& logfile, vector<int>& mzNums, vector<string>& mzNames) {
-    string line;
-    while (std::getline(logfile, line)) {
-        if (boost::starts_with(line,"Microzone")) {
-            vector<string> toks;
-            boost::split(toks, line, boost::is_any_of(" "));
-            assert(toks.size() >= 3);
-            mzNums.push_back(boost::lexical_cast<int>(toks[1]));
-            mzNames.push_back(toks[2]);
-        }
-    }
-    logfile.close();
-}
 
 

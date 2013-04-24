@@ -16,12 +16,15 @@ private:
     friend class boost::serialization::access;
     template <class Archive>
     void serialize(Archive &ar, const unsigned int version) {
+        (void)version;
         ar & name;
         ar & mfInds;
         ar & type;
     }
 
 public:
+    StateVariable() {}
+    
     StateVariable(std::string name, UpdateType type, float mfProportion) :
         name(name), numMF(0), mfProportion(mfProportion), mfFreq(NULL), mfFreqRelaxed(NULL),
         mfFreqExcited(NULL), type(type), environment(NULL), getValue(NULL)
@@ -117,6 +120,8 @@ public:
             pos += interval;
         }
     }
+
+    std::string getName() { return name; }
 
 public:
     std::string name;

@@ -14,35 +14,28 @@
 
 class Robocup : public Environment {
 public:
+    Robocup() : Environment(NULL) {}
     Robocup(CRandomSFMT0 *randGen, int argc, char **argv);
     ~Robocup();
-
     int numRequiredMZ() { return 2; }
-
     void setupMossyFibers(CBMState *simState);
-
     float* getState();
-
     void step(CBMSimCore *simCore);
-
     bool terminated();
-
-    void func() { cout << "Yeah huh!" << endl; }
-    
     static boost::program_options::options_description getOptions();
     
-public:
     float getTimeToImpact() { return behavior->getTimeToShot(); }
     float getGyroX() { return bodyModel->getGyroRates().getX(); }
     float getGyroY() { return bodyModel->getGyroRates().getY(); }
     float getGyroZ() { return bodyModel->getGyroRates().getZ(); }
     float getAccelX() { return bodyModel->getAccelRates().getX(); }
     float getAccelY() { return bodyModel->getAccelRates().getY(); }
-    float getAccelZ() { return bodyModel->getAccelRates().getZ(); }    
+    float getAccelZ() { return bodyModel->getAccelRates().getZ(); }
+    float getHipPitch() { return bodyModel->getJointAngle(HJ_LL3); }
 
 protected:
-    void deliverErrors(CBMSimCore *simCore);
-    void calcForce(CBMSimCore *simCore);
+    void deliverErrors();
+    void calcForce();
 
 protected:
     std::ofstream logfile;
@@ -55,7 +48,7 @@ protected:
     UTWalkEngine *walkEngine;
 
     Microzone mz_hipPitchForwards, mz_hipPitchBack; 
-    StateVariable<Robocup> sv_highFreq, sv_impactTimer;
+    StateVariable<Robocup> sv_highFreq, sv_impactTimer, sv_hipPitch;
 
     // Min & Max observed gyro (x,y,z) values
     // Current angular velocities along the three axes of freedom of the corresponding body in degrees per second
@@ -76,17 +69,8 @@ protected:
     static const float maxAZ = 5.432633;
     static const float maxImpactTimerVal = 1.5;
     static const float minImpactTimerVal = -1.5;
-
-    // Proportions of total mossy fibers that belong to each sensor
-    static const float highFreqMFProportion  = .03;
-    static const float impactMFProportion = .15;
-    static const float gyroXMFProportion  = 0;//.06;
-    static const float gyroYMFProportion  = 0;//.06;
-    static const float gyroZMFProportion  = 0;//.06;    
-    static const float accelXMFProportion = 0;//.06;
-    static const float accelYMFProportion = 0;//.06;
-    static const float accelZMFProportion = 0;//.06;
-    static const float hipPitchForwardsMFProportion = 0;//.05;
+    static const float minHipPitch = 0;
+    static const float maxHipPitch = 45;
 
     static const bool randomizeMFs = false;
 

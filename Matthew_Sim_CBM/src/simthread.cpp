@@ -40,20 +40,12 @@ SimThread::SimThread(QObject *parent, int numMZ, int randSeed, string conPF, str
     setupMFs(randSeed);
 }
 
-SimThread::SimThread(QObject *parent, int numMZ, int randSeed, std::string savedSimFile, Environment *env)
-    : QThread(parent), alive(true), paused(false), trialLength(5000), numMZ(numMZ), env(env)
+SimThread::SimThread(QObject *parent, int numMZ, int randSeed, CBMState *simState, Environment *env)
+    : QThread(parent), alive(true), paused(false),
+      trialLength(5000), numMZ(numMZ), env(env), simState(simState)
 {
-    fstream stateStream(savedSimFile.c_str(), fstream::in);
-
-    // Hack: Ignore the first line of the file because it contains boost serialization stuff
-    string line;
-    std::getline(stateStream, line);
-
     // Create the simulation
-    simState = new CBMState(stateStream);
     simCore = new CBMSimCore(simState, &randSeed);
-    stateStream.close();
-
     setupMFs(randSeed);
 }
 
@@ -154,6 +146,9 @@ void SimThread::run()
 
         simStep++;
     }
+
+    // Save simulation at the end of running
+    save();
 }
 
 void SimThread::disablePlasticity() {
@@ -163,16 +158,4 @@ void SimThread::disablePlasticity() {
     actParams->synLTDStepSizeGRtoPC = 0;
     actParams->synLTDStepSizeMFtoNC = 0;
     actParams->synLTPStepSizeMFtoNC = 0;
-}
-
-void SimThread::saveSimState(string saveFile) {
-    ofstream ofs(saveFile.c_str());
-    {
-        boost::archive::text_oarchive oa(ofs);
-        oa << (*env);
-    }
-    
-    std::fstream filestr(saveFile.c_str(), fstream::out | fstream::app);
-    simCore->writeToState(filestr);
-    filestr.close();
 }

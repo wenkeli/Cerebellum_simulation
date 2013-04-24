@@ -12,19 +12,22 @@
 #include <CBMToolsInclude/poissonregencells.h>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/vector.hpp>
 
 class Environment {
 private:
     friend class boost::serialization::access;
     template <class Archive>
     void serialize(Archive &ar, const unsigned int version) {
+        (void)version;
         for (uint i=0; i<microzones.size(); i++)
-            ar & (*microzones[i]);
+            ar & *microzones[i];
         for (uint i=0; i<stateVariables.size(); i++)
-            ar & (*stateVariables[i]);
+            ar & *stateVariables[i];
+        ar & microzones;
+        ar & stateVariables;
     }
 
-    friend class WeightAnalyzer;
 public:
     Environment(CRandomSFMT0 *randGen);
     virtual ~Environment();
@@ -47,6 +50,10 @@ public:
     // Returns the human-readable names for each microzone
     virtual std::vector<std::string> getMZNames();
 
+    virtual std::vector<std::string> getStateVariableNames();
+
+    std::vector<StateVariable<Environment>*> getStateVariables() { return stateVariables; }
+
 public:
     std::vector<bool> mfExcited;
 
@@ -64,16 +71,7 @@ protected:
 
 protected:
     // Initializes and writes the state variables to log
-    void setupStateVariables(bool randomizeMFs,
-                             std::ofstream &logfile);
-
-    // Reads the list of MF indexes in a given logfile
-    void readMFInds(std::ifstream& logfile, std::vector<std::string>& variables, std::vector<std::vector<int> >& mfInds);
-
-    void readMFResponses(std::ifstream& logfile, std::vector<std::string>& variables,
-                         std::vector<std::vector<float> >& mfResp);
-
-    void readMZ(std::ifstream& logfile, std::vector<int>& mzNums, std::vector<std::string>& mzNames);
+    void setupStateVariables(bool randomizeMFs, std::ofstream &logfile);
 };
 
 #endif // ENVIRONMENT_H

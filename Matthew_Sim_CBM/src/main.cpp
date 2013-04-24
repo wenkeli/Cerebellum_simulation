@@ -36,6 +36,7 @@ int main(int argc, char **argv)
         ("nogui", "Run without a gui")
         ("load", po::value<string>(), "Load saved simulator state file")
         ("freeze", "Freeze the current policy by disabling synaptic plasticity")
+        ("analyze", "Run analysis mode")
         ;
 
     po::variables_map vm;
@@ -65,26 +66,28 @@ int main(int argc, char **argv)
 
     CRandomSFMT0 randGen(randSeed);
 
-    auto_ptr<Environment> env;
+    Environment *env;
     string envStr = vm["environment"].as<string>();
     if (envStr == "default")
-        env.reset(new Environment(&randGen));
+        env = new Environment(&randGen);
     else if (envStr == "eyelid")
-        env.reset(new Eyelid(&randGen));
+        env = new Eyelid(&randGen);
     else if (envStr == "cartpole")
-        env.reset(new Cartpole(&randGen, argc, argv));
+        env = new Cartpole(&randGen, argc, argv);
     else if (envStr == "robocup")
-        env.reset(new Robocup(&randGen, argc, argv));
-#ifdef BUILD_ANALYSIS
-    else if (envStr == "analysis") {
-        WeightAnalyzer a(argc, argv);
-        return 0;
-    }
-#endif
+        env = new Robocup(&randGen, argc, argv);
     else {
         cout << "Unrecognized Environment " << envStr << endl;
         return 1;
     }
+
+#ifdef BUILD_ANALYSIS
+    if (vm.count("analyze")) {
+        cout << "Entering Analysis Mode" << endl;
+        WeightAnalyzer a(env, argc, argv);
+        return 0;
+    }
+#endif
 
     int numMZ     = env->numRequiredMZ();
     string conPF  = vm["conPF"].as<string>();
@@ -93,13 +96,10 @@ int main(int argc, char **argv)
     // Create the simulation thread
     auto_ptr<SimThread> t;
     if (vm.count("load")) {
-        std::ifstream ifs(vm["load"].as<string>().c_str());
-        boost::archive::text_iarchive ia(ifs);
-        ia >> (*env);
-        cout << "Loaded boost archive of environment." << endl;
-        t.reset(new SimThread(NULL, numMZ, randSeed, vm["load"].as<string>(), env.get()));
+        CBMState *simState = loadSim(vm["load"].as<string>().c_str(), *env);
+        t.reset(new SimThread(NULL, numMZ, randSeed, simState, env));
     } else
-        t.reset(new SimThread(NULL, numMZ, randSeed, conPF, actPF, env.get()));
+        t.reset(new SimThread(NULL, numMZ, randSeed, conPF, actPF, env));
 
     if (vm.count("freeze"))
         t->disablePlasticity();
@@ -110,12 +110,14 @@ int main(int argc, char **argv)
         t->wait();
     } else {
         QApplication app(argc, argv);
-        MainW *mainW = new MainW(NULL, t.get(), env.get());        
+        MainW *mainW = new MainW(NULL, t.get(), env);
         app.setActiveWindow(mainW);
         mainW->show();
         app.connect(mainW, SIGNAL(destroyed()), &app, SLOT(quit()));
         return app.exec();
     }
+
+    delete env;
 }
 
 

@@ -31,8 +31,9 @@ Robocup::Robocup(CRandomSFMT0 *randGen, int argc, char **argv)
     : Environment(randGen),
       mz_hipPitchForwards("HipPitchForwards", 0, forceScale, forcePow, forceDecay), 
       mz_hipPitchBack("HipPitchBack", 1, forceScale, forcePow, forceDecay),
-      sv_highFreq("highFreqMFs", HIGH_FREQ, highFreqMFProportion),
-      sv_impactTimer("impactMFs", GAUSSIAN, impactMFProportion),
+      sv_highFreq("highFreqMFs", HIGH_FREQ, .03),
+      sv_impactTimer("impactMFs", GAUSSIAN, .15),
+      sv_hipPitch("hipPitchMFs", GAUSSIAN, .06),
       hpFF(0), hpBF(0), avgHipPitchForce(0)
 {
     po::options_description desc = getOptions();
@@ -54,9 +55,11 @@ Robocup::Robocup(CRandomSFMT0 *randGen, int argc, char **argv)
     saveStateDir = boost::filesystem::path(vm["simStateDir"].as<string>());
     assert(exists(saveStateDir) && is_directory(saveStateDir));
 
-    // Hack: I'm not sure this cast is kosher
+    assert(stateVariables.empty());
     stateVariables.push_back((StateVariable<Environment>*) (&sv_highFreq));
     stateVariables.push_back((StateVariable<Environment>*) (&sv_impactTimer));
+    stateVariables.push_back((StateVariable<Environment>*) (&sv_hipPitch));
+    assert(microzones.empty());
     microzones.push_back(&mz_hipPitchForwards);
     microzones.push_back(&mz_hipPitchBack);
 }
@@ -85,6 +88,7 @@ void Robocup::setupMossyFibers(CBMState *simState) {
     walkEngine = robosim.behavior->getWalkEngine();
 
     sv_impactTimer.initializeGaussian(minImpactTimerVal, maxImpactTimerVal, this, &Robocup::getTimeToImpact, 12);
+    sv_hipPitch.initializeGaussian(minHipPitch, maxHipPitch, this, &Robocup::getHipPitch);
 }
 
 float* Robocup::getState() {
@@ -106,18 +110,7 @@ void Robocup::step(CBMSimCore *simCore) {
     if (!mz_hipPitchForwards.initialized()) mz_hipPitchForwards.initialize(simCore, numNC);
     if (!mz_hipPitchBack.initialized())     mz_hipPitchBack.initialize(simCore, numNC); 
 
-    // Save the simulator before the run ends
-    static bool saved=false;
-    if (!saved && behavior->getNumberShots() >= maxNumTrials - 1) {
-        boost::filesystem::path p(saveStateDir);
-        p /= "trial" + boost::lexical_cast<string>(behavior->getNumberShots()) + ".st";
-        std::fstream filestr (p.c_str(), fstream::out);
-        simCore->writeToState(filestr);
-        filestr.close();
-        saved = true;
-    }
-
-    calcForce(simCore);
+    calcForce();
 
     if (timestep % cbm_steps_to_robosim_steps == 0) {
         float avgHipPitchForwardForce = hpFF / float(cbm_steps_to_robosim_steps);
@@ -146,11 +139,11 @@ void Robocup::step(CBMSimCore *simCore) {
 
     if (behavior->getShotPhase() == OptimizationBehaviorBalance::prep ||
         behavior->getShotPhase() == OptimizationBehaviorBalance::recovery) {
-        deliverErrors(simCore);
+        deliverErrors();
     }
 }
 
-void Robocup::deliverErrors(CBMSimCore *simCore) {
+void Robocup::deliverErrors() {
     float maxErrProb = .01;
 
     // Error based on solution
@@ -188,10 +181,9 @@ void Robocup::deliverErrors(CBMSimCore *simCore) {
     //     mz_hipPitchBack.deliverError();
 }
 
-void Robocup::calcForce(CBMSimCore *simCore) {
+void Robocup::calcForce() {
     float hipPitchForwardsForce = mz_hipPitchForwards.getForce();
     float hipPitchBackForce = mz_hipPitchBack.getForce();
-    float netHipPitchForce = hipPitchForwardsForce - hipPitchBackForce;
     hpFF += hipPitchForwardsForce;
     hpBF += hipPitchBackForce;
 }
