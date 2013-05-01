@@ -28,9 +28,9 @@ SimThread::SimThread(QObject *parent, ECManagementBase *ecsim,
 
 	conParams=management->getConParams();
 
-	inputNet=management->getInputNet(1);
+	inputNet=management->getInputNet(0);
 
-	mZone=management->getMZone(1);
+	mZone=management->getMZone(0);
 
 	inputNetSView=inputNetSV;
 
