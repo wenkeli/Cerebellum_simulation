@@ -13,10 +13,10 @@
 #include <string>
 #include <time.h>
 
-#include <CBMStateInclude/interfaces/cbmstate.h>
+#include <CBMStateInclude/interfaces/cbmstatex2grgodecouple.h>
 #include <CBMStateInclude/interfaces/iconnectivityparams.h>
 
-#include <CBMCoreInclude/interface/cbmsimcore.h>
+#include <CBMCoreInclude/interface/cbmsimx2grgodecouple.h>
 #include <CBMCoreInclude/interface/innetinterface.h>
 #include <CBMCoreInclude/interface/mzoneinterface.h>
 
@@ -37,8 +37,8 @@ public:
 	int getInterTrialI();
 
 	IConnectivityParams* getConParams();
-	InNetInterface* getInputNet();
-	MZoneInterface* getMZone();
+	InNetInterface* getInputNet(unsigned int stateN);
+	MZoneInterface* getMZone(unsigned int zoneN);
 
 	const ct_uint8_t* exportAPMF();
 
@@ -46,9 +46,9 @@ protected:
 	virtual void calcMFActivity()=0;
 	virtual void calcSimActivity();
 
-	CBMState *simState;
+	CBMStateX2GRGODecouple *simState;
 
-	CBMSimCore *simulation;
+	CBMSimX2GRGODecouple *simulation;
 
 	const ct_uint8_t *apMF;
 	int numMF;

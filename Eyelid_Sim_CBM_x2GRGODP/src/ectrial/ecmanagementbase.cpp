@@ -18,10 +18,10 @@ ECManagementBase::ECManagementBase
 	conPF.open(conParamFile.c_str());
 	actPF.open(actParamFile.c_str());
 
-	simState=new CBMState(actPF, conPF, 1, randSeed, &randSeed, &randSeed);
-	simulation=new CBMSimCore(simState, &randSeed);
+	simState=new CBMStateX2GRGODecouple(actPF, conPF);
+	simulation=new CBMSimX2GRGODecouple(simState);
 
-	simulation->writeToState();
+//	simulation->writeToState();
 
 	conPF.close();
 	actPF.close();
@@ -110,14 +110,14 @@ IConnectivityParams* ECManagementBase::getConParams()
 	return simState->getConnectivityParams();
 }
 
-InNetInterface* ECManagementBase::getInputNet()
+InNetInterface* ECManagementBase::getInputNet(unsigned int stateN)
 {
-	return simulation->getInputNet();
+	return simulation->getInputNetList()[stateN];
 }
 
-MZoneInterface* ECManagementBase::getMZone()
+MZoneInterface* ECManagementBase::getMZone(unsigned int zoneN)
 {
-	return simulation->getMZoneList()[0];
+	return simulation->getMZoneList()[zoneN];
 }
 
 const ct_uint8_t* ECManagementBase::exportAPMF()

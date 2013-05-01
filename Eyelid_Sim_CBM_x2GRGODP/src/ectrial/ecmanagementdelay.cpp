@@ -170,31 +170,58 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 
 		pp.numCells=simState->getConnectivityParams()->getNumGO();
 		pp.numTimeStepsPerBin=10;
-		pshParams["go"]=pp;
+		pshParams["go0"]=pp;
 //		pp.numCells=simState->getConnectivityParams()->getNumGR();
-//		pshParams["gr"]=pp;
+//		pshParams["gr0"]=pp;
 		pp.numCells=simState->getConnectivityParams()->getNumSC();
-		pshParams["sc"]=pp;
+		pshParams["sc0"]=pp;
 		pp.numCells=simState->getConnectivityParams()->getNumBC();
-		pshParams["bc"]=pp;
+		pshParams["bc0"]=pp;
 		pp.numCells=simState->getConnectivityParams()->getNumPC();
-		pshParams["pc"]=pp;
+		pshParams["pc0"]=pp;
 		pp.numCells=simState->getConnectivityParams()->getNumIO();
-		pshParams["io"]=pp;
+		pshParams["io0"]=pp;
+
+		pp.numCells=simState->getConnectivityParams()->getNumGO();
+		pp.numTimeStepsPerBin=10;
+		pshParams["go1"]=pp;
+//		pp.numCells=simState->getConnectivityParams()->getNumGR();
+//		pshParams["gr1"]=pp;
+		pp.numCells=simState->getConnectivityParams()->getNumSC();
+		pshParams["sc1"]=pp;
+		pp.numCells=simState->getConnectivityParams()->getNumBC();
+		pshParams["bc1"]=pp;
+		pp.numCells=simState->getConnectivityParams()->getNumPC();
+		pshParams["pc1"]=pp;
+		pp.numCells=simState->getConnectivityParams()->getNumIO();
+		pshParams["io1"]=pp;
 
 		rasterParams.clear();
 		rp.numCells=simState->getConnectivityParams()->getNumGO();
-		rasterParams["go"]=rp;
+		rasterParams["go0"]=rp;
 		rp.numCells=simState->getConnectivityParams()->getNumSC();
-		rasterParams["sc"]=rp;
+		rasterParams["sc0"]=rp;
 		rp.numCells=simState->getConnectivityParams()->getNumBC();
-		rasterParams["bc"]=rp;
+		rasterParams["bc0"]=rp;
 		rp.numCells=simState->getConnectivityParams()->getNumPC();
-		rasterParams["pc"]=rp;
+		rasterParams["pc0"]=rp;
 		rp.numCells=simState->getConnectivityParams()->getNumNC();
-		rasterParams["nc"]=rp;
+		rasterParams["nc0"]=rp;
 		rp.numCells=simState->getConnectivityParams()->getNumIO();
-		rasterParams["io"]=rp;
+		rasterParams["io0"]=rp;
+
+		rp.numCells=simState->getConnectivityParams()->getNumGO();
+		rasterParams["go1"]=rp;
+		rp.numCells=simState->getConnectivityParams()->getNumSC();
+		rasterParams["sc1"]=rp;
+		rp.numCells=simState->getConnectivityParams()->getNumBC();
+		rasterParams["bc1"]=rp;
+		rp.numCells=simState->getConnectivityParams()->getNumPC();
+		rasterParams["pc1"]=rp;
+		rp.numCells=simState->getConnectivityParams()->getNumNC();
+		rasterParams["nc1"]=rp;
+		rp.numCells=simState->getConnectivityParams()->getNumIO();
+		rasterParams["io1"]=rp;
 
 
 		data=new ECTrialsData(500, csOff-csOn, 500, simState->getActivityParams()->getMSPerTimeStep(),
@@ -251,7 +278,7 @@ void ECManagementDelay::calcSimActivity()
 
 	if(currentTime==(csOffTime-1) && currentTrial>=csStartTrialN)
 	{
-		simulation->updateErrDrive(0, 1.0);
+		simulation->updateErrDrive(1.0);
 	}
 	else
 	{
@@ -288,21 +315,35 @@ void ECManagementDelay::calcSimActivity()
 		{
 			if(ct%data->getTSPerRasterUpdate()==0 &&ct>0)
 			{
-				data->updateRaster("go", simulation->getInputNet()->exportAPBufGO());
-				data->updateRaster("sc", simulation->getInputNet()->exportAPBufSC());
-				data->updateRaster("bc", simulation->getMZoneList()[0]->exportAPBufBC());
-				data->updateRaster("pc", simulation->getMZoneList()[0]->exportAPBufPC());
-				data->updateRaster("nc", simulation->getMZoneList()[0]->exportAPBufNC());
-				data->updateRaster("io", simulation->getMZoneList()[0]->exportAPBufIO());
+				data->updateRaster("go0", simulation->getInputNetList()[0]->exportAPBufGO());
+				data->updateRaster("sc0", simulation->getInputNetList()[0]->exportAPBufSC());
+				data->updateRaster("bc0", simulation->getMZoneList()[0]->exportAPBufBC());
+				data->updateRaster("pc0", simulation->getMZoneList()[0]->exportAPBufPC());
+				data->updateRaster("nc0", simulation->getMZoneList()[0]->exportAPBufNC());
+				data->updateRaster("io0", simulation->getMZoneList()[0]->exportAPBufIO());
+
+				data->updateRaster("go1", simulation->getInputNetList()[1]->exportAPBufGO());
+				data->updateRaster("sc1", simulation->getInputNetList()[1]->exportAPBufSC());
+				data->updateRaster("bc1", simulation->getMZoneList()[1]->exportAPBufBC());
+				data->updateRaster("pc1", simulation->getMZoneList()[1]->exportAPBufPC());
+				data->updateRaster("nc1", simulation->getMZoneList()[1]->exportAPBufNC());
+				data->updateRaster("io1", simulation->getMZoneList()[1]->exportAPBufIO());
 			}
 		}
 
-		data->updatePSH("go", simulation->getInputNet()->exportAPGO());
-//		data->updatePSH("gr", simulation->getInputNet()->exportAPGR());
-		data->updatePSH("sc", simulation->getInputNet()->exportAPSC());
-		data->updatePSH("bc", simulation->getMZoneList()[0]->exportAPBC());
-		data->updatePSH("pc", simulation->getMZoneList()[0]->exportAPPC());
-		data->updatePSH("io", simulation->getMZoneList()[0]->exportAPIO());
+		data->updatePSH("go0", simulation->getInputNetList()[0]->exportAPGO());
+//		data->updatePSH("gr0", simulation->getInputNetList()[0]->exportAPGR());
+		data->updatePSH("sc0", simulation->getInputNetList()[0]->exportAPSC());
+		data->updatePSH("bc0", simulation->getMZoneList()[0]->exportAPBC());
+		data->updatePSH("pc0", simulation->getMZoneList()[0]->exportAPPC());
+		data->updatePSH("io0", simulation->getMZoneList()[0]->exportAPIO());
+
+		data->updatePSH("go1", simulation->getInputNetList()[1]->exportAPGO());
+//		data->updatePSH("gr1", simulation->getInputNetList()[1]->exportAPGR());
+		data->updatePSH("sc1", simulation->getInputNetList()[1]->exportAPSC());
+		data->updatePSH("bc1", simulation->getMZoneList()[1]->exportAPBC());
+		data->updatePSH("pc1", simulation->getMZoneList()[1]->exportAPPC());
+		data->updatePSH("io1", simulation->getMZoneList()[1]->exportAPIO());
 
 		data->updateEyelid(eyelidPos);
 	}
