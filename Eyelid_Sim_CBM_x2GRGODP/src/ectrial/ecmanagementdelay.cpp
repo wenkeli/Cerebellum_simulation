@@ -291,6 +291,7 @@ void ECManagementDelay::calcSimActivity()
 		grPCPlastSet=true;
 		grPCPlastReset=false;
 		simulation->getMZoneList()[0]->setGRPCPlastSteps(-0.0002f*((float)(csOffTime-csOnTime)-200)/100.0f, 0.0002f);
+		simulation->getMZoneList()[1]->setGRPCPlastSteps(-0.0002f*((float)(csOffTime-csOnTime)-200)/100.0f, 0.0002f);
 	}
 
 	if(!grPCPlastReset && currentTime>=csOffTime+200 && currentTrial>=csStartTrialN)
@@ -298,6 +299,7 @@ void ECManagementDelay::calcSimActivity()
 		grPCPlastSet=false;
 		grPCPlastReset=true;
 		simulation->getMZoneList()[0]->resetGRPCPlastSteps();
+		simulation->getMZoneList()[1]->resetGRPCPlastSteps();
 	}
 
 	simulation->updateMFInput(apMF);
