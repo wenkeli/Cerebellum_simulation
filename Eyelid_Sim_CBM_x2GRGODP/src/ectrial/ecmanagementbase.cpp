@@ -10,21 +10,24 @@
 using namespace std;
 
 ECManagementBase::ECManagementBase
-	(string conParamFile, string actParamFile, int numT, int iti, int randSeed)
+	(string conParamFile, string actParamFile, string actParamFile1, int numT, int iti, int randSeed)
 {
 	fstream conPF;
 	fstream actPF;
+	fstream actPF1;
 
 	conPF.open(conParamFile.c_str());
 	actPF.open(actParamFile.c_str());
+	actPF1.open(actParamFile1.c_str());
 
-	simState=new CBMStateX2GRGODecouple(actPF, conPF);
+	simState=new CBMStateX2GRGODecouple(actPF, actPF1, conPF);
 	simulation=new CBMSimX2GRGODecouple(simState);
 
 //	simulation->writeToState();
 
 	conPF.close();
 	actPF.close();
+	actPF1.close();
 
 	numMF=simState->getConnectivityParams()->getNumMF();
 	numTrials=numT;

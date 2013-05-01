@@ -25,7 +25,7 @@
 class ECManagementBase
 {
 public:
-	ECManagementBase(std::string conParamFile, std::string actParamFile,
+	ECManagementBase(std::string conParamFile, std::string actParamFile, std::string actParamFile1,
 			int numT, int iti, int randSeed);
 	virtual ~ECManagementBase();
 

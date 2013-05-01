@@ -30,8 +30,8 @@
 class ECManagementDelay : public ECManagementBase
 {
 public:
-	ECManagementDelay(std::string conParamFile, std::string actParamFile, int randSeed,
-			int numT, int iti, int csOn, int csOff, int csPOff,
+	ECManagementDelay(std::string conParamFile, std::string actParamFile, std::string actParamFile1,
+			int randSeed, int numT, int iti, int csOn, int csOff, int csPOff,
 			int csStartTN, int dataStartTN, int nDataT,
 			float fracCSTMF, float fracCSPMF, float fracCtxtMF,
 			float bgFreqMin, float csBGFreqMin, float ctxtFreqMin, float csTFreqMin, float csPFreqMin,

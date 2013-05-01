@@ -8,13 +8,13 @@
 #include "../../includes/ectrial/ecmanagementdelay.h"
 using namespace std;
 
-ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, int randSeed,
-		int numT, int iti, int csOn, int csOff, int csPOff,
+ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, string actParamFile1,
+		int randSeed, int numT, int iti, int csOn, int csOff, int csPOff,
 		int csStartTN, int dataStartTN, int nDataT,
 		float fracCSTMF, float fracCSPMF, float fracCtxtMF,
 		float bgFreqMin, float csBGFreqMin, float ctxtFreqMin, float csTFreqMin, float csPFreqMin,
 		float bgFreqMax, float csBGFreqMax, float ctxtFreqMax, float csTFreqMax, float csPFreqMax)
-		:ECManagementBase(conParamFile, actParamFile, numT, iti, randSeed)
+		:ECManagementBase(conParamFile, actParamFile, actParamFile1, numT, iti, randSeed)
 {
 	CRandomSFMT0 randGen(randSeed);
 
@@ -153,11 +153,11 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 		}
 	}
 
-	simState->getActivityParams()->showParams(cout);
+	simState->getActivityParams(0)->showParams(cout);
 	simState->getConnectivityParams()->showParams(cout);
 
 	eyelidFunc=new EyelidIntegrator(simState->getConnectivityParams()->getNumNC(),
-			simState->getActivityParams()->getMSPerTimeStep(), 10.5, 0.012, -0.13, 0.13, 100);
+			simState->getActivityParams(0)->getMSPerTimeStep(), 10.5, 0.012, -0.13, 0.13, 100);
 
 	{
 		EyelidOutParams eyelidParams;
@@ -224,7 +224,7 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 		rasterParams["io1"]=rp;
 
 
-		data=new ECTrialsData(500, csOff-csOn, 500, simState->getActivityParams()->getMSPerTimeStep(),
+		data=new ECTrialsData(500, csOff-csOn, 500, simState->getActivityParams(0)->getMSPerTimeStep(),
 				numDataTrials, pshParams, rasterParams, eyelidParams);
 	}
 

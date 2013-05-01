@@ -20,12 +20,14 @@ MainW::MainW(QApplication *app, QWidget *parent)
 
 	string conPF;
 	string actPF;
+	string actPF1;
 	QStringList args;
 
 	args=app->arguments();
 
 	conPF=args[1].toStdString();
 	actPF=args[2].toStdString();
+	actPF1=args[3].toStdString();
 
 	this->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -34,8 +36,9 @@ MainW::MainW(QApplication *app, QWidget *parent)
 
 	cout<<"conPF "<<conPF<<endl;
 	cout<<"actPF "<<actPF<<endl;
+	cout<<"actPF1 "<<actPF1<<endl;
 
-	manager=new ECManagementDelay(conPF, actPF, time(0), 7550, 5000, 2000, 2750, 2040,
+	manager=new ECManagementDelay(conPF, actPF, actPF1, time(0), 7550, 5000, 2000, 2750, 2040,
 			5, 6545, 1000, 0.025, 0.0, 0.03,
 			1, 1, 30, 40, 120, 10, 5, 60, 50, 130);
 
