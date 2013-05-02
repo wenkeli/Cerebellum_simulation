@@ -38,8 +38,8 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	cout<<"actPF "<<actPF<<endl;
 	cout<<"actPF1 "<<actPF1<<endl;
 
-	manager=new ECManagementDelay(conPF, actPF, actPF1, time(0), 7550, 5000, 2000, 2750, 2040,
-			5, 6545, 1000, 0.025, 0.0, 0.03,
+	manager=new ECManagementDelay(conPF, actPF, actPF1, time(0), 10550, 5000, 2000, 2750, 2040,
+			5, 9545, 1000, 0.025, 0.0, 0.03,
 			1, 1, 30, 40, 120, 10, 5, 60, 50, 130);
 
 	conParams=manager->getConParams();
