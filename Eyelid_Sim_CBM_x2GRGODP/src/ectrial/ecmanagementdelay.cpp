@@ -293,7 +293,7 @@ void ECManagementDelay::calcSimActivity()
 	{
 		gIncGRtoGOSet=true;
 		gIncGRtoGOReset=false;
-		simulation->getInputNetList()[1]->setGIncGRtoGO(0.000026);
+		simulation->getInputNetList()[1]->setGIncGRtoGO(0.000035);
 	}
 
 	if(!gIncGRtoGOReset && currentTime>=csOffTime && currentTrial>=csStartTrialN)
