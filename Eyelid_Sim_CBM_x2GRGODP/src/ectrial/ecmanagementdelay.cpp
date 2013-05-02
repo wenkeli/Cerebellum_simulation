@@ -231,6 +231,9 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, s
 	grPCPlastSet=false;
 	grPCPlastReset=true;
 
+	gIncGRtoGOSet=false;
+	gIncGRtoGOReset=true;
+
 	delete[] isCSTonic;
 	delete[] isCSPhasic;
 	delete[] isContext;
@@ -283,6 +286,21 @@ void ECManagementDelay::calcSimActivity()
 	else
 	{
 //		simulation->updateErrDrive(0, 0);
+	}
+
+	if(currentTime>=csOnTime && !gIncGRtoGOSet &&currentTrial>=csStartTrialN
+			&& currentTime<csOffTime)
+	{
+		gIncGRtoGOSet=true;
+		gIncGRtoGOReset=false;
+		simulation->getInputNetList()[1]->setGIncGRtoGO(0.00003);
+	}
+
+	if(!gIncGRtoGOReset && currentTime>=csOffTime && currentTrial>=csStartTrialN)
+	{
+		gIncGRtoGOSet=false;
+		gIncGRtoGOReset=true;
+		simulation->getInputNetList()[1]->resetGIncGRtoGO();
 	}
 
 	if(currentTime>=csOnTime+200 && !grPCPlastSet

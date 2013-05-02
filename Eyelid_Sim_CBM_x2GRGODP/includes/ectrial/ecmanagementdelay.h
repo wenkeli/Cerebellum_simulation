@@ -79,6 +79,9 @@ protected:
 	bool grPCPlastSet;
 	bool grPCPlastReset;
 
+	bool gIncGRtoGOSet;
+	bool gIncGRtoGOReset;
+
 	EyelidIntegrator *eyelidFunc;
 
 	ECTrialsData *data;
