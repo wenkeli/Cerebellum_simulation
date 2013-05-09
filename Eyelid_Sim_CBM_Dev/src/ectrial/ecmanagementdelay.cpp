@@ -171,8 +171,8 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 		pp.numCells=simState->getConnectivityParams()->getNumGO();
 		pp.numTimeStepsPerBin=10;
 		pshParams["go"]=pp;
-//		pp.numCells=simState->getConnectivityParams()->getNumGR();
-//		pshParams["gr"]=pp;
+		pp.numCells=simState->getConnectivityParams()->getNumGR();
+		pshParams["gr"]=pp;
 		pp.numCells=simState->getConnectivityParams()->getNumSC();
 		pshParams["sc"]=pp;
 		pp.numCells=simState->getConnectivityParams()->getNumBC();
@@ -298,7 +298,7 @@ void ECManagementDelay::calcSimActivity()
 		}
 
 		data->updatePSH("go", simulation->getInputNet()->exportAPGO());
-//		data->updatePSH("gr", simulation->getInputNet()->exportAPGR());
+		data->updatePSH("gr", simulation->getInputNet()->exportAPGR());
 		data->updatePSH("sc", simulation->getInputNet()->exportAPSC());
 		data->updatePSH("bc", simulation->getMZoneList()[0]->exportAPBC());
 		data->updatePSH("pc", simulation->getMZoneList()[0]->exportAPPC());
