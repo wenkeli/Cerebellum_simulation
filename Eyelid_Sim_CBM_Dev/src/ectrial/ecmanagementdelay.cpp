@@ -171,7 +171,7 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 		pp.numCells=simState->getConnectivityParams()->getNumGO();
 		pp.numTimeStepsPerBin=10;
 		pshParams["go"]=pp;
-		pp.numCells=simState->getConnectivityParams()->getNumGR();
+		pp.numCells=simState->getConnectivityParams()->getNumGR()/10;
 		pshParams["gr"]=pp;
 		pp.numCells=simState->getConnectivityParams()->getNumSC();
 		pshParams["sc"]=pp;
