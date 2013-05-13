@@ -163,8 +163,10 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 		EyelidOutParams eyelidParams;
 		PSHParams pp;
 		RasterParams rp;
+		RawUIntParams ruip;
 		map<string, PSHParams> pshParams;
 		map<string, RasterParams> rasterParams;
+		map<string, RawUIntParams> uintParams;
 
 		eyelidParams.numTimeStepSmooth=4;
 
@@ -196,9 +198,13 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 		rp.numCells=simState->getConnectivityParams()->getNumIO();
 		rasterParams["io"]=rp;
 
+		uintParams.clear();
+		ruip.numRows=simState->getConnectivityParams()->getNumGO();
+		uintParams["grInputGO"]=ruip;
+
 
 		data=new ECTrialsData(500, csOff-csOn, 500, simState->getActivityParams()->getMSPerTimeStep(),
-				numDataTrials, pshParams, rasterParams, eyelidParams);
+				numDataTrials, pshParams, rasterParams, uintParams, eyelidParams);
 	}
 
 	grPCPlastSet=false;
@@ -303,6 +309,8 @@ void ECManagementDelay::calcSimActivity()
 		data->updatePSH("bc", simulation->getMZoneList()[0]->exportAPBC());
 		data->updatePSH("pc", simulation->getMZoneList()[0]->exportAPPC());
 		data->updatePSH("io", simulation->getMZoneList()[0]->exportAPIO());
+
+		data->updateRawUInt("grInputGO", simulation->getInputNet()->exportSumGRInputGO());
 
 		data->updateEyelid(eyelidPos);
 	}
