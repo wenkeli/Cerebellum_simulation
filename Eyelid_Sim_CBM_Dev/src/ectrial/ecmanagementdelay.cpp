@@ -173,6 +173,7 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 		pp.numCells=simState->getConnectivityParams()->getNumGO();
 		pp.numTimeStepsPerBin=10;
 		pshParams["go"]=pp;
+		pshParams["grInputGO"]=pp;
 		pp.numCells=simState->getConnectivityParams()->getNumGR()/10;
 		pshParams["gr"]=pp;
 		pp.numCells=simState->getConnectivityParams()->getNumSC();
@@ -199,8 +200,8 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 		rasterParams["io"]=rp;
 
 		uintParams.clear();
-		ruip.numRows=simState->getConnectivityParams()->getNumGO();
-		uintParams["grInputGO"]=ruip;
+//		ruip.numRows=simState->getConnectivityParams()->getNumGO();
+//		uintParams["grInputGO"]=ruip;
 
 
 		data=new ECTrialsData(500, csOff-csOn, 500, simState->getActivityParams()->getMSPerTimeStep(),
@@ -304,13 +305,14 @@ void ECManagementDelay::calcSimActivity()
 		}
 
 		data->updatePSH("go", simulation->getInputNet()->exportAPGO());
+		data->updatePSH("grInputGO", simulation->getInputNet()->exportSumGRInputGO());
 		data->updatePSH("gr", simulation->getInputNet()->exportAPGR());
 		data->updatePSH("sc", simulation->getInputNet()->exportAPSC());
 		data->updatePSH("bc", simulation->getMZoneList()[0]->exportAPBC());
 		data->updatePSH("pc", simulation->getMZoneList()[0]->exportAPPC());
 		data->updatePSH("io", simulation->getMZoneList()[0]->exportAPIO());
 
-		data->updateRawUInt("grInputGO", simulation->getInputNet()->exportSumGRInputGO());
+//		data->updateRawUInt("grInputGO", simulation->getInputNet()->exportSumGRInputGO());
 
 		data->updateEyelid(eyelidPos);
 	}
