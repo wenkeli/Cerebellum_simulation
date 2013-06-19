@@ -35,8 +35,66 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	cout<<"conPF "<<conPF<<endl;
 	cout<<"actPF "<<actPF<<endl;
 
-	manager=new ECManagementDelay(conPF, actPF, time(0), 1050, 10000, 2000, 3500, 2040,
-			5, 45, 1000, 0.0075, 0.0, 0.015,
+	ui.numTrialsBox->setMaximum(1000000000);
+	ui.numTrialsBox->setValue(1050);
+	ui.itiBox->setMaximum(1000000);
+	ui.itiBox->setValue(5000);
+	ui.csStartBox->setMaximum(ui.itiBox->maximum());
+	ui.csStartBox->setValue(2000);
+	ui.csEndBox->setMaximum(ui.itiBox->maximum());
+	ui.csEndBox->setValue(2750);
+	ui.csPEndBox->setMaximum(ui.itiBox->maximum());
+	ui.csPEndBox->setValue(2040);
+	ui.csTrialStartNBox->setMaximum(ui.numTrialsBox->maximum());
+	ui.csTrialStartNBox->setValue(5);
+	ui.dataTrialStartNBox->setMaximum(ui.numTrialsBox->maximum());
+	ui.dataTrialStartNBox->setValue(45);
+	ui.numDataTrialsBox->setMaximum(ui.numTrialsBox->maximum());
+	ui.numDataTrialsBox->setValue(1000);
+
+	ui.fracCtxtMFBox->setMaximum(1);
+	ui.fracCtxtMFBox->setValue(0.03);
+	ui.fracCtxtMFBox->setDecimals(4);
+	ui.mfBGFreqMinBox->setMaximum(1000);
+	ui.mfBGFreqMinBox->setValue(1);
+	ui.mfBGFreqMinBox->setDecimals(4);
+	ui.mfBGFreqMaxBox->setMaximum(1000);
+	ui.mfBGFreqMaxBox->setValue(10);
+	ui.mfBGFreqMaxBox->setDecimals(4);
+	ui.ctxtMFFreqMinBox->setMaximum(1000);
+	ui.ctxtMFFreqMinBox->setValue(30);
+	ui.ctxtMFFreqMinBox->setDecimals(4);
+	ui.ctxtMFFreqMaxBox->setMaximum(1000);
+	ui.ctxtMFFreqMaxBox->setValue(60);
+	ui.ctxtMFFreqMaxBox->setDecimals(4);
+
+	ui.csMFBGFreqMinBox->setMaximum(1000);
+	ui.csMFBGFreqMinBox->setValue(1);
+	ui.csMFBGFreqMinBox->setDecimals(4);
+	ui.csMFBGFreqMaxBox->setMaximum(1000);
+	ui.csMFBGFreqMaxBox->setValue(5);
+	ui.csMFBGFreqMaxBox->setDecimals(4);
+	ui.fracCSTMFBox->setMaximum(1);
+	ui.fracCSTMFBox->setValue(0.025);
+	ui.fracCSTMFBox->setDecimals(4);
+	ui.csTMFFreqMinBox->setMaximum(1000);
+	ui.csTMFFreqMinBox->setValue(40);
+	ui.csTMFFreqMinBox->setDecimals(4);
+	ui.csTMFFreqMaxBox->setMaximum(1000);
+	ui.csTMFFreqMaxBox->setValue(50);
+	ui.csTMFFreqMaxBox->setDecimals(4);
+	ui.fracCSPMFBox->setMaximum(1);
+	ui.fracCSPMFBox->setValue(0.0);
+	ui.fracCSPMFBox->setDecimals(4);
+	ui.csPMFFreqMinBox->setMaximum(1000);
+	ui.csPMFFreqMinBox->setValue(120);
+	ui.csPMFFreqMinBox->setDecimals(4);
+	ui.csPMFFreqMaxBox->setMaximum(1000);
+	ui.csPMFFreqMaxBox->setValue(130);
+	ui.csPMFFreqMaxBox->setDecimals(4);
+
+	manager=new ECManagementDelay(conPF, actPF, time(0), 12550, 10000, 2000, 3500, 2040,
+			5, 11545, 1000, 0.0075, 0.0, 0.015,
 			1, 1, 30, 40, 120, 10, 5, 60, 50, 130);
 
 	conParams=manager->getConParams();
