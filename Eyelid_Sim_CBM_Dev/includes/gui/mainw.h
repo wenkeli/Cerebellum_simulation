@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <string>
 #include <time.h>
 
 #include <QtCore/QMutex>
@@ -66,6 +67,9 @@ private:
     ActTemporalView *ioTView;
 
     InterThreadComm *itc;
+
+    std::string conPFileName;
+    std::string actPFileName;
 
     void showActCommon(int checked, int checkedIndex, QWidget *view);
 };

@@ -6,34 +6,21 @@ using namespace std;
 MainW::MainW(QApplication *app, QWidget *parent)
     : QWidget(parent)
 {
-	vector<int> xDims;
-	vector<int> yDims;
-	vector<int> sizes;
-	vector<QColor> colors;
-
-	vector<int> csLineTs;
-	vector<QColor> csLineColors;
-
-	QColor temp(255, 165, 0);
-
-	ui.setupUi(this);
-
-	string conPF;
-	string actPF;
 	QStringList args;
+	ui.setupUi(this);
 
 	args=app->arguments();
 
-	conPF=args[1].toStdString();
-	actPF=args[2].toStdString();
+	conPFileName=args[1].toStdString();
+	actPFileName=args[2].toStdString();
 
 	this->setAttribute(Qt::WA_DeleteOnClose);
 
 	connect(ui.quitButton, SIGNAL(clicked()), app, SLOT(quit()));
 	connect(this, SIGNAL(destroyed()), app, SLOT(quit()));
 
-	cout<<"conPF "<<conPF<<endl;
-	cout<<"actPF "<<actPF<<endl;
+	cout<<"conPF "<<conPFileName<<endl;
+	cout<<"actPF "<<actPFileName<<endl;
 
 	ui.numTrialsBox->setMaximum(1000000000);
 	ui.numTrialsBox->setValue(1050);
@@ -93,9 +80,64 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	ui.csPMFFreqMaxBox->setValue(130);
 	ui.csPMFFreqMaxBox->setDecimals(4);
 
-	manager=new ECManagementDelay(conPF, actPF, time(0), 12550, 10000, 2000, 3500, 2040,
-			5, 11545, 1000, 0.0075, 0.0, 0.015,
-			1, 1, 30, 40, 120, 10, 5, 60, 50, 130);
+	ui.inputNetCellTBox->setDisabled(true);
+	ui.showINetBox->setDisabled(true);
+	ui.showINetBox->setChecked(false);
+	ui.showINetSpatialBox->setDisabled(true);
+	ui.showINetSpatialBox->setChecked(false);
+	ui.showBCBox->setDisabled(true);
+	ui.showBCBox->setChecked(false);
+	ui.showSCBox->setDisabled(true);
+	ui.showSCBox->setChecked(false);
+	ui.showPCBox->setDisabled(true);
+	ui.showPCBox->setChecked(false);
+	ui.showIOBox->setDisabled(true);
+	ui.showIOBox->setChecked(false);
+	ui.showNCBox->setDisabled(true);
+	ui.showNCBox->setChecked(false);
+
+//	inputNetSpatialView->hide();
+
+//	pcTView->drawBlank(Qt::blue);
+//	pcTView->drawVertLine(500, Qt::white);
+
+}
+
+MainW::~MainW()
+{
+	delete compThread;
+	delete manager;
+	delete inputNetSpatialView;
+	delete inputNetTView;
+	delete scTView;
+	delete bcTView;
+	delete pcTView;
+	delete ncTView;
+	delete ioTView;
+}
+
+
+void MainW::run()
+{
+	vector<int> xDims;
+	vector<int> yDims;
+	vector<int> sizes;
+	vector<QColor> colors;
+
+	vector<int> csLineTs;
+	vector<QColor> csLineColors;
+
+	QColor temp(255, 165, 0);
+
+	manager=new ECManagementDelay(conPFileName, actPFileName, time(0),
+			ui.numTrialsBox->value(), ui.itiBox->value(),
+			ui.csStartBox->value(), ui.csEndBox->value(), ui.csPEndBox->value(),
+			ui.csTrialStartNBox->value(), ui.dataTrialStartNBox->value(), ui.numDataTrialsBox->value(),
+			ui.fracCSTMFBox->value(), ui.fracCSPMFBox->value(), ui.fracCtxtMFBox->value(),
+			ui.mfBGFreqMinBox->value(), ui.csMFBGFreqMinBox->value(), ui.ctxtMFFreqMinBox->value(),
+			ui.csTMFFreqMinBox->value(), ui.csPMFFreqMinBox->value(),
+			ui.mfBGFreqMaxBox->value(), ui.csMFBGFreqMaxBox->value(), ui.ctxtMFFreqMaxBox->value(),
+			ui.csTMFFreqMaxBox->value(), ui.csPMFFreqMaxBox->value());
 
 	conParams=manager->getConParams();
 
@@ -162,37 +204,39 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	ncTView->hide();
 	ioTView->hide();
 
+	ui.numTrialsBox->setDisabled(true);
+	ui.itiBox->setDisabled(true);
+	ui.csStartBox->setDisabled(true);
+	ui.csEndBox->setDisabled(true);
+	ui.csPEndBox->setDisabled(true);
+	ui.csTrialStartNBox->setDisabled(true);
+	ui.dataTrialStartNBox->setDisabled(true);
+	ui.numDataTrialsBox->setDisabled(true);
 
-//	inputNetSpatialView->hide();
+	ui.fracCtxtMFBox->setDisabled(true);
+	ui.mfBGFreqMinBox->setDisabled(true);
+	ui.mfBGFreqMaxBox->setDisabled(true);
+	ui.ctxtMFFreqMinBox->setDisabled(true);
+	ui.ctxtMFFreqMaxBox->setDisabled(true);
 
-//	pcTView->drawBlank(Qt::blue);
-//	pcTView->drawVertLine(500, Qt::white);
+	ui.csMFBGFreqMinBox->setDisabled(true);
+	ui.csMFBGFreqMaxBox->setDisabled(true);
+	ui.fracCSTMFBox->setDisabled(true);
+	ui.csTMFFreqMinBox->setDisabled(true);
+	ui.csTMFFreqMaxBox->setDisabled(true);
+	ui.fracCSPMFBox->setDisabled(true);
+	ui.csPMFFreqMinBox->setDisabled(true);
+	ui.csPMFFreqMaxBox->setDisabled(true);
 
-	ui.showINetBox->setChecked(false);
-	ui.showINetSpatialBox->setChecked(false);
-	ui.showBCBox->setChecked(false);
-	ui.showSCBox->setChecked(false);
-	ui.showPCBox->setChecked(false);
-	ui.showIOBox->setChecked(false);
-	ui.showNCBox->setChecked(false);
-}
+	ui.inputNetCellTBox->setEnabled(true);
+	ui.showINetBox->setEnabled(true);
+	ui.showINetSpatialBox->setEnabled(true);
+	ui.showBCBox->setEnabled(true);
+	ui.showSCBox->setEnabled(true);
+	ui.showPCBox->setEnabled(true);
+	ui.showIOBox->setEnabled(true);
+	ui.showNCBox->setEnabled(true);
 
-MainW::~MainW()
-{
-	delete compThread;
-	delete manager;
-	delete inputNetSpatialView;
-	delete inputNetTView;
-	delete scTView;
-	delete bcTView;
-	delete pcTView;
-	delete ncTView;
-	delete ioTView;
-}
-
-
-void MainW::run()
-{
 	compThread->start(QThread::TimeCriticalPriority);
 }
 
