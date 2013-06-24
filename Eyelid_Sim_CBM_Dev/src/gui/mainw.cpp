@@ -129,6 +129,8 @@ void MainW::run()
 
 	QColor temp(255, 165, 0);
 
+	ui.runButton->setDisabled(true);
+
 	manager=new ECManagementDelay(conPFileName, actPFileName, time(0),
 			ui.numTrialsBox->value(), ui.itiBox->value(),
 			ui.csStartBox->value(), ui.csEndBox->value(), ui.csPEndBox->value(),
@@ -236,8 +238,6 @@ void MainW::run()
 	ui.showPCBox->setEnabled(true);
 	ui.showIOBox->setEnabled(true);
 	ui.showNCBox->setEnabled(true);
-
-	ui.runButton->setDisabled(true);
 
 	compThread->start(QThread::TimeCriticalPriority);
 }
