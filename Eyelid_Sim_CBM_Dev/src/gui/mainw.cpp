@@ -237,6 +237,8 @@ void MainW::run()
 	ui.showIOBox->setEnabled(true);
 	ui.showNCBox->setEnabled(true);
 
+	ui.runButton->setDisabled(true);
+
 	compThread->start(QThread::TimeCriticalPriority);
 }
 
