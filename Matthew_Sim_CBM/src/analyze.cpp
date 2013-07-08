@@ -5,6 +5,7 @@
 #include <fstream>
 #include <map>
 #include <iterator>
+#include <boost/algorithm/string.hpp>
 
 using namespace std;
 using namespace boost::filesystem;
@@ -43,6 +44,7 @@ WeightAnalyzer::WeightAnalyzer(Environment *env, int argc, char **argv) :
     if (vm.count("logfile")) {
         logfile = path(vm["logfile"].as<string>());
         assert(exists(logfile) && is_regular_file(logfile));
+        analyzeLog(logfile);
     }
 
     if (simPaths.size() == 1)
@@ -55,6 +57,72 @@ WeightAnalyzer::WeightAnalyzer(Environment *env, int argc, char **argv) :
             analyzeFiles(simPaths[i], simPaths[j]);
         }
     }
+}
+
+void WeightAnalyzer::analyzeLog(path logpath) {
+    cout << "Analyzing log " << logpath.c_str() << endl;
+    plot_dir /= "plots_" + logpath.leaf().native() + "/";
+    create_directory(plot_dir);
+
+    // Makes plots of the Robocup force output as a function of time
+    ifstream ifs(logpath.c_str(), std::ifstream::in);
+    string line;
+    //vector<float> time, force;
+    vector<vector<float> > forces;
+    //int trialNum = 0;
+
+    while (ifs.good()) {
+        std::getline(ifs, line);
+        if (line.empty())
+            continue;
+
+        vector<string> tokens;
+        boost::split(tokens, line, boost::is_any_of(" "));
+
+        if (line.find("TSTS") == string::npos || line.find("HPFF") == string::npos)
+            continue;
+
+        assert(tokens.size() == 5); // [Cycle TSTS # HPFF #]
+        float time = boost::lexical_cast<float>(tokens[2]);
+        uint indx = floor(time / 0.02 + .5); // Time runs in intervals of 0.02
+        float force = boost::lexical_cast<float>(tokens[4]);
+        while (forces.size() <= indx) {
+            vector<float> f;
+            forces.push_back(f);
+        }
+        forces[indx].push_back(force);
+    }
+    ifs.close();
+
+    // Take averages of the forces
+    vector<float> forceAvg, time;
+    for (uint i=0; i<forces.size(); i++) {
+        time.push_back(0.02 * i);
+        float sum = 0;
+        for (uint j=0; j<forces[i].size(); j++)
+            sum += forces[i][j];
+        float avg = sum / float(forces[i].size());
+        if (forces[i].size() == 0)
+            cout << "Forces " << i << " is empty" << endl;
+        forceAvg.push_back(avg);
+        cout << (0.02*i) << " " << avg << endl;
+    }
+
+    {
+        // Plot the results of this trial
+        plot_dir /= "avgForces.pdf";
+        R["time"] = time;
+        R["forces"] = forceAvg;
+        string txt =
+            "library(ggplot2); "
+            "data=data.frame(time=time, force=forces); "
+            "plot=ggplot(data, aes(x=time, y=forces)) + geom_line(); "
+            "ggsave(plot,file=\""+plot_dir.native()+"\"); ";
+        R.parseEvalQ(txt);
+        plot_dir.remove_leaf();
+    }
+
+    plot_dir.remove_leaf();
 }
 
 void WeightAnalyzer::analyzeFiles(path p1, path p2) {

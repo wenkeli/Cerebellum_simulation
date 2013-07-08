@@ -43,7 +43,7 @@ protected:
     std::vector<ActTemporalView*> ioTViews;
 
     QVBoxLayout vbox;
-    QPushButton inputNetTButton, stellateTButton, basketTButton,
+    QPushButton glVizButton, inputNetTButton, stellateTButton, basketTButton,
         purkinjeTButton, nucleusTButton, oliveTButton;
 
 public slots:

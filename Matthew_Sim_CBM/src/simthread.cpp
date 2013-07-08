@@ -1,12 +1,12 @@
 #include <iostream>
 #include <fstream>
-
 #include "../includes/simthread.hpp"
 
 using namespace std;
 
 SimThread::SimThread(QObject *parent, int numMZ, int randSeed, string conPF, string actPF, Environment *env)
-    : QThread(parent), alive(true), paused(false), trialLength(5000), numMZ(numMZ), env(env)
+    : QThread(parent), alive(true), paused(false), trialLength(5000),
+      numMZ(numMZ), env(env), cbmViz(NULL)
 {
     vector<int> mzoneCRSeeds; // Seed for each MZ's connectivity
     vector<int> mzoneARSeeds; // Seed for each MZ's activity
@@ -42,7 +42,7 @@ SimThread::SimThread(QObject *parent, int numMZ, int randSeed, string conPF, str
 
 SimThread::SimThread(QObject *parent, int numMZ, int randSeed, CBMState *simState, Environment *env)
     : QThread(parent), alive(true), paused(false),
-      trialLength(5000), numMZ(numMZ), env(env), simState(simState)
+      trialLength(5000), numMZ(numMZ), env(env), simState(simState), cbmViz(NULL)
 {
     // Create the simulation
     simCore = new CBMSimCore(simState, &randSeed);
@@ -54,6 +54,7 @@ SimThread::~SimThread()
     delete simState;
     delete simCore;
     delete mfs;
+    if (cbmViz) delete cbmViz;
 }
 
 void SimThread::setupMFs(int randSeed) {
@@ -85,6 +86,13 @@ void SimThread::setupMFs(int randSeed) {
     qRegisterMetaType<QColor>("QColor");
 }
 
+void SimThread::createGLVisualization() {
+    // TODO: Something smarter with the allocation/de-allocation 
+    if (cbmViz != NULL)
+        return;
+    cbmViz = new CerebellumViz(simState, simCore);
+}
+
 void SimThread::run()
 {
     int simStep = 0;
@@ -102,6 +110,9 @@ void SimThread::run()
         simCore->updateMFInput(apMF);
         simCore->calcActivity();
         env->step(simCore);
+
+        if (cbmViz != NULL)
+            cbmViz->update();
 
         // Update the visualizations of all the different views
         vector<ct_uint8_t> apMFVis(apMF, apMF + numGO * sizeof apMF[0]);

@@ -20,7 +20,7 @@ po::options_description Robocup::getOptions() {
         ("rsg", po::value<string>()->default_value("rsg/agent/nao"),//"/usr/local/share/rcssserver3d/rsg/agent/nao"),
          "Folder for the nao model")
         ("behavior", po::value<string>()->default_value("cerebellumAgent"), "Agent behavior")
-        ("maxNumTrials", po::value<int>()->default_value(100),
+        ("maxNumTrials", po::value<int>()->default_value(250),
          "Maximum number of trials.")
         ("simStateDir", po::value<string>()->default_value("./"), "Directory to save sim state files.")
         ;
@@ -30,10 +30,11 @@ po::options_description Robocup::getOptions() {
 Robocup::Robocup(CRandomSFMT0 *randGen, int argc, char **argv)
     : Environment(randGen),
       mz_hipPitchForwards("HipPitchForwards", 0, forceScale, forcePow, forceDecay), 
-      mz_hipPitchBack("HipPitchBack", 1, forceScale, forcePow, forceDecay),
+      //mz_hipPitchBack("HipPitchBack", 1, forceScale, forcePow, forceDecay),
       sv_highFreq("highFreqMFs", HIGH_FREQ, .03),
       sv_impactTimer("impactMFs", GAUSSIAN, .15),
-      sv_hipPitch("hipPitchMFs", GAUSSIAN, .06),
+      //sv_hipPitch("hipPitchMFs", GAUSSIAN, .06),
+      //sv_gyrox("gyroX", GAUSSIAN, .06),      
       hpFF(0), hpBF(0), avgHipPitchForce(0)
 {
     po::options_description desc = getOptions();
@@ -58,10 +59,11 @@ Robocup::Robocup(CRandomSFMT0 *randGen, int argc, char **argv)
     assert(stateVariables.empty());
     stateVariables.push_back((StateVariable<Environment>*) (&sv_highFreq));
     stateVariables.push_back((StateVariable<Environment>*) (&sv_impactTimer));
-    stateVariables.push_back((StateVariable<Environment>*) (&sv_hipPitch));
+    //stateVariables.push_back((StateVariable<Environment>*) (&sv_hipPitch));
+    //stateVariables.push_back((StateVariable<Environment>*) (&sv_gyrox));    
     assert(microzones.empty());
     microzones.push_back(&mz_hipPitchForwards);
-    microzones.push_back(&mz_hipPitchBack);
+    //microzones.push_back(&mz_hipPitchBack);
 }
 
 Robocup::~Robocup() {
@@ -88,7 +90,8 @@ void Robocup::setupMossyFibers(CBMState *simState) {
     walkEngine = robosim.behavior->getWalkEngine();
 
     sv_impactTimer.initializeGaussian(minImpactTimerVal, maxImpactTimerVal, this, &Robocup::getTimeToImpact, 12);
-    sv_hipPitch.initializeGaussian(minHipPitch, maxHipPitch, this, &Robocup::getHipPitch);
+    //sv_hipPitch.initializeGaussian(minHipPitch, maxHipPitch, this, &Robocup::getHipPitch);
+    //sv_gyrox.initializeGaussian(minGX, maxGX, this, &Robocup::getGyroX);    
 }
 
 float* Robocup::getState() {
@@ -108,20 +111,28 @@ void Robocup::step(CBMSimCore *simCore) {
 
     // Setup the MZs
     if (!mz_hipPitchForwards.initialized()) mz_hipPitchForwards.initialize(simCore, numNC);
-    if (!mz_hipPitchBack.initialized())     mz_hipPitchBack.initialize(simCore, numNC); 
+    //if (!mz_hipPitchBack.initialized())     mz_hipPitchBack.initialize(simCore, numNC); 
 
     calcForce();
 
     if (timestep % cbm_steps_to_robosim_steps == 0) {
         float avgHipPitchForwardForce = hpFF / float(cbm_steps_to_robosim_steps);
         float avgHipPitchBackForce = hpBF / float(cbm_steps_to_robosim_steps);
-        avgHipPitchForce = avgHipPitchForwardForce - avgHipPitchBackForce;
+        avgHipPitchForce = avgHipPitchForwardForce; // - avgHipPitchBackForce;
         hpFF = 0; hpBF = 0;
 
         // Only take actions when not in reset phase
         if (behavior->getShotPhase() != OptimizationBehaviorBalance::reset) {
             robosim.drawHipForces(avgHipPitchForwardForce, avgHipPitchBackForce);
             walkEngine->changeHips(-avgHipPitchForce, -avgHipPitchForce);
+
+            logfile << timestep << " TSTS " << getTimeSinceTrialStart() << " HPFF " << avgHipPitchForce << endl;
+
+            // This is the 4 line solution strategy to this problem!!!
+            // if (getTimeToImpact() > -.5 && getTimeToImpact() < .5)
+            //     walkEngine->changeHips(-20, -20);
+            // else 
+            //     walkEngine->changeHips(0, 0);
         }
 
         // Let the robosim do its thing
@@ -140,52 +151,99 @@ void Robocup::step(CBMSimCore *simCore) {
     if (behavior->getShotPhase() == OptimizationBehaviorBalance::prep ||
         behavior->getShotPhase() == OptimizationBehaviorBalance::recovery) {
         deliverErrors();
+
     }
 }
 
 void Robocup::deliverErrors() {
     float maxErrProb = .01;
 
-    // Error based on solution
-    double tts = behavior->getTimeToShot();
-    if (tts < .5 && tts > -.5) {
-        float hfTarget = 20;
-        float errProb = min(.001f*fabsf(hfTarget-avgHipPitchForce), maxErrProb);
-        if (hfTarget - avgHipPitchForce > 0 && randGen->Random() < errProb)
+    // Err based on gyro x
+    // float expectedVal = 0;
+    // float posErrorVal = 134;
+    // float errScale = 1.0 * maxErrProb / (posErrorVal - expectedVal);
+    // float value = getGyroX();
+    // // if (getTimeToImpact() > 0) {
+    // //     if (value > 0 && avgHipPitchForce < 0)
+    // //         value = max(value + 2.0f * avgHipPitchForce, 0.0f);
+    // //     if (value < 0 && avgHipPitchForce > 0) 
+    // //         value = min(value + 2.0f * avgHipPitchForce, 0.0f);
+    // // }
+    // float errProb = min(errScale*fabsf(value), maxErrProb);
+    // if (getTimeToImpact() < 0 && value > 0 && randGen->Random() < errProb)
+    //     mz_hipPitchForwards.deliverError();
+    // else if (getTimeToImpact() < 0 && value < 0 && randGen->Random() < errProb)
+    //     mz_hipPitchBack.deliverError();
+
+    // if (timestep % cbm_steps_to_robosim_steps == 0)
+    //     printf("%5.2lf gyrox %5.2lf avgHipForce %5.2lf Value %5.2lf ErrProb %5.2lf\n", getTimeToImpact(), getGyroX(), avgHipPitchForce, value, errProb);
+
+    {
+        static int numShots = 0;
+        double tts = behavior->getTimeToShot();
+        if (tts == 0 && behavior->getNumberShots() >= numShots) {
             mz_hipPitchForwards.deliverError();
-    } else if (tts < -.5) {
-        float hfTarget = 0;
-        float errProb = min(.0001f*fabsf(hfTarget-avgHipPitchForce), maxErrProb);
-        if (hfTarget - avgHipPitchForce < 0 && randGen->Random() < errProb)
-            mz_hipPitchBack.deliverError();
+            numShots++;
+        }
     }
+
+    // {   // Error based on solution
+    //     double tts = behavior->getTimeToShot();
+    //     if (tts < .5 && tts > -.5) {
+    //         float hfTarget = 20;
+    //         float errProb = min(.001f*fabsf(hfTarget-avgHipPitchForce), maxErrProb);
+    //         if (hfTarget - avgHipPitchForce > 0 && randGen->Random() < errProb) {
+    //             logfile << timestep << " TSTS " << getTimeSinceTrialStart() << " ERR " << endl;
+    //             mz_hipPitchForwards.deliverError();
+    //         }
+    //     }
+    //     // else if (tts < -.5) {
+    //     //     float hfTarget = 0;
+    //     //     float errProb = min(.0001f*fabsf(hfTarget-avgHipPitchForce), maxErrProb);
+    //     //     if (hfTarget - avgHipPitchForce < 0 && randGen->Random() < errProb)
+    //     //         mz_hipPitchBack.deliverError();
+    //     // }
+    // }
+    
+    // COM based error
+    // cout << getCOMX() << endl;
+    // float comx = getCOMX() - 9;
+    // if (randGen->Random() < min(.002f * fabsf(comx), maxErrProb)) {
+    //     if (comx < 0)
+    //         mz_hipPitchForwards.deliverError();
+    //     else
+    //         mz_hipPitchBack.deliverError();
+    // }
 
     // Error based on acceleration
     // VecPosition accel = bodyModel->getAccelRates();
-    // cout << accel.getX() << endl;
-    // float errorProbability = min(.002f * fabsf(accel.getX()), maxErrProb);
+    // //cout << accel.getX() << endl;
+    // float errorProbability = min(.005f * fabsf(accel.getX()), maxErrProb);
     // // Accel X < 0 Indicates a backwards lean
     // if (accel.getX() < 0 && randGen->Random() < errorProbability)
     //     mz_hipPitchForwards.deliverError();
     // // Accel X > 0 Indicates a forwards lean
+    // errorProbability = min(.001f * fabsf(accel.getX()), maxErrProb);
     // if (accel.getX() > 0 && randGen->Random() < errorProbability)
     //     mz_hipPitchBack.deliverError();
 
-    // Error based on deviation from upright
-    // Standing angle = ~.5; Fallen front or back = ~.06
-    // float uprightAngle = float(worldModel->getMyPositionGroundTruth().getZ());
-    // errorProbability = min(.05f * fabsf(uprightAngle - .5f), maxErrProb);
-    // if (accel.getX() < 0 && randGen->Random() < errorProbability)
-    //     mz_hipPitchForwards.deliverError();
-    // if (accel.getX() > 0 && randGen->Random() < errorProbability)
-    //     mz_hipPitchBack.deliverError();
+        // Error based on deviation from upright
+    // {   // Standing angle = ~.5; Fallen front or back = ~.06
+    //     VecPosition accel = bodyModel->getAccelRates();
+    //     float uprightAngle = float(worldModel->getMyPositionGroundTruth().getZ());
+    //     float errorProbability = min(.05f * fabsf(uprightAngle - .5f), maxErrProb);
+    //     if (accel.getX() < 0 && randGen->Random() < errorProbability)
+    //         mz_hipPitchForwards.deliverError();
+    //     // if (accel.getX() > 0 && randGen->Random() < errorProbability)
+    //     //     mz_hipPitchBack.deliverError();
+    // }
 }
 
 void Robocup::calcForce() {
     float hipPitchForwardsForce = mz_hipPitchForwards.getForce();
-    float hipPitchBackForce = mz_hipPitchBack.getForce();
+    //float hipPitchBackForce = mz_hipPitchBack.getForce();
     hpFF += hipPitchForwardsForce;
-    hpBF += hipPitchBackForce;
+    //hpBF += hipPitchBackForce;
 }
 
 bool Robocup::terminated() {

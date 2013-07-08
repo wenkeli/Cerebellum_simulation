@@ -13,6 +13,7 @@ MainW::MainW(QWidget *parent, SimThread *thread, Environment *env)
       scTView(thread->numSC, 1, thread->trialLength, thread->trialLength/4,
               thread->numSC, Qt::white, "Stellate Temporal View"),
       vbox(this),
+      glVizButton("Cerebellum Visualization", this),
       inputNetTButton("InputNet Temporal View", this),
       stellateTButton("Stellate Temporal View", this),
       basketTButton  ("Basket Temporal View", this),
@@ -72,6 +73,7 @@ MainW::MainW(QWidget *parent, SimThread *thread, Environment *env)
     }
 
     // Connect the buttons to the toggle visible methods
+    connect(&glVizButton, SIGNAL(clicked()), thread, SLOT(createGLVisualization()));
     connect(&inputNetTButton, SIGNAL(clicked()), &inputNetTView, SLOT(toggleVisible()));
     connect(&stellateTButton, SIGNAL(clicked()), &scTView, SLOT(toggleVisible()));
     for (int i=0; i<thread->numMZ; i++) {
@@ -82,6 +84,7 @@ MainW::MainW(QWidget *parent, SimThread *thread, Environment *env)
     }
 
     // Make the buttons expanable
+    glVizButton.setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     inputNetTButton.setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     stellateTButton.setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     basketTButton.setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -91,6 +94,7 @@ MainW::MainW(QWidget *parent, SimThread *thread, Environment *env)
 
     // Add the buttons to vbox
     vbox.setSpacing(1);
+    vbox.addWidget(&glVizButton);
     vbox.addWidget(&inputNetTButton);
     vbox.addWidget(&stellateTButton);
     vbox.addWidget(&basketTButton);

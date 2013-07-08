@@ -12,6 +12,7 @@
 #include <CBMToolsInclude/poissonregencells.h>
 #include <CBMVisualInclude/acttemporalview.h>
 
+#include "cbmViz.h"
 #include "environments/environment.hpp"
 
 // Saves the simulation to a file given an environment and the core
@@ -78,6 +79,9 @@ public:
         loadSim(saveFile, *env);
     }
 
+public slots:
+    void createGLVisualization();
+
 signals:
     void updateINTW(std::vector<ct_uint8_t>, int t);
     void updateSCTW(std::vector<ct_uint8_t>, int t);
@@ -94,6 +98,8 @@ protected:
     PoissonRegenCells *mfs;
     InNetInterface *inNet;
     std::vector<MZoneInterface*> mZones;
+
+    CerebellumViz *cbmViz;
     
     CRandomSFMT0 *randGen;
 

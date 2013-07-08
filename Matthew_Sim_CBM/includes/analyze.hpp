@@ -29,6 +29,8 @@ public:
 
     static boost::program_options::options_description getOptions();
 
+    void analyzeLog(boost::filesystem::path p);
+
     // Analyzes the weights in a single file
     void analyzeFile(boost::filesystem::path p);
 
