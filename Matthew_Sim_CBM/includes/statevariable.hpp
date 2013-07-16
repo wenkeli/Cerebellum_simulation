@@ -8,7 +8,7 @@
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/vector.hpp>
 
-enum UpdateType { GAUSSIAN, HIGH_FREQ };    
+enum UpdateType { MANUAL, GAUSSIAN, HIGH_FREQ };    
 
 // This class wraps a state variable
 template <class env> class StateVariable {
@@ -81,12 +81,27 @@ public:
         this->gaussWidth = gaussWidth;
     }
 
+    // Initializes the state varible with the manual updating method, passing a
+    // pointer to the environment as well as pointer to the update function
+    void initializeManual(env *environment, float *(env::*getMFFreq)()) {
+        this->environment = environment;
+        this->func_getMFFreq = getMFFreq;
+    }
+
     void update() {
         assert(mfFreq != NULL);
         assert(mfFreqRelaxed != NULL);
         assert(mfFreqExcited != NULL);
 
-        if (type == GAUSSIAN) {
+        if (type == MANUAL) {
+            float *manualFreqs = (environment->*func_getMFFreq)();
+            int j=0;
+            for (std::vector<int>::iterator it=mfInds.begin(); it != mfInds.end(); it++) {
+                float freq = manualFreqs[j++];
+                assert(freq >= 0 && freq <= 1); 
+                (*mfFreq)[*it] = 60 * freq; // TODO: May want to scale [relaxed,excited]
+            }
+        } else if (type == GAUSSIAN) {
             float svVal = (environment->*getValue)();
             gaussMFAct(svVal);
         } else if (type == HIGH_FREQ) {
@@ -138,6 +153,9 @@ public:
 
     // Pointer to the function to get the value of the state variable
     float (env::*getValue)();
+
+    // Pointer to the function to get the manual MF frequency of the state variable
+    float *(env::*func_getMFFreq)();
 };
 
 #endif

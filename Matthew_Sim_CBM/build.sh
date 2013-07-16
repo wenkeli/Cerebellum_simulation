@@ -4,6 +4,7 @@ set -e
 # This toggles the analysis code. Requires R, Rcpp, RInside
 BUILD_ANALYSIS=1
 BUILD_GL=1
+BUILD_AUDIO=1
 
 # Includes for the Robocup associated code
 ROBOCUP_INC="/home/matthew/projects/3Dsim/agents/nao-agent /home/matthew/projects/3Dsim/agents/nao-agent/core_utwalk /usr/local/include/simspark"
@@ -55,9 +56,15 @@ then
     DEFINES+="BUILD_ANALYSIS"
 fi
 
+if [[ BUILD_AUDIO -eq 1 ]]
+then
+    AUDIO_LIB="-lbass"
+    DEFINES+="BUILD_AUDIO"
+fi
+
 INC_PATH="/usr/local/cuda/include/ $BOOST_INC $CBM_INC $ROBOCUP_INC $QT_INC $R_INC $RCPP_INC $RINSIDE_INC $GL_INC"
 LIB_PATH="$BOOST_LIB_PATH $CBM_LIB_PATH $ROBOCUP_LIB_PATH $QT_LIB_PATH $R_LIB $RCPP_LIB $RINSIDE_LIB $GL_LIB_PATH"
-LIBS="$ROBOCUP_LIB $CBM_LIB $BOOST_LIB $QT_LIB $GL_LIB"
+LIBS="$ROBOCUP_LIB $CBM_LIB $BOOST_LIB $QT_LIB $GL_LIB $AUDIO_LIB"
 
 qmake -project -t app INCLUDEPATH+="$INC_PATH" LIBS+="$LIB_PATH $LIBS" OBJECTS_DIR="objs" MOC_DIR="moc" DEFINES+="$DEFINES" #QMAKE_CXXFLAGS+="-O1 -g"
 qmake 

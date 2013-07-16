@@ -9,6 +9,7 @@
 #include "../includes/environments/eyelid.hpp"
 #include "../includes/environments/cartpole.hpp"
 #include "../includes/environments/robocup.hpp"
+#include "../includes/environments/audio.hpp"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -27,7 +28,7 @@ int main(int argc, char **argv)
     desc.add_options()
         ("help,h", "produce help message")
         ("environment,e", po::value<string>()->required(),
-         "Experimental Environment. Choices: default, eyelid, cartpole, robocup, analysis")
+         "Experimental Environment. Choices: default, eyelid, cartpole, robocup, audio, analysis")
         ("conPF", po::value<string>()->default_value("../CBM_Params/conParams.txt"),
          "Connectivity Parameter File")
         ("actPF", po::value<string>()->default_value("../CBM_Params/actParams1.txt"),
@@ -49,6 +50,8 @@ int main(int argc, char **argv)
 #endif
         cout << Cartpole::getOptions() << endl;
         cout << Robocup::getOptions() << endl;
+        cout << Audio::getOptions() << endl;
+
         return 0;
     }
 
@@ -76,6 +79,8 @@ int main(int argc, char **argv)
         env = new Cartpole(&randGen, argc, argv);
     else if (envStr == "robocup")
         env = new Robocup(&randGen, argc, argv);
+    else if (envStr == "audio")
+        env = new Audio(&randGen, argc, argv);
     else {
         cout << "Unrecognized Environment " << envStr << endl;
         return 1;
