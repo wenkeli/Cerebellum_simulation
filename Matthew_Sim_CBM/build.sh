@@ -53,7 +53,7 @@ then
     RCPP_LIB=`echo 'Rcpp:::LdFlags()'  | R --vanilla --slave`
     RINSIDE_INC=`echo 'RInside:::CxxFlags()' | R --vanilla --slave | cut -c3-`
     RINSIDE_LIB=`echo 'RInside:::LdFlags()'  | R --vanilla --slave`
-    DEFINES+="BUILD_ANALYSIS"
+    DEFINES+="BUILD_ANALYSIS "
 fi
 
 if [[ BUILD_AUDIO -eq 1 ]]

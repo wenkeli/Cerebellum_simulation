@@ -5,6 +5,7 @@
 #include <vector>
 #include <assert.h>
 #include <fstream>
+#include <queue>
 #include <QtCore/QThread>
 
 #include <CBMStateInclude/interfaces/cbmstate.h>
@@ -87,7 +88,7 @@ signals:
     void updateSCTW(std::vector<ct_uint8_t>, int t);
     void updateBCTW(std::vector<ct_uint8_t>, int t, int mz);
     void updatePCTW(std::vector<ct_uint8_t>, std::vector<float>, int t, int mz);
-    void updateNCTW(std::vector<ct_uint8_t>, std::vector<float>, int t, int mz);
+    void updateNCTW(std::vector<ct_uint8_t>, std::vector<float>, int t, int mz, float window);
     void updateIOTW(std::vector<ct_uint8_t>, std::vector<float>, int t, int mz);
     void blankTW(QColor bc);
 
@@ -103,13 +104,15 @@ protected:
     
     CRandomSFMT0 *randGen;
 
-    /* std::vector<bool> mfExcited; */
-    /* std::vector<float> mfFreq, mfFreqRelaxed, mfFreqExcited; */
-
     void setupMossyFibers(int randSeed);
 
 private:
     void run();
+
+    // Variables used to keep a running avg of NC firings
+    static const int ncWindowLength = 100;
+    std::queue<float> ncActQueue;
+    float sumNCAct;
 };
 
 #endif /* SIMTHREAD_H_ */

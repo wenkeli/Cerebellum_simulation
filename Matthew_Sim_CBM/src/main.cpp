@@ -28,7 +28,7 @@ int main(int argc, char **argv)
     desc.add_options()
         ("help,h", "produce help message")
         ("environment,e", po::value<string>()->required(),
-         "Experimental Environment. Choices: default, eyelid, cartpole, robocup, audio, analysis")
+         "Experimental Environment. Choices: default, eyelid, cartpole, robocup, audio")
         ("conPF", po::value<string>()->default_value("../CBM_Params/conParams.txt"),
          "Connectivity Parameter File")
         ("actPF", po::value<string>()->default_value("../CBM_Params/actParams1.txt"),

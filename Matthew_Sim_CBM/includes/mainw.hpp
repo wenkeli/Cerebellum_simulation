@@ -49,7 +49,8 @@ protected:
 public slots:
     void drawBCRaster(std::vector<ct_uint8_t> aps, int t, int mz);
     void drawPCVmRaster(std::vector<ct_uint8_t> aps, std::vector<float> vm, int t, int mz);
-    void drawNCVmRaster(std::vector<ct_uint8_t> aps, std::vector<float> vm, int t, int mz);
+    void drawNCVmRaster(std::vector<ct_uint8_t> aps, std::vector<float> vm, int t, int mz,
+                        float window);
     void drawIOVmRaster(std::vector<ct_uint8_t> aps, std::vector<float> vm, int t, int mz);    
 };
 

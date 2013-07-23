@@ -5,6 +5,7 @@
 #include "microzone.hpp"
 #include "statevariable.hpp"
 #include "bass.h"
+#include <string>
 
 class Audio : public Environment {
 public:
@@ -25,12 +26,15 @@ public:
     // Returns the FFT as a MF firing frequency. Returns a background freq if at rest.
     float* getFFT();
 
+    // Plays a song from a music file
+    void playSong(std::string file);
+
 protected:
     std::ofstream logfile;
     Microzone mz_applause;
     StateVariable<Audio> sv_highFreq, sv_fft;
 
-    static const bool randomizeMFs = false;
+    static const bool randomizeMFs = true;
 
     trainPhase phase;
 
@@ -46,7 +50,7 @@ protected:
     float raw_fft[FFT_SIZE]; // Raw Fourrier transform data
     float scaled_fft[FFT_SIZE]; // FFT Data scaled into range [0,1]
 
-    static const double chanPos_increment_secs = .002;
-    static const double rest_time_secs = 5;
+    static const double chanPos_increment_secs = .001;
+    static const double rest_time_secs = 8;
 };
 #endif // AUDIO_HPP

@@ -99,7 +99,9 @@ public:
             for (std::vector<int>::iterator it=mfInds.begin(); it != mfInds.end(); it++) {
                 float freq = manualFreqs[j++];
                 assert(freq >= 0 && freq <= 1); 
-                (*mfFreq)[*it] = 60 * freq; // TODO: May want to scale [relaxed,excited]
+                int mfIndx = *it;
+                (*mfFreq)[mfIndx] = 1.5 * freq * (*mfFreqExcited)[mfIndx] +
+                    (1 - freq) * (*mfFreqRelaxed)[mfIndx];
             }
         } else if (type == GAUSSIAN) {
             float svVal = (environment->*getValue)();

@@ -42,22 +42,24 @@ Audio::Audio(CRandomSFMT0 *randGen, int argc, char **argv)
 
     // initialize BASS
     assert(BASS_Init(-1,44100,0,NULL,NULL));
-
-    // Load the music file
-    string file = "/home/matthew/Desktop/whistle.mp3";
-    assert((chan=BASS_StreamCreateFile(FALSE,file.c_str(),0,0,BASS_SAMPLE_LOOP|BASS_STREAM_PRESCAN)) ||
-           (chan=BASS_MusicLoad(FALSE,file.c_str(),0,0,BASS_MUSIC_RAMP|BASS_SAMPLE_LOOP,1)));
-
-    chanLen_bytes = BASS_ChannelGetLength(chan, BASS_POS_BYTE);
-    chanLen_secs  = BASS_ChannelBytes2Seconds(chan, chanLen_bytes);
-
-    // Optionally play the audio
-    //BASS_ChannelPlay(chan, FALSE);
 }
 
 Audio::~Audio() {
     logfile.close();
     BASS_Free();
+}
+
+void Audio::playSong(string file) {
+    // Load the music file
+    assert((chan=BASS_StreamCreateFile(FALSE,file.c_str(),0,0,BASS_SAMPLE_LOOP|BASS_STREAM_PRESCAN)) ||
+           (chan=BASS_MusicLoad(FALSE,file.c_str(),0,0,BASS_MUSIC_RAMP|BASS_SAMPLE_LOOP,1)));
+
+    chanLen_bytes = BASS_ChannelGetLength(chan, BASS_POS_BYTE);
+    chanLen_secs  = BASS_ChannelBytes2Seconds(chan, chanLen_bytes);
+    chanPos_secs  = 0;
+
+    // Optionally play the audio
+    BASS_ChannelPlay(chan, FALSE);
 }
 
 void Audio::setupMossyFibers(CBMState *simState) {
@@ -89,8 +91,10 @@ float* Audio::getState() {
     }
 
     for (uint i=0; i<stateVariables.size(); i++)
-        if (phase == resting && stateVariables[i]->type == MANUAL) 
-            ; // Dont update the SV during rest phase
+        if (stateVariables[i]->type == MANUAL && phase == resting) 
+            ; // Dont update the manual SV during rest phase
+        else if (stateVariables[i]->type == HIGH_FREQ && phase == training)
+            ;
         else
             stateVariables[i]->update();
 
@@ -107,14 +111,18 @@ void Audio::step(CBMSimCore *simCore) {
     // Setup the MZs
     if (!mz_applause.initialized()) mz_applause.initialize(simCore, numNC);
 
+    // Record the MZ output force
+    if (timestep % 100 == 0)
+        logfile << timestep << " MZForce " << mz_applause.getForce() << endl;
+
     chanPos_secs += chanPos_increment_secs; // Increment position in channel
 
     if (phase == resting) {
         if (chanPos_secs >= rest_time_secs) {
             chanPos_secs = 0;
             phase = training;
-            //playSong();
-            BASS_ChannelPlay(chan, FALSE);
+            playSong("/home/matthew/Desktop/thermo.wav");
+            logfile << timestep << " Playing" << endl;
         }
     } else { // Either training or testing
         // If we have reached the end of the song, rest for a while
@@ -122,14 +130,17 @@ void Audio::step(CBMSimCore *simCore) {
             chanPos_secs = 0; // Reset if past end
             phase = resting;
             BASS_ChannelPause(chan);
-        } else {
+            logfile << timestep << " Resting" << endl;
+        } else if (chanPos_secs >= .5 * chanLen_secs) {
             // Deliver regular error
-            if (int(chanPos_secs*1000) % 1000 == 0)
-                mz_applause.deliverError(); //TODO: Why does this stop after the sound starts?!
+            if (timestep % 200 == 0) { // TODO: Consider delivering error only if MZ isnt outputting enough
+                mz_applause.deliverError();
+                logfile << timestep << " Err" << endl;
+            }
         }
     }
 }
 
 bool Audio::terminated() {
-    return false;
+    return timestep >= 1200000; // 20 minutes
 }

@@ -29,8 +29,9 @@ public:
 
     static boost::program_options::options_description getOptions();
 
-    void analyzeLog(boost::filesystem::path p);
-
+    void AnalyzeRobocupLogFile(boost::filesystem::path logpath);
+    void AnalyzeAudioLogFile(boost::filesystem::path logpath);
+    
     // Analyzes the weights in a single file
     void analyzeFile(boost::filesystem::path p);
 

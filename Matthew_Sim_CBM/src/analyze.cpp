@@ -2,10 +2,12 @@
 #include "../includes/analyze.hpp"
 #include "simthread.hpp"
 #include "robocup.hpp"
+#include "audio.hpp"
 #include <fstream>
 #include <map>
 #include <iterator>
 #include <boost/algorithm/string.hpp>
+#include <exception>
 
 using namespace std;
 using namespace boost::filesystem;
@@ -14,7 +16,7 @@ namespace po = boost::program_options;
 po::options_description WeightAnalyzer::getOptions() {
     po::options_description desc("Analysis Options");
     desc.add_options()
-        ("simfile,s", po::value<vector<string> >()->required()->multitoken(),
+        ("simfile,s", po::value<vector<string> >()->multitoken(),
          "Saved simulator state files to compare")
         ("logfile,l", po::value<string>(),
          "Logfile of run. Necessary for Ordered MF analysis.")
@@ -30,36 +32,44 @@ WeightAnalyzer::WeightAnalyzer(Environment *env, int argc, char **argv) :
     po::store(po::command_line_parser(argc, argv).options(desc).allow_unregistered().run(), vm);
     po::notify(vm);
 
-    // Read the granule-PC weights off into a vector
-    vector<string> simFiles = vm["simfile"].as<vector<string> >();
+    if (vm.count("simfile")) {
+        // Read the granule-PC weights off into a vector
+        vector<string> simFiles = vm["simfile"].as<vector<string> >();
 
-    // Convert the file names into boost paths
-    vector<path> simPaths;
-    for (uint i=0; i<simFiles.size(); i++) {
-        path p(simFiles[i]);
-        assert(exists(p) && is_regular_file(p));
-        simPaths.push_back(p);
+        // Convert the file names into boost paths
+        vector<path> simPaths;
+        for (uint i=0; i<simFiles.size(); i++) {
+            path p(simFiles[i]);
+            assert(exists(p) && is_regular_file(p));
+            simPaths.push_back(p);
+        }
+
+        // Analyze saved sim state file
+        if (simPaths.size() == 1)
+            analyzeFile(simPaths[0]);
+
+        // Analyze all pairs of files
+        for (uint i=0; i<simPaths.size(); i++) {
+            for (uint j=i; j<simPaths.size(); j++) {
+                if (i==j) continue;
+                analyzeFiles(simPaths[i], simPaths[j]);
+            }
+        }
     }
 
+    // Analyze a logfile using class specific analysis
     if (vm.count("logfile")) {
         logfile = path(vm["logfile"].as<string>());
         assert(exists(logfile) && is_regular_file(logfile));
-        analyzeLog(logfile);
-    }
-
-    if (simPaths.size() == 1)
-        analyzeFile(simPaths[0]);
-
-    // Analyze all pairs of files
-    for (uint i=0; i<simPaths.size(); i++) {
-        for (uint j=i; j<simPaths.size(); j++) {
-            if (i==j) continue;
-            analyzeFiles(simPaths[i], simPaths[j]);
+        if (dynamic_cast<Robocup*>(env) != NULL) {
+            AnalyzeRobocupLogFile(logfile);
+        } else if (dynamic_cast<Audio*>(env) != NULL) {
+            AnalyzeAudioLogFile(logfile);
         }
     }
 }
 
-void WeightAnalyzer::analyzeLog(path logpath) {
+void WeightAnalyzer::AnalyzeRobocupLogFile(path logpath) {
     cout << "Analyzing log " << logpath.c_str() << endl;
     plot_dir /= "plots_" + logpath.leaf().native() + "/";
     create_directory(plot_dir);
@@ -117,6 +127,76 @@ void WeightAnalyzer::analyzeLog(path logpath) {
             "library(ggplot2); "
             "data=data.frame(time=time, force=forces); "
             "plot=ggplot(data, aes(x=time, y=forces)) + geom_line(); "
+            "ggsave(plot,file=\""+plot_dir.native()+"\"); ";
+        R.parseEvalQ(txt);
+        plot_dir.remove_leaf();
+    }
+
+    plot_dir.remove_leaf();
+}
+
+void WeightAnalyzer::AnalyzeAudioLogFile(path logpath) {
+    cout << "Analyzing log " << logpath.c_str() << endl;
+    plot_dir /= "plots_" + logpath.leaf().native() + "/";
+    create_directory(plot_dir);
+
+    // Makes plots of the Audio force output as a function of time
+    ifstream ifs(logpath.c_str(), std::ifstream::in);
+    string line;
+    vector<float> forces;
+    vector<float> resting_times;
+    vector<float> playing_times;
+    vector<float> err_times;
+    float startTime_sec = 0; // This cuts of the left bound of the graph
+
+    while (ifs.good()) {
+        std::getline(ifs, line);
+        if (line.empty())
+            continue;
+
+        vector<string> tokens;
+        boost::split(tokens, line, boost::is_any_of(" "));
+
+        try {
+            float timestep = boost::lexical_cast<float>(tokens[0]);
+            string keyword = tokens[1];
+
+            if (timestep / 1000.0 < startTime_sec) continue;
+
+            if (keyword == "MZForce") {
+                assert(tokens.size() == 3); // [timestep MZForce #]
+                float force = boost::lexical_cast<float>(tokens[2]);
+                forces.push_back(force);
+            } else if (keyword == "Resting") {
+                assert(tokens.size() == 2); // [timestep Resting]
+                resting_times.push_back(timestep/1000.0);
+            } else if (keyword == "Playing") {
+                assert(tokens.size() == 2); // [timestep Resting]
+                playing_times.push_back(timestep/1000.0);
+            } else if (keyword == "Err") {
+                assert(tokens.size() == 2); // [timestep Err]
+                err_times.push_back(timestep/1000.0);
+            }
+        } catch (...) { printf("Got an exception!\n"); }
+    }
+    ifs.close();
+
+    vector<float> time;
+    for (uint i=0; i<forces.size(); i++)
+        time.push_back(0.1 * i + startTime_sec);
+
+    {
+        // Plot the results of this trial
+        plot_dir /= "forces.pdf";
+        R["time"] = time;
+        R["forces"] = forces;
+        R["playing"] = playing_times;
+        R["resting"] = resting_times;
+        R["Err"] = err_times;
+        string txt =
+            "library(ggplot2); "
+            "data=data.frame(time=time, force=forces); "
+            "plot=ggplot(data, aes(x=time, y=forces)) + geom_vline(xintercept = playing, colour=\"green\") + geom_vline(xintercept = resting, colour=\"green\") + geom_vline(xintercept=Err,colour=\"red\",linetype=\"longdash\") + geom_line() + xlab(\"Time (Seconds)\") + ylab(\"MZ Force\"); "
             "ggsave(plot,file=\""+plot_dir.native()+"\"); ";
         R.parseEvalQ(txt);
         plot_dir.remove_leaf();

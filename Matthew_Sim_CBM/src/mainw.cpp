@@ -56,8 +56,8 @@ MainW::MainW(QWidget *parent, SimThread *thread, Environment *env)
         windowName = string(" MZ") + boost::lexical_cast<string>(i) + " " + mzNames[i] + " Nucleus Temporal View";
         ActTemporalView* ncTView = new ActTemporalView(thread->numNC, 16, tl, tl/4, thread->numNC*16,
                                                       Qt::green, windowName.c_str());
-        connect(thread, SIGNAL(updateNCTW(std::vector<ct_uint8_t>, std::vector<float>, int, int)),
-                this, SLOT(drawNCVmRaster(std::vector<ct_uint8_t>, std::vector<float>, int, int)),
+        connect(thread, SIGNAL(updateNCTW(std::vector<ct_uint8_t>, std::vector<float>, int, int, float)),
+                this, SLOT(drawNCVmRaster(std::vector<ct_uint8_t>, std::vector<float>, int, int, float)),
                 Qt::QueuedConnection);
         connect(thread, SIGNAL(blankTW(QColor)), ncTView, SLOT(drawBlank(QColor)), Qt::QueuedConnection);
         ncTViews.push_back(ncTView);
@@ -134,9 +134,11 @@ void MainW::drawPCVmRaster(vector<ct_uint8_t> aps, vector<float> vm, int t, int 
     assert(uint(mz) < pcTViews.size());
     pcTViews[mz]->drawVmRaster(aps, vm, t);
 }
-void MainW::drawNCVmRaster(vector<ct_uint8_t> aps, vector<float> vm, int t, int mz) {
+void MainW::drawNCVmRaster(vector<ct_uint8_t> aps, vector<float> vm, int t, int mz, float window) {
     assert(uint(mz) < ncTViews.size());
     ncTViews[mz]->drawVmRaster(aps, vm, t);
+    assert(window >= 0 && window <= 1);
+    ncTViews[mz]->drawPoint(t, window, Qt::red);
 }
 void MainW::drawIOVmRaster(vector<ct_uint8_t> aps, vector<float> vm, int t, int mz) {
     assert(uint(mz) < ioTViews.size());
