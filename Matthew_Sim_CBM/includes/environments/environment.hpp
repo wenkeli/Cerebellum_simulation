@@ -54,6 +54,8 @@ public:
 
     std::vector<StateVariable<Environment>*> getStateVariables() { return stateVariables; }
 
+    std::vector<Microzone*> getMicrozones() { return microzones; }
+
 public:
     std::vector<bool> mfExcited;
 

@@ -5,7 +5,6 @@
 #include <vector>
 #include <assert.h>
 #include <fstream>
-#include <queue>
 #include <QtCore/QThread>
 
 #include <CBMStateInclude/interfaces/cbmstate.h>
@@ -108,11 +107,6 @@ protected:
 
 private:
     void run();
-
-    // Variables used to keep a running avg of NC firings
-    static const int ncWindowLength = 100;
-    std::queue<float> ncActQueue;
-    float sumNCAct;
 };
 
 #endif /* SIMTHREAD_H_ */

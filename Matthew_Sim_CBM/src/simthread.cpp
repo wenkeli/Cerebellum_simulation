@@ -6,7 +6,7 @@ using namespace std;
 
 SimThread::SimThread(QObject *parent, int numMZ, int randSeed, string conPF, string actPF, Environment *env)
     : QThread(parent), alive(true), paused(false), trialLength(5000),
-      numMZ(numMZ), env(env), cbmViz(NULL), sumNCAct(0)
+      numMZ(numMZ), env(env), cbmViz(NULL)
 {
     vector<int> mzoneCRSeeds; // Seed for each MZ's connectivity
     vector<int> mzoneARSeeds; // Seed for each MZ's activity
@@ -142,20 +142,8 @@ void SimThread::run()
             for (int i=0; i<numNC; i++)
                 vmNCVis[i] = (vmNC[i]+80)/80;
 
-
-            // Compute the moving window average
-            while (ncActQueue.size() < ncWindowLength)
-                ncActQueue.push(0);
-            float mzInputSum = 0;
-            for (int i=0; i<numNC; i++)
-                mzInputSum += apNC[i];
-            sumNCAct += mzInputSum;
-            ncActQueue.push(mzInputSum);
-            sumNCAct -= ncActQueue.front();
-            ncActQueue.pop();
-            float movingWindowAvg = min(1.0f, max(0.0f, sumNCAct / float(ncWindowLength)));
-            
-            emit(updateNCTW(apNCVis, vmNCVis, simStep, mz, movingWindowAvg));
+            float movingAvg = env->getMicrozones()[mz]->getMovingAverage();
+            emit(updateNCTW(apNCVis, vmNCVis, simStep, mz, movingAvg));
 
             const ct_uint8_t *apIO = mZones[mz]->exportAPIO();
             const float *vmIO = mZones[mz]->exportVmIO();

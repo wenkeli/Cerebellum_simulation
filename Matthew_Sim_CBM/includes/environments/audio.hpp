@@ -6,6 +6,8 @@
 #include "statevariable.hpp"
 #include "bass.h"
 #include <string>
+#include <queue>
+#include <utility>
 
 class Audio : public Environment {
 public:
@@ -16,7 +18,7 @@ public:
 
     // Each MZ will activate on hearing a certain type of audio.
     // Generally you want as many MZs as class labels.
-    int numRequiredMZ() { return 1; }
+    int numRequiredMZ() { return 2; }
     void setupMossyFibers(CBMState *simState);
     float* getState();
     void step(CBMSimCore *simCore);
@@ -30,8 +32,13 @@ public:
     void playSong(std::string file);
 
 protected:
+    bool testMode;
+
+    std::queue<std::pair<std::string, Microzone*> > playQueue;
+    Microzone *discipleMZ; // The MZ being trained
+
     std::ofstream logfile;
-    Microzone mz_applause;
+    Microzone mz_thermo, mz_force;
     StateVariable<Audio> sv_highFreq, sv_fft;
 
     static const bool randomizeMFs = true;
@@ -51,6 +58,6 @@ protected:
     float scaled_fft[FFT_SIZE]; // FFT Data scaled into range [0,1]
 
     static const double chanPos_increment_secs = .001;
-    static const double rest_time_secs = 8;
+    static const double rest_time_secs = 2;
 };
 #endif // AUDIO_HPP

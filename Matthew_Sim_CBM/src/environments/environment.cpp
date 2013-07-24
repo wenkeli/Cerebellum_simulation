@@ -74,6 +74,13 @@ float* Environment::getState() {
 }
 
 void Environment::step(CBMSimCore *simCore) {
+    // Setup & Update the Microzones
+    for (uint i=0; i<microzones.size(); i++) {
+        Microzone *mz = microzones[i];
+        if (!mz->initialized()) mz->initialize(simCore, numNC);
+        mz->update();
+    }
+
     (void)simCore;
     timestep++;
 }
