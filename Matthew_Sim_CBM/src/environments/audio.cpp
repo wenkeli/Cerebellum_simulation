@@ -1,13 +1,20 @@
 #include "../../includes/environments/audio.hpp"
+#include <boost/filesystem.hpp>
 
 using namespace std;
+using namespace boost::filesystem;
 namespace po = boost::program_options;
 
 po::options_description Audio::getOptions() {
+    vector<string> v;
+    v.push_back("/home/matthew/Desktop/piano/train/");
+    v.push_back("/home/matthew/Desktop/violin/train/");    
     po::options_description desc("Audio Environment Options");    
     desc.add_options()
         ("logfile", po::value<string>()->default_value("audio.log"),"log file")
         ("test", "Activate testing mode: no error signals will be delivered.")
+        ("dir,d", po::value<vector<string> >()->multitoken()->required()->default_value(v,""),
+         "Director(y/ies) to find audio files.")
         ;
     return desc;
 }
@@ -15,8 +22,8 @@ po::options_description Audio::getOptions() {
 Audio::Audio(CRandomSFMT0 *randGen, int argc, char **argv)
     : Environment(randGen),
       testMode(false),
-      mz_thermo("Thermo", 0, 1, 1, .95),
-      mz_force("Force", 1, 1, 1, .95),
+      mz_piano("Piano", 0, 1, 1, .95),
+      mz_violin("Violin", 1, 1, 1, .95),
       sv_highFreq("highFreqMFs", HIGH_FREQ, .03),
       sv_fft("audioFreqMFs", MANUAL, .5), 
       phase(resting), 
@@ -33,16 +40,15 @@ Audio::Audio(CRandomSFMT0 *randGen, int argc, char **argv)
     
     logfile.open(vm["logfile"].as<string>().c_str());
 
-    if (vm.count("test"))
-        testMode = true;
+    if (vm.count("test")) testMode = true;
 
     assert(stateVariables.empty());
     stateVariables.push_back((StateVariable<Environment>*) (&sv_highFreq));
     stateVariables.push_back((StateVariable<Environment>*) (&sv_fft));
 
     assert(microzones.empty());
-    microzones.push_back(&mz_thermo);
-    microzones.push_back(&mz_force);    
+    microzones.push_back(&mz_piano);
+    microzones.push_back(&mz_violin);    
 
     // check the correct BASS was loaded
     assert(HIWORD(BASS_GetVersion()) == BASSVERSION);
@@ -50,10 +56,30 @@ Audio::Audio(CRandomSFMT0 *randGen, int argc, char **argv)
     // initialize BASS
     assert(BASS_Init(-1,44100,0,NULL,NULL));
 
+    // Load the dataset to test/train against
+    vector<string> audioDirs = vm["dir"].as<vector<string> >();
+    assert(audioDirs.size() == (uint) numRequiredMZ());
+
+    vector<vector<path> > audioPaths;
+    for (uint i=0; i<audioDirs.size(); i++) {
+        vector<path> pathVec;
+        path p(audioDirs[i]);
+        assert(exists(p) && is_directory(p));
+        directory_iterator end;
+        for(directory_iterator it(p); it != end; it++) {
+            if (is_regular_file(it->status()))
+                pathVec.push_back(it->path());
+        }
+        assert(!pathVec.empty());
+        std::random_shuffle(pathVec.begin(), pathVec.end());
+        audioPaths.push_back(pathVec);
+    }
+
     for (int i=0; i<50; i++) {
-        playQueue.push(pair<string, Microzone*>("/home/matthew/Desktop/thermo.wav", &mz_thermo));
-        playQueue.push(pair<string, Microzone*>("/home/matthew/Desktop/thermo.wav", &mz_thermo));
-        playQueue.push(pair<string, Microzone*>("/home/matthew/Desktop/force.wav", &mz_force));
+        for (uint j=0; j<audioPaths.size(); j++) {
+            int indx = i % audioPaths[j].size();
+            playQueue.push(pair<string, Microzone*>(audioPaths[j][indx].c_str(), microzones[j]));
+        }
     }
 }
 
@@ -125,8 +151,8 @@ void Audio::step(CBMSimCore *simCore) {
 
     // Record the MZ output force
     if (timestep % 100 == 0) {
-        logfile << timestep << " " << mz_thermo.getName() << " " << mz_thermo.getForce() << endl;
-        logfile << timestep << " " << mz_force.getName() << " " << mz_force.getForce() << endl;        
+        logfile << timestep << " " << mz_piano.getName() << " " << mz_piano.getForce() << endl;
+        logfile << timestep << " " << mz_violin.getName() << " " << mz_violin.getForce() << endl;        
     }
 
     chanPos_secs += chanPos_increment_secs; // Increment position in channel
@@ -152,9 +178,9 @@ void Audio::step(CBMSimCore *simCore) {
             phase = resting;
             BASS_ChannelPause(chan);
             logfile << timestep << " Resting" << endl;
-        } else if (chanPos_secs >= .5 * chanLen_secs && phase == training) {
+        } else if (chanPos_secs >= .25 * chanLen_secs && phase == training) {
             // Deliver regular error
-            if (timestep % 200 == 0) { // TODO: Consider delivering error only if MZ isnt outputting enough
+            if (timestep % 200 == 0) {
                 discipleMZ->smartDeliverError();
                 logfile << timestep << " Err" << endl;
             }

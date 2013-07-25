@@ -40,6 +40,7 @@ public:
             unassignedMFs.pop_back();
         }
     }
+
     void assignRandomMFInds(std::vector<int> &unassignedMFs, CRandomSFMT0 *randGen) {
         if (!mfInds.empty())
             return;
@@ -50,19 +51,6 @@ public:
             unassignedMFs.erase(unassignedMFs.begin()+indx);
         }
     }
-
-    // // Write the maximal repsonses for gaussians
-    // if (type == GAUSSIAN) {
-    //     logfile << "MFMaximalResponses " << name << " ";
-    //     float range = maxSVVal - minSVVal;
-    //     float interval = range / numMF;
-    //     float pos = minSVVal + interval / 2.0;
-    //     for (int i = 0; i < numMF; i++) {
-    //         logfile << pos << " ";
-    //         pos += interval;
-    //     }
-    //     logfile << std::endl;
-    // }
 
     void initialize(int totalMF, std::vector<float> *mfFreq, std::vector<float> *mfFreqRelaxed,
                     std::vector<float> *mfFreqExcited) {
@@ -100,6 +88,7 @@ public:
                 float freq = manualFreqs[j++];
                 assert(freq >= 0 && freq <= 1); 
                 int mfIndx = *it;
+                // HACK: the 1.5 gives a little extra juice
                 (*mfFreq)[mfIndx] = 1.5 * freq * (*mfFreqExcited)[mfIndx] +
                     (1 - freq) * (*mfFreqRelaxed)[mfIndx];
             }
@@ -139,6 +128,7 @@ public:
     }
 
     std::string getName() { return name; }
+    int getNumMF() { return numMF; }
 
 public:
     std::string name;

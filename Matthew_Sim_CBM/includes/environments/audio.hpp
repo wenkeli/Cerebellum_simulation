@@ -38,7 +38,7 @@ protected:
     Microzone *discipleMZ; // The MZ being trained
 
     std::ofstream logfile;
-    Microzone mz_thermo, mz_force;
+    Microzone mz_piano, mz_violin;
     StateVariable<Audio> sv_highFreq, sv_fft;
 
     static const bool randomizeMFs = true;
