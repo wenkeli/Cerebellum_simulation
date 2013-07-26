@@ -11,6 +11,7 @@
 #include "../includes/environments/robocup.hpp"
 #include "../includes/environments/audio.hpp"
 #include "../includes/environments/test.hpp"
+#include "../includes/environments/xor.hpp"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -29,7 +30,7 @@ int main(int argc, char **argv)
     desc.add_options()
         ("help,h", "produce help message")
         ("environment,e", po::value<string>()->required(),
-         "Experimental Environment. Choices: default, eyelid, cartpole, robocup, audio, test")
+         "Experimental Environment. Choices: default, eyelid, cartpole, robocup, audio, test, xor")
         ("conPF", po::value<string>()->default_value("../CBM_Params/conParams.txt"),
          "Connectivity Parameter File")
         ("actPF", po::value<string>()->default_value("../CBM_Params/actParams1.txt"),
@@ -52,7 +53,8 @@ int main(int argc, char **argv)
         cout << Cartpole::getOptions() << endl;
         cout << Robocup::getOptions() << endl;
         cout << Audio::getOptions() << endl;
-
+        cout << Test::getOptions() << endl;        
+        cout << Xor::getOptions() << endl;        
         return 0;
     }
 
@@ -84,6 +86,8 @@ int main(int argc, char **argv)
         env = new Audio(&randGen, argc, argv);
     else if (envStr == "test")
         env = new Test(&randGen, argc, argv);
+    else if (envStr == "xor")
+        env = new Xor(&randGen, argc, argv);
     else {
         cout << "Unrecognized Environment " << envStr << endl;
         return 1;
