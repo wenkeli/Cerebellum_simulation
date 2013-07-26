@@ -57,7 +57,7 @@ protected:
     float raw_fft[FFT_SIZE]; // Raw Fourrier transform data
     float scaled_fft[FFT_SIZE]; // FFT Data scaled into range [0,1]
 
-    static const double chanPos_increment_secs = .001;
+    static const double chanPos_increment_secs = .0035;
     static const double rest_time_secs = 2;
 };
 #endif // AUDIO_HPP

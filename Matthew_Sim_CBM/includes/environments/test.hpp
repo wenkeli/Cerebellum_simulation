@@ -34,7 +34,7 @@ protected:
     state lastPhase;
     long phaseTransitionTime;
 
-    static const int phaseDuration = 1200;
+    static const int phaseDuration = 750;
     static const int restTimeMSec = 2000;
 
     void toneA() {

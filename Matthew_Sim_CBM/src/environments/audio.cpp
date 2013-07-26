@@ -158,7 +158,7 @@ void Audio::step(CBMSimCore *simCore) {
     chanPos_secs += chanPos_increment_secs; // Increment position in channel
 
     if (phase == resting) {
-        if (chanPos_secs >= rest_time_secs) {
+        if (chanPos_secs / chanPos_increment_secs >= rest_time_secs * 1000) {
             chanPos_secs = 0;
             phase = testMode ? testing : training;
 
@@ -174,17 +174,25 @@ void Audio::step(CBMSimCore *simCore) {
     } else { // Either training or testing
         // If we have reached the end of the song, rest for a while
         if (chanPos_secs >= chanLen_secs) {
+            logfile << timestep << " Disciple " << discipleMZ->getName() <<
+                " " << mz_piano.getName() << " AvgForce " << mz_piano.getMovingAverage() <<
+                " " << mz_violin.getName() << " AvgForce " << mz_violin.getMovingAverage() << endl;
+
+            // Deliver single error signal
+            discipleMZ->smartDeliverError();
+
             chanPos_secs = 0; // Reset if past end
             phase = resting;
             BASS_ChannelPause(chan);
             logfile << timestep << " Resting" << endl;
-        } else if (chanPos_secs >= .25 * chanLen_secs && phase == training) {
-            // Deliver regular error
-            if (timestep % 200 == 0) {
-                discipleMZ->smartDeliverError();
-                logfile << timestep << " Err" << endl;
-            }
         }
+        // else if (chanPos_secs >= .25 * chanLen_secs && phase == training) {
+        //     // Deliver regular error
+        //     if (timestep % 200 == 0) {
+        //         discipleMZ->smartDeliverError();
+        //         logfile << timestep << " Err" << endl;
+        //     }
+        // }
     }
 }
 
