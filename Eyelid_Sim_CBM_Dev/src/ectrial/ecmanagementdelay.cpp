@@ -324,6 +324,7 @@ void ECManagementDelay::writeDataToFile()
 	fstream dataOut;
 
 	dataOut.open("dataOut", ios::out|ios::binary);
+	simulation->writeToState(dataOut);
 	data->writeData(dataOut);
 	dataOut.close();
 
