@@ -34,7 +34,7 @@ protected:
     state lastPhase;
     long phaseTransitionTime;
 
-    static const int phaseDuration = 600;
+    static const int phaseDuration = 500;
     static const int restTimeMSec = 2000;
 
     void A() {

@@ -53,22 +53,22 @@ float* Xor::getManualMF() {
     if (phase == resting) {
         ;
     } else if (phase == AB) {
-        if (timestep - phaseTransitionTime < phaseDuration / 2.0)
+        if (timestep % 2 == 0) 
             A();
         else 
             B();
     } else if (phase == AnotB) {
-        if (timestep - phaseTransitionTime < phaseDuration / 2.0)
+        if (timestep % 2 == 0) 
             A();
         else
             notB();
     } else if (phase == notAnotB) {
-        if (timestep - phaseTransitionTime < phaseDuration / 2.0)
+        if (timestep % 2 == 0) 
             notA();
         else
             notB();
     } else if (phase == notAB) {
-        if (timestep - phaseTransitionTime < phaseDuration / 2.0)
+        if (timestep % 2 == 0) 
             notA();
         else
             B();
