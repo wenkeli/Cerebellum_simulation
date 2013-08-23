@@ -75,7 +75,7 @@ Audio::Audio(CRandomSFMT0 *randGen, int argc, char **argv)
         audioPaths.push_back(pathVec);
     }
 
-    for (int i=0; i<50; i++) {
+    for (int i=0; i<500; i++) {
         for (uint j=0; j<audioPaths.size(); j++) {
             int indx = i % audioPaths[j].size();
             playQueue.push(pair<string, Microzone*>(audioPaths[j][indx].c_str(), microzones[j]));
@@ -132,9 +132,10 @@ float* Audio::getState() {
     }
 
     for (uint i=0; i<stateVariables.size(); i++)
-        if (stateVariables[i]->type == MANUAL && phase == resting) 
-            ; // Dont update the manual SV during rest phase
-        else if (stateVariables[i]->type == HIGH_FREQ && phase == training)
+        // if (stateVariables[i]->type == MANUAL && phase == resting) 
+        //     ; // Dont update the manual SV during rest phase
+        // else
+        if (stateVariables[i]->type == HIGH_FREQ && phase == training)
             ;
         else
             stateVariables[i]->update();
@@ -174,8 +175,8 @@ void Audio::step(CBMSimCore *simCore) {
     } else { // Either training or testing
         // If we have reached the end of the song, rest for a while
         if (chanPos_secs >= chanLen_secs) {
-            logfile << timestep << " Disciple " << discipleMZ->getName() <<
-                " " << mz_piano.getName() << " AvgForce " << mz_piano.getMovingAverage() <<
+            logfile << timestep << " Playing " << discipleMZ->getName() <<
+                ": " << mz_piano.getName() << " AvgForce " << mz_piano.getMovingAverage() <<
                 " " << mz_violin.getName() << " AvgForce " << mz_violin.getMovingAverage() << endl;
 
             // Deliver single error signal
@@ -186,17 +187,17 @@ void Audio::step(CBMSimCore *simCore) {
             BASS_ChannelPause(chan);
             logfile << timestep << " Resting" << endl;
         }
-        // else if (chanPos_secs >= .25 * chanLen_secs && phase == training) {
-        //     // Deliver regular error
-        //     if (timestep % 200 == 0) {
-        //         discipleMZ->smartDeliverError();
-        //         logfile << timestep << " Err" << endl;
-        //     }
-        // }
+        else if (chanPos_secs >= .5 * chanLen_secs && phase == training) {
+            // Deliver regular error
+            if (timestep % 200 == 0) {
+                discipleMZ->smartDeliverError();
+                logfile << timestep << " Err" << endl;
+            }
+        }
     }
 }
 
 bool Audio::terminated() {
-    return timestep >= 600000 || // 10 minutes
+    return timestep >= 1000000 || 
         playQueue.empty(); 
 }

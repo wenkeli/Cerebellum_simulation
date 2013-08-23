@@ -193,8 +193,8 @@ void Eyelid::setupMossyFibers(CBMState *simState) {
         rasterParams["pc"]=rp;
 
 
-        data=new ECTrialsData(500, csOffTime-csOnTime, 500, simState->getActivityParams()->getMSPerTimeStep(),
-                              numDataTrials, pshParams, rasterParams, eyelidParams);
+        // data=new ECTrialsData(500, csOffTime-csOnTime, 500, simState->getActivityParams()->getMSPerTimeStep(),
+        //                       numDataTrials, pshParams, rasterParams, eyelidParams);
     }
 
     delete[] isCSTonic;
