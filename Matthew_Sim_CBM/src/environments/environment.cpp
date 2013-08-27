@@ -74,6 +74,8 @@ float* Environment::getState() {
 }
 
 void Environment::step(CBMSimCore *simCore) {
+    assert(microzones.size() == numRequiredMZ());
+
     // Setup & Update the Microzones
     for (uint i=0; i<microzones.size(); i++) {
         Microzone *mz = microzones[i];

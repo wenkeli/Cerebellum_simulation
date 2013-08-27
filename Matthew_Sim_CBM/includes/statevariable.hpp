@@ -62,6 +62,7 @@ public:
 
     void initializeGaussian(float minVal, float maxVal, env *environment, float (env::*getSV)(),
                             float gaussWidth=6.0) {
+        assert(type == GAUSSIAN);
         this->minSVVal = minVal;
         this->maxSVVal = maxVal;
         this->environment = environment;
