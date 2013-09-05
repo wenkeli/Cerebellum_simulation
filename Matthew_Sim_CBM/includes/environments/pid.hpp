@@ -23,6 +23,9 @@ public:
 
     void reset();
 
+    // This is used when analyzing the rewards
+    int getMovingWindowSize();
+
 protected:
     std::ofstream logfile;
     Microzone mz_throttle, mz_brake;
@@ -36,7 +39,7 @@ protected:
     static const float maxPIDErr = 12.0;
     static const float minPIDErr = -12.0;
 
-    static const int phaseDuration = 5000;
+    static const int phaseDuration = 10000; // 10 seconds of simulation
     static const int restTimeMSec = 1500;
 
     float targetVel;
@@ -45,6 +48,8 @@ protected:
     float trueBrake;
     float throttleTarget;
     float brakeTarget;
+    float episodeReward;
+    int episodeNum;
 
     const static bool randomVel = true;
     const static bool upVel = false;
@@ -53,6 +58,8 @@ protected:
 
     float brakePosVel;
     int actNum;
+
+    const static int cbm_steps_to_domain_steps = 50;
 };
 
 #endif // PID_HPP

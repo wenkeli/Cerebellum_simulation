@@ -15,17 +15,22 @@ po::options_description PID::getOptions() {
 
 PID::PID(CRandomSFMT0 *randGen, int argc, char **argv)
     : Environment(randGen),
-      mz_throttle("throttle", 0, 1, 1, .95),
-      mz_brake("brake", 1, 1, 1, .95),      
+      mz_throttle("throttle", 0, 2, 1, .95),
+      mz_brake("brake", 1, 2, 1, .95),      
       sv_highFreq("highFreqMFs", HIGH_FREQ, .03),
       sv_gauss("PID Error", GAUSSIAN, .5),
-      phase(resting), phaseTransitionTime(0)
+      phase(resting), phaseTransitionTime(0),
+      episodeNum(0)
 {
     po::options_description desc = getOptions();
     po::variables_map vm;
     po::store(po::command_line_parser(argc, argv).options(desc).allow_unregistered().run(), vm);
     po::notify(vm);
     
+    if (vm.count("analyze"))
+        cout << "Detected analysis mode!" << endl;
+    else
+        cout << "No analysis found." << endl;
     logfile.open(vm["logfile"].as<string>().c_str());
 
     assert(stateVariables.empty());
@@ -75,6 +80,8 @@ void PID::step(CBMSimCore *simCore) {
         }
     } else { // Training Phase
         if (timestep - phaseTransitionTime >= phaseDuration) {
+            cout << "Episode " << episodeNum << " Reward: " << episodeReward << endl;
+            logfile << "Episode " << episodeNum << " Reward: " << episodeReward << endl;
             phase = resting;
             phaseTransitionTime = timestep;
         }
@@ -90,9 +97,13 @@ void PID::step(CBMSimCore *simCore) {
 
         // Compute the velocity changes for the car given the control inputs
         // Code adapted from Todd Hester's repo @ http://www.ros.org/wiki/rl_env
-        {
+        if (timestep % cbm_steps_to_domain_steps == 0) {
+            // figure out reward based on target/curr vel
+            float reward = -10.0 * fabs(currVel - targetVel);
+            episodeReward += reward;
+            
             // Step the PID simulation task
-            float HZ = 1000.0;
+            float HZ = 20.0;
 
             float throttleChangePct = 1.0;//0.9; //1.0;
             float brakeChangePct = 1.0;//0.9; //1.0;
@@ -135,15 +146,15 @@ void PID::step(CBMSimCore *simCore) {
         if (getPIDErr() < 0 && randGen->Random() < -.001f * getPIDErr())
             mz_brake.smartDeliverError();
 
-        if (timestep % 100 == 0) {
-            printf("PID Err: %f\n",getPIDErr());
-            logfile << timestep << " mz0MovingAvg " << mz_throttle.getMovingAverage() << endl;
-        }
+        // if (timestep % 100 == 0) {
+        //     printf("PID Err: %f\n",getPIDErr());
+        //     logfile << timestep << " mz0MovingAvg " << mz_throttle.getMovingAverage() << endl;
+        // }
     }
 }
 
 bool PID::terminated() {
-    return timestep >= 5000000;
+    return episodeNum >= 500;
 }
 
 void PID::reset() {
@@ -176,10 +187,17 @@ void PID::reset() {
         }
     }
 
-    actNum = 0;
     throttleTarget = randGen->Random() * .4; //rng.uniformDiscrete(0,4) * 0.1;
     brakeTarget = 0.0;
     trueThrottle = throttleTarget;
     trueBrake = brakeTarget;
     brakePosVel = 0.0;
+
+    episodeReward = 0;
+    episodeNum++;
+}
+
+int PID::getMovingWindowSize() {
+    if (randomVel) return 50;
+    else return 4;
 }

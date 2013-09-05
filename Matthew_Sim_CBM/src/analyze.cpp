@@ -3,7 +3,9 @@
 #include "simthread.hpp"
 #include "robocup.hpp"
 #include "audio.hpp"
+#include "pid.hpp"
 #include <fstream>
+#include <queue>
 #include <map>
 #include <iterator>
 #include <boost/algorithm/string.hpp>
@@ -65,8 +67,72 @@ WeightAnalyzer::WeightAnalyzer(Environment *env, int argc, char **argv) :
             AnalyzeRobocupLogFile(logfile);
         } else if (dynamic_cast<Audio*>(env) != NULL) {
             AnalyzeAudioLogFile(logfile);
+        } else if (dynamic_cast<PID*>(env) != NULL) {
+            AnalyzePIDLogFile(logfile);
         }
     }
+}
+
+void WeightAnalyzer::AnalyzePIDLogFile(path logpath) {
+    cout << "Analyzing log " << logpath.c_str() << endl;
+    plot_dir /= "plots_" + logpath.leaf().native() + "/";
+    create_directory(plot_dir);
+
+    ifstream ifs(logpath.c_str(), std::ifstream::in);
+    string line;
+    vector<float> rewards;
+
+    while (ifs.good()) {
+        std::getline(ifs, line);
+        if (line.empty())
+            continue;
+
+        vector<string> tokens;
+        boost::split(tokens, line, boost::is_any_of(" "));
+
+        if (line.find("Episode") == string::npos || line.find("Reward") == string::npos)
+            continue;
+
+        assert(tokens.size() == 4); // [Episode # Reward #]
+        float reward = boost::lexical_cast<float>(tokens[3]);
+        rewards.push_back(reward);
+    }
+    ifs.close();
+
+    PID *PIDEnv = dynamic_cast<PID*>(env);
+
+    // Take a moving window average
+    int windowSz = PIDEnv->getMovingWindowSize();
+    cout << "Applying moving window of Size: " << windowSz << endl;
+    
+    vector<float> smoothedRewards;
+    float rewardSum = 0;
+    queue<float> q;
+
+    for (uint i=0; i<rewards.size(); i++) {
+        rewardSum += rewards[i];
+        q.push(rewards[i]);
+        while (q.size() > (uint) windowSz) {
+            rewardSum -= q.front();
+            q.pop();
+        }
+        smoothedRewards.push_back(rewardSum / float(q.size()));
+    }
+
+    {
+        // Plot the results of this trial
+        plot_dir /= "PIDReward.pdf";
+        R["rewards"] = smoothedRewards;
+        string txt =
+            "library(ggplot2); "
+            "data=data.frame(r=rewards); "
+            "plot=ggplot(data, aes(x=1:nrow(data), y=r)) + geom_line() + xlab(\"Episode Number\") + ylab(\"Average Reward\") + labs(title = expression(\"Autonomous Vehicle PID Control Error\")); "
+            "ggsave(plot,file=\""+plot_dir.native()+"\"); ";
+        R.parseEvalQ(txt);
+        plot_dir.remove_leaf();
+    }
+
+    plot_dir.remove_leaf();
 }
 
 void WeightAnalyzer::AnalyzeRobocupLogFile(path logpath) {
