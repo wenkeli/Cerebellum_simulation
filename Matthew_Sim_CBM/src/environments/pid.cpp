@@ -15,8 +15,8 @@ po::options_description PID::getOptions() {
 
 PID::PID(CRandomSFMT0 *randGen, int argc, char **argv)
     : Environment(randGen),
-      mz_throttle("throttle", 0, 2, 1, .95),
-      mz_brake("brake", 1, 2, 1, .95),      
+      mz_throttle("throttle", 0, 1, 1, .95),
+      mz_brake("brake", 1, 1, 1, .95),      
       sv_highFreq("highFreqMFs", HIGH_FREQ, .03),
       sv_gauss("PID Error", GAUSSIAN, .5),
       phase(resting), phaseTransitionTime(0),
@@ -77,6 +77,7 @@ void PID::step(CBMSimCore *simCore) {
             phase = training;
             phaseTransitionTime = timestep;
             reset();
+            logfile << "Episode " << episodeNum << " TargetVelocity: " << targetVel << endl;
         }
     } else { // Training Phase
         if (timestep - phaseTransitionTime >= phaseDuration) {
@@ -146,10 +147,7 @@ void PID::step(CBMSimCore *simCore) {
         if (getPIDErr() < 0 && randGen->Random() < -.001f * getPIDErr())
             mz_brake.smartDeliverError();
 
-        // if (timestep % 100 == 0) {
-        //     printf("PID Err: %f\n",getPIDErr());
-        //     logfile << timestep << " mz0MovingAvg " << mz_throttle.getMovingAverage() << endl;
-        // }
+        logfile << timestep << " currVel " << currVel << endl;
     }
 }
 

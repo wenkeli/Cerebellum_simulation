@@ -69,6 +69,7 @@ WeightAnalyzer::WeightAnalyzer(Environment *env, int argc, char **argv) :
             AnalyzeAudioLogFile(logfile);
         } else if (dynamic_cast<PID*>(env) != NULL) {
             AnalyzePIDLogFile(logfile);
+            CreatePIDPlots(logfile);
         }
     }
 }
@@ -134,6 +135,78 @@ void WeightAnalyzer::AnalyzePIDLogFile(path logpath) {
 
     plot_dir.remove_leaf();
 }
+
+void WeightAnalyzer::CreatePIDPlots(path logpath) {
+    cout << "Creating PID Plots from log " << logpath.c_str() << endl;
+    plot_dir /= "plots_" + logpath.leaf().native() + "/";
+    create_directory(plot_dir);
+
+    ifstream ifs(logpath.c_str(), std::ifstream::in);
+    string line;
+    vector<float> v; // List of currentVelocities
+    bool inEpisode = false;
+    float targetVel = 0;
+    int episodeNum = 0;
+    float episodeReward = 0;
+
+    while (ifs.good()) {
+        std::getline(ifs, line);
+        if (line.empty())
+            continue;
+
+        vector<string> tokens;
+        boost::split(tokens, line, boost::is_any_of(" "));
+
+        if (inEpisode && line.find("currVel") != string::npos) {
+            assert(tokens.size() == 3); // [timestep currVel #]
+            float currVel = boost::lexical_cast<float>(tokens[2]);
+            v.push_back(currVel);
+        }
+
+        // Start of episode
+        if (line.find("Episode") != string::npos && line.find("TargetVelocity") != string::npos) {
+            assert(tokens.size() == 4); // [Episode # TargetVelocity: #]
+            episodeNum = boost::lexical_cast<int>(tokens[1]);
+            targetVel = boost::lexical_cast<float>(tokens[3]);
+            assert(v.empty());
+            inEpisode = true;
+            continue;
+        }
+
+        if (line.find("Episode") != string::npos && line.find("Reward") != string::npos) {
+            // End of the episode. Make the plot and reset
+            assert(tokens.size() == 4); // [Episode # Reward: #]
+            assert(!v.empty());
+            episodeReward = boost::lexical_cast<float>(tokens[3]);
+
+            // Make the plot
+            if (episodeNum >= 450) {
+                stringstream ss;
+                ss << episodeNum;
+                stringstream rew;
+                rew << episodeReward;
+                plot_dir /= "PIDPerformance-" + ss.str() + ".pdf";
+                R["CurrVel"] = v;
+                R["TargetVel"] = targetVel;
+                string txt =
+                    "library(ggplot2); "
+                    "data=data.frame(CurrVel=CurrVel); "
+                    "plot=ggplot(data, aes(x=1:nrow(data), y=CurrVel)) + geom_line() + geom_hline(aes(yintercept=TargetVel)) + ylim(0,12) + xlab(\"Time\") + ylab(\"Current Velocity\") + labs(title = expression(\"Autonomous Vehicle PID Control Episode " + ss.str() + " Reward " + rew.str() + "\")); "
+                    "ggsave(plot,file=\""+plot_dir.native()+"\"); ";
+                R.parseEvalQ(txt);
+                plot_dir.remove_leaf();
+            }
+            
+            inEpisode = false;
+            v.clear();
+            continue;
+        }
+    }
+    ifs.close();
+
+    plot_dir.remove_leaf();
+}
+
 
 void WeightAnalyzer::AnalyzeRobocupLogFile(path logpath) {
     cout << "Analyzing log " << logpath.c_str() << endl;
