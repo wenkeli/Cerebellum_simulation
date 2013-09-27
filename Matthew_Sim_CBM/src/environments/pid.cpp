@@ -77,12 +77,12 @@ void PID::step(CBMSimCore *simCore) {
             phase = training;
             phaseTransitionTime = timestep;
             reset();
-            logfile << "Episode " << episodeNum << " TargetVelocity: " << targetVel << endl;
+            // logfile << "Episode " << episodeNum << " TargetVelocity: " << targetVel << endl;
         }
     } else { // Training Phase
         if (timestep - phaseTransitionTime >= phaseDuration) {
             cout << "Episode " << episodeNum << " Reward: " << episodeReward << endl;
-            logfile << "Episode " << episodeNum << " Reward: " << episodeReward << endl;
+            // logfile << "Episode " << episodeNum << " Reward: " << episodeReward << endl;
             phase = resting;
             phaseTransitionTime = timestep;
         }
@@ -147,7 +147,7 @@ void PID::step(CBMSimCore *simCore) {
         if (getPIDErr() < 0 && randGen->Random() < -.001f * getPIDErr())
             mz_brake.smartDeliverError();
 
-        logfile << timestep << " currVel " << currVel << endl;
+        // logfile << timestep << " currVel " << currVel << endl;
     }
 }
 
