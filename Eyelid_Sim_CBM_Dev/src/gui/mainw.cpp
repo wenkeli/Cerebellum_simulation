@@ -96,6 +96,15 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	ui.showNCBox->setDisabled(true);
 	ui.showNCBox->setChecked(false);
 
+	ui.gpuStartNBox->setMinimum(0);
+	ui.gpuStartNBox->setMaximum(128);
+	ui.gpuStartNBox->setValue(0);
+
+	ui.numGPUP2Box->setMinimum(0);
+	ui.numGPUP2Box->setMaximum(8);
+	ui.numGPUP2Box->setValue(2);
+
+
 //	inputNetSpatialView->hide();
 
 //	pcTView->drawBlank(Qt::blue);
@@ -139,7 +148,8 @@ void MainW::run()
 			ui.mfBGFreqMinBox->value(), ui.csMFBGFreqMinBox->value(), ui.ctxtMFFreqMinBox->value(),
 			ui.csTMFFreqMinBox->value(), ui.csPMFFreqMinBox->value(),
 			ui.mfBGFreqMaxBox->value(), ui.csMFBGFreqMaxBox->value(), ui.ctxtMFFreqMaxBox->value(),
-			ui.csTMFFreqMaxBox->value(), ui.csPMFFreqMaxBox->value());
+			ui.csTMFFreqMaxBox->value(), ui.csPMFFreqMaxBox->value(),
+			ui.gpuStartNBox->value(), ui.numGPUP2Box->value());
 
 	conParams=manager->getConParams();
 

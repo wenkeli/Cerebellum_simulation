@@ -13,8 +13,9 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 		int csStartTN, int dataStartTN, int nDataT,
 		float fracCSTMF, float fracCSPMF, float fracCtxtMF,
 		float bgFreqMin, float csBGFreqMin, float ctxtFreqMin, float csTFreqMin, float csPFreqMin,
-		float bgFreqMax, float csBGFreqMax, float ctxtFreqMax, float csTFreqMax, float csPFreqMax)
-		:ECManagementBase(conParamFile, actParamFile, numT, iti, randSeed)
+		float bgFreqMax, float csBGFreqMax, float ctxtFreqMax, float csTFreqMax, float csPFreqMax,
+		int gpuIndStart, int numGPUP2)
+		:ECManagementBase(conParamFile, actParamFile, numT, iti, randSeed, gpuIndStart, numGPUP2)
 {
 	CRandomSFMT0 randGen(randSeed);
 

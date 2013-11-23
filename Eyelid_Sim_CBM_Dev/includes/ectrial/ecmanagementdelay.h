@@ -35,7 +35,8 @@ public:
 			int csStartTN, int dataStartTN, int nDataT,
 			float fracCSTMF, float fracCSPMF, float fracCtxtMF,
 			float bgFreqMin, float csBGFreqMin, float ctxtFreqMin, float csTFreqMin, float csPFreqMin,
-			float bgFreqMax, float csBGFreqMax, float ctxtFreqMax, float csTFreqMax, float csPFreqMax);
+			float bgFreqMax, float csBGFreqMax, float ctxtFreqMax, float csTFreqMax, float csPFreqMax,
+			int gpuIndStart=-1, int numGPUP2=-1);
 
 	virtual ~ECManagementDelay();
 

@@ -10,7 +10,8 @@
 using namespace std;
 
 ECManagementBase::ECManagementBase
-	(string conParamFile, string actParamFile, int numT, int iti, int randSeed)
+	(string conParamFile, string actParamFile, int numT, int iti, int randSeed,
+			int gpuIndStart, int numGPUP2)
 {
 	fstream conPF;
 	fstream actPF;
@@ -19,7 +20,7 @@ ECManagementBase::ECManagementBase
 	actPF.open(actParamFile.c_str());
 
 	simState=new CBMState(actPF, conPF, 1, randSeed, &randSeed, &randSeed);
-	simulation=new CBMSimCore(simState, &randSeed);
+	simulation=new CBMSimCore(simState, &randSeed, gpuIndStart, numGPUP2);
 
 	simulation->writeToState();
 
