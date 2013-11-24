@@ -70,6 +70,7 @@ private:
 
     std::string conPFileName;
     std::string actPFileName;
+    std::string dataFileName;
 
     void showActCommon(int checked, int checkedIndex, QWidget *view);
 };

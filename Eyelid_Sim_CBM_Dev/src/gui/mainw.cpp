@@ -7,12 +7,21 @@ MainW::MainW(QApplication *app, QWidget *parent)
     : QWidget(parent)
 {
 	QStringList args;
+	int argc;
+
 	ui.setupUi(this);
 
 	args=app->arguments();
+	argc=app->argc();
 
 	conPFileName=args[1].toStdString();
 	actPFileName=args[2].toStdString();
+
+	dataFileName="dataOut";
+	if(argc>3)
+	{
+		dataFileName=args[3].toStdString();
+	}
 
 	this->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -21,6 +30,7 @@ MainW::MainW(QApplication *app, QWidget *parent)
 
 	cout<<"conPF "<<conPFileName<<endl;
 	cout<<"actPF "<<actPFileName<<endl;
+	cout<<"dataF "<<dataFileName<<endl;
 
 	ui.numTrialsBox->setMaximum(1000000000);
 	ui.numTrialsBox->setValue(1050);
@@ -149,7 +159,7 @@ void MainW::run()
 			ui.csTMFFreqMinBox->value(), ui.csPMFFreqMinBox->value(),
 			ui.mfBGFreqMaxBox->value(), ui.csMFBGFreqMaxBox->value(), ui.ctxtMFFreqMaxBox->value(),
 			ui.csTMFFreqMaxBox->value(), ui.csPMFFreqMaxBox->value(),
-			ui.gpuStartNBox->value(), ui.numGPUP2Box->value());
+			dataFileName, ui.gpuStartNBox->value(), ui.numGPUP2Box->value());
 
 	conParams=manager->getConParams();
 

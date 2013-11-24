@@ -14,7 +14,7 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 		float fracCSTMF, float fracCSPMF, float fracCtxtMF,
 		float bgFreqMin, float csBGFreqMin, float ctxtFreqMin, float csTFreqMin, float csPFreqMin,
 		float bgFreqMax, float csBGFreqMax, float ctxtFreqMax, float csTFreqMax, float csPFreqMax,
-		int gpuIndStart, int numGPUP2)
+		string dataFileName, int gpuIndStart, int numGPUP2)
 		:ECManagementBase(conParamFile, actParamFile, numT, iti, randSeed, gpuIndStart, numGPUP2)
 {
 	CRandomSFMT0 randGen(randSeed);
@@ -209,6 +209,8 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 
 		data=new ECTrialsData(500, csOff-csOn, 500, simState->getActivityParams()->getMSPerTimeStep(),
 				numDataTrials, pshParams, rasterParams, uintParams, eyelidParams);
+
+		this->dataFileName=dataFileName;
 	}
 
 	grPCPlastSet=false;
@@ -327,7 +329,7 @@ void ECManagementDelay::writeDataToFile()
 {
 	fstream dataOut;
 
-	dataOut.open("dataOut", ios::out|ios::binary);
+	dataOut.open(dataFileName.c_str(), ios::out|ios::binary);
 	simulation->writeToState(dataOut);
 	data->writeData(dataOut);
 	dataOut.close();
