@@ -9,6 +9,7 @@ po::options_description PID::getOptions() {
     po::options_description desc("PID Environment Options");    
     desc.add_options()
         ("logfile", po::value<string>()->default_value("pid.log"),"log file")
+        ("runPostHocAnalysis", "Runs some demonstrative trials.")
         ;
     return desc;
 }
@@ -20,7 +21,9 @@ PID::PID(CRandomSFMT0 *randGen, int argc, char **argv)
       sv_highFreq("highFreqMFs", HIGH_FREQ, .03),
       sv_gauss("PID Error", GAUSSIAN, .5),
       phase(resting), phaseTransitionTime(0),
-      episodeNum(0)
+      episodeNum(0),
+      simStep(0),
+      postHocAnalysis(false)
 {
     po::options_description desc = getOptions();
     po::variables_map vm;
@@ -32,6 +35,9 @@ PID::PID(CRandomSFMT0 *randGen, int argc, char **argv)
     else
         cout << "No analysis found." << endl;
     logfile.open(vm["logfile"].as<string>().c_str());
+
+    if (vm.count("runPostHocAnalysis"))
+        postHocAnalysis = true;
 
     assert(stateVariables.empty());
     stateVariables.push_back((StateVariable<Environment>*) (&sv_highFreq));
@@ -77,22 +83,20 @@ void PID::step(CBMSimCore *simCore) {
             phase = training;
             phaseTransitionTime = timestep;
             reset();
-            // logfile << "Episode " << episodeNum << " TargetVelocity: " << targetVel << endl;
+            if (postHocAnalysis)
+                logfile << "Episode " << episodeNum << " TargetVelocity: " << targetVel << endl;
         }
     } else { // Training Phase
-        if (timestep - phaseTransitionTime >= phaseDuration) {
-            cout << "Episode " << episodeNum << " Reward: " << episodeReward << endl;
-            // logfile << "Episode " << episodeNum << " Reward: " << episodeReward << endl;
-            phase = resting;
-            phaseTransitionTime = timestep;
-        }
-        
         // Set the throttle or brake based on the MZ output forces
         if (mz_throttle.getForce() > mz_brake.getForce()) {
-            throttleTarget = mz_throttle.getForce() - mz_brake.getForce();
+            float throttleRequest = mz_throttle.getForce() - mz_brake.getForce();
+            throttleTarget = max(throttleTarget-.1f, min(throttleTarget+.1f, throttleRequest));
+            throttleTarget = max(0.0f, min(0.4f, throttleTarget));
             brakeTarget = 0.0;
         } else {
-            brakeTarget = mz_brake.getForce() - mz_throttle.getForce();
+            float brakeRequest = mz_brake.getForce() - mz_throttle.getForce();
+            brakeTarget = max(brakeTarget-.1f, min(brakeTarget+.1f, brakeRequest));
+            brakeTarget = max(0.0f, min(0.4f, brakeTarget));
             throttleTarget = 0.0;
         }
 
@@ -139,6 +143,18 @@ void PID::step(CBMSimCore *simCore) {
                            - wind_resistance);
             currVel += (accel / HZ);
             currVel = min(max(currVel, 0.0f), 12.0f);
+
+            if (postHocAnalysis)
+                logfile << simStep << " currVel " << currVel << endl;
+
+            simStep++;
+        }
+
+        if (timestep - phaseTransitionTime >= phaseDuration) {
+            cout << "Episode " << episodeNum << " Reward: " << episodeReward << endl;
+            logfile << "Episode " << episodeNum << " Reward: " << episodeReward << endl;
+            phase = resting;
+            phaseTransitionTime = timestep;
         }
 
         // Assign error proportional to the magnitude of PID Error
@@ -146,13 +162,14 @@ void PID::step(CBMSimCore *simCore) {
             mz_throttle.smartDeliverError();
         if (getPIDErr() < 0 && randGen->Random() < -.001f * getPIDErr())
             mz_brake.smartDeliverError();
-
-        // logfile << timestep << " currVel " << currVel << endl;
     }
 }
 
 bool PID::terminated() {
-    return episodeNum >= 500;
+    if (postHocAnalysis)
+        return episodeNum > 3;
+
+    return episodeNum >= 1500;
 }
 
 void PID::reset() {
@@ -193,6 +210,17 @@ void PID::reset() {
 
     episodeReward = 0;
     episodeNum++;
+    simStep = 0;
+
+    if (postHocAnalysis) {
+        if (episodeNum == 2) {
+            targetVel = 10;
+            currVel = 5;
+        } else if (episodeNum == 3) {
+            targetVel = 5;
+            currVel = 10;
+        }
+    }
 }
 
 int PID::getMovingWindowSize() {

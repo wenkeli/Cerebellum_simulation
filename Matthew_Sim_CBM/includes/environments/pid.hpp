@@ -39,7 +39,7 @@ protected:
     static const float maxPIDErr = 12.0;
     static const float minPIDErr = -12.0;
 
-    static const int phaseDuration = 10000; // 10 seconds of simulation
+    static const int phaseDuration = 10000; // 200 steps of simulation
     static const int restTimeMSec = 1500;
 
     float targetVel;
@@ -60,6 +60,9 @@ protected:
     int actNum;
 
     const static int cbm_steps_to_domain_steps = 50;
+    int simStep; // The timestep # for the vehicle code
+
+    bool postHocAnalysis;
 };
 
 #endif // PID_HPP

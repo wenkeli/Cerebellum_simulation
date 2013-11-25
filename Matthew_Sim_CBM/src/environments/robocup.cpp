@@ -126,7 +126,7 @@ void Robocup::step(CBMSimCore *simCore) {
             robosim.drawHipForces(avgHipPitchForwardForce, avgHipPitchBackForce);
             walkEngine->changeHips(-avgHipPitchForce, -avgHipPitchForce);
 
-            logfile << timestep << " TSTS " << getTimeSinceTrialStart() << " HPFF " << avgHipPitchForce << endl;
+            // logfile << timestep << " TSTS " << getTimeSinceTrialStart() << " HPFF " << avgHipPitchForce << endl;
 
             // This is the 4 line solution strategy to this problem!!!
             // if (getTimeToImpact() > -.5 && getTimeToImpact() < .5)
@@ -170,6 +170,8 @@ void Robocup::deliverErrors() {
     // //         value = min(value + 2.0f * avgHipPitchForce, 0.0f);
     // // }
     // float errProb = min(errScale*fabsf(value), maxErrProb);
+    // if (timestep % cbm_steps_to_robosim_steps == 0)
+    //     logfile << "TTI: " << getTimeToImpact() << " ErrProb: " << errProb << endl;
     // if (getTimeToImpact() < 0 && value > 0 && randGen->Random() < errProb)
     //     mz_hipPitchForwards.deliverError();
     // else if (getTimeToImpact() < 0 && value < 0 && randGen->Random() < errProb)
@@ -178,25 +180,29 @@ void Robocup::deliverErrors() {
     // if (timestep % cbm_steps_to_robosim_steps == 0)
     //     printf("%5.2lf gyrox %5.2lf avgHipForce %5.2lf Value %5.2lf ErrProb %5.2lf\n", getTimeToImpact(), getGyroX(), avgHipPitchForce, value, errProb);
 
-    {
-        static int numShots = 0;
-        double tts = behavior->getTimeToShot();
-        if (tts == 0 && behavior->getNumberShots() >= numShots) {
-            mz_hipPitchForwards.deliverError();
-            numShots++;
-        }
-    }
+    // {
+    //     static int numShots = 0;
+    //     double tts = behavior->getTimeToShot();
+    //     if (tts == 0 && behavior->getNumberShots() >= numShots) {
+    //         mz_hipPitchForwards.deliverError();
+    //         numShots++;
+    //     }
+    // }
 
     // {   // Error based on solution
     //     double tts = behavior->getTimeToShot();
     //     if (tts < .5 && tts > -.5) {
     //         float hfTarget = 20;
     //         float errProb = min(.001f*fabsf(hfTarget-avgHipPitchForce), maxErrProb);
+    //         if (timestep % cbm_steps_to_robosim_steps == 0)
+    //             logfile << "TTI: " << getTimeToImpact() << " ErrProb: " << errProb << endl;
+
     //         if (hfTarget - avgHipPitchForce > 0 && randGen->Random() < errProb) {
-    //             logfile << timestep << " TSTS " << getTimeSinceTrialStart() << " ERR " << endl;
+    //             // logfile << timestep << " TSTS " << getTimeSinceTrialStart() << " ERR " << endl;
     //             mz_hipPitchForwards.deliverError();
     //         }
-    //     }
+    //     } else if (timestep % cbm_steps_to_robosim_steps == 0)
+    //         logfile << "TTI: " << getTimeToImpact() << " ErrProb: 0" << endl;
     //     // else if (tts < -.5) {
     //     //     float hfTarget = 0;
     //     //     float errProb = min(.0001f*fabsf(hfTarget-avgHipPitchForce), maxErrProb);
@@ -207,10 +213,14 @@ void Robocup::deliverErrors() {
     
     // COM based error
     // cout << getCOMX() << endl;
-    // float comx = getCOMX() - 9;
-    // if (randGen->Random() < min(.002f * fabsf(comx), maxErrProb)) {
-    //     if (comx < 0)
-    //         mz_hipPitchForwards.deliverError();
+    float comx = getCOMX() - 9;
+    float errProb = min(.002f * fabsf(comx), maxErrProb);
+    // if (comx > 0 && timestep % cbm_steps_to_robosim_steps == 0)
+    //     logfile << "TTI: " << getTimeToImpact() << " ErrProb: " << errProb << endl;
+    if (randGen->Random() < errProb) {
+        if (comx > 0)
+            mz_hipPitchForwards.deliverError();
+    }
     //     else
     //         mz_hipPitchBack.deliverError();
     // }
@@ -219,6 +229,8 @@ void Robocup::deliverErrors() {
     // VecPosition accel = bodyModel->getAccelRates();
     // //cout << accel.getX() << endl;
     // float errorProbability = min(.005f * fabsf(accel.getX()), maxErrProb);
+    // if (timestep % cbm_steps_to_robosim_steps == 0)
+    //     logfile << "TTI: " << getTimeToImpact() << " ErrProb: " << errorProbability << endl;
     // // Accel X < 0 Indicates a backwards lean
     // if (accel.getX() < 0 && randGen->Random() < errorProbability)
     //     mz_hipPitchForwards.deliverError();
@@ -241,6 +253,7 @@ void Robocup::deliverErrors() {
 
 void Robocup::calcForce() {
     float hipPitchForwardsForce = mz_hipPitchForwards.getForce();
+
     //float hipPitchBackForce = mz_hipPitchBack.getForce();
     hpFF += hipPitchForwardsForce;
     //hpBF += hipPitchBackForce;

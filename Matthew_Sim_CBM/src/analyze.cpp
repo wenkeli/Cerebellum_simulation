@@ -640,9 +640,13 @@ void WeightAnalyzer::plotMFWeights(string vName, vector<int>& mfInds, vector<vec
                                    int numMZ, vector<string>& mzNames) {
     for (int mz=0; mz<numMZ; mz++) {
         vector<float> weights;
+        printf("%s Weights: [", vName.c_str());
         for (uint i=0; i<mfInds.size(); i++) {
-            weights.push_back(mfWeightSums[mz][mfInds[i]]);
+            float w = mfWeightSums[mz][mfInds[i]]-1000.0;
+            weights.push_back(w);
+            printf("%f, ",w);
         }
+        printf("\n");
 
         // Plot this re-ordered weights
         stringstream ss;
