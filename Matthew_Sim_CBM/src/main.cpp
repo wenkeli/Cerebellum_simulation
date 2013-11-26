@@ -14,6 +14,7 @@
 #include "../includes/environments/pid.hpp"
 #include "../includes/environments/xor.hpp"
 #include "../includes/environments/subtraction.hpp"
+#include "../includes/environments/identity.hpp"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -96,6 +97,8 @@ int main(int argc, char **argv)
         env = new Subtraction(&randGen, argc, argv);
     else if (envStr == "PID")
         env = new PID(&randGen, argc, argv);
+    else if (envStr == "Identity")
+        env = new Identity(&randGen, argc, argv);
     else {
         cout << "Unrecognized Environment " << envStr << endl;
         return 1;
