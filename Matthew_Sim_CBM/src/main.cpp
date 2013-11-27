@@ -15,6 +15,7 @@
 #include "../includes/environments/xor.hpp"
 #include "../includes/environments/subtraction.hpp"
 #include "../includes/environments/identity.hpp"
+#include "../includes/environments/conjunction.hpp"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -99,6 +100,8 @@ int main(int argc, char **argv)
         env = new PID(&randGen, argc, argv);
     else if (envStr == "Identity")
         env = new Identity(&randGen, argc, argv);
+    else if (envStr == "Conjunction")
+        env = new Conjunction(&randGen, argc, argv);
     else {
         cout << "Unrecognized Environment " << envStr << endl;
         return 1;
