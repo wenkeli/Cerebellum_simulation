@@ -16,6 +16,9 @@
 #include "../includes/environments/subtraction.hpp"
 #include "../includes/environments/identity.hpp"
 #include "../includes/environments/conjunction.hpp"
+#include "../includes/environments/disjunction.hpp"
+#include "../includes/environments/negation.hpp"
+#include "../includes/environments/nand.hpp"
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -102,6 +105,12 @@ int main(int argc, char **argv)
         env = new Identity(&randGen, argc, argv);
     else if (envStr == "Conjunction")
         env = new Conjunction(&randGen, argc, argv);
+    else if (envStr == "Disjunction")
+        env = new Disjunction(&randGen, argc, argv);
+    else if (envStr == "Negation")
+        env = new Negation(&randGen, argc, argv);
+    else if (envStr == "Nand")
+        env = new Nand(&randGen, argc, argv);
     else {
         cout << "Unrecognized Environment " << envStr << endl;
         return 1;
