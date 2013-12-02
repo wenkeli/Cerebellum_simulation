@@ -92,8 +92,10 @@ void Negation::step(CBMSimCore *simCore) {
             phaseTransitionTime = timestep;
         }
     } else if (phase == notA) {
-        if (timestep - phaseTransitionTime == phaseDuration) {
+        if (timestep % 500 == 0)
             mz_0.smartDeliverError();
+
+        if (timestep - phaseTransitionTime == phaseDuration) {
             logfile << timestep << " EndRealMovingAvg " << mz_0.getMovingAverage() << endl;    
         }
 
