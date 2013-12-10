@@ -28,14 +28,16 @@ protected:
 
     static const bool randomizeMFs = true;
 
-    float manMFs[1024];
-
     state phase;
     state lastPhase;
     long phaseTransitionTime;
 
     static const int phaseDuration = 500;
-    static const int restTimeMSec = 2000;
+    static const int restTimeMSec = 500;
+
+    float manMFs[1024];
+    const static int mzOutputLen = 4000;
+    double mzOutputs[mzOutputLen];
 
     void A() {
         for (int i=100; i<150; i++)

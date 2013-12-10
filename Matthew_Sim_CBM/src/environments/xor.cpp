@@ -33,6 +33,10 @@ Xor::Xor(CRandomSFMT0 *randGen, int argc, char **argv)
 
     assert(microzones.empty());
     microzones.push_back(&mz_0);
+
+    for (int i=0; i<mzOutputLen; i++) {
+        mzOutputs[i] = 0.0;
+    }
 }
 
 Xor::~Xor() {
@@ -53,25 +57,33 @@ float* Xor::getManualMF() {
     if (phase == resting) {
         ;
     } else if (phase == AB) {
-        if (timestep % 2 == 0) 
-            A();
-        else 
-            B();
+        A();
+        B();
+        // if (timestep % 2 == 0) 
+        //     A();
+        // else 
+        //     B();
     } else if (phase == AnotB) {
-        if (timestep % 2 == 0) 
-            A();
-        else
-            notB();
+        A();
+        notB();
+        // if (timestep % 2 == 0) 
+        //     A();
+        // else
+        //     notB();
     } else if (phase == notAnotB) {
-        if (timestep % 2 == 0) 
-            notA();
-        else
-            notB();
+        notA();
+        notB();
+        // if (timestep % 2 == 0) 
+        //     notA();
+        // else
+        //     notB();
     } else if (phase == notAB) {
-        if (timestep % 2 == 0) 
-            notA();
-        else
-            B();
+        notA();
+        B();
+        // if (timestep % 2 == 0) 
+        //     notA();
+        // else
+        //     B();
     } else {
         assert(false);
     }
@@ -90,6 +102,8 @@ float* Xor::getState() {
 
 void Xor::step(CBMSimCore *simCore) {
     Environment::step(simCore);
+
+    mzOutputs[timestep%mzOutputLen] += mz_0.getMovingAverage();
 
     if (phase != resting) {
         if (timestep % 100 == 0)
@@ -133,5 +147,15 @@ void Xor::step(CBMSimCore *simCore) {
 }
 
 bool Xor::terminated() {
-    return timestep >= 1000000;
+    // return timestep >= 1000000;
+
+    if (timestep >= 10 * mzOutputLen) {
+        printf("MZOutput: [");
+        for (int i=0; i<mzOutputLen; i++) {
+            printf("%lf, ", mzOutputs[i]/10.0);
+        }
+        printf("\n");
+        return true;
+    }
+    return false;
 }
