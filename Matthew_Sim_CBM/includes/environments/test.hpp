@@ -26,9 +26,11 @@ protected:
     Microzone mz_0;
     StateVariable<Test> sv_highFreq, sv_manual;
 
-    static const bool randomizeMFs = true;
+    static const bool randomizeMFs = false;
 
     float manMFs[1024];
+    const static int mzOutputLen = 5500;
+    double mzOutputs[mzOutputLen];
 
     state phase;
     state lastPhase;
