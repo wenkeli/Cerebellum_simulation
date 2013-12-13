@@ -7,8 +7,8 @@ namespace po = boost::program_options;
 
 po::options_description Audio::getOptions() {
     vector<string> v;
-    v.push_back("/home/matthew/Desktop/piano/train/");
-    v.push_back("/home/matthew/Desktop/violin/train/");    
+    v.push_back("./audio/force");
+    v.push_back("./audio/thermo");    
     po::options_description desc("Audio Environment Options");    
     desc.add_options()
         ("logfile", po::value<string>()->default_value("audio.log"),"log file")
@@ -89,7 +89,7 @@ Audio::~Audio() {
 }
 
 void Audio::playSong(string file) {
-    logfile << timestep << " PlayingSong " << file.c_str() << endl;
+    // logfile << timestep << " PlayingSong " << file.c_str() << endl;
 
     // Load the music file
     assert((chan=BASS_StreamCreateFile(FALSE,file.c_str(),0,0,BASS_SAMPLE_LOOP|BASS_STREAM_PRESCAN)) ||
@@ -151,10 +151,10 @@ void Audio::step(CBMSimCore *simCore) {
     Environment::step(simCore);
 
     // Record the MZ output force
-    if (timestep % 100 == 0) {
-        logfile << timestep << " " << mz_piano.getName() << " " << mz_piano.getForce() << endl;
-        logfile << timestep << " " << mz_violin.getName() << " " << mz_violin.getForce() << endl;        
-    }
+    // if (timestep % 100 == 0) {
+    //     logfile << timestep << " " << mz_piano.getName() << " " << mz_piano.getForce() << endl;
+    //     logfile << timestep << " " << mz_violin.getName() << " " << mz_violin.getForce() << endl; 
+    // }
 
     chanPos_secs += chanPos_increment_secs; // Increment position in channel
 
@@ -170,14 +170,20 @@ void Audio::step(CBMSimCore *simCore) {
             playSong(toPlay.first);
             playQueue.pop();
             discipleMZ = toPlay.second;
-            logfile << timestep << " Playing" << endl;
         }
     } else { // Either training or testing
+        for (int i=0; i<FFT_SIZE; i++) {
+            logfile << scaled_fft[i] << " ";
+        }
+        logfile << endl;
+
         // If we have reached the end of the song, rest for a while
         if (chanPos_secs >= chanLen_secs) {
-            logfile << timestep << " Playing " << discipleMZ->getName() <<
-                ": " << mz_piano.getName() << " AvgForce " << mz_piano.getMovingAverage() <<
-                " " << mz_violin.getName() << " AvgForce " << mz_violin.getMovingAverage() << endl;
+            logfile.close();
+            exit(0);
+            // logfile << timestep << " Playing " << discipleMZ->getName() <<
+            //     ": " << mz_piano.getName() << " AvgForce " << mz_piano.getMovingAverage() <<
+            //     " " << mz_violin.getName() << " AvgForce " << mz_violin.getMovingAverage() << endl;
 
             // Deliver single error signal
             discipleMZ->smartDeliverError();
@@ -185,13 +191,12 @@ void Audio::step(CBMSimCore *simCore) {
             chanPos_secs = 0; // Reset if past end
             phase = resting;
             BASS_ChannelPause(chan);
-            logfile << timestep << " Resting" << endl;
+            // logfile << timestep << " Resting" << endl;
         }
         else if (chanPos_secs >= .5 * chanLen_secs && phase == training) {
             // Deliver regular error
             if (timestep % 200 == 0) {
                 discipleMZ->smartDeliverError();
-                logfile << timestep << " Err" << endl;
             }
         }
     }

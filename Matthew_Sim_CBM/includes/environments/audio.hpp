@@ -41,7 +41,7 @@ protected:
     Microzone mz_piano, mz_violin;
     StateVariable<Audio> sv_highFreq, sv_fft;
 
-    static const bool randomizeMFs = true;
+    static const bool randomizeMFs = false;
 
     trainPhase phase;
 
