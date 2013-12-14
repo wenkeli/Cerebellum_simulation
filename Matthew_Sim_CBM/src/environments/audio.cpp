@@ -7,8 +7,8 @@ namespace po = boost::program_options;
 
 po::options_description Audio::getOptions() {
     vector<string> v;
+    v.push_back("./audio/thermo");
     v.push_back("./audio/force");
-    v.push_back("./audio/thermo");    
     po::options_description desc("Audio Environment Options");    
     desc.add_options()
         ("logfile", po::value<string>()->default_value("audio.log"),"log file")
@@ -75,11 +75,20 @@ Audio::Audio(CRandomSFMT0 *randGen, int argc, char **argv)
         audioPaths.push_back(pathVec);
     }
 
-    for (int i=0; i<500; i++) {
+    for (int i=0; i<10; i++) {
         for (uint j=0; j<audioPaths.size(); j++) {
             int indx = i % audioPaths[j].size();
             playQueue.push(pair<string, Microzone*>(audioPaths[j][indx].c_str(), microzones[j]));
         }
+    }
+
+    for (int i=0; i<thermoOutputLen; i++) {
+        MZ0_thermoOutputs[i] = 0.0;
+        MZ1_thermoOutputs[i] = 0.0;        
+    }
+    for (int i=0; i<forceOutputLen; i++) {
+        MZ0_forceOutputs[i] = 0.0;
+        MZ1_forceOutputs[i] = 0.0;        
     }
 }
 
@@ -172,15 +181,23 @@ void Audio::step(CBMSimCore *simCore) {
             discipleMZ = toPlay.second;
         }
     } else { // Either training or testing
-        for (int i=0; i<FFT_SIZE; i++) {
-            logfile << scaled_fft[i] << " ";
+        if (discipleMZ->getName() == "Piano") {
+            MZ0_thermoOutputs[timestep%thermoOutputLen] += mz_piano.getMovingAverage();
+            MZ1_thermoOutputs[timestep%thermoOutputLen] += mz_violin.getMovingAverage();
+        } else {
+            MZ0_forceOutputs[timestep%forceOutputLen] += mz_piano.getMovingAverage();
+            MZ1_forceOutputs[timestep%forceOutputLen] += mz_violin.getMovingAverage();
         }
-        logfile << endl;
+
+        // for (int i=0; i<FFT_SIZE; i++) {
+        //     logfile << scaled_fft[i] << " ";
+        // }
+        // logfile << endl;
 
         // If we have reached the end of the song, rest for a while
         if (chanPos_secs >= chanLen_secs) {
-            logfile.close();
-            exit(0);
+            // logfile.close();
+            // exit(0);
             // logfile << timestep << " Playing " << discipleMZ->getName() <<
             //     ": " << mz_piano.getName() << " AvgForce " << mz_piano.getMovingAverage() <<
             //     " " << mz_violin.getName() << " AvgForce " << mz_violin.getMovingAverage() << endl;
@@ -203,6 +220,32 @@ void Audio::step(CBMSimCore *simCore) {
 }
 
 bool Audio::terminated() {
-    return timestep >= 1000000 || 
-        playQueue.empty(); 
+    // return timestep >= 1000000 || 
+    //     playQueue.empty(); 
+
+    if (playQueue.empty()) {
+        logfile << "MZ0Thermo: [";
+        for (int i=0; i<thermoOutputLen; i++) {
+            logfile << MZ0_thermoOutputs[i]/10.0 << ", ";
+        }
+        logfile << endl;
+        logfile << "MZ1Thermo: [";
+        for (int i=0; i<thermoOutputLen; i++) {
+            logfile << MZ1_thermoOutputs[i]/10.0 << ", ";
+        }
+        logfile << endl;
+        logfile << "MZ0Force: [";
+        for (int i=0; i<forceOutputLen; i++) {
+            logfile << MZ0_forceOutputs[i]/10.0 << ", ";
+        }
+        logfile << endl;
+        logfile << "MZ1Force: [";
+        for (int i=0; i<forceOutputLen; i++) {
+            logfile << MZ1_forceOutputs[i]/10.0 << ", ";
+        }
+        logfile << endl;
+
+        return true;
+    }
+    return false;
 }

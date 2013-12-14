@@ -43,6 +43,14 @@ protected:
 
     static const bool randomizeMFs = false;
 
+    // Outputs for average force
+    const static int thermoOutputLen = 3094;
+    double MZ0_thermoOutputs[thermoOutputLen];
+    double MZ1_thermoOutputs[thermoOutputLen];
+    const static int forceOutputLen = 3801;
+    double MZ0_forceOutputs[forceOutputLen];
+    double MZ1_forceOutputs[forceOutputLen];        
+
     trainPhase phase;
 
     DWORD chan; // The audio channel
