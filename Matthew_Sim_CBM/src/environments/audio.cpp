@@ -7,8 +7,8 @@ namespace po = boost::program_options;
 
 po::options_description Audio::getOptions() {
     vector<string> v;
-    v.push_back("./audio/thermo");
-    v.push_back("./audio/force");
+    v.push_back("./audio/piano/train");
+    v.push_back("./audio/violin/train");
     po::options_description desc("Audio Environment Options");    
     desc.add_options()
         ("logfile", po::value<string>()->default_value("audio.log"),"log file")

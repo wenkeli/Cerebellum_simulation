@@ -44,10 +44,10 @@ protected:
     static const bool randomizeMFs = false;
 
     // Outputs for average force
-    const static int thermoOutputLen = 3094;
+    const static int thermoOutputLen = 2499;
     double MZ0_thermoOutputs[thermoOutputLen];
     double MZ1_thermoOutputs[thermoOutputLen];
-    const static int forceOutputLen = 3801;
+    const static int forceOutputLen = 2414;
     double MZ0_forceOutputs[forceOutputLen];
     double MZ1_forceOutputs[forceOutputLen];        
 
@@ -65,7 +65,7 @@ protected:
     float raw_fft[FFT_SIZE]; // Raw Fourrier transform data
     float scaled_fft[FFT_SIZE]; // FFT Data scaled into range [0,1]
 
-    static const double chanPos_increment_secs = .001;
+    static const double chanPos_increment_secs = .002;
     static const double rest_time_secs = 2;
 };
 #endif // AUDIO_HPP
