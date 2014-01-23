@@ -13,7 +13,7 @@
 
 class Nand : public Environment {
 public:
-    enum state { resting, justA, AB, justB };
+    enum state { resting, justA, AB, justB, notAB };
 
     Nand(CRandomSFMT0 *randGen, int argc, char **argv);
     ~Nand();
@@ -35,7 +35,7 @@ protected:
     static const bool randomizeMFs = false;
 
     float manMFs[1024];
-    const static int mzOutputLen = 3000;
+    const static int mzOutputLen = 4000;
     double mzOutputs[mzOutputLen];
 
     state phase;

@@ -63,6 +63,8 @@ float* Nand::getManualMF() {
     } else if (phase == AB) {
         A();
         B();
+    } else if (phase == notAB) {
+        ;
     } else {
         cout << "Got unexpected phase: " << phase << endl;
         assert(false);
@@ -92,7 +94,7 @@ void Nand::step(CBMSimCore *simCore) {
     if (phase == resting) {
         if (timestep - phaseTransitionTime >= restTimeMSec) {
             phase = static_cast<state>(lastPhase + 1);
-            if (phase > justB) phase = justA;
+            if (phase > notAB) phase = justA;
             logfile << timestep << " Starting Phase " << phase << endl;
             lastPhase = resting;
             phaseTransitionTime = timestep;
@@ -124,6 +126,18 @@ void Nand::step(CBMSimCore *simCore) {
         if (timestep - phaseTransitionTime == phaseDuration) {
             mz_0.smartDeliverError();
             logfile << timestep << " EndBMovingAvg " << mz_0.getMovingAverage() << endl;    
+        }
+
+        if (timestep - phaseTransitionTime >= phaseDuration) {
+            lastPhase = phase;
+            phase = resting;
+            logfile << timestep << " Starting Phase resting" << endl;
+            phaseTransitionTime = timestep;
+        }
+    } else if (phase == notAB) {
+        if (timestep - phaseTransitionTime == phaseDuration) {
+            mz_0.smartDeliverError();
+            logfile << timestep << " notABMovingAvg " << mz_0.getMovingAverage() << endl;    
         }
 
         if (timestep - phaseTransitionTime >= phaseDuration) {
