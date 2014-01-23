@@ -57,33 +57,34 @@ float* Xor::getManualMF() {
     if (phase == resting) {
         ;
     } else if (phase == AB) {
-        // A();
-        // B();
-        if (timestep % 2 == 0) 
-            A();
-        else 
-            B();
+        A();
+        B();
+        // if (timestep % 2 == 0) 
+        //     A();
+        // else 
+        //     B();
     } else if (phase == AnotB) {
-        // A();
+        A();
         // notB();
-        if (timestep % 2 == 0) 
-            A();
-        else
-            notB();
+        // if (timestep % 2 == 0) 
+        //     A();
+        // else
+        //     notB();
     } else if (phase == notAnotB) {
+        ;
         // notA();
         // notB();
-        if (timestep % 2 == 0) 
-            notA();
-        else
-            notB();
+        // if (timestep % 2 == 0) 
+        //     notA();
+        // else
+        //     notB();
     } else if (phase == notAB) {
         // notA();
-        // B();
-        if (timestep % 2 == 0) 
-            notA();
-        else
-            B();
+        B();
+        // if (timestep % 2 == 0) 
+        //     notA();
+        // else
+        //     B();
     } else {
         assert(false);
     }
@@ -107,7 +108,7 @@ void Xor::step(CBMSimCore *simCore) {
 
     if (phase != resting) {
         if (timestep % 100 == 0)
-            logfile << timestep << " mz0MovingAvg " << mz_0.getMovingAverage() << endl;                
+            logfile << timestep << " mz0MovingAvg " << mz_0.getMovingAverage() << endl;
     }
 
     if (phase == resting) {
@@ -121,8 +122,7 @@ void Xor::step(CBMSimCore *simCore) {
     } else if (phase == AB || phase == notAnotB) {
         // Single error at the end of the "real" phase
         if (timestep - phaseTransitionTime == phaseDuration) {
-            mz_0.smartDeliverError();
-            logfile << timestep << " EndRealMovingAvg " << mz_0.getMovingAverage() << endl;    
+            logfile << timestep << " EndFakeMovingAvg " << mz_0.getMovingAverage() << endl;    
         }
 
         if (timestep - phaseTransitionTime >= phaseDuration) {
@@ -133,7 +133,8 @@ void Xor::step(CBMSimCore *simCore) {
         } 
     } else if (phase == AnotB || phase == notAB) {
         if (timestep - phaseTransitionTime == phaseDuration) {
-            logfile << timestep << " EndFakeMovingAvg " << mz_0.getMovingAverage() << endl;    
+            mz_0.smartDeliverError();
+            logfile << timestep << " EndRealMovingAvg " << mz_0.getMovingAverage() << endl;    
         }
 
         if (timestep - phaseTransitionTime >= phaseDuration) {

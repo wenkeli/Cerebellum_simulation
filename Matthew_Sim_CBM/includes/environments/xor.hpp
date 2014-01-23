@@ -26,7 +26,7 @@ protected:
     Microzone mz_0;
     StateVariable<Xor> sv_highFreq, sv_manual;
 
-    static const bool randomizeMFs = true;
+    static const bool randomizeMFs = false;
 
     state phase;
     state lastPhase;
