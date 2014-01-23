@@ -50,8 +50,18 @@ protected:
             manMFs[i] = 1.0;
     }
 
+    void notA() {
+        for (int i=200; i<250; i++)
+            manMFs[i] = 1.0;
+    }
+
     void B() {
         for (int i=300; i<350; i++)
+            manMFs[i] = 1.0;
+    }
+
+    void notB() {
+        for (int i=400; i<450; i++)
             manMFs[i] = 1.0;
     }
 };

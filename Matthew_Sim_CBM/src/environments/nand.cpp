@@ -58,13 +58,16 @@ float* Nand::getManualMF() {
         ;
     } else if (phase == justA) {
         A();
+        notB();
     } else if (phase == justB) {
         B();
+        notA();
     } else if (phase == AB) {
         A();
         B();
     } else if (phase == notAB) {
-        ;
+        notA();
+        notB();
     } else {
         cout << "Got unexpected phase: " << phase << endl;
         assert(false);
