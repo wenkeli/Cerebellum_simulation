@@ -33,6 +33,10 @@ Subtraction::Subtraction(CRandomSFMT0 *randGen, int argc, char **argv)
 
     assert(microzones.empty());
     microzones.push_back(&mz_0);
+
+    for (int i=0; i<mzOutputLen; i++) {
+        mzOutputs[i] = 0.0;
+    }
 }
 
 Subtraction::~Subtraction() {
@@ -57,7 +61,7 @@ float* Subtraction::getManualMF() {
         toneB();
     } else if (phase == real) {
         toneA();
-        if (timestep - phaseTransitionTime < 3000)
+        if (timestep - phaseTransitionTime < 2000)
             toneB();
     } else {
         assert(false);
@@ -78,8 +82,10 @@ float* Subtraction::getState() {
 void Subtraction::step(CBMSimCore *simCore) {
     Environment::step(simCore);
 
+    mzOutputs[timestep%mzOutputLen] += mz_0.getMovingAverage();
+
     if (phase == real || phase == fake) {
-        if (timestep % 100 == 0)
+        if (timestep % 10 == 0)
             logfile << timestep << " mz0MovingAvg " << mz_0.getMovingAverage() << endl;                
     }
 
@@ -127,5 +133,15 @@ void Subtraction::step(CBMSimCore *simCore) {
 }
 
 bool Subtraction::terminated() {
-    return timestep >= 9250000; // About 500 trials
+    // return timestep >= 1000000;
+
+    if (timestep >= 10 * mzOutputLen) {
+        printf("MZOutput: [");
+        for (int i=0; i<mzOutputLen; i++) {
+            printf("%lf, ", mzOutputs[i]/10.0);
+        }
+        printf("\n");
+        return true;
+    }
+    return false;
 }
