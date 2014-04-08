@@ -34,7 +34,7 @@ Negation::Negation(CRandomSFMT0 *randGen, int argc, char **argv)
     assert(microzones.empty());
     microzones.push_back(&mz_0);
 
-    for (int i=0; i<mzOutputLen; i++) {
+    for (int i=0; i<trialLen; i++) {
         mzOutputs[i] = 0.0;
     }
 }
@@ -78,11 +78,8 @@ float* Negation::getState() {
 void Negation::step(CBMSimCore *simCore) {
     Environment::step(simCore);
 
-    mzOutputs[timestep%mzOutputLen] += mz_0.getMovingAverage();
-
-    if (timestep % 10 == 0) {
-        logfile << timestep%mzOutputLen << " mz0MovingAvg " << mz_0.getMovingAverage() << endl;
-    }
+    if (timestep >= nTrials * trialLen)
+        mzOutputs[timestep%trialLen] += mz_0.getMovingAverage();
 
     if (phase == resting) {
         if (timestep - phaseTransitionTime >= restTimeMSec) {
@@ -112,12 +109,10 @@ void Negation::step(CBMSimCore *simCore) {
 }
 
 bool Negation::terminated() {
-    // return timestep >= 1000000;
-
-    if (timestep >= 10 * mzOutputLen) {
-        printf("MZOutput: [");
-        for (int i=0; i<mzOutputLen; i++) {
-            printf("%lf, ", mzOutputs[i]/10.0);
+    if (timestep >= nTrials * trialLen + nAdditionalTrials * trialLen) {
+        printf("MZOutput: ");
+        for (int i=0; i<trialLen; i++) {
+            printf("%.3f, ", mzOutputs[i]/float(nAdditionalTrials));
         }
         printf("\n");
         return true;

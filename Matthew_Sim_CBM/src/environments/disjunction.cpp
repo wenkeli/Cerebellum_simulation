@@ -34,7 +34,7 @@ Disjunction::Disjunction(CRandomSFMT0 *randGen, int argc, char **argv)
     assert(microzones.empty());
     microzones.push_back(&mz_0);
 
-    for (int i=0; i<3000; i++) {
+    for (int i=0; i<trialLen; i++) {
         mzOutputs[i] = 0.0;
     }
 }
@@ -83,7 +83,8 @@ float* Disjunction::getState() {
 void Disjunction::step(CBMSimCore *simCore) {
     Environment::step(simCore);
 
-    mzOutputs[timestep%3000] += mz_0.getMovingAverage();
+    if (timestep >= nTrials * trialLen)
+        mzOutputs[timestep%trialLen] += mz_0.getMovingAverage();
 
     if (timestep % 10 == 0) {
         logfile << timestep%3000 << " mz0MovingAvg " << mz_0.getMovingAverage() << endl;
@@ -141,12 +142,10 @@ void Disjunction::step(CBMSimCore *simCore) {
 }
 
 bool Disjunction::terminated() {
-    // return timestep >= 1000000;
-
-    if (timestep >= 10 * 3000) {
-        printf("MZOutput: [");
-        for (int i=0; i<3000; i++) {
-            printf("%lf, ", mzOutputs[i]/10.0);
+    if (timestep >= nTrials * trialLen + nAdditionalTrials * trialLen) {
+        printf("MZOutput: ");
+        for (int i=0; i<trialLen; i++) {
+            printf("%.3f, ", mzOutputs[i]/float(nAdditionalTrials));
         }
         printf("\n");
         return true;

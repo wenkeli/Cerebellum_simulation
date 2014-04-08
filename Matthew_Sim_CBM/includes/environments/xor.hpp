@@ -36,8 +36,11 @@ protected:
     static const int restTimeMSec = 500;
 
     float manMFs[1024];
-    const static int mzOutputLen = 4000;
-    double mzOutputs[mzOutputLen];
+    const static int trialLen = 4 * (phaseDuration + restTimeMSec);
+    const static int nTrials = 500;
+    const static int nAdditionalTrials = 10;
+    float mzOutputs[trialLen];
+
 
     void A() {
         for (int i=100; i<150; i++)

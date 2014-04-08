@@ -34,7 +34,7 @@ Test::Test(CRandomSFMT0 *randGen, int argc, char **argv)
     assert(microzones.empty());
     microzones.push_back(&mz_0);
 
-    for (int i=0; i<mzOutputLen; i++) {
+    for (int i=0; i<trialLen; i++) {
         mzOutputs[i] = 0.0;
     }
 }
@@ -91,7 +91,8 @@ float* Test::getState() {
 void Test::step(CBMSimCore *simCore) {
     Environment::step(simCore);
 
-    mzOutputs[timestep%mzOutputLen] += mz_0.getMovingAverage();
+    if (timestep >= nTrials * trialLen)
+        mzOutputs[timestep%trialLen] += mz_0.getMovingAverage();
 
     if (phase == real || phase == fake) {
         if (timestep % 100 == 0)
@@ -139,12 +140,10 @@ void Test::step(CBMSimCore *simCore) {
 }
 
 bool Test::terminated() {
-    // return timestep >= 1000000; // 10 minutes
-
-    if (timestep >= 10 * mzOutputLen) {
-        printf("MZOutput: [");
-        for (int i=0; i<mzOutputLen; i++) {
-            printf("%4.3f, ", mzOutputs[i]/10.0);
+    if (timestep >= nTrials * trialLen + nAdditionalTrials * trialLen) {
+        printf("MZOutput: ");
+        for (int i=0; i<trialLen; i++) {
+            printf("%.3f, ", mzOutputs[i]/float(nAdditionalTrials));
         }
         printf("\n");
         return true;
