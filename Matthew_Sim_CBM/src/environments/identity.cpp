@@ -34,7 +34,7 @@ Identity::Identity(CRandomSFMT0 *randGen, int argc, char **argv)
     assert(microzones.empty());
     microzones.push_back(&mz_0);
 
-    for (int i=0; i<2000; i++) {
+    for (int i=0; i<trialLen; i++) {
         mzOutputs[i] = 0.0;
     }
 }
@@ -79,17 +79,13 @@ float* Identity::getState() {
 void Identity::step(CBMSimCore *simCore) {
     Environment::step(simCore);
 
-    mzOutputs[timestep%2000] += mz_0.getMovingAverage();
-
-    if (timestep % 10 == 0) {
-        logfile << timestep%2000 << " mz0MovingAvg " << mz_0.getMovingAverage() << endl;
-    }
+    if (timestep >= nTrials * trialLen)
+        mzOutputs[timestep%trialLen] += mz_0.getMovingAverage();
 
     if (phase == resting) {
         if (timestep - phaseTransitionTime >= restTimeMSec) {
             phase = static_cast<state>(lastPhase + 1);
             if (phase > fake) phase = real;
-            logfile << timestep << " Starting Phase " << phase << endl;
             lastPhase = resting;
             phaseTransitionTime = timestep;
         }
@@ -97,24 +93,17 @@ void Identity::step(CBMSimCore *simCore) {
         // Single error at the end of the "real" phase
         if (timestep - phaseTransitionTime == phaseDuration) {
             mz_0.smartDeliverError();
-            logfile << timestep << " EndRealMovingAvg " << mz_0.getMovingAverage() << endl;    
         }
 
         if (timestep - phaseTransitionTime >= phaseDuration) {
             lastPhase = phase;
             phase = resting;
-            logfile << timestep << " Starting Phase resting" << endl;
             phaseTransitionTime = timestep;
         } 
     } else if (phase == fake) {
-        if (timestep - phaseTransitionTime == phaseDuration) {
-            logfile << timestep << " EndFakeMovingAvg " << mz_0.getMovingAverage() << endl;    
-        }
-
         if (timestep - phaseTransitionTime >= phaseDuration) {
             lastPhase = phase;
             phase = resting;
-            logfile << timestep << " Starting Phase resting" << endl;
             phaseTransitionTime = timestep;
         }
     } else
@@ -122,10 +111,10 @@ void Identity::step(CBMSimCore *simCore) {
 }
 
 bool Identity::terminated() {
-    if (timestep >= 20000) {
-        printf("MZOutput: [");
-        for (int i=0; i<2000; i++) {
-            printf("%lf, ", mzOutputs[i]/10.0);
+    if (timestep >= nTrials * trialLen + nAdditionalTrials * trialLen) {
+        printf("MZOutput: ");
+        for (int i=0; i<trialLen; i++) {
+            printf("%.3f, ", mzOutputs[i]/float(nAdditionalTrials));
         }
         printf("\n");
         return true;

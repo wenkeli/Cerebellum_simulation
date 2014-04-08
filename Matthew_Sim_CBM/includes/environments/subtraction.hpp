@@ -28,24 +28,24 @@ protected:
 
     static const bool randomizeMFs = true;
 
-    float manMFs[1024];
-    const static int mzOutputLen = 3000;
-    double mzOutputs[mzOutputLen];
-
     state phase;
     state lastPhase;
     long phaseTransitionTime;
 
-    static const int phaseDuration = 2500;//3500;
-    static const int restTimeMSec = 500;//15000;
+    static const int phaseDuration = 3500;
+    static const int restTimeMSec = 2000;
+
+    float manMFs[1024];
+    const static int mzOutputLen = phaseDuration + restTimeMSec;
+    double mzOutputs[mzOutputLen];
 
     void toneA() {
-        for (int i=600; i<650; i++)
+        for (int i=600; i<651; i++)
             manMFs[i] = 1.0;
     }
 
     void toneB() {
-        for (int i=800; i<850; i++)
+        for (int i=800; i<851; i++)
             manMFs[i] = 1.0;
     }
 };

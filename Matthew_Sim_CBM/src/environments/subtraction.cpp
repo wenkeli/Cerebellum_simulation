@@ -86,7 +86,7 @@ void Subtraction::step(CBMSimCore *simCore) {
 
     if (phase == real || phase == fake) {
         if (timestep % 10 == 0)
-            logfile << timestep << " mz0MovingAvg " << mz_0.getMovingAverage() << endl;                
+            logfile << timestep << " mz0MovingAvg " << mz_0.getMovingAverage() << endl;
     }
 
     if (phase == resting) {
@@ -133,7 +133,7 @@ void Subtraction::step(CBMSimCore *simCore) {
 }
 
 bool Subtraction::terminated() {
-    // return timestep >= 1000000;
+    // return timestep >= 500 * (restTimeMSec + phaseDuration); // 500 trials
 
     if (timestep >= 10 * mzOutputLen) {
         printf("MZOutput: [");

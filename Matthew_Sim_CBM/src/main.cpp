@@ -79,6 +79,9 @@ int main(int argc, char **argv)
         srand(randSeed);
     }
 
+    string conPF  = vm["conPF"].as<string>();
+    string actPF  = vm["actPF"].as<string>();
+
     CRandomSFMT0 randGen(randSeed);
 
     Environment *env;
@@ -97,9 +100,11 @@ int main(int argc, char **argv)
         env = new Test(&randGen, argc, argv);
     else if (envStr == "xor")
         env = new Xor(&randGen, argc, argv);
-    else if (envStr == "subtraction")
+    else if (envStr == "subtraction") {
         env = new Subtraction(&randGen, argc, argv);
-    else if (envStr == "PID")
+        // conPF = "../CBM_Params/sim_GOHGO/fig4/conParams_GOGOI.txt";
+        // actPF = "../CBM_Params/sim_GOHGO/fig4/actParams_GOGOI_DEP_Matt.txt";
+    } else if (envStr == "PID")
         env = new PID(&randGen, argc, argv);
     else if (envStr == "Identity")
         env = new Identity(&randGen, argc, argv);
@@ -125,8 +130,8 @@ int main(int argc, char **argv)
 #endif
 
     int numMZ     = env->numRequiredMZ();
-    string conPF  = vm["conPF"].as<string>();
-    string actPF  = vm["actPF"].as<string>();
+    cout << "Using connectivity param file: " << conPF << endl;
+    cout << "Using activity param file: " << actPF << endl;
 
     // Create the simulation thread
     auto_ptr<SimThread> t;

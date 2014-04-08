@@ -31,8 +31,8 @@ void Environment::setupMossyFibers(CBMState *simState) {
     }
 
     for (int i=0; i<numMF; i++) {
-        const float excitedFreqMin = 30;
-        const float excitedFreqMax = 60;
+        const float excitedFreqMin = 40;
+        const float excitedFreqMax = 50;
         mfFreqExcited[i]=randGen->Random()*(excitedFreqMax-excitedFreqMax)+excitedFreqMin;
         mfExcited.push_back(false);
     }
