@@ -8,6 +8,7 @@
 class Xor : public Environment {
 public:
     enum state { resting, AB, AnotB, notAnotB, notAB };
+    enum expType { normal, implicit, interleaved };
 
     Xor(CRandomSFMT0 *randGen, int argc, char **argv);
     ~Xor();
@@ -27,6 +28,8 @@ protected:
     StateVariable<Xor> sv_highFreq, sv_manual;
 
     static const bool randomizeMFs = false;
+
+    expType experiment;
 
     state phase;
     state lastPhase;

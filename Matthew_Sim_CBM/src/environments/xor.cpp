@@ -9,6 +9,8 @@ po::options_description Xor::getOptions() {
     po::options_description desc("Xor Environment Options");    
     desc.add_options()
         ("logfile", po::value<string>()->default_value("xor.log"),"log file")
+        ("exptype", po::value<string>()->default_value("explicit"),
+         "Experiment type: explicit, implicit, or interleaved")
         ;
     return desc;
 }
@@ -26,6 +28,18 @@ Xor::Xor(CRandomSFMT0 *randGen, int argc, char **argv)
     po::notify(vm);
     
     logfile.open(vm["logfile"].as<string>().c_str());
+
+    string etype = vm["exptype"].as<string>();
+    if (etype == "explicit")
+        experiment = normal;
+    else if (etype == "implicit")
+        experiment = implicit;
+    else if (etype == "interleaved")
+        experiment = interleaved;
+    else {
+        cout << "Unrecognized Experiment Type " << etype << endl;
+        exit(1);
+    }
 
     assert(stateVariables.empty());
     stateVariables.push_back((StateVariable<Environment>*) (&sv_highFreq));
@@ -57,34 +71,51 @@ float* Xor::getManualMF() {
     if (phase == resting) {
         ;
     } else if (phase == AB) {
-        A();
-        B();
-        // if (timestep % 2 == 0) 
-        //     A();
-        // else 
-        //     B();
+        if (experiment == normal || experiment == implicit) {
+            A();
+            B();
+        } else if (experiment == interleaved) {
+            if (timestep % 2 == 0) 
+                A();
+            else 
+                B();
+        }
     } else if (phase == AnotB) {
-        A();
-        // notB();
-        // if (timestep % 2 == 0) 
-        //     A();
-        // else
-        //     notB();
+        if (experiment == normal) {
+            A();
+            notB();
+        } else if (experiment == implicit) {
+            A();
+        } else if (experiment == interleaved) {
+            if (timestep % 2 == 0) 
+                A();
+            else
+                notB();
+        }
     } else if (phase == notAnotB) {
-        ;
-        // notA();
-        // notB();
-        // if (timestep % 2 == 0) 
-        //     notA();
-        // else
-        //     notB();
+        if (experiment == normal) {
+            notA();
+            notB();
+        } else if (experiment == implicit) {
+            ;
+        } else if (experiment == interleaved) {
+            if (timestep % 2 == 0) 
+                notA();
+            else
+                notB();
+        }
     } else if (phase == notAB) {
-        // notA();
-        B();
-        // if (timestep % 2 == 0) 
-        //     notA();
-        // else
-        //     B();
+        if (experiment == normal) {
+            notA();
+            B();
+        } else if (experiment == implicit) {
+            B();
+        } else if (experiment == interleaved) {
+            if (timestep % 2 == 0) 
+                notA();
+            else
+                B();
+        }
     } else {
         assert(false);
     }
