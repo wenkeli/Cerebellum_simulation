@@ -203,8 +203,8 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 		rasterParams["io"]=rp;
 
 		uintParams.clear();
-		ruip.numRows=simState->getConnectivityParams()->getNumGO();
-		uintParams["grInputGO"]=ruip;
+//		ruip.numRows=simState->getConnectivityParams()->getNumGO();
+//		uintParams["grInputGO"]=ruip;
 
 
 		data=new ECTrialsData(500, csOff-csOn, 500, simState->getActivityParams()->getMSPerTimeStep(),
@@ -318,7 +318,7 @@ void ECManagementDelay::calcSimActivity()
 		data->updatePSH("pc", simulation->getMZoneList()[0]->exportAPPC());
 		data->updatePSH("io", simulation->getMZoneList()[0]->exportAPIO());
 
-		data->updateRawUInt("grInputGO", simulation->getInputNet()->exportSumGRInputGO());
+//		data->updateRawUInt("grInputGO", simulation->getInputNet()->exportSumGRInputGO());
 
 		data->updateEyelid(eyelidPos);
 	}

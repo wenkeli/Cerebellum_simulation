@@ -30,9 +30,7 @@ QTLIBS = -lQtGui -lQtCore
 
 DEPLIBPATH = ../libs/
 DEPLIBS = -Xlinker --library=cxx_tools -Xlinker --library=cbm_tools -Xlinker --library=cbm_state \
--Xlinker --library=cbm_core -Xlinker --library=cbm_visual -Xlinker --library=cbm_data 
-
-
+-Xlinker --library=cbm_core -Xlinker --library=cbm_visual -Xlinker --library=cbm_data
 
 
 INCPATH = ./includes
