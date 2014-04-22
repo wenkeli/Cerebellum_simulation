@@ -66,6 +66,9 @@ public:
     // Get the MZ name
     std::string getName() { return name; }
 
+    // Set the MZ name
+    void setName(std::string newName) { name = newName; }
+
 protected:
     std::string name;
     int mzNum, numNC;

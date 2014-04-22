@@ -1,5 +1,6 @@
 #include "../../includes/environments/audio.hpp"
 #include <boost/filesystem.hpp>
+#include <math.h>
 
 using namespace std;
 using namespace boost::filesystem;
@@ -7,23 +8,21 @@ namespace po = boost::program_options;
 
 po::options_description Audio::getOptions() {
     vector<string> v;
-    v.push_back("./audio/piano/train");
-    v.push_back("./audio/violin/train");
+    v.push_back("./audio/piano/train/4.wav");
+    v.push_back("./audio/violin/train/4.wav");
     po::options_description desc("Audio Environment Options");    
     desc.add_options()
         ("logfile", po::value<string>()->default_value("audio.log"),"log file")
-        ("test", "Activate testing mode: no error signals will be delivered.")
-        ("dir,d", po::value<vector<string> >()->multitoken()->required()->default_value(v,""),
-         "Director(y/ies) to find audio files.")
+        ("files,f", po::value<vector<string> >()->multitoken()->required()->default_value(v,""),
+         "Audio files.")
         ;
     return desc;
 }
 
 Audio::Audio(CRandomSFMT0 *randGen, int argc, char **argv)
     : Environment(randGen),
-      testMode(false),
-      mz_piano("Piano", 0, 1, 1, .95),
-      mz_violin("Violin", 1, 1, 1, .95),
+      mz0("mz0", 0, 1, 1, .95),
+      mz1("mz1", 1, 1, 1, .95),
       sv_highFreq("highFreqMFs", HIGH_FREQ, .03),
       sv_fft("audioFreqMFs", MANUAL, .5), 
       phase(resting), 
@@ -40,15 +39,13 @@ Audio::Audio(CRandomSFMT0 *randGen, int argc, char **argv)
     
     logfile.open(vm["logfile"].as<string>().c_str());
 
-    if (vm.count("test")) testMode = true;
-
     assert(stateVariables.empty());
     stateVariables.push_back((StateVariable<Environment>*) (&sv_highFreq));
     stateVariables.push_back((StateVariable<Environment>*) (&sv_fft));
 
     assert(microzones.empty());
-    microzones.push_back(&mz_piano);
-    microzones.push_back(&mz_violin);    
+    microzones.push_back(&mz0);
+    microzones.push_back(&mz1);
 
     // check the correct BASS was loaded
     assert(HIWORD(BASS_GetVersion()) == BASSVERSION);
@@ -57,38 +54,27 @@ Audio::Audio(CRandomSFMT0 *randGen, int argc, char **argv)
     assert(BASS_Init(-1,44100,0,NULL,NULL));
 
     // Load the dataset to test/train against
-    vector<string> audioDirs = vm["dir"].as<vector<string> >();
-    assert(audioDirs.size() == (uint) numRequiredMZ());
-
-    vector<vector<path> > audioPaths;
-    for (uint i=0; i<audioDirs.size(); i++) {
-        vector<path> pathVec;
-        path p(audioDirs[i]);
-        assert(exists(p) && is_directory(p));
-        directory_iterator end;
-        for(directory_iterator it(p); it != end; it++) {
-            if (is_regular_file(it->status()))
-                pathVec.push_back(it->path());
-        }
-        assert(!pathVec.empty());
-        std::random_shuffle(pathVec.begin(), pathVec.end());
-        audioPaths.push_back(pathVec);
-    }
-
-    for (int i=0; i<10; i++) {
-        for (uint j=0; j<audioPaths.size(); j++) {
-            int indx = i % audioPaths[j].size();
-            playQueue.push(pair<string, Microzone*>(audioPaths[j][indx].c_str(), microzones[j]));
+    audioFiles = vm["files"].as<vector<string> >();
+    assert(audioFiles.size() == (uint) numSongs);
+    for (uint i=0; i<audioFiles.size(); i++) {
+        path p(audioFiles[i]);
+        assert(exists(p) && is_regular_file(p));
+        logfile << "Adding to play queue: " << audioFiles[i].c_str() << endl;
+        microzones[i]->setName(audioFiles[i]);
+        double lenInS = getChanLength(audioFiles[i]);
+        int lenInTS = int(ceil(lenInS / chanPos_increment_secs));
+        logfile << "Audio file " << audioFiles[i] << " has TS len of " << lenInTS << endl;
+        songLength[i] = lenInTS;
+        for (int j=0; j<lenInTS; j++) {
+            mzOutputs[0][i].push_back(0.);
+            mzOutputs[1][i].push_back(0.);
         }
     }
 
-    for (int i=0; i<thermoOutputLen; i++) {
-        MZ0_thermoOutputs[i] = 0.0;
-        MZ1_thermoOutputs[i] = 0.0;        
-    }
-    for (int i=0; i<forceOutputLen; i++) {
-        MZ0_forceOutputs[i] = 0.0;
-        MZ1_forceOutputs[i] = 0.0;        
+    for (int t=0; t<nTrials+nTest; t++) {
+        for (uint i=0; i<audioFiles.size(); i++) {
+            playQueue.push(pair<string, Microzone*>(audioFiles[i].c_str(), microzones[i]));
+        }
     }
 }
 
@@ -97,8 +83,17 @@ Audio::~Audio() {
     BASS_Free();
 }
 
+double Audio::getChanLength(string file) {
+    DWORD chan;
+    assert((chan=BASS_StreamCreateFile(FALSE,file.c_str(),0,0,
+                                       BASS_SAMPLE_LOOP|BASS_STREAM_PRESCAN)) ||
+           (chan=BASS_MusicLoad(FALSE,file.c_str(),0,0,BASS_MUSIC_RAMP|BASS_SAMPLE_LOOP,1)));
+    QWORD chanLen_bytes = BASS_ChannelGetLength(chan, BASS_POS_BYTE);
+    return BASS_ChannelBytes2Seconds(chan, chanLen_bytes);
+}
+
 void Audio::playSong(string file) {
-    // logfile << timestep << " PlayingSong " << file.c_str() << endl;
+    logfile << timestep << " PlayingSong " << file.c_str() << endl;
 
     // Load the music file
     assert((chan=BASS_StreamCreateFile(FALSE,file.c_str(),0,0,BASS_SAMPLE_LOOP|BASS_STREAM_PRESCAN)) ||
@@ -106,6 +101,7 @@ void Audio::playSong(string file) {
 
     chanLen_bytes = BASS_ChannelGetLength(chan, BASS_POS_BYTE);
     chanLen_secs  = BASS_ChannelBytes2Seconds(chan, chanLen_bytes);
+    logfile << "Chanlen Seconds: " << chanLen_secs << endl;
     chanPos_secs  = 0;
 
     // Optionally play the audio
@@ -144,7 +140,7 @@ float* Audio::getState() {
         // if (stateVariables[i]->type == MANUAL && phase == resting) 
         //     ; // Dont update the manual SV during rest phase
         // else
-        if (stateVariables[i]->type == HIGH_FREQ && phase == training)
+        if (stateVariables[i]->type == HIGH_FREQ)
             ;
         else
             stateVariables[i]->update();
@@ -159,18 +155,11 @@ float* Audio::getFFT() {
 void Audio::step(CBMSimCore *simCore) {
     Environment::step(simCore);
 
-    // Record the MZ output force
-    // if (timestep % 100 == 0) {
-    //     logfile << timestep << " " << mz_piano.getName() << " " << mz_piano.getForce() << endl;
-    //     logfile << timestep << " " << mz_violin.getName() << " " << mz_violin.getForce() << endl; 
-    // }
-
     chanPos_secs += chanPos_increment_secs; // Increment position in channel
 
     if (phase == resting) {
         if (chanPos_secs / chanPos_increment_secs >= rest_time_secs * 1000) {
             chanPos_secs = 0;
-            phase = testMode ? testing : training;
 
             if (playQueue.empty())
                 return;
@@ -179,38 +168,37 @@ void Audio::step(CBMSimCore *simCore) {
             playSong(toPlay.first);
             playQueue.pop();
             discipleMZ = toPlay.second;
+            phase = playing;
+            phaseTransitionTime = timestep;
         }
-    } else { // Either training or testing
-        if (discipleMZ->getName() == "Piano") {
-            MZ0_thermoOutputs[timestep%thermoOutputLen] += mz_piano.getMovingAverage();
-            MZ1_thermoOutputs[timestep%thermoOutputLen] += mz_violin.getMovingAverage();
-        } else {
-            MZ0_forceOutputs[timestep%forceOutputLen] += mz_piano.getMovingAverage();
-            MZ1_forceOutputs[timestep%forceOutputLen] += mz_violin.getMovingAverage();
+    } else { // Audio file playing
+        int songIndx = -1; // Find the index of the song currently playing
+        for (int i=0; i<numSongs; i++) {
+            if (discipleMZ->getName() == audioFiles[i]) {
+                songIndx = i;
+                break;
+            }
         }
+        assert(songIndx >= 0);
 
-        // for (int i=0; i<FFT_SIZE; i++) {
-        //     logfile << scaled_fft[i] << " ";
-        // }
-        // logfile << endl;
+        int k = timestep-phaseTransitionTime-1;
+        assert(k < songLength[songIndx]);
+        if (playQueue.size() <= numSongs * nTest) {
+            mzOutputs[0][songIndx][k] += mz0.getMovingAverage();
+            mzOutputs[1][songIndx][k] += mz1.getMovingAverage();
+        }
 
         // If we have reached the end of the song, rest for a while
         if (chanPos_secs >= chanLen_secs) {
-            // logfile.close();
-            // exit(0);
-            // logfile << timestep << " Playing " << discipleMZ->getName() <<
-            //     ": " << mz_piano.getName() << " AvgForce " << mz_piano.getMovingAverage() <<
-            //     " " << mz_violin.getName() << " AvgForce " << mz_violin.getMovingAverage() << endl;
-
             // Deliver single error signal
             discipleMZ->smartDeliverError();
 
             chanPos_secs = 0; // Reset if past end
             phase = resting;
+            phaseTransitionTime = timestep;
             BASS_ChannelPause(chan);
-            // logfile << timestep << " Resting" << endl;
         }
-        else if (chanPos_secs >= .5 * chanLen_secs && phase == training) {
+        else if (chanPos_secs >= .5 * chanLen_secs) {
             // Deliver regular error
             if (timestep % 200 == 0) {
                 discipleMZ->smartDeliverError();
@@ -220,31 +208,16 @@ void Audio::step(CBMSimCore *simCore) {
 }
 
 bool Audio::terminated() {
-    // return timestep >= 1000000 || 
-    //     playQueue.empty(); 
-
     if (playQueue.empty()) {
-        logfile << "MZ0Thermo: [";
-        for (int i=0; i<thermoOutputLen; i++) {
-            logfile << MZ0_thermoOutputs[i]/10.0 << ", ";
+        cout << "Playqueue empty" << endl;
+        for (int j=0; j<numSongs; j++) {
+            for (int i=0; i<numMZ; i++) {
+                logfile << "MZ" << microzones[i]->getName() << " on " << audioFiles[j] << ": [";
+                for (uint k=0; k<mzOutputs[i][j].size(); k++)
+                    logfile << mzOutputs[i][j][k] / float(nTest) << ", ";
+                logfile << endl;
+            }
         }
-        logfile << endl;
-        logfile << "MZ1Thermo: [";
-        for (int i=0; i<thermoOutputLen; i++) {
-            logfile << MZ1_thermoOutputs[i]/10.0 << ", ";
-        }
-        logfile << endl;
-        logfile << "MZ0Force: [";
-        for (int i=0; i<forceOutputLen; i++) {
-            logfile << MZ0_forceOutputs[i]/10.0 << ", ";
-        }
-        logfile << endl;
-        logfile << "MZ1Force: [";
-        for (int i=0; i<forceOutputLen; i++) {
-            logfile << MZ1_forceOutputs[i]/10.0 << ", ";
-        }
-        logfile << endl;
-
         return true;
     }
     return false;
