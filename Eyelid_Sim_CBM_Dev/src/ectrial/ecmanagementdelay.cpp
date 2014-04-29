@@ -176,6 +176,7 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 		pshParams["go"]=pp;
 		pshParams["grInputGO"]=pp;
 		pshParams["goInputGO"]=pp;
+		pshParams["goOutSynScale"]=pp;
 		pp.numCells=simState->getConnectivityParams()->getNumMF();
 		pshParams["mf"]=pp;
 		pp.numCells=simState->getConnectivityParams()->getNumGR()/10;
@@ -313,6 +314,7 @@ void ECManagementDelay::calcSimActivity()
 		data->updatePSH("go", simulation->getInputNet()->exportAPGO());
 		data->updatePSH("grInputGO", simulation->getInputNet()->exportSumGRInputGO());
 		data->updatePSH("goInputGO", simulation->getInputNet()->exportSumGOInputGO());
+		data->updatePSH("goOutSynScale", simulation->getInputNet()->exportGOOutSynScaleGOGO());
 		data->updatePSH("mf", apMF);
 		data->updatePSH("gr", simulation->getInputNet()->exportAPGR());
 		data->updatePSH("sc", simulation->getInputNet()->exportAPSC());
