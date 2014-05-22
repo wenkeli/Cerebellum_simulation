@@ -6,9 +6,11 @@ using namespace boost::filesystem;
 namespace po = boost::program_options;
 
 po::options_description TemporalSequence::getOptions() {
-    po::options_description desc("TemporalSequence Environment Options");    
+    po::options_description desc("Sequence Environment Options:");
     desc.add_options()
-        ("logfile", po::value<string>()->default_value("test.log"),"log file")
+        ("logfile", po::value<string>()->default_value("sequence.log"),"log file")
+        ("duration", po::value<int>()->default_value(1500), "Duration of the sequence in ms. E.g. 1500 means each of A,B,C would be played for 500ms.")
+        ("iti", po::value<int>()->default_value(2000), "Duration of inter-trial-interval in ms.")
         ;
     return desc;
 }
@@ -27,6 +29,10 @@ TemporalSequence::TemporalSequence(CRandomSFMT0 *randGen, int argc, char **argv)
     
     logfile.open(vm["logfile"].as<string>().c_str());
 
+    phaseDuration = vm["duration"].as<int>();
+    restTimeMSec = vm["iti"].as<int>();
+    trialLen = 2 * (phaseDuration + restTimeMSec);
+
     assert(stateVariables.empty());
     stateVariables.push_back((StateVariable<Environment>*) (&sv_highFreq));
     stateVariables.push_back((StateVariable<Environment>*) (&sv_manual));
@@ -35,7 +41,7 @@ TemporalSequence::TemporalSequence(CRandomSFMT0 *randGen, int argc, char **argv)
     microzones.push_back(&mz_0);
 
     for (int i=0; i<trialLen; i++) {
-        mzOutputs[i] = 0.0;
+        mzOutputs.push_back(0.0);
     }
 }
 

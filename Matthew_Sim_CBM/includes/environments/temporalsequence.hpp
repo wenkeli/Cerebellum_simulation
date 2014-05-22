@@ -5,6 +5,17 @@
 #include "microzone.hpp"
 #include "statevariable.hpp"
 
+/**
+   This experiment tests the ability of the cerebellum simulator to
+   identify sequences of Mossy Fiber inputs. Specifically there are
+   two sequences of MF inputs - a true sequence which is followed by
+   an error signal and a false sequence which is not. Successful
+   learning involves the cerebellum outputting high force response for
+   the true sequence but not for the false. Sequences consist of three
+   blocks of MF input named A,B,C. The true sequence is B->A->C and
+   the false is A->B->C. 
+**/
+
 class TemporalSequence : public Environment {
 public:
     enum state { resting, fake, real };
@@ -32,14 +43,14 @@ protected:
     state lastPhase;
     long phaseTransitionTime;
 
-    static const int phaseDuration = 1500;
-    static const int restTimeMSec = 2000;
+    int phaseDuration;
+    int restTimeMSec;
 
     float manMFs[1024];
-    const static int trialLen = 2 * (phaseDuration + restTimeMSec);
+    int trialLen;
     const static int nTrials = 500;
     const static int nAdditionalTrials = 10;
-    float mzOutputs[trialLen];
+    std::vector<float> mzOutputs;
 
     void toneA() {
         for (int i=100; i<150; i++)
