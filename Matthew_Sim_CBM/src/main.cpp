@@ -10,7 +10,7 @@
 #include "../includes/environments/cartpole.hpp"
 #include "../includes/environments/robocup.hpp"
 #include "../includes/environments/audio.hpp"
-#include "../includes/environments/test.hpp"
+#include "../includes/environments/temporalsequence.hpp"
 #include "../includes/environments/pid.hpp"
 #include "../includes/environments/xor.hpp"
 #include "../includes/environments/subtraction.hpp"
@@ -37,7 +37,7 @@ int main(int argc, char **argv)
     desc.add_options()
         ("help,h", "produce help message")
         ("environment,e", po::value<string>()->required(),
-         "Experimental Environment. Choices: default, eyelid, cartpole, robocup, audio, test, xor, subtraction, pid")
+         "Experimental Environment. Choices: default, eyelid, cartpole, robocup, audio, sequence, xor, subtraction, pid")
         ("conPF", po::value<string>()->default_value("../CBM_Params/conParams.txt"),
          "Connectivity Parameter File")
         ("actPF", po::value<string>()->default_value("../CBM_Params/actParams1.txt"),
@@ -60,7 +60,7 @@ int main(int argc, char **argv)
         cout << Cartpole::getOptions() << endl;
         cout << Robocup::getOptions() << endl;
         cout << Audio::getOptions() << endl;
-        cout << Test::getOptions() << endl;        
+        cout << TemporalSequence::getOptions() << endl;        
         cout << Xor::getOptions() << endl;
         cout << Subtraction::getOptions() << endl;
         cout << PID::getOptions() << endl;        
@@ -96,15 +96,13 @@ int main(int argc, char **argv)
         env = new Robocup(&randGen, argc, argv);
     else if (envStr == "audio")
         env = new Audio(&randGen, argc, argv);
-    else if (envStr == "test")
-        env = new Test(&randGen, argc, argv);
+    else if (envStr == "sequence")
+        env = new TemporalSequence(&randGen, argc, argv);
     else if (envStr == "xor")
         env = new Xor(&randGen, argc, argv);
-    else if (envStr == "subtraction") {
+    else if (envStr == "subtraction")
         env = new Subtraction(&randGen, argc, argv);
-        // conPF = "../CBM_Params/sim_GOHGO/fig4/conParams_GOGOI.txt";
-        // actPF = "../CBM_Params/sim_GOHGO/fig4/actParams_GOGOI_DEP_Matt.txt";
-    } else if (envStr == "PID")
+    else if (envStr == "PID")
         env = new PID(&randGen, argc, argv);
     else if (envStr == "Identity")
         env = new Identity(&randGen, argc, argv);

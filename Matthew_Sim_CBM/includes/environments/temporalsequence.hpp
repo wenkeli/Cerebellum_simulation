@@ -1,16 +1,16 @@
-#ifndef TEST_HPP
-#define TEST_HPP
+#ifndef TEMPORALSEQUENCE_HPP
+#define TEMPORALSEQUENCE_HPP
 
 #include "environment.hpp"
 #include "microzone.hpp"
 #include "statevariable.hpp"
 
-class Test : public Environment {
+class TemporalSequence : public Environment {
 public:
     enum state { resting, fake, real };
 
-    Test(CRandomSFMT0 *randGen, int argc, char **argv);
-    ~Test();
+    TemporalSequence(CRandomSFMT0 *randGen, int argc, char **argv);
+    ~TemporalSequence();
 
     int numRequiredMZ() { return 1; }
     void setupMossyFibers(CBMState *simState);
@@ -24,7 +24,7 @@ public:
 protected:
     std::ofstream logfile;
     Microzone mz_0;
-    StateVariable<Test> sv_highFreq, sv_manual;
+    StateVariable<TemporalSequence> sv_highFreq, sv_manual;
 
     static const bool randomizeMFs = false;
 
@@ -57,4 +57,4 @@ protected:
     }
 };
 
-#endif // TEST_HPP
+#endif // TEMPORALSEQUENCE_HPP

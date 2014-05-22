@@ -1,19 +1,19 @@
-#include "../../includes/environments/test.hpp"
+#include "../../includes/environments/temporalsequence.hpp"
 #include <boost/filesystem.hpp>
 
 using namespace std;
 using namespace boost::filesystem;
 namespace po = boost::program_options;
 
-po::options_description Test::getOptions() {
-    po::options_description desc("Test Environment Options");    
+po::options_description TemporalSequence::getOptions() {
+    po::options_description desc("TemporalSequence Environment Options");    
     desc.add_options()
         ("logfile", po::value<string>()->default_value("test.log"),"log file")
         ;
     return desc;
 }
 
-Test::Test(CRandomSFMT0 *randGen, int argc, char **argv)
+TemporalSequence::TemporalSequence(CRandomSFMT0 *randGen, int argc, char **argv)
     : Environment(randGen),
       mz_0("0", 0, 1, 1, .95),
       sv_highFreq("highFreqMFs", HIGH_FREQ, .03),
@@ -39,18 +39,18 @@ Test::Test(CRandomSFMT0 *randGen, int argc, char **argv)
     }
 }
 
-Test::~Test() {
+TemporalSequence::~TemporalSequence() {
     logfile.close();
 }
 
-void Test::setupMossyFibers(CBMState *simState) {
+void TemporalSequence::setupMossyFibers(CBMState *simState) {
     Environment::setupMossyFibers(simState);
     Environment::setupStateVariables(randomizeMFs, logfile);
 
-    sv_manual.initializeManual(this, &Test::getManualMF);
+    sv_manual.initializeManual(this, &TemporalSequence::getManualMF);
 }
 
-float* Test::getManualMF() {
+float* TemporalSequence::getManualMF() {
     for (int i=0; i<sv_manual.getNumMF(); i++)
         manMFs[i] = 0;
 
@@ -78,7 +78,7 @@ float* Test::getManualMF() {
     return manMFs;
 }
 
-float* Test::getState() {
+float* TemporalSequence::getState() {
     for (int i=0; i<numMF; i++)
         mfFreq[i] = mfFreqRelaxed[i];
 
@@ -88,7 +88,7 @@ float* Test::getState() {
     return &mfFreq[0];
 }
 
-void Test::step(CBMSimCore *simCore) {
+void TemporalSequence::step(CBMSimCore *simCore) {
     Environment::step(simCore);
 
     if (timestep >= nTrials * trialLen)
@@ -139,7 +139,7 @@ void Test::step(CBMSimCore *simCore) {
         assert(false);
 }
 
-bool Test::terminated() {
+bool TemporalSequence::terminated() {
     if (timestep >= nTrials * trialLen + nAdditionalTrials * trialLen) {
         printf("MZOutput: ");
         for (int i=0; i<trialLen; i++) {
