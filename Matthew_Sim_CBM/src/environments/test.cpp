@@ -96,7 +96,7 @@ void Test::step(CBMSimCore *simCore) {
 
     if (phase == real || phase == fake) {
         if (timestep % 100 == 0)
-            logfile << timestep << " mz0MovingAvg " << mz_0.getMovingAverage() << endl;                
+            logfile << timestep << " mz0MovingAvg " << mz_0.getMovingAverage() << endl;
     }
 
     if (phase == resting) {

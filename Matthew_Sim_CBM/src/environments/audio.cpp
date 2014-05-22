@@ -198,7 +198,7 @@ void Audio::step(CBMSimCore *simCore) {
             phaseTransitionTime = timestep;
             BASS_ChannelPause(chan);
         }
-        else if (chanPos_secs >= .5 * chanLen_secs) {
+        else if (chanPos_secs >= .1 * chanLen_secs) {
             // Deliver regular error
             if (timestep % 200 == 0) {
                 discipleMZ->smartDeliverError();

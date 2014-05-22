@@ -32,7 +32,7 @@ protected:
     state lastPhase;
     long phaseTransitionTime;
 
-    static const int phaseDuration = 750;
+    static const int phaseDuration = 1500;
     static const int restTimeMSec = 2000;
 
     float manMFs[1024];
