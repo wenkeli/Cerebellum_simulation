@@ -277,7 +277,7 @@ void ECManagementDelay::calcSimActivity()
 	{
 		grPCPlastSet=true;
 		grPCPlastReset=false;
-		simulation->getMZoneList()[0]->setGRPCPlastSteps(-0.0001f*((float)(csOffTime-csOnTime)-200)/100.0f, 0.0001f);
+		simulation->getMZoneList()[0]->setGRPCPlastSteps(-0.0005f*((float)(csOffTime-csOnTime)-200)/100.0f, 0.0005f);
 	}
 
 	if(!grPCPlastReset && currentTime>=csOffTime+200 && currentTrial>=csStartTrialN)
