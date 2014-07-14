@@ -27,7 +27,7 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 ECManagementDelay::ECManagementDelay(string stateDataFile, int randSeed,
 		int numT, int iti, int csOn, int csOff, int csPOff,
 		int csStartTN, int dataStartTN, int nDataT,
-		std::string dataFileName, int gpuIndStart=-1, int numGPUP2=-1)
+		string dataFileName, int gpuIndStart, int numGPUP2)
 		:ECManagementBase(stateDataFile, numT, iti, randSeed,
 			gpuIndStart, numGPUP2)
 {
