@@ -68,9 +68,13 @@ private:
 
     InterThreadComm *itc;
 
+    bool loadStateData;
+
+    std::string stateDataFileName;
+
     std::string conPFileName;
     std::string actPFileName;
-    std::string dataFileName;
+    std::string outDataFileName;
 
     void showActCommon(int checked, int checkedIndex, QWidget *view);
 };

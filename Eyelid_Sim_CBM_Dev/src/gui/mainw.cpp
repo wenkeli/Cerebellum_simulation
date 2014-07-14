@@ -7,6 +7,11 @@ MainW::MainW(QApplication *app, QWidget *parent)
     : QWidget(parent)
 {
 	QStringList args;
+
+	int loadType;
+
+	bool convertSuccess;
+
 	int argc;
 
 	ui.setupUi(this);
@@ -14,13 +19,41 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	args=app->arguments();
 	argc=app->argc();
 
-	conPFileName=args[1].toStdString();
-	actPFileName=args[2].toStdString();
-
-	dataFileName="dataOut";
-	if(argc>3)
+	loadType=args[1].toInt(&convertSuccess);
+	if(!convertSuccess)
 	{
-		dataFileName=args[3].toStdString();
+		cerr<<"must specify type of file to be loaded:"<<endl
+				<<"0 for connectivity and parameter files"<<endl
+				<<"1 for statedata files"<<endl;
+
+		return;
+	}
+	loadStateData=(loadType!=0);
+
+	outDataFileName="dataOut";
+	if(!loadStateData)
+	{
+		conPFileName=args[2].toStdString();
+		actPFileName=args[3].toStdString();
+
+		if(argc>4)
+		{
+			outDataFileName=args[4].toStdString();
+		}
+
+		cout<<"conPF "<<conPFileName<<endl;
+		cout<<"actPF "<<actPFileName<<endl;
+	}
+	else
+	{
+		stateDataFileName=args[2].toStdString();
+
+		if(argc>3)
+		{
+			outDataFileName=args[3].toStdString();
+		}
+
+		cout<<"stateDataF "<<stateDataFileName<<endl;
 	}
 
 	this->setAttribute(Qt::WA_DeleteOnClose);
@@ -28,9 +61,7 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	connect(ui.quitButton, SIGNAL(clicked()), app, SLOT(quit()));
 	connect(this, SIGNAL(destroyed()), app, SLOT(quit()));
 
-	cout<<"conPF "<<conPFileName<<endl;
-	cout<<"actPF "<<actPFileName<<endl;
-	cout<<"dataF "<<dataFileName<<endl;
+	cout<<"dataF "<<outDataFileName<<endl;
 
 	ui.numTrialsBox->setMaximum(1000000000);
 	ui.numTrialsBox->setValue(1050);
@@ -150,16 +181,27 @@ void MainW::run()
 
 	ui.runButton->setDisabled(true);
 
-	manager=new ECManagementDelay(conPFileName, actPFileName, time(0),
-			ui.numTrialsBox->value(), ui.itiBox->value(),
-			ui.csStartBox->value(), ui.csEndBox->value(), ui.csPEndBox->value(),
-			ui.csTrialStartNBox->value(), ui.dataTrialStartNBox->value(), ui.numDataTrialsBox->value(),
-			ui.fracCSTMFBox->value(), ui.fracCSPMFBox->value(), ui.fracCtxtMFBox->value(),
-			ui.mfBGFreqMinBox->value(), ui.csMFBGFreqMinBox->value(), ui.ctxtMFFreqMinBox->value(),
-			ui.csTMFFreqMinBox->value(), ui.csPMFFreqMinBox->value(),
-			ui.mfBGFreqMaxBox->value(), ui.csMFBGFreqMaxBox->value(), ui.ctxtMFFreqMaxBox->value(),
-			ui.csTMFFreqMaxBox->value(), ui.csPMFFreqMaxBox->value(),
-			dataFileName, ui.gpuStartNBox->value(), ui.numGPUP2Box->value());
+	if(!loadStateData)
+	{
+		manager=new ECManagementDelay(conPFileName, actPFileName, time(0),
+				ui.numTrialsBox->value(), ui.itiBox->value(),
+				ui.csStartBox->value(), ui.csEndBox->value(), ui.csPEndBox->value(),
+				ui.csTrialStartNBox->value(), ui.dataTrialStartNBox->value(), ui.numDataTrialsBox->value(),
+				ui.fracCSTMFBox->value(), ui.fracCSPMFBox->value(), ui.fracCtxtMFBox->value(),
+				ui.mfBGFreqMinBox->value(), ui.csMFBGFreqMinBox->value(), ui.ctxtMFFreqMinBox->value(),
+				ui.csTMFFreqMinBox->value(), ui.csPMFFreqMinBox->value(),
+				ui.mfBGFreqMaxBox->value(), ui.csMFBGFreqMaxBox->value(), ui.ctxtMFFreqMaxBox->value(),
+				ui.csTMFFreqMaxBox->value(), ui.csPMFFreqMaxBox->value(),
+				outDataFileName, ui.gpuStartNBox->value(), ui.numGPUP2Box->value());
+	}
+	else
+	{
+		manager=new ECManagementDelay(stateDataFileName, time(0),
+				ui.numTrialsBox->value(), ui.itiBox->value(),
+				ui.csStartBox->value(), ui.csEndBox->value(), ui.csPEndBox->value(),
+				ui.csTrialStartNBox->value(), ui.dataTrialStartNBox->value(), ui.numDataTrialsBox->value(),
+				outDataFileName, ui.gpuStartNBox->value(), ui.numGPUP2Box->value());
+	}
 
 	conParams=manager->getConParams();
 
