@@ -9,36 +9,25 @@
 
 using namespace std;
 
-ECManagementBase::ECManagementBase
-	(string conParamFile, string actParamFile, int numT, int iti, int randSeed,
-			int gpuIndStart, int numGPUP2)
+ECManagementBase::ECManagementBase(string conParamFile, string actParamFile,
+		int numT, int iti, int randSeed, int gpuIndStart, int numGPUP2)
 {
 	fstream conPF;
 	fstream actPF;
 
-	conPF.open(conParamFile.c_str());
-	actPF.open(actParamFile.c_str());
+	conPF.open(conParamFile.c_str(), ios::in);
+	actPF.open(actParamFile.c_str(), ios::in);
 
 	simState=new CBMState(actPF, conPF, 1, randSeed, &randSeed, &randSeed);
-	simulation=new CBMSimCore(simState, &randSeed, gpuIndStart, numGPUP2);
-
-	simulation->writeToState();
 
 	conPF.close();
 	actPF.close();
 
-	numMF=simState->getConnectivityParams()->getNumMF();
-	numTrials=numT;
-	interTrialI=iti;
-
-	cerr<<"numTrials: "<<numTrials<<" iti:"<<interTrialI<<endl;
-
-	currentTrial=0;
-	currentTime=-1;
+	initialize(randSeed, numT, iti, gpuIndStart, numGPUP2);
 }
 
-ECManagementBase::ECManagementBase(string stateDataFile, int numT, int iti, int randSeed,
-		int gpuIndStart, int numGPUP2)
+ECManagementBase::ECManagementBase(string stateDataFile,
+		int numT, int iti, int randSeed, int gpuIndStart, int numGPUP2)
 {
 	fstream stateDataF;
 
@@ -46,11 +35,16 @@ ECManagementBase::ECManagementBase(string stateDataFile, int numT, int iti, int 
 
 	simState=new CBMState(stateDataF);
 
+	stateDataF.close();
+
+	initialize(randSeed, numT, iti, gpuIndStart, numGPUP2);
+}
+
+void ECManagementBase::initialize(int randSeed, int numT, int iti, int gpuIndStart, int numGPUP2)
+{
 	simulation=new CBMSimCore(simState, &randSeed, gpuIndStart, numGPUP2);
 
 	simulation->writeToState();
-
-	stateDataF.close();
 
 	numMF=simState->getConnectivityParams()->getNumMF();
 	numTrials=numT;

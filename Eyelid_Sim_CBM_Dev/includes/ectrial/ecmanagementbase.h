@@ -65,6 +65,8 @@ protected:
 
 private:
 	ECManagementBase();
+
+	void initialize(int randSeed, int numT, int iti, int gpuIndStart, int numGPUP2);
 };
 
 #endif /* ECMANAGEMENT_H_ */

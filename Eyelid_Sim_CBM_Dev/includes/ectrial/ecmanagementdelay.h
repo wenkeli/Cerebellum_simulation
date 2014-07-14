@@ -54,6 +54,10 @@ protected:
 	ECMFPopulation *mfFreqs;
 	PoissonRegenCells *mfs;
 
+	float *mfFreqBG;
+	float *mfFreqInCSPhasic;
+	float *mfFreqInCSTonic;
+
 	int rSeed;
 
 	int csOnTime;
@@ -63,26 +67,6 @@ protected:
 	int csStartTrialN;
 	int dataStartTrialN;
 	int numDataTrials;
-
-	float fracCSTonicMF;
-	float fracCSPhasicMF;
-	float fracContextMF;
-
-	float backGFreqMin;
-	float csBackGFreqMin;
-	float contextFreqMin;
-	float csTonicFreqMin;
-	float csPhasicFreqMin;
-
-	float backGFreqMax;
-	float csBackGFreqMax;
-	float contextFreqMax;
-	float csTonicFreqMax;
-	float csPhasicFreqMax;
-
-	float *mfFreqBG;
-	float *mfFreqInCSTonic;
-	float *mfFreqInCSPhasic;
 
 	bool grPCPlastSet;
 	bool grPCPlastReset;
@@ -95,6 +79,8 @@ protected:
 
 private:
 	ECManagementDelay();
+	void initialize(int randSeed, int csOn, int csOff, int csPOff,
+			int csStartTN, int dataStartTN, int nDataT);
 };
 
 

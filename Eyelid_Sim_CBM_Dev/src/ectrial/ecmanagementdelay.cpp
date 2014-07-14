@@ -17,16 +17,40 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 		string dataFileName, int gpuIndStart, int numGPUP2)
 		:ECManagementBase(conParamFile, actParamFile, numT, iti, randSeed, gpuIndStart, numGPUP2)
 {
-//	CRandomSFMT0 randGen(randSeed);
-//
-//	int numCSTMF;
-//	int numCSPMF;
-//	int numCtxtMF;
-//
-//	bool *isCSTonic;
-//	bool *isCSPhasic;
-//	bool *isContext;
+	mfFreqs=new ECMFPopulation(numMF, randSeed, fracCSTMF, fracCSPMF, fracCtxtMF,
+			bgFreqMin, csBGFreqMin, ctxtFreqMin, csTFreqMin, csPFreqMin,
+			bgFreqMax, csBGFreqMax, ctxtFreqMax, csTFreqMax, csPFreqMax);
 
+	initialize(randSeed, csOn, csOff, csPOff, csStartTN, dataStartTN, nDataT);
+}
+
+ECManagementDelay::ECManagementDelay(string stateDataFile, int randSeed,
+		int numT, int iti, int csOn, int csOff, int csPOff,
+		int csStartTN, int dataStartTN, int nDataT,
+		std::string dataFileName, int gpuIndStart=-1, int numGPUP2=-1)
+		:ECManagementBase(stateDataFile, numT, iti, randSeed,
+			gpuIndStart, numGPUP2)
+{
+	fstream sdFile;
+
+	CBMState *dummyState;
+	ECTrialsData *prevData;
+
+	sdFile.open(stateDataFile.c_str(), ios::in|ios::binary);
+
+	dummyState=new CBMState(sdFile);
+	prevData=new ECTrialsData(sdFile);
+
+	mfFreqs=new ECMFPopulation(prevData);
+	initialize(randSeed, csOn, csOff, csPOff, csStartTN, dataStartTN, nDataT);
+
+	delete dummyState;
+	delete prevData;
+}
+
+void ECManagementDelay::initialize(int randSeed, int csOn, int csOff, int csPOff,
+		int csStartTN, int dataStartTN, int nDataT)
+{
 	rSeed=randSeed;
 
 	csOnTime=csOn;
@@ -37,122 +61,11 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 	dataStartTrialN=dataStartTN;
 	numDataTrials=nDataT;
 
-	fracCSTonicMF=fracCSTMF;
-	fracCSPhasicMF=fracCSPMF;
-	fracContextMF=fracCtxtMF;
+	mfs=new PoissonRegenCells(numMF, randSeed, 4, 1);
 
-	backGFreqMin=bgFreqMin;
-	csBackGFreqMin=csBGFreqMin;
-	contextFreqMin=ctxtFreqMin;
-	csTonicFreqMin=csTFreqMin;
-	csPhasicFreqMin=csPFreqMin;
-
-	backGFreqMax=bgFreqMax;
-	csBackGFreqMax=csBGFreqMax;
-	contextFreqMax=ctxtFreqMax;
-	csTonicFreqMax=csTFreqMax;
-	csPhasicFreqMax=csPFreqMax;
-
-	mfs=new PoissonRegenCells(numMF, rSeed, 4, 1);
-
-//	mfFreqBG=new float[numMF];
-//	mfFreqInCSTonic=new float[numMF];
-//	mfFreqInCSPhasic=new float[numMF];
-
-
-//	isCSTonic=new bool[numMF];
-//	isCSPhasic=new bool[numMF];
-//	isContext=new bool[numMF];
-//
-//	for(int i=0; i<numMF; i++)
-//	{
-//		mfFreqBG[i]=randGen.Random()*(backGFreqMax-backGFreqMin)+backGFreqMin;
-//		mfFreqInCSTonic[i]=mfFreqBG[i];
-//		mfFreqInCSPhasic[i]=mfFreqBG[i];
-//
-//		isCSTonic[i]=false;
-//		isCSPhasic[i]=false;
-//		isContext[i]=false;
-//	}
-//
-//	numCSTMF=fracCSTonicMF*numMF;
-//	numCSPMF=fracCSPhasicMF*numMF;
-//	numCtxtMF=fracContextMF*numMF;
-//
-//	for(int i=0; i<numCSTMF; i++)
-//	{
-//		while(true)
-//		{
-//			int mfInd;
-//
-//			mfInd=randGen.IRandom(0, numMF-1);
-//
-//			if(isCSTonic[mfInd])
-//			{
-//				continue;
-//			}
-//
-//			isCSTonic[mfInd]=true;
-//			break;
-//		}
-//	}
-//
-//	for(int i=0; i<numCSPMF; i++)
-//	{
-//		while(true)
-//		{
-//			int mfInd;
-//
-//			mfInd=randGen.IRandom(0, numMF-1);
-//
-//			if(isCSPhasic[mfInd] || isCSTonic[mfInd])
-//			{
-//				continue;
-//			}
-//
-//			isCSPhasic[mfInd]=true;
-//			break;
-//		}
-//	}
-//
-//	for(int i=0; i<numCtxtMF; i++)
-//	{
-//		while(true)
-//		{
-//			int mfInd;
-//
-//			mfInd=randGen.IRandom(0, numMF-1);
-//
-//			if(isContext[mfInd] || isCSPhasic[mfInd] || isCSTonic[mfInd])
-//			{
-//				continue;
-//			}
-//
-//			isContext[mfInd]=true;
-//			break;
-//		}
-//	}
-//
-//	for(int i=0; i<numMF; i++)
-//	{
-//		if(isContext[i])
-//		{
-//			mfFreqBG[i]=randGen.Random()*(contextFreqMax-contextFreqMin)+contextFreqMin;
-//			mfFreqInCSTonic[i]=mfFreqBG[i];
-//			mfFreqInCSPhasic[i]=mfFreqBG[i];
-//		}
-//
-//		if(isCSTonic[i])
-//		{
-//			mfFreqInCSTonic[i]=randGen.Random()*(csTonicFreqMax-csTonicFreqMin)+csTonicFreqMin;
-//			mfFreqInCSPhasic[i]=mfFreqInCSTonic[i];
-//		}
-//
-//		if(isCSPhasic[i])
-//		{
-//			mfFreqInCSPhasic[i]=randGen.Random()*(csPhasicFreqMax-csPhasicFreqMin)+csPhasicFreqMin;
-//		}
-//	}
+	mfFreqBG=mfFreqs->getMFBG();
+	mfFreqInCSTonic=mfFreqs->getMFInCSTonic();
+	mfFreqInCSPhasic=mfFreqs->getMFFreqInCSPhasic();
 
 	simState->getActivityParams()->showParams(cout);
 	simState->getConnectivityParams()->showParams(cout);
@@ -217,18 +130,12 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 
 	grPCPlastSet=false;
 	grPCPlastReset=true;
-
-	delete[] isCSTonic;
-	delete[] isCSPhasic;
-	delete[] isContext;
 }
 
 ECManagementDelay::~ECManagementDelay()
 {
 	delete mfs;
-	delete[] mfFreqBG;
-	delete[] mfFreqInCSTonic;
-	delete[] mfFreqInCSPhasic;
+	delete mfFreqs;
 
 	delete data;
 }
