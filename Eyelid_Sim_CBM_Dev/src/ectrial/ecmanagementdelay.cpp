@@ -17,15 +17,15 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 		string dataFileName, int gpuIndStart, int numGPUP2)
 		:ECManagementBase(conParamFile, actParamFile, numT, iti, randSeed, gpuIndStart, numGPUP2)
 {
-	CRandomSFMT0 randGen(randSeed);
-
-	int numCSTMF;
-	int numCSPMF;
-	int numCtxtMF;
-
-	bool *isCSTonic;
-	bool *isCSPhasic;
-	bool *isContext;
+//	CRandomSFMT0 randGen(randSeed);
+//
+//	int numCSTMF;
+//	int numCSPMF;
+//	int numCtxtMF;
+//
+//	bool *isCSTonic;
+//	bool *isCSPhasic;
+//	bool *isContext;
 
 	rSeed=randSeed;
 
@@ -55,104 +55,104 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 
 	mfs=new PoissonRegenCells(numMF, rSeed, 4, 1);
 
-	mfFreqBG=new float[numMF];
-	mfFreqInCSTonic=new float[numMF];
-	mfFreqInCSPhasic=new float[numMF];
+//	mfFreqBG=new float[numMF];
+//	mfFreqInCSTonic=new float[numMF];
+//	mfFreqInCSPhasic=new float[numMF];
 
 
-	isCSTonic=new bool[numMF];
-	isCSPhasic=new bool[numMF];
-	isContext=new bool[numMF];
-
-	for(int i=0; i<numMF; i++)
-	{
-		mfFreqBG[i]=randGen.Random()*(backGFreqMax-backGFreqMin)+backGFreqMin;
-		mfFreqInCSTonic[i]=mfFreqBG[i];
-		mfFreqInCSPhasic[i]=mfFreqBG[i];
-
-		isCSTonic[i]=false;
-		isCSPhasic[i]=false;
-		isContext[i]=false;
-	}
-
-	numCSTMF=fracCSTonicMF*numMF;
-	numCSPMF=fracCSPhasicMF*numMF;
-	numCtxtMF=fracContextMF*numMF;
-
-	for(int i=0; i<numCSTMF; i++)
-	{
-		while(true)
-		{
-			int mfInd;
-
-			mfInd=randGen.IRandom(0, numMF-1);
-
-			if(isCSTonic[mfInd])
-			{
-				continue;
-			}
-
-			isCSTonic[mfInd]=true;
-			break;
-		}
-	}
-
-	for(int i=0; i<numCSPMF; i++)
-	{
-		while(true)
-		{
-			int mfInd;
-
-			mfInd=randGen.IRandom(0, numMF-1);
-
-			if(isCSPhasic[mfInd] || isCSTonic[mfInd])
-			{
-				continue;
-			}
-
-			isCSPhasic[mfInd]=true;
-			break;
-		}
-	}
-
-	for(int i=0; i<numCtxtMF; i++)
-	{
-		while(true)
-		{
-			int mfInd;
-
-			mfInd=randGen.IRandom(0, numMF-1);
-
-			if(isContext[mfInd] || isCSPhasic[mfInd] || isCSTonic[mfInd])
-			{
-				continue;
-			}
-
-			isContext[mfInd]=true;
-			break;
-		}
-	}
-
-	for(int i=0; i<numMF; i++)
-	{
-		if(isContext[i])
-		{
-			mfFreqBG[i]=randGen.Random()*(contextFreqMax-contextFreqMin)+contextFreqMin;
-			mfFreqInCSTonic[i]=mfFreqBG[i];
-			mfFreqInCSPhasic[i]=mfFreqBG[i];
-		}
-
-		if(isCSTonic[i])
-		{
-			mfFreqInCSTonic[i]=randGen.Random()*(csTonicFreqMax-csTonicFreqMin)+csTonicFreqMin;
-			mfFreqInCSPhasic[i]=mfFreqInCSTonic[i];
-		}
-
-		if(isCSPhasic[i])
-		{
-			mfFreqInCSPhasic[i]=randGen.Random()*(csPhasicFreqMax-csPhasicFreqMin)+csPhasicFreqMin;
-		}
-	}
+//	isCSTonic=new bool[numMF];
+//	isCSPhasic=new bool[numMF];
+//	isContext=new bool[numMF];
+//
+//	for(int i=0; i<numMF; i++)
+//	{
+//		mfFreqBG[i]=randGen.Random()*(backGFreqMax-backGFreqMin)+backGFreqMin;
+//		mfFreqInCSTonic[i]=mfFreqBG[i];
+//		mfFreqInCSPhasic[i]=mfFreqBG[i];
+//
+//		isCSTonic[i]=false;
+//		isCSPhasic[i]=false;
+//		isContext[i]=false;
+//	}
+//
+//	numCSTMF=fracCSTonicMF*numMF;
+//	numCSPMF=fracCSPhasicMF*numMF;
+//	numCtxtMF=fracContextMF*numMF;
+//
+//	for(int i=0; i<numCSTMF; i++)
+//	{
+//		while(true)
+//		{
+//			int mfInd;
+//
+//			mfInd=randGen.IRandom(0, numMF-1);
+//
+//			if(isCSTonic[mfInd])
+//			{
+//				continue;
+//			}
+//
+//			isCSTonic[mfInd]=true;
+//			break;
+//		}
+//	}
+//
+//	for(int i=0; i<numCSPMF; i++)
+//	{
+//		while(true)
+//		{
+//			int mfInd;
+//
+//			mfInd=randGen.IRandom(0, numMF-1);
+//
+//			if(isCSPhasic[mfInd] || isCSTonic[mfInd])
+//			{
+//				continue;
+//			}
+//
+//			isCSPhasic[mfInd]=true;
+//			break;
+//		}
+//	}
+//
+//	for(int i=0; i<numCtxtMF; i++)
+//	{
+//		while(true)
+//		{
+//			int mfInd;
+//
+//			mfInd=randGen.IRandom(0, numMF-1);
+//
+//			if(isContext[mfInd] || isCSPhasic[mfInd] || isCSTonic[mfInd])
+//			{
+//				continue;
+//			}
+//
+//			isContext[mfInd]=true;
+//			break;
+//		}
+//	}
+//
+//	for(int i=0; i<numMF; i++)
+//	{
+//		if(isContext[i])
+//		{
+//			mfFreqBG[i]=randGen.Random()*(contextFreqMax-contextFreqMin)+contextFreqMin;
+//			mfFreqInCSTonic[i]=mfFreqBG[i];
+//			mfFreqInCSPhasic[i]=mfFreqBG[i];
+//		}
+//
+//		if(isCSTonic[i])
+//		{
+//			mfFreqInCSTonic[i]=randGen.Random()*(csTonicFreqMax-csTonicFreqMin)+csTonicFreqMin;
+//			mfFreqInCSPhasic[i]=mfFreqInCSTonic[i];
+//		}
+//
+//		if(isCSPhasic[i])
+//		{
+//			mfFreqInCSPhasic[i]=randGen.Random()*(csPhasicFreqMax-csPhasicFreqMin)+csPhasicFreqMin;
+//		}
+//	}
 
 	simState->getActivityParams()->showParams(cout);
 	simState->getConnectivityParams()->showParams(cout);

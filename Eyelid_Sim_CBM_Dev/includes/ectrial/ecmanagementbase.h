@@ -28,6 +28,9 @@ public:
 	ECManagementBase(std::string conParamFile, std::string actParamFile,
 			int numT, int iti, int randSeed,
 			int gpuIndStart=-1, int numGPUP2=-1);
+	ECManagementBase(std::string stateDataFile, int numT, int iti, int randSeed,
+			int gpuIndStart=-1, int numGPUP2=-1);
+
 	virtual ~ECManagementBase();
 
 	bool runStep();

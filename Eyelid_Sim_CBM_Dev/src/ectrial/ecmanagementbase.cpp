@@ -37,6 +37,31 @@ ECManagementBase::ECManagementBase
 	currentTime=-1;
 }
 
+ECManagementBase::ECManagementBase(string stateDataFile, int numT, int iti, int randSeed,
+		int gpuIndStart, int numGPUP2)
+{
+	fstream stateDataF;
+
+	stateDataF.open(stateDataFile.c_str(), ios::in|ios::binary);
+
+	simState=new CBMState(stateDataF);
+
+	simulation=new CBMSimCore(simState, &randSeed, gpuIndStart, numGPUP2);
+
+	simulation->writeToState();
+
+	stateDataF.close();
+
+	numMF=simState->getConnectivityParams()->getNumMF();
+	numTrials=numT;
+	interTrialI=iti;
+
+	cerr<<"numTrials: "<<numTrials<<" iti:"<<interTrialI<<endl;
+
+	currentTrial=0;
+	currentTime=-1;
+}
+
 ECManagementBase::~ECManagementBase()
 {
 	delete simulation;

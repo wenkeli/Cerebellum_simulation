@@ -17,6 +17,7 @@
 
 #include <CBMToolsInclude/poissonregencells.h>
 #include <CBMToolsInclude/eyelidintegrator.h>
+#include <CBMToolsInclude/ecmfpopulation.h>
 
 #include <CBMCoreInclude/interface/cbmsimcore.h>
 #include <CBMCoreInclude/interface/innetinterface.h>
@@ -37,6 +38,10 @@ public:
 			float bgFreqMin, float csBGFreqMin, float ctxtFreqMin, float csTFreqMin, float csPFreqMin,
 			float bgFreqMax, float csBGFreqMax, float ctxtFreqMax, float csTFreqMax, float csPFreqMax,
 			std::string dataFileName, int gpuIndStart=-1, int numGPUP2=-1);
+	ECManagementDelay(std::string stateDataFile, int randSeed,
+			int numT, int iti, int csOn, int csOff, int csPOff,
+			int csStartTN, int dataStartTN, int nDataT,
+			std::string dataFileName, int gpuIndStart=-1, int numGPUP2=-1);
 
 	virtual ~ECManagementDelay();
 
@@ -46,7 +51,9 @@ protected:
 	virtual void calcMFActivity();
 	virtual void calcSimActivity();
 
+	ECMFPopulation *mfFreqs;
 	PoissonRegenCells *mfs;
+
 	int rSeed;
 
 	int csOnTime;
