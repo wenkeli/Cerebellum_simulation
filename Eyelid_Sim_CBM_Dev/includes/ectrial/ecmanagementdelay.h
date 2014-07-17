@@ -80,7 +80,7 @@ protected:
 private:
 	ECManagementDelay();
 	void initialize(int randSeed, int csOn, int csOff, int csPOff,
-			int csStartTN, int dataStartTN, int nDataT);
+			int csStartTN, int dataStartTN, int nDataT, std::string dataFileName);
 };
 
 

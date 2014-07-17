@@ -21,7 +21,7 @@ ECManagementDelay::ECManagementDelay(string conParamFile, string actParamFile, i
 			bgFreqMin, csBGFreqMin, ctxtFreqMin, csTFreqMin, csPFreqMin,
 			bgFreqMax, csBGFreqMax, ctxtFreqMax, csTFreqMax, csPFreqMax);
 
-	initialize(randSeed, csOn, csOff, csPOff, csStartTN, dataStartTN, nDataT);
+	initialize(randSeed, csOn, csOff, csPOff, csStartTN, dataStartTN, nDataT, dataFileName);
 }
 
 ECManagementDelay::ECManagementDelay(string stateDataFile, int randSeed,
@@ -42,14 +42,14 @@ ECManagementDelay::ECManagementDelay(string stateDataFile, int randSeed,
 	prevData=new ECTrialsData(sdFile);
 
 	mfFreqs=new ECMFPopulation(prevData);
-	initialize(randSeed, csOn, csOff, csPOff, csStartTN, dataStartTN, nDataT);
+	initialize(randSeed, csOn, csOff, csPOff, csStartTN, dataStartTN, nDataT, dataFileName);
 
 	delete dummyState;
 	delete prevData;
 }
 
 void ECManagementDelay::initialize(int randSeed, int csOn, int csOff, int csPOff,
-		int csStartTN, int dataStartTN, int nDataT)
+		int csStartTN, int dataStartTN, int nDataT, string dataFileName)
 {
 	rSeed=randSeed;
 

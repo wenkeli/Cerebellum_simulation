@@ -56,6 +56,8 @@ MainW::MainW(QApplication *app, QWidget *parent)
 		cout<<"stateDataF "<<stateDataFileName<<endl;
 	}
 
+	cout<<"outDataF "<<outDataFileName<<endl;
+
 	this->setAttribute(Qt::WA_DeleteOnClose);
 
 	connect(ui.quitButton, SIGNAL(clicked()), app, SLOT(quit()));
