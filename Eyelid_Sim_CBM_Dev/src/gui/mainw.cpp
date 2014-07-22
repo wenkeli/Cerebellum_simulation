@@ -59,7 +59,7 @@ MainW::MainW(QApplication *app, QWidget *parent)
 
 		if(argc>4)
 		{
-			outDataFileName=args[3].toStdString();
+			outDataFileName=args[4].toStdString();
 		}
 
 		cout<<"stateDataF "<<stateDataFileName<<endl;
