@@ -151,9 +151,6 @@ void ECManagementDelay::initialize(int randSeed, int csOn, int csOff, int csPOff
 
 	grPCPlastSet=false;
 	grPCPlastReset=true;
-
-	//TODO: disable gr pc plast, make sure to unset this
-	simulation->getMZoneList()[0]->setGRPCPlastSteps(0, 0);
 }
 
 ECManagementDelay::~ECManagementDelay()
@@ -194,6 +191,8 @@ void ECManagementDelay::calcSimActivity()
 {
 	float eyelidPos;
 
+	//TODO: disable gr pc plast, make sure to unset this
+	simulation->getMZoneList()[0]->setGRPCPlastSteps(0, 0);
 	if(currentTime==(csOffTime-1) && currentTrial>=csStartTrialN)
 	{
 		simulation->updateErrDrive(0, 1.0);
