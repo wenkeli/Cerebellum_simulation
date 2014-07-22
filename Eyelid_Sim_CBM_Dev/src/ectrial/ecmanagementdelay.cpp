@@ -192,7 +192,7 @@ void ECManagementDelay::calcSimActivity()
 	float eyelidPos;
 
 	//TODO: disable gr pc plast, make sure to unset this
-	simulation->getMZoneList()[0]->setGRPCPlastSteps(0, 0);
+//	simulation->getMZoneList()[0]->setGRPCPlastSteps(0, 0);
 	if(currentTime==(csOffTime-1) && currentTrial>=csStartTrialN)
 	{
 		simulation->updateErrDrive(0, 1.0);
@@ -207,14 +207,14 @@ void ECManagementDelay::calcSimActivity()
 	{
 		grPCPlastSet=true;
 		grPCPlastReset=false;
-//		simulation->getMZoneList()[0]->setGRPCPlastSteps(-0.0005f*((float)(csOffTime-csOnTime)-200)/100.0f, 0.0005f);
+		simulation->getMZoneList()[0]->setGRPCPlastSteps(-0.0005f*((float)(csOffTime-csOnTime)-200)/100.0f, 0.0005f);
 	}
 
 	if(!grPCPlastReset && currentTime>=csOffTime+200 && currentTrial>=csStartTrialN)
 	{
 		grPCPlastSet=false;
 		grPCPlastReset=true;
-//		simulation->getMZoneList()[0]->resetGRPCPlastSteps();
+		simulation->getMZoneList()[0]->resetGRPCPlastSteps();
 	}
 
 	simulation->updateMFInput(apMF);
