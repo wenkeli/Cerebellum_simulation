@@ -60,7 +60,7 @@ ECManagementDelay::ECManagementDelay(string stateDataFN, string mfFN, int randSe
 	fstream mfFile;
 
 	sdFile.open(stateDataFN.c_str(), ios::in|ios::binary);
-	mfFile.open(mfFN.c_str(), ios::in);
+	mfFile.open(mfFN.c_str(), ios::in|ios::binary);
 
 	mfFreqs=new ECMFPopulation(mfFile);
 	initialize(randSeed, csOn, csOff, csPOff, csStartTN, dataStartTN, nDataT, dataFileName);
