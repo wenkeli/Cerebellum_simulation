@@ -68,9 +68,10 @@ private:
 
     InterThreadComm *itc;
 
-    bool loadStateData;
+    int loadType;
 
     std::string stateDataFileName;
+    std::string mfFileName;
 
     std::string conPFileName;
     std::string actPFileName;

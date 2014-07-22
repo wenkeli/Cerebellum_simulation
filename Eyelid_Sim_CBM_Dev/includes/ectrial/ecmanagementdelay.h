@@ -42,6 +42,10 @@ public:
 			int numT, int iti, int csOn, int csOff, int csPOff,
 			int csStartTN, int dataStartTN, int nDataT,
 			std::string dataFileName, int gpuIndStart=-1, int numGPUP2=-1);
+	ECManagementDelay(std::string stateDataFN, std::string mfFN, int randSeed,
+			int numT, int iti, int csOn, int csOff, int csPOff,
+			int csStartTN, int dataStartTN, int nDataT,
+			std::string dataFileName, int gpuIndStart=-1, int numGPUP2=-1);
 
 	virtual ~ECManagementDelay();
 

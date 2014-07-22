@@ -46,6 +46,27 @@ ECManagementDelay::ECManagementDelay(string stateDataFile, int randSeed,
 
 	delete dummyState;
 	delete prevData;
+	sdFile.close();
+}
+
+ECManagementDelay::ECManagementDelay(string stateDataFN, string mfFN, int randSeed,
+		int numT, int iti, int csOn, int csOff, int csPOff,
+		int csStartTN, int dataStartTN, int nDataT,
+		string dataFileName, int gpuIndStart, int numGPUP2)
+		:ECManagementBase(stateDataFN, numT, iti, randSeed,
+			gpuIndStart, numGPUP2)
+{
+	fstream sdFile;
+	fstream mfFile;
+
+	sdFile.open(stateDataFN.c_str(), ios::in|ios::binary);
+	mfFile.open(mfFN.c_str(), ios::in);
+
+	mfFreqs=new ECMFPopulation(mfFile);
+	initialize(randSeed, csOn, csOff, csPOff, csStartTN, dataStartTN, nDataT, dataFileName);
+
+	sdFile.close();
+	mfFile.close();
 }
 
 void ECManagementDelay::initialize(int randSeed, int csOn, int csOff, int csPOff,
@@ -238,11 +259,18 @@ void ECManagementDelay::calcSimActivity()
 
 void ECManagementDelay::writeDataToFile()
 {
+	string mfFN;
 	fstream dataOut;
+
+	mfFN=dataFileName+"_MFPop";
 
 	dataOut.open(dataFileName.c_str(), ios::out|ios::binary);
 	simulation->writeToState(dataOut);
 	data->writeData(dataOut);
+	dataOut.close();
+
+	dataOut.open(mfFN.c_str(), ios::out);
+	mfFreqs->writeToFile(dataOut);
 	dataOut.close();
 
 }

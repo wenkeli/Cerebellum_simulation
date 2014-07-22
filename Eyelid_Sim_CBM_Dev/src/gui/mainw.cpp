@@ -8,8 +8,6 @@ MainW::MainW(QApplication *app, QWidget *parent)
 {
 	QStringList args;
 
-	int loadType;
-
 	bool convertSuccess;
 
 	int argc;
@@ -28,10 +26,9 @@ MainW::MainW(QApplication *app, QWidget *parent)
 
 		return;
 	}
-	loadStateData=(loadType!=0);
 
 	outDataFileName="dataOut";
-	if(!loadStateData)
+	if(loadType==0)
 	{
 		conPFileName=args[2].toStdString();
 		actPFileName=args[3].toStdString();
@@ -44,7 +41,7 @@ MainW::MainW(QApplication *app, QWidget *parent)
 		cout<<"conPF "<<conPFileName<<endl;
 		cout<<"actPF "<<actPFileName<<endl;
 	}
-	else
+	else if(loadType==1)
 	{
 		stateDataFileName=args[2].toStdString();
 
@@ -54,6 +51,19 @@ MainW::MainW(QApplication *app, QWidget *parent)
 		}
 
 		cout<<"stateDataF "<<stateDataFileName<<endl;
+	}
+	else
+	{
+		stateDataFileName=args[2].toStdString();
+		mfFileName=args[3].toStdString();
+
+		if(argc>4)
+		{
+			outDataFileName=args[3].toStdString();
+		}
+
+		cout<<"stateDataF "<<stateDataFileName<<endl;
+		cout<<"mfFileName "<<mfFileName<<endl;
 	}
 
 	cout<<"outDataF "<<outDataFileName<<endl;
@@ -183,7 +193,7 @@ void MainW::run()
 
 	ui.runButton->setDisabled(true);
 
-	if(!loadStateData)
+	if(loadType==0)
 	{
 		manager=new ECManagementDelay(conPFileName, actPFileName, time(0),
 				ui.numTrialsBox->value(), ui.itiBox->value(),
@@ -196,9 +206,17 @@ void MainW::run()
 				ui.csTMFFreqMaxBox->value(), ui.csPMFFreqMaxBox->value(),
 				outDataFileName, ui.gpuStartNBox->value(), ui.numGPUP2Box->value());
 	}
-	else
+	else if(loadType==1)
 	{
 		manager=new ECManagementDelay(stateDataFileName, time(0),
+				ui.numTrialsBox->value(), ui.itiBox->value(),
+				ui.csStartBox->value(), ui.csEndBox->value(), ui.csPEndBox->value(),
+				ui.csTrialStartNBox->value(), ui.dataTrialStartNBox->value(), ui.numDataTrialsBox->value(),
+				outDataFileName, ui.gpuStartNBox->value(), ui.numGPUP2Box->value());
+	}
+	else
+	{
+		manager=new ECManagementDelay(stateDataFileName, mfFileName, time(0),
 				ui.numTrialsBox->value(), ui.itiBox->value(),
 				ui.csStartBox->value(), ui.csEndBox->value(), ui.csPEndBox->value(),
 				ui.csTrialStartNBox->value(), ui.dataTrialStartNBox->value(), ui.numDataTrialsBox->value(),
