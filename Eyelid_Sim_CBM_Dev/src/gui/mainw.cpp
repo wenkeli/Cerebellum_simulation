@@ -17,12 +17,22 @@ MainW::MainW(QApplication *app, QWidget *parent)
 	args=app->arguments();
 	argc=app->argc();
 
+	if(argc<2)
+	{
+		cerr<<"must specify type of file to be loaded:"<<endl
+				<<"0 for connectivity and activity parameter files"<<endl
+				<<"1 for statedata file"<<endl
+				<<"2 for statedata file and mf specification file"<<endl;
+		return;
+	}
+
 	loadType=args[1].toInt(&convertSuccess);
 	if(!convertSuccess)
 	{
 		cerr<<"must specify type of file to be loaded:"<<endl
-				<<"0 for connectivity and parameter files"<<endl
-				<<"1 for statedata files"<<endl;
+				<<"0 for connectivity and activity parameter files"<<endl
+				<<"1 for statedata file"<<endl
+				<<"2 for statedata file and mf specification file"<<endl;
 
 		return;
 	}
