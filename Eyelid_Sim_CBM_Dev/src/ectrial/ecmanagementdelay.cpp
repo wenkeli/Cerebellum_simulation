@@ -113,7 +113,7 @@ void ECManagementDelay::initialize(int randSeed, int csOn, int csOff, int csPOff
 		pshParams["goOutSynScale"]=pp;
 		pp.numCells=simState->getConnectivityParams()->getNumMF();
 		pshParams["mf"]=pp;
-		pp.numCells=simState->getConnectivityParams()->getNumGR(); // /10
+		pp.numCells=simState->getConnectivityParams()->getNumGR()/10;
 		pshParams["gr"]=pp;
 		pp.numCells=simState->getConnectivityParams()->getNumSC();
 		pshParams["sc"]=pp;
