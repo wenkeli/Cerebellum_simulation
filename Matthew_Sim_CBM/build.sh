@@ -2,7 +2,7 @@
 set -e
 
 # This toggles the analysis code. Requires R, Rcpp, RInside
-BUILD_ANALYSIS=1
+BUILD_ANALYSIS=0
 BUILD_GL=1
 BUILD_AUDIO=1
 
