@@ -72,6 +72,9 @@ ECManagementDelay::ECManagementDelay(string stateDataFN, string mfFN, int randSe
 void ECManagementDelay::initialize(int randSeed, int csOn, int csOff, int csPOff,
 		int csStartTN, int dataStartTN, int nDataT, string dataFileName)
 {
+	float ltdStart;
+	float ltdDuration;
+
 	rSeed=randSeed;
 
 	csOnTime=csOn;
@@ -90,6 +93,10 @@ void ECManagementDelay::initialize(int randSeed, int csOn, int csOff, int csPOff
 
 	simState->getActivityParams()->showParams(cout);
 	simState->getConnectivityParams()->showParams(cout);
+
+	ltdStart=simState->getActivityParams()->getParam("msLTDStartAPIO");
+	ltdDuration=simState->getActivityParams()->getParam("msLTDDurationIO");
+	grPCPlastLTDLTPRatio=((csOffTime-csOnTime)+ltdStart)/ltdDuration;
 
 	eyelidFunc=new EyelidIntegrator(simState->getConnectivityParams()->getNumNC(),
 			simState->getActivityParams()->getMSPerTimeStep(), 10.5, 0.012, -0.13, 0.13, 100);
@@ -207,7 +214,9 @@ void ECManagementDelay::calcSimActivity()
 	{
 		grPCPlastSet=true;
 		grPCPlastReset=false;
-		simulation->getMZoneList()[0]->setGRPCPlastSteps(-0.0005f*((float)(csOffTime-csOnTime)-200)/100.0f, 0.0005f);
+//		simulation->getMZoneList()[0]->setGRPCPlastSteps(-0.0005f*((float)(csOffTime-csOnTime)-200)/100.0f, 0.0005f);
+		simulation->getMZoneList()[0]->setGRPCPlastSteps(-0.0005f*grPCPlastLTDLTPRatio, 0.0005f);
+
 	}
 
 	if(!grPCPlastReset && currentTime>=csOffTime+200 && currentTrial>=csStartTrialN)
