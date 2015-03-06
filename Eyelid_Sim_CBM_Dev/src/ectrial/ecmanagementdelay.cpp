@@ -97,6 +97,10 @@ void ECManagementDelay::initialize(int randSeed, int csOn, int csOff, int csPOff
 	ltdStart=simState->getActivityParams()->getParam("msLTDStartAPIO");
 	ltdDuration=simState->getActivityParams()->getParam("msLTDDurationIO");
 	grPCPlastLTDLTPRatio=((csOffTime-csOnTime)+ltdStart)/ltdDuration;
+	if(grPCPlastLTDLTPRatio<=0.5)
+	{
+		grPCPlastLTDLTPRatio=0.5;
+	}
 
 	eyelidFunc=new EyelidIntegrator(simState->getConnectivityParams()->getNumNC(),
 			simState->getActivityParams()->getMSPerTimeStep(), 10.5, 0.012, -0.13, 0.13, 100);
