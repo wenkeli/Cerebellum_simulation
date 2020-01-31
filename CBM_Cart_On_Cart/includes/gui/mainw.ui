@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWClass</class>
+ <widget class="QMainWindow" name="MainWClass">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>574</width>
+    <height>513</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>220</y>
+      <width>183</width>
+      <height>265</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QPushButton" name="connectButton">
+       <property name="text">
+        <string>make connections</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="loadSimButton">
+       <property name="text">
+        <string>load sim state</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="viewMFGRButton">
+       <property name="text">
+        <string>view MF to GR connections</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="viewMFGOButton">
+       <property name="text">
+        <string>view MF to GO connections</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="viewGRGOButton">
+       <property name="text">
+        <string>view GR to GO connections</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="viewGOGRButton">
+       <property name="text">
+        <string>view GO to GR connections</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="runSimButton">
+       <property name="text">
+        <string>Run simulation</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="quitButton">
+       <property name="text">
+        <string>quit</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QTextBrowser" name="statusBox">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>391</width>
+      <height>491</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>connectButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWClass</receiver>
+   <slot>makeConns()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>491</x>
+     <y>237</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>415</x>
+     <y>245</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>viewMFGRButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWClass</receiver>
+   <slot>showMFGRMainP()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>452</x>
+     <y>313</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>452</x>
+     <y>208</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>viewMFGOButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWClass</receiver>
+   <slot>showMFGOMainP()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>499</x>
+     <y>347</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>522</x>
+     <y>135</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>viewGRGOButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWClass</receiver>
+   <slot>showGRGOMainP()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>473</x>
+     <y>380</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>431</x>
+     <y>120</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>viewGOGRButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWClass</receiver>
+   <slot>showGOGRMainP()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>507</x>
+     <y>409</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>505</x>
+     <y>63</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>runSimButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWClass</receiver>
+   <slot>runSimulation()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>546</x>
+     <y>446</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>552</x>
+     <y>226</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>loadSimButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWClass</receiver>
+   <slot>loadSim()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>431</x>
+     <y>269</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>441</x>
+     <y>165</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>makeConns()</slot>
+  <slot>showMFGRMainP()</slot>
+  <slot>showMFGOMainP()</slot>
+  <slot>showGRGOMainP()</slot>
+  <slot>showGOGRMainP()</slot>
+  <slot>runSimulation()</slot>
+  <slot>loadSim()</slot>
+ </slots>
+</ui>

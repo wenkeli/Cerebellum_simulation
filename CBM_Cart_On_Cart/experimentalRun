@@ -1,0 +1,52 @@
+#!/bin/bash
+date
+
+if [ -a .svn ]
+then
+    echo "SVN Revision:" `svnversion .`
+fi
+if [ -a .git ]
+then
+    echo "Git Revision:" `git rev-parse HEAD`
+fi 
+
+echo "Starting Experimental Run..."
+
+EXECUTABLE="./output/cbm_new_CUDAexpr"
+LOG_PREFIX="run"
+LOG_SUFFIX=".log"
+
+# Build the code
+./build exprapp > /dev/null 2>&1
+
+# Get sufficient memory to run this
+ulimit -s 1000000
+
+let NUMTRIALS=10
+let MAXTRIALLEN=1000000
+let DIFFICULTY=50
+let SEED=123
+
+# Experiments Here
+for i in {0..4}
+do
+    LOGFILE="$LOG_PREFIX$i$LOG_SUFFIX"
+    COMMAND="$EXECUTABLE --num_trials $NUMTRIALS --trial_length $MAXTRIALLEN --difficulty $DIFFICULTY -l $LOGFILE --seed $SEED"
+    
+    # Run the command
+    $COMMAND
+
+    # Re build & re-run the experiment if an anomaly was detected
+    while grep -q "Shutting down" $LOGFILE
+    do
+        echo "Inversion Detected in log file. Re-starting..."
+        ./build exprapp > /dev/null 2>&1
+        $COMMAND
+    done
+done
+
+echo "Experiments Finished!"
+date
+
+#cat nohup.out | mail -s "CBM_Cart_On_Cart Experiment Finished!" mhauskn@cs.utexas.edu
+echo 'Have a wonderful day!' | mail -s "CBM_Cart_On_Cart Experiment Finished!" mhauskn@cs.utexas.edu

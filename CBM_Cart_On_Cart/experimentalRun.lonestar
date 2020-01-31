@@ -1,0 +1,65 @@
+#!/bin/bash
+#$ -V                             	# Inherit the submission environment
+#$ -cwd                           	# Start job in submission dir
+#$ -N CBM_Cart_On_Cart 	               	# Job name
+#$ -j y                           	# Combine stderr and stdout into stdout
+#$ -o job.out      	                # Name of the output file
+#$ -pe 12way 12 	                # Request 1 node
+#$ -q gpu                               # Queue name
+#$ -l h_rt=24:00:00                	# runtime (hh:mm:ss) - 4 hours
+#$ -M mhauskn@cs.utexas.edu             # Address for email notification
+#$ -m e  	                        # Email at Begin and End of job
+
+module load cuda/4.2
+
+echo job $JOB_ID execution at: `date`
+
+# our node name
+NODE_HOSTNAME=`hostname -s`
+echo "running on node $NODE_HOSTNAME"
+
+if [ -a .svn ]
+then
+    echo "SVN Revision:" `svnversion .`
+fi
+if [ -a .git ]
+then
+    echo "Git Revision:" `git rev-parse HEAD`
+fi 
+
+echo "Starting Experimental Run..."
+
+EXECUTABLE="./output/cbm_new_CUDAexpr"
+LOG_PREFIX="exp"
+LOG_SUFFIX=".log"
+
+# Build the code
+make -j3 -f Lonestar.mk clean && make -j3 -f Lonestar.mk exprapp
+
+# Get sufficient memory to run this
+ulimit -s 1000000 -c 0
+
+let NUMTRIALS=20
+let MAXTRIALLEN=1000000
+let DIFFICULTY=50
+
+# Experiments Here
+for i in {0..4}
+do
+    LOGFILE="$LOG_PREFIX$i$LOG_SUFFIX"
+    COMMAND="$EXECUTABLE --num_trials $NUMTRIALS --trial_length $MAXTRIALLEN --difficulty $DIFFICULTY -l $LOGFILE"
+    
+    # Run the command
+    $COMMAND
+
+    # Re build & re-run the experiment if an anomaly was detected
+    while grep -q "Shutting down" $LOGFILE
+    do
+        echo "Inversion Detected in log file. Re-starting..."
+	make -j3 -f Lonestar.mk clean && make -j3 -f Lonestar.mk exprapp
+        $COMMAND
+    done
+done
+
+echo "Experiments Finished!"
+echo job $JOB_ID execution finished at: `date`

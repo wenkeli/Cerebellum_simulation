@@ -1,0 +1,16 @@
+#!/bin/bash
+LOG="expr.log"
+date > $LOG
+echo "Starting Experimental Runs..."
+echo "Writing to logfile $LOG"
+echo "Starting Experimental Runs..." >> $LOG
+
+# Experiments Here
+for i in {1..30}
+do
+    ./a.out -l rl$i.log >> $LOG
+done
+
+echo "Experiments Finished!"
+echo "Experiments Finished!" >> $LOG
+date >> $LOG

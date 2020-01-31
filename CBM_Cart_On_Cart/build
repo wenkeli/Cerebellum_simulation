@@ -1,0 +1,8 @@
+#!/bin/bash
+TARGET="guiapp"
+if [ $# -gt 0 ]
+then
+    TARGET=$1
+fi
+
+make -j3 -f Ubuntu.mk clean && make -j3 -f Ubuntu.mk $TARGET

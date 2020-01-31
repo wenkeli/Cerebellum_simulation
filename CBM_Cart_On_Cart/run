@@ -1,0 +1,8 @@
+#!/bin/bash
+TARGET="rungui"
+if [ $# -gt 0 ]
+then
+    TARGET=$1
+fi
+
+ulimit -s 1000000 && make -f Ubuntu.mk $TARGET

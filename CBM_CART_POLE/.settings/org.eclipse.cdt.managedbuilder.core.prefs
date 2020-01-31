@@ -1,0 +1,16 @@
+#Tue Apr 05 16:02:44 CDT 2011
+eclipse.preferences.version=1
+environment/buildEnvironmentInclude/cdt.managedbuild.config.gnu.mingw.exe.release.1629530075/CPATH/delimiter=\:
+environment/buildEnvironmentInclude/cdt.managedbuild.config.gnu.mingw.exe.release.1629530075/CPATH/operation=replace
+environment/buildEnvironmentInclude/cdt.managedbuild.config.gnu.mingw.exe.release.1629530075/CPATH/value=/opt/intel/composerxe-2011.2.137/mkl/include\:/opt/intel/composerxe-2011.2.137/tbb/include
+environment/buildEnvironmentInclude/cdt.managedbuild.config.gnu.mingw.exe.release.1629530075/CPLUS_INCLUDE_PATH/delimiter=\:
+environment/buildEnvironmentInclude/cdt.managedbuild.config.gnu.mingw.exe.release.1629530075/CPLUS_INCLUDE_PATH/operation=remove
+environment/buildEnvironmentInclude/cdt.managedbuild.config.gnu.mingw.exe.release.1629530075/C_INCLUDE_PATH/delimiter=\:
+environment/buildEnvironmentInclude/cdt.managedbuild.config.gnu.mingw.exe.release.1629530075/C_INCLUDE_PATH/operation=remove
+environment/buildEnvironmentInclude/cdt.managedbuild.config.gnu.mingw.exe.release.1629530075/append=true
+environment/buildEnvironmentInclude/cdt.managedbuild.config.gnu.mingw.exe.release.1629530075/appendContributed=true
+environment/buildEnvironmentLibrary/cdt.managedbuild.config.gnu.mingw.exe.release.1629530075/LIBRARY_PATH/delimiter=\:
+environment/buildEnvironmentLibrary/cdt.managedbuild.config.gnu.mingw.exe.release.1629530075/LIBRARY_PATH/operation=replace
+environment/buildEnvironmentLibrary/cdt.managedbuild.config.gnu.mingw.exe.release.1629530075/LIBRARY_PATH/value=/opt/intel/composerxe-2011.2.137/compiler/lib/intel64\:/opt/intel/composerxe-2011.2.137/ipp/../compiler/lib/intel64\:/opt/intel/composerxe-2011.2.137/ipp/lib/intel64\:/opt/intel/composerxe-2011.2.137/compiler/lib/intel64\:/opt/intel/composerxe-2011.2.137/mkl/lib/intel64\:/opt/intel/composerxe-2011.2.137/tbb/lib/intel64//cc4.1.0_libc2.4_kernel2.6.16.21
+environment/buildEnvironmentLibrary/cdt.managedbuild.config.gnu.mingw.exe.release.1629530075/append=true
+environment/buildEnvironmentLibrary/cdt.managedbuild.config.gnu.mingw.exe.release.1629530075/appendContributed=true

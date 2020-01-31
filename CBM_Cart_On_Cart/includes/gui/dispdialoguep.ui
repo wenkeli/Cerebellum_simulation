@@ -1,0 +1,158 @@
+<ui version="4.0" >
+ <class>DispDialoguePClass</class>
+ <widget class="QWidget" name="DispDialoguePClass" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>490</width>
+    <height>80</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>DispDialogueP</string>
+  </property>
+  <widget class="QTextBrowser" name="statusBox" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>241</width>
+     <height>81</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="startNumSel" >
+   <property name="geometry" >
+    <rect>
+     <x>300</x>
+     <y>0</y>
+     <width>101</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="endNumSel" >
+   <property name="geometry" >
+    <rect>
+     <x>300</x>
+     <y>50</y>
+     <width>101</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label" >
+   <property name="geometry" >
+    <rect>
+     <x>250</x>
+     <y>0</y>
+     <width>46</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-size:12pt; font-weight:600;">Start&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2" >
+   <property name="geometry" >
+    <rect>
+     <x>260</x>
+     <y>50</y>
+     <width>31</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-size:12pt; font-weight:600;">End&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="displayButton" >
+   <property name="geometry" >
+    <rect>
+     <x>410</x>
+     <y>0</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text" >
+    <string>Display</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="verticalLayoutWidget" >
+   <property name="geometry" >
+    <rect>
+     <x>410</x>
+     <y>30</y>
+     <width>71</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout" >
+    <item>
+     <widget class="QLabel" name="maxL" >
+      <property name="text" >
+       <string>Max:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="maxValLab" >
+      <property name="text" >
+       <string>maxnumber</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11" />
+ <resources/>
+ <connections>
+  <connection>
+   <sender>displayButton</sender>
+   <signal>clicked()</signal>
+   <receiver>DispDialoguePClass</receiver>
+   <slot>dispConns()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>525</x>
+     <y>32</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>524</x>
+     <y>45</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>startNumSel</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>endNumSel</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>354</x>
+     <y>8</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>354</x>
+     <y>60</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>dispConns()</slot>
+ </slots>
+</ui>
